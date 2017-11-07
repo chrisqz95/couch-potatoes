@@ -3,6 +3,8 @@ package com.example.potato.couchpotatoes;
 import com.google.firebase.auth.*;
 import com.google.firebase.database.*;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Queue;
 
 /**
@@ -14,6 +16,8 @@ public class DBHelper {
     FirebaseAuth auth;
     FirebaseDatabase db;
     FirebaseUser user;
+
+    final String userPath = "User/";
 
     public DBHelper() {
         auth = FirebaseAuth.getInstance();
@@ -43,4 +47,41 @@ public class DBHelper {
         return null;
     }
 
+    public boolean addNewUser( User user ) {
+        db.getReference( userPath ).child( user.getUid() ).setValue( user );
+
+        return checkExists( userPath + user.getUid() );
+    }
+
+    public boolean removeUser( User user ) {
+        db.getReference( userPath ).child( user.getUid() ).setValue( null );
+
+        return checkExists( userPath + user.getUid() );
+    }
+
+    public void updateUser( User user ) {
+        Map<String, Object> updates = new HashMap<>();
+
+        updates.put( "email", user.getEmail() );
+        updates.put( "uid", user.getUid() );
+        updates.put( "firstName", user.getFirstName() );
+        updates.put( "middleName", user.getMiddleName() );
+        updates.put( "lastName", user.getLastName() );
+        updates.put( "dob", user.getDob() );
+        updates.put( "gender", user.getGender() );
+        updates.put( "city", user.getCity() );
+        updates.put( "state", user.getState() );
+        updates.put( "country", user.getCountry() );
+        updates.put( "bio", user.getBio() );
+        updates.put( "latitude", user.getLatitude() );
+        updates.put( "longitude", user.getLongitude() );
+        updates.put( "locked", user.isLocked() );
+        updates.put( "suspended", user.isSuspended() );
+
+        db.getReference( userPath ).child( user.getUid() ).updateChildren( updates );
+    }
+
+    public boolean checkExists( String path ) {
+        return ( db.getReference( path ) == null );
+    }
 }

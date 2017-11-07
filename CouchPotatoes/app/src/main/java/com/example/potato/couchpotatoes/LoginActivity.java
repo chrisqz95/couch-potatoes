@@ -17,6 +17,7 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -66,6 +67,18 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         helper = new DBHelper();
+
+        CurrentUser newUser = new CurrentUser(
+                "test@test.com", "1", "Tom", null, "Cat", "1/1/1980",
+                "M", null, null, null, "TEST BIO", 0.0, 0.0,
+                false, false
+        );
+
+        helper.addNewUser( newUser );
+        newUser.setBio( "BIO TEST" );
+        helper.updateUser( newUser );
+        //helper.removeUser( newUser );
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
