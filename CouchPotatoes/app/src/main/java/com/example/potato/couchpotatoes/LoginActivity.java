@@ -68,16 +68,28 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     protected void onCreate(Bundle savedInstanceState) {
         helper = new DBHelper();
 
+        /*
         CurrentUser newUser = new CurrentUser(
-                "test@test.com", "1", "Tom", null, "Cat", "1/1/1980",
+                "test@test.com", helper.getNewChildKey( helper.getUserPath() ), "Tom", null, "Cat", "1/1/1980",
                 "M", null, null, null, "TEST BIO", 0.0, 0.0,
                 false, false
         );
 
-        helper.addNewUser( newUser );
-        newUser.setBio( "BIO TEST" );
-        helper.updateUser( newUser );
+        CurrentUser newUser2 = new CurrentUser(
+                "test2@test.com", helper.getNewChildKey( helper.getUserPath() ), "Tim", null, "Jones", "12/1/1985",
+                "M", null, null, null, "TEST BIO 2", 0.0, 0.0,
+                false, false
+        );
+        */
+
+        //MatchedUser newContact = new MatchedUser( "2" );
+        //helper.addNewUser( newUser );
+        //helper.addNewUser( newUser2 );
+        //newUser.setBio( "BIO TEST" );
+        //helper.updateUser( newUser );
         //helper.removeUser( newUser );
+        //helper.addToContactList( newUser, newUser2 );
+        //helper.removeFromContactList( newUser, newContact );
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
