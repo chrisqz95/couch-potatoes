@@ -28,6 +28,15 @@ public class DBHelper {
     private final String interestSubcategoryPath = "Interest_Subcategory/";
     private final String userInterestPath = "User_Interest/";
     private final String partnerPreferencePath = "Partner_Preference/";
+    private final String likePath = "Like/";
+    private final String dislikePath = "Dislike/";
+    private final String befriendPath = "Befriend/";
+    private final String datePath = "Date/";
+    private final String blockPath = "Block/";
+    private final String blockedUserPath = "Blocked_User/";
+    private final String reportPath = "Report/";
+    private final String reportedUserPath = "Reported_User/";
+    private final String userMatchPath = "User_Match/";
 
     public DBHelper() {
         auth = FirebaseAuth.getInstance();
@@ -130,6 +139,55 @@ public class DBHelper {
         return checkExists( getPartnerPreferencePath() + userID );
     }
 
+    public boolean addToLike( String actorUserID, String receiverUserID, String timestamp ) {
+        db.getReference( getLikePath() ).child( actorUserID ).child( receiverUserID ).child( "timestamp" ).setValue( timestamp );
+
+        return checkExists( getLikePath() + actorUserID + "/" + receiverUserID );
+    }
+    public boolean addToDislike( String actorUserID, String receiverUserID, String timestamp ) {
+        db.getReference( getDislikePath() ).child( actorUserID ).child( receiverUserID ).child( "timestamp" ).setValue( timestamp );
+
+        return checkExists( getDislikePath() + actorUserID + "/" + receiverUserID );
+    }
+
+    public boolean addToBefriend( String actorUserID, String receiverUserID, String timestamp ) {
+        db.getReference( getBefriendPath() ).child( actorUserID ).child( receiverUserID ).child( "timestamp" ).setValue( timestamp );
+
+        return checkExists( getBefriendPath() + actorUserID + "/" + receiverUserID );
+    }
+
+    public boolean addToDate( String actorUserID, String receiverUserID, String timestamp ) {
+        db.getReference( getDatePath() ).child( actorUserID ).child( receiverUserID ).child( "timestamp" ).setValue( timestamp );
+
+        return checkExists( getDatePath() + actorUserID + "/" + receiverUserID );
+    }
+
+    public boolean addToBlock( String actorUserID, String receiverUserID, String timestamp ) {
+        db.getReference( getBlockPath() ).child( actorUserID ).child( receiverUserID ).child( "timestamp" ).setValue( timestamp );
+
+        return checkExists( getBlockPath() + actorUserID + "/" + receiverUserID );
+    }
+
+    public boolean addToBlockedUser( String receiverUserID, String actorUserID, String timestamp ) {
+        db.getReference( getBlockedUserPath() ).child( receiverUserID ).child( actorUserID ).child( "timestamp" ).setValue( timestamp );
+
+        return checkExists( getBlockedUserPath() + receiverUserID + "/" + actorUserID );
+    }
+
+    public boolean addToReport( String actorUserID, String receiverUserID, String timestamp, String reason ) {
+        db.getReference( getReportPath() ).child( actorUserID ).child( receiverUserID ).child( "timestamp" ).setValue( timestamp );
+        db.getReference( getReportPath() ).child( actorUserID ).child( receiverUserID ).child( "reason" ).setValue( reason );
+
+        return checkExists( getReportPath() + actorUserID + "/" + receiverUserID );
+    }
+
+    public boolean addToReportedUser( String receiverUserID, String actorUserID, String timestamp, String reason ) {
+        db.getReference( getReportedUserPath() ).child( receiverUserID ).child( actorUserID ).child( "timestamp" ).setValue( timestamp );
+        db.getReference( getReportedUserPath() ).child( receiverUserID ).child( actorUserID ).child( "reason" ).setValue( reason );
+
+        return checkExists( getReportedUserPath() + receiverUserID + "/" + actorUserID );
+    }
+
     public boolean removeUser( String userID ) {
         db.getReference(getUserPath()).child( userID ).setValue( null );
 
@@ -195,6 +253,54 @@ public class DBHelper {
         db.getReference( getPartnerPreferencePath() ).child( userID ).setValue( null );
 
         return !checkExists( getPartnerPreferencePath() + userID );
+    }
+
+    public boolean removeFromLike( String actorUserID, String receiverUserID ) {
+        db.getReference( getLikePath() ).child( actorUserID ).child( receiverUserID ).setValue( null );
+
+        return !checkExists( getLikePath() + actorUserID + "/" + receiverUserID );
+    }
+
+    public boolean removeFromDislike( String actorUserID, String receiverUserID ) {
+        db.getReference( getDislikePath() ).child( actorUserID ).child( receiverUserID ).setValue( null );
+
+        return !checkExists( getDislikePath() + actorUserID + "/" + receiverUserID );
+    }
+
+    public boolean removeFromBefriend( String actorUserID, String receiverUserID ) {
+        db.getReference( getBefriendPath() ).child( actorUserID ).child( receiverUserID ).setValue( null );
+
+        return !checkExists( getBefriendPath() + actorUserID + "/" + receiverUserID );
+    }
+
+    public boolean removeFromDate( String actorUserID, String receiverUserID ) {
+        db.getReference( getDatePath() ).child( actorUserID ).child( receiverUserID ).setValue( null );
+
+        return !checkExists( getDatePath() + actorUserID + "/" + receiverUserID );
+    }
+
+    public boolean removeFromBlock( String actorUserID, String receiverUserID ) {
+        db.getReference( getBlockPath() ).child( actorUserID ).child( receiverUserID ).setValue( null );
+
+        return !checkExists( getBlockPath() + actorUserID + "/" + receiverUserID );
+    }
+
+    public boolean removeFromBlockedUser( String receiverUserID, String actorUserID ) {
+        db.getReference( getBlockedUserPath() ).child( receiverUserID ).child( actorUserID ).setValue( null );
+
+        return !checkExists( getBlockedUserPath() + receiverUserID + "/" + actorUserID );
+    }
+
+    public boolean removeFromReport( String actorUserID, String receiverUserID ) {
+        db.getReference( getReportPath() ).child( actorUserID ).child( receiverUserID ).setValue( null );
+
+        return !checkExists( getReportPath() + actorUserID + "/" + receiverUserID );
+    }
+
+    public boolean removeFromReportedUser( String receiverUserID, String actorUserID ) {
+        db.getReference( getReportedUserPath() ).child( receiverUserID ).child( actorUserID ).setValue( null );
+
+        return !checkExists( getReportedUserPath() + receiverUserID + "/" + actorUserID );
     }
 
     public void updateUser( User user ) {
@@ -290,5 +396,41 @@ public class DBHelper {
 
     public String getPartnerPreferencePath() {
         return partnerPreferencePath;
+    }
+
+    public String getLikePath() {
+        return likePath;
+    }
+
+    public String getBefriendPath() {
+        return befriendPath;
+    }
+
+    public String getDislikePath() {
+        return dislikePath;
+    }
+
+    public String getDatePath() {
+        return datePath;
+    }
+
+    public String getBlockPath() {
+        return blockPath;
+    }
+
+    public String getBlockedUserPath() {
+        return blockedUserPath;
+    }
+
+    public String getReportPath() {
+        return reportPath;
+    }
+
+    public String getReportedUserPath() {
+        return reportedUserPath;
+    }
+
+    public String getUserMatchPath() {
+        return userMatchPath;
     }
 }
