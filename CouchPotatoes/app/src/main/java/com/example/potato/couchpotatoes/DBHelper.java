@@ -37,6 +37,10 @@ public class DBHelper {
     private final String reportPath = "Report/";
     private final String reportedUserPath = "Reported_User/";
     private final String userMatchPath = "User_Match/";
+    private final String userChatPath = "User_Chat/";
+    private final String chatUserPath = "Chat_User/";
+    private final String chatMessagePath = "Chat_Message/";
+    private final String messagePath = "Message/";
 
     public DBHelper() {
         auth = FirebaseAuth.getInstance();
@@ -188,6 +192,39 @@ public class DBHelper {
         return checkExists( getReportedUserPath() + receiverUserID + "/" + actorUserID );
     }
 
+    public boolean addToUserMatch( String userID, String matchUserID ) {
+        db.getReference( getUserMatchPath() ).child( userID ).child( matchUserID ).setValue( true );
+
+        return checkExists( getUserMatchPath() + userID + "/" + matchUserID );
+    }
+
+    public boolean addToUserChat( String userID, String chatID ) {
+        db.getReference( getUserChatPath() ).child( userID ).child( chatID ).setValue( true );
+
+        return checkExists( getUserChatPath() + userID + "/" + chatID );
+    }
+
+    public boolean addToChatUser( String chatID, String userID ) {
+        db.getReference( getChatUserPath() ).child( chatID ).child( userID ).setValue( true );
+
+        return checkExists( getChatUserPath() + chatID + "/" + userID );
+    }
+
+    public boolean addToChatMessage( String chatID, String messageID ) {
+        db.getReference( getChatMessagePath() ).child( chatID ).child( messageID ).setValue( true );
+
+        return checkExists( getChatMessagePath() + chatID + "/" + messageID );
+    }
+
+    public boolean addToMessage( String messageID, String userID, String chatID, String timestamp, String text ) {
+        db.getReference( getMessagePath() ).child( messageID ).child( "user_id" ).setValue( userID );
+        db.getReference( getMessagePath() ).child( messageID ).child( "chat_id" ).setValue( chatID );
+        db.getReference( getMessagePath() ).child( messageID ).child( "timestamp" ).setValue( timestamp );
+        db.getReference( getMessagePath() ).child( messageID ).child( "text" ).setValue( text );
+
+        return checkExists( getMessagePath() + messageID );
+    }
+
     public boolean removeUser( String userID ) {
         db.getReference(getUserPath()).child( userID ).setValue( null );
 
@@ -303,6 +340,36 @@ public class DBHelper {
         return !checkExists( getReportedUserPath() + receiverUserID + "/" + actorUserID );
     }
 
+    public boolean removeFromUserMatch( String userID, String matchUserID ) {
+        db.getReference( getUserMatchPath() ).child( userID ).child( matchUserID ).setValue( null );
+
+        return !checkExists( getUserMatchPath() + userID + "/" + matchUserID );
+    }
+
+    public boolean removeFromUserChat( String userID, String chatID ) {
+        db.getReference( getUserChatPath() ).child( userID ).child( chatID ).setValue( null );
+
+        return !checkExists( getUserChatPath() + userID + "/" + chatID );
+    }
+
+    public boolean removeFromChatUser( String chatID, String userID ) {
+        db.getReference( getChatUserPath() ).child( chatID ).child( userID ).setValue( null );
+
+        return !checkExists( getChatUserPath() + chatID + "/" + userID );
+    }
+
+    public boolean removeFromChatMessage( String chatID, String messageID ) {
+        db.getReference( getChatMessagePath() ).child( chatID ).child( messageID ).setValue( null );
+
+        return !checkExists( getChatMessagePath() + chatID + "/" + messageID );
+    }
+
+    public boolean removeFromMessage( String messageID ) {
+        db.getReference( getMessagePath() ).child( messageID ).setValue( null );
+
+        return !checkExists( getMessagePath() + messageID );
+    }
+
     public void updateUser( User user ) {
         Map<String, Object> updates = new HashMap<>();
 
@@ -344,6 +411,17 @@ public class DBHelper {
         updates.put( "gender", gender );
 
         db.getReference( getPartnerPreferencePath() ).child( userID ).updateChildren( updates );
+    }
+
+    public void updateMessage( String messageID, String userID, String chatID, String timestamp, String text ) {
+        Map<String, Object> updates = new HashMap<>();
+
+        updates.put( "user_id", userID );
+        updates.put( "chat_id", chatID );
+        updates.put( "timestamp", timestamp );
+        updates.put( "text", text );
+
+        db.getReference( getMessagePath() ).child( messageID ).updateChildren( updates );
     }
 
     public boolean checkExists( String path ) {
@@ -432,5 +510,21 @@ public class DBHelper {
 
     public String getUserMatchPath() {
         return userMatchPath;
+    }
+
+    public String getUserChatPath() {
+        return userChatPath;
+    }
+
+    public String getChatUserPath() {
+        return chatUserPath;
+    }
+
+    public String getChatMessagePath() {
+        return chatMessagePath;
+    }
+
+    public String getMessagePath() {
+        return messagePath;
     }
 }
