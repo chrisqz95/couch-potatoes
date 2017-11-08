@@ -72,12 +72,14 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         helper = new DBHelper();
 
         /* COMMENTED CODE BELOW USED FOR TESTING. WILL REMOVE WHEN DONE TESTING */
-        /*
+
         CurrentUser newUser = new CurrentUser(
                 "test@test.com", helper.getNewChildKey( helper.getUserPath() ), "Tom", null, "Cat", "1/1/1980",
                 "M", null, null, null, "TEST BIO", 0.0, 0.0,
                 false, false
         );
+
+        /*
         CurrentUser newUser2 = new CurrentUser(
                 "test2@test.com", helper.getNewChildKey( helper.getUserPath() ), "Tim", null, "Jones", "12/1/1985",
                 "M", null, null, null, "TEST BIO 2", 0.0, 0.0,
@@ -97,6 +99,9 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         //helper.removeFromLockedUser( newUser );
         //helper.addToSuspendedUser( newUser, "test", "Test" );
         //helper.removeFromSuspendedUser( newUser );
+        //helper.addToUserNotification( newUser, "1-1-2011 00:00:00", "Test Notification 1" );
+        //helper.addToUserNotification( newUser, "1-1-2011 00:00:01", "Test Notification 2" );
+        //helper.removeFromUserNotification( newUser, "1-1-2011 00:00:00" );
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
