@@ -19,6 +19,7 @@ public class DBHelper {
 
     private final String userPath = "User/";
     private final String userContactListPath = "User_Contact_List/";
+    private final String loginRecordPath = "Login_Record/";
     private final String lockedUserPath = "Locked_User/";
     private final String suspendedUserPath = "Suspended_User/";
     private final String userNotificationPath = "User_Notification/";
@@ -80,6 +81,15 @@ public class DBHelper {
         db.getReference(getUserContactListPath()).child( currUserID ).child( contactUserID ).setValue( true );
 
         return checkExists( getUserContactListPath() + currUserID + "/" + contactUserID );
+    }
+
+    public boolean addToLoginRecord( String userID, String timestamp, boolean success, String device, double latitude, double longitude ) {
+        db.getReference( getLoginRecordPath() ).child( userID ).child( timestamp ).child( "success" ).setValue( success );
+        db.getReference( getLoginRecordPath() ).child( userID ).child( timestamp ).child( "device" ).setValue( device );
+        db.getReference( getLoginRecordPath() ).child( userID ).child( timestamp ).child( "latitude" ).setValue( latitude );
+        db.getReference( getLoginRecordPath() ).child( userID ).child( timestamp ).child( "longitude" ).setValue( longitude );
+
+        return checkExists( getLoginRecordPath() + userID + "/" + timestamp );
     }
 
     public boolean addToLockedUser( String userID, String timestamp, String reason ) {
@@ -235,6 +245,12 @@ public class DBHelper {
         db.getReference(getUserContactListPath()).child( currUserID ).child( contactUserID ).setValue( null );
 
         return !checkExists( getUserContactListPath() + currUserID + "/" + contactUserID );
+    }
+
+    public boolean removeFromLoginRecord( String userID, String timestamp ) {
+        db.getReference( getLoginRecordPath() ).child( userID ).child( timestamp ).setValue( null );
+        
+        return !checkExists( getLoginRecordPath() + userID + "/" + timestamp );
     }
 
     public boolean removeFromLockedUser( String userID ) {
@@ -526,5 +542,9 @@ public class DBHelper {
 
     public String getMessagePath() {
         return messagePath;
+    }
+
+    public String getLoginRecordPath() {
+        return loginRecordPath;
     }
 }
