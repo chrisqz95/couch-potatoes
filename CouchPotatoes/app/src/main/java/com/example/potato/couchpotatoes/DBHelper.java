@@ -115,6 +115,12 @@ public class DBHelper {
         return checkExists( getInterestSubcategoryPath() + category + "/" + subcategory );
     }
 
+    public boolean addToUserInterest( String userID, String category, String subcategory, String preference ) {
+        db.getReference( getUserInterestPath() ).child( userID ).child( category ).child( subcategory ).setValue( preference );
+
+        return checkExists( getUserInterestPath() + userID + "/" + category + "/" + subcategory );
+    }
+
     public boolean removeUser( String userID ) {
         db.getReference(getUserPath()).child( userID ).setValue( null );
 
@@ -167,6 +173,12 @@ public class DBHelper {
         db.getReference( getInterestSubcategoryPath() ).child( category ).child( subcategory ).setValue( null );
 
         return !checkExists( getInterestSubcategoryPath() + category + "/" + subcategory );
+    }
+
+    public boolean removeFromUserInterest( String userID, String category, String subcategory  ) {
+        db.getReference( getUserInterestPath() ).child( userID ).child( category ).child( subcategory ).setValue( null );
+
+        return !checkExists( getUserInterestPath() + userID + "/" + category + "/" + subcategory );
     }
 
     public void updateUser( User user ) {
