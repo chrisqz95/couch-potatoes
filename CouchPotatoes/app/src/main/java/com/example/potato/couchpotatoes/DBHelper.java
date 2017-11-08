@@ -27,6 +27,7 @@ public class DBHelper {
     private final String interestPath = "Category/";
     private final String interestSubcategoryPath = "Interest_Subcategory/";
     private final String userInterestPath = "User_Interest/";
+    private final String partnerPreferencePath = "Partner_Preference/";
 
     public DBHelper() {
         auth = FirebaseAuth.getInstance();
@@ -121,6 +122,14 @@ public class DBHelper {
         return checkExists( getUserInterestPath() + userID + "/" + category + "/" + subcategory );
     }
 
+    public boolean addToPartnerPreference( String userID, int min_age, int max_age, Map<String, Object> gender ) {
+        db.getReference( getPartnerPreferencePath() ).child( userID ).child( "min_age" ).setValue( min_age );
+        db.getReference( getPartnerPreferencePath() ).child( userID ).child( "max_age" ).setValue( max_age );
+        db.getReference( getPartnerPreferencePath() ).child( userID ).child( "gender" ).setValue( gender );
+
+        return checkExists( getPartnerPreferencePath() + userID );
+    }
+
     public boolean removeUser( String userID ) {
         db.getReference(getUserPath()).child( userID ).setValue( null );
 
@@ -181,6 +190,13 @@ public class DBHelper {
         return !checkExists( getUserInterestPath() + userID + "/" + category + "/" + subcategory );
     }
 
+
+    public boolean removeFromPartnerPreference( String userID ) {
+        db.getReference( getPartnerPreferencePath() ).child( userID ).setValue( null );
+
+        return !checkExists( getPartnerPreferencePath() + userID );
+    }
+
     public void updateUser( User user ) {
         Map<String, Object> updates = new HashMap<>();
 
@@ -214,8 +230,18 @@ public class DBHelper {
         db.getReference( getPhotoPath() ).child( photoID ).updateChildren( updates );
     }
 
+    public void updatePartnerPreference( String userID, int min_age, int max_age, Map<String, Object> gender ) {
+        Map<String, Object> updates = new HashMap<>();
+
+        updates.put( "min_age", min_age );
+        updates.put( "max_age", max_age );
+        updates.put( "gender", gender );
+
+        db.getReference( getPartnerPreferencePath() ).child( userID ).updateChildren( updates );
+    }
+
     public boolean checkExists( String path ) {
-        return ( db.getReference( path ) == null );
+        return ( db.getReference( path ) != null );
     }
 
     public String getNewChildKey( String path ) {
@@ -260,5 +286,9 @@ public class DBHelper {
 
     public String getUserInterestPath() {
         return userInterestPath;
+    }
+
+    public String getPartnerPreferencePath() {
+        return partnerPreferencePath;
     }
 }
