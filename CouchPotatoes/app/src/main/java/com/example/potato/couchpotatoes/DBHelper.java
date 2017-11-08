@@ -22,6 +22,7 @@ public class DBHelper {
     private final String lockedUserPath = "Locked_User/";
     private final String suspendedUserPath = "Suspended_User/";
     private final String userNotificationPath = "User_Notification/";
+    private final String userPhotoPath = "User_Photo/";
 
     public DBHelper() {
         auth = FirebaseAuth.getInstance();
@@ -83,6 +84,12 @@ public class DBHelper {
         return checkExists( getUserNotificationPath() + user.getUid() + "/" + timestamp );
     }
 
+    public boolean addToUserPhoto( CurrentUser user, String photoID ) {
+        db.getReference( getUserPhotoPath() ).child( user.getUid() ).child( photoID ).setValue( true );
+
+        return checkExists( getUserPhotoPath() + user.getUid() + "/" + photoID );
+    }
+
     public boolean removeUser( User user ) {
         db.getReference(getUserPath()).child( user.getUid() ).setValue( null );
 
@@ -110,7 +117,13 @@ public class DBHelper {
     public boolean removeFromUserNotification( CurrentUser user, String timestamp ) {
         db.getReference( getUserNotificationPath() ).child( user.getUid() ).child( timestamp ).setValue( null );
 
-        return checkExists( getUserNotificationPath() + user.getUid() + "/" + timestamp );
+        return !checkExists( getUserNotificationPath() + user.getUid() + "/" + timestamp );
+    }
+
+    public boolean removeFromUserPhoto( CurrentUser user, String photoID ) {
+        db.getReference( getUserPhotoPath() ).child( user.getUid() ).child( photoID ).setValue( null );
+
+        return !checkExists( getUserPhotoPath() + user.getUid() + "/" + photoID );
     }
 
     public void updateUser( User user ) {
@@ -161,5 +174,9 @@ public class DBHelper {
 
     public String getUserNotificationPath() {
         return userNotificationPath;
+    }
+
+    public String getUserPhotoPath() {
+        return userPhotoPath;
     }
 }
