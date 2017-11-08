@@ -25,6 +25,8 @@ public class DBHelper {
     private final String userPhotoPath = "User_Photo/";
     private final String photoPath = "Photo/";
     private final String interestPath = "Category/";
+    private final String interestSubcategoryPath = "Interest_Subcategory/";
+    private final String userInterestPath = "User_Interest/";
 
     public DBHelper() {
         auth = FirebaseAuth.getInstance();
@@ -107,6 +109,12 @@ public class DBHelper {
         return checkExists( getInterestPath() + category );
     }
 
+    public boolean addToInterestSubcategory( String category, String subcategory ) {
+        db.getReference( getInterestSubcategoryPath() ).child( category ).child( subcategory ).setValue( true );
+
+        return checkExists( getInterestSubcategoryPath() + category + "/" + subcategory );
+    }
+
     public boolean removeUser( String userID ) {
         db.getReference(getUserPath()).child( userID ).setValue( null );
 
@@ -153,6 +161,12 @@ public class DBHelper {
         db.getReference( getInterestPath() ).child( category ).setValue( null );
 
         return !checkExists( getInterestPath() + category );
+    }
+
+    public boolean removeFromInterestSubcategory( String category, String subcategory ) {
+        db.getReference( getInterestSubcategoryPath() ).child( category ).child( subcategory ).setValue( null );
+
+        return !checkExists( getInterestSubcategoryPath() + category + "/" + subcategory );
     }
 
     public void updateUser( User user ) {
@@ -226,5 +240,13 @@ public class DBHelper {
 
     public String getInterestPath() {
         return interestPath;
+    }
+
+    public String getInterestSubcategoryPath() {
+        return interestSubcategoryPath;
+    }
+
+    public String getUserInterestPath() {
+        return userInterestPath;
     }
 }
