@@ -19,6 +19,8 @@ public class DBHelper {
 
     private final String userPath = "User/";
     private final String userContactListPath = "User_Contact_List/";
+    private final String lockedUserPath = "Locked_User/";
+    private final String suspendedUserPath = "Suspended_User/";
 
     public DBHelper() {
         auth = FirebaseAuth.getInstance();
@@ -60,16 +62,42 @@ public class DBHelper {
         return checkExists( getUserContactListPath() + user.getUid() + "/" + newContact.getUid() );
     }
 
+    public boolean addToLockedUser( User user, String timestamp, String reason ) {
+        db.getReference( getLockedUserPath() ).child( user.getUid() ).child( "timestamp" ).setValue( timestamp );
+        db.getReference( getLockedUserPath() ).child( user.getUid() ).child( "reason" ).setValue( reason );
+
+        return checkExists( getLockedUserPath() + user.getUid() );
+    }
+
+    public boolean addToSuspendedUser( User user, String timestamp, String reason ) {
+        db.getReference( getSuspendedUserPath() ).child( user.getUid() ).child( "timestamp" ).setValue( timestamp );
+        db.getReference( getSuspendedUserPath() ).child( user.getUid() ).child( "reason" ).setValue( reason );
+
+        return checkExists( getSuspendedUserPath() + user.getUid() );
+    }
+
     public boolean removeUser( User user ) {
         db.getReference(getUserPath()).child( user.getUid() ).setValue( null );
 
-        return checkExists( getUserPath() + user.getUid() );
+        return !checkExists( getUserPath() + user.getUid() );
     }
 
     public boolean removeFromContactList( CurrentUser user, User newContact ) {
         db.getReference(getUserContactListPath()).child( user.getUid() ).child( newContact.getUid() ).setValue( null );
 
-        return checkExists( getUserContactListPath() + user.getUid() + "/" + newContact.getUid() );
+        return !checkExists( getUserContactListPath() + user.getUid() + "/" + newContact.getUid() );
+    }
+
+    public boolean removeFromLockedUser( User user ) {
+        db.getReference( getLockedUserPath() ).child( user.getUid() ).setValue( null );
+
+        return !checkExists( getLockedUserPath() + user.getUid() );
+    }
+
+    public boolean removeFromSuspendedUser( User user ) {
+        db.getReference( getSuspendedUserPath() ).child( user.getUid() ).setValue( null );
+
+        return !checkExists( getSuspendedUserPath() + user.getUid() );
     }
 
     public void updateUser( User user ) {
@@ -108,5 +136,13 @@ public class DBHelper {
 
     public String getUserContactListPath() {
         return userContactListPath;
+    }
+
+    public String getLockedUserPath() {
+        return lockedUserPath;
+    }
+
+    public String getSuspendedUserPath() {
+        return suspendedUserPath;
     }
 }

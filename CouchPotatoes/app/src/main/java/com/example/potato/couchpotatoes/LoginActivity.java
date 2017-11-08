@@ -28,7 +28,10 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import java.security.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import static android.Manifest.permission.READ_CONTACTS;
@@ -68,13 +71,13 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     protected void onCreate(Bundle savedInstanceState) {
         helper = new DBHelper();
 
+        /* COMMENTED CODE BELOW USED FOR TESTING. WILL REMOVE WHEN DONE TESTING */
         /*
         CurrentUser newUser = new CurrentUser(
                 "test@test.com", helper.getNewChildKey( helper.getUserPath() ), "Tom", null, "Cat", "1/1/1980",
                 "M", null, null, null, "TEST BIO", 0.0, 0.0,
                 false, false
         );
-
         CurrentUser newUser2 = new CurrentUser(
                 "test2@test.com", helper.getNewChildKey( helper.getUserPath() ), "Tim", null, "Jones", "12/1/1985",
                 "M", null, null, null, "TEST BIO 2", 0.0, 0.0,
@@ -90,6 +93,10 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         //helper.removeUser( newUser );
         //helper.addToContactList( newUser, newUser2 );
         //helper.removeFromContactList( newUser, newContact );
+        //helper.addToLockedUser( newUser, "test", "Test" );
+        //helper.removeFromLockedUser( newUser );
+        //helper.addToSuspendedUser( newUser, "test", "Test" );
+        //helper.removeFromSuspendedUser( newUser );
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
