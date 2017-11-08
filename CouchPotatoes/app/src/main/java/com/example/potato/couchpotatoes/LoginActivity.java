@@ -87,23 +87,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         );
         */
 
-        //MatchedUser newContact = new MatchedUser( "2" );
-        //helper.addNewUser( newUser );
-        //helper.addNewUser( newUser2 );
-        //newUser.setBio( "BIO TEST" );
-        //helper.updateUser( newUser );
-        //helper.removeUser( newUser );
-        //helper.addToContactList( newUser, newUser2 );
-        //helper.removeFromContactList( newUser, newContact );
-        //helper.addToLockedUser( newUser, "test", "Test" );
-        //helper.removeFromLockedUser( newUser );
-        //helper.addToSuspendedUser( newUser, "test", "Test" );
-        //helper.removeFromSuspendedUser( newUser );
-        //helper.addToUserNotification( newUser, "1-1-2011 00:00:00", "Test Notification 1" );
-        //helper.addToUserNotification( newUser, "1-1-2011 00:00:01", "Test Notification 2" );
-        //helper.removeFromUserNotification( newUser, "1-1-2011 00:00:00" );
-        //helper.addToUserPhoto( newUser, "1" );
-        //helper.removeFromUserPhoto( newUser, "1" );
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);

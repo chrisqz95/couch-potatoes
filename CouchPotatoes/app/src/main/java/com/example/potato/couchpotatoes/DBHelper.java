@@ -23,6 +23,7 @@ public class DBHelper {
     private final String suspendedUserPath = "Suspended_User/";
     private final String userNotificationPath = "User_Notification/";
     private final String userPhotoPath = "User_Photo/";
+    private final String photoPath = "Photo/";
 
     public DBHelper() {
         auth = FirebaseAuth.getInstance();
@@ -58,72 +59,87 @@ public class DBHelper {
         return checkExists( getUserPath() + user.getUid() );
     }
 
-    public boolean addToContactList( CurrentUser user, User newContact ) {
-        db.getReference(getUserContactListPath()).child( user.getUid() ).child( newContact.getUid() ).setValue( true );
+    public boolean addToContactList( String currUserID, String contactUserID ) {
+        db.getReference(getUserContactListPath()).child( currUserID ).child( contactUserID ).setValue( true );
 
-        return checkExists( getUserContactListPath() + user.getUid() + "/" + newContact.getUid() );
+        return checkExists( getUserContactListPath() + currUserID + "/" + contactUserID );
     }
 
-    public boolean addToLockedUser( User user, String timestamp, String reason ) {
-        db.getReference( getLockedUserPath() ).child( user.getUid() ).child( "timestamp" ).setValue( timestamp );
-        db.getReference( getLockedUserPath() ).child( user.getUid() ).child( "reason" ).setValue( reason );
+    public boolean addToLockedUser( String userID, String timestamp, String reason ) {
+        db.getReference( getLockedUserPath() ).child( userID ).child( "timestamp" ).setValue( timestamp );
+        db.getReference( getLockedUserPath() ).child( userID ).child( "reason" ).setValue( reason );
 
-        return checkExists( getLockedUserPath() + user.getUid() );
+        return checkExists( getLockedUserPath() + userID );
     }
 
-    public boolean addToSuspendedUser( User user, String timestamp, String reason ) {
-        db.getReference( getSuspendedUserPath() ).child( user.getUid() ).child( "timestamp" ).setValue( timestamp );
-        db.getReference( getSuspendedUserPath() ).child( user.getUid() ).child( "reason" ).setValue( reason );
+    public boolean addToSuspendedUser( String userID, String timestamp, String reason ) {
+        db.getReference( getSuspendedUserPath() ).child( userID ).child( "timestamp" ).setValue( timestamp );
+        db.getReference( getSuspendedUserPath() ).child( userID ).child( "reason" ).setValue( reason );
 
-        return checkExists( getSuspendedUserPath() + user.getUid() );
+        return checkExists( getSuspendedUserPath() + userID );
     }
 
-    public boolean addToUserNotification( CurrentUser user, String timestamp, String description ) {
-        db.getReference( getUserNotificationPath() ).child( user.getUid() ).child( timestamp ).child( "description" ).setValue( description );
+    public boolean addToUserNotification( String userID, String timestamp, String description ) {
+        db.getReference( getUserNotificationPath() ).child( userID ).child( timestamp ).child( "description" ).setValue( description );
 
-        return checkExists( getUserNotificationPath() + user.getUid() + "/" + timestamp );
+        return checkExists( getUserNotificationPath() + userID + "/" + timestamp );
     }
 
-    public boolean addToUserPhoto( CurrentUser user, String photoID ) {
-        db.getReference( getUserPhotoPath() ).child( user.getUid() ).child( photoID ).setValue( true );
+    public boolean addToUserPhoto( String userID, String photoID ) {
+        db.getReference( getUserPhotoPath() ).child( userID ).child( photoID ).setValue( true );
 
-        return checkExists( getUserPhotoPath() + user.getUid() + "/" + photoID );
+        return checkExists( getUserPhotoPath() + userID + "/" + photoID );
     }
 
-    public boolean removeUser( User user ) {
-        db.getReference(getUserPath()).child( user.getUid() ).setValue( null );
+    public boolean addToPhoto( String photoID, String userID, String title, String description, String uri ) {
+        db.getReference( getPhotoPath() ).child( photoID ).child( "user_id" ).setValue( userID );
+        db.getReference( getPhotoPath() ).child( photoID ).child( "title" ).setValue( title );
+        db.getReference( getPhotoPath() ).child( photoID ).child( "description" ).setValue( description );
+        db.getReference( getPhotoPath() ).child( photoID ).child( "uri" ).setValue( uri );
 
-        return !checkExists( getUserPath() + user.getUid() );
+        return checkExists( getPhotoPath() + photoID );
     }
 
-    public boolean removeFromContactList( CurrentUser user, User newContact ) {
-        db.getReference(getUserContactListPath()).child( user.getUid() ).child( newContact.getUid() ).setValue( null );
+    public boolean removeUser( String userID ) {
+        db.getReference(getUserPath()).child( userID ).setValue( null );
 
-        return !checkExists( getUserContactListPath() + user.getUid() + "/" + newContact.getUid() );
+        return !checkExists( getUserPath() + userID );
     }
 
-    public boolean removeFromLockedUser( User user ) {
-        db.getReference( getLockedUserPath() ).child( user.getUid() ).setValue( null );
+    public boolean removeFromContactList( String currUserID, String contactUserID ) {
+        db.getReference(getUserContactListPath()).child( currUserID ).child( contactUserID ).setValue( null );
 
-        return !checkExists( getLockedUserPath() + user.getUid() );
+        return !checkExists( getUserContactListPath() + currUserID + "/" + contactUserID );
     }
 
-    public boolean removeFromSuspendedUser( User user ) {
-        db.getReference( getSuspendedUserPath() ).child( user.getUid() ).setValue( null );
+    public boolean removeFromLockedUser( String userID ) {
+        db.getReference( getLockedUserPath() ).child( userID ).setValue( null );
 
-        return !checkExists( getSuspendedUserPath() + user.getUid() );
+        return !checkExists( getLockedUserPath() + userID );
     }
 
-    public boolean removeFromUserNotification( CurrentUser user, String timestamp ) {
-        db.getReference( getUserNotificationPath() ).child( user.getUid() ).child( timestamp ).setValue( null );
+    public boolean removeFromSuspendedUser( String userID ) {
+        db.getReference( getSuspendedUserPath() ).child( userID ).setValue( null );
 
-        return !checkExists( getUserNotificationPath() + user.getUid() + "/" + timestamp );
+        return !checkExists( getSuspendedUserPath() + userID );
     }
 
-    public boolean removeFromUserPhoto( CurrentUser user, String photoID ) {
-        db.getReference( getUserPhotoPath() ).child( user.getUid() ).child( photoID ).setValue( null );
+    public boolean removeFromUserNotification( String userID, String timestamp ) {
+        db.getReference( getUserNotificationPath() ).child( userID ).child( timestamp ).setValue( null );
 
-        return !checkExists( getUserPhotoPath() + user.getUid() + "/" + photoID );
+        return !checkExists( getUserNotificationPath() + userID + "/" + timestamp );
+    }
+
+    public boolean removeFromUserPhoto( String userID, String photoID ) {
+        db.getReference( getUserPhotoPath() ).child( userID ).child( photoID ).setValue( null );
+
+        return !checkExists( getUserPhotoPath() + userID + "/" + photoID );
+    }
+
+    public boolean removeFromPhoto( String photoID, String userID, String title, String description, String uri ) {
+        db.getReference( getPhotoPath() ).child( photoID ).setValue( null );
+
+        return !checkExists( getPhotoPath() + photoID );
     }
 
     public void updateUser( User user ) {
@@ -146,6 +162,17 @@ public class DBHelper {
         updates.put("suspended", user.isSuspended());
 
         db.getReference(getUserPath()).child(user.getUid()).updateChildren(updates);
+    }
+
+    public void updatePhoto( String photoID, String userID, String title, String description, String uri ) {
+        Map<String, Object> updates = new HashMap<>();
+
+        updates.put( "user_id", userID );
+        updates.put( "title", title );
+        updates.put( "description", description );
+        updates.put( "uri", uri );
+
+        db.getReference( getPhotoPath() ).child( photoID ).updateChildren( updates );
     }
 
     public boolean checkExists( String path ) {
@@ -178,5 +205,9 @@ public class DBHelper {
 
     public String getUserPhotoPath() {
         return userPhotoPath;
+    }
+
+    public String getPhotoPath() {
+        return photoPath;
     }
 }
