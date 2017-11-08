@@ -24,6 +24,7 @@ public class DBHelper {
     private final String userNotificationPath = "User_Notification/";
     private final String userPhotoPath = "User_Photo/";
     private final String photoPath = "Photo/";
+    private final String interestPath = "Category/";
 
     public DBHelper() {
         auth = FirebaseAuth.getInstance();
@@ -100,6 +101,12 @@ public class DBHelper {
         return checkExists( getPhotoPath() + photoID );
     }
 
+    public boolean addToInterest( String category ) {
+        db.getReference( getInterestPath() ).child( category ).setValue( true );
+
+        return checkExists( getInterestPath() + category );
+    }
+
     public boolean removeUser( String userID ) {
         db.getReference(getUserPath()).child( userID ).setValue( null );
 
@@ -140,6 +147,12 @@ public class DBHelper {
         db.getReference( getPhotoPath() ).child( photoID ).setValue( null );
 
         return !checkExists( getPhotoPath() + photoID );
+    }
+
+    public boolean removeFromInterest( String category ) {
+        db.getReference( getInterestPath() ).child( category ).setValue( null );
+
+        return !checkExists( getInterestPath() + category );
     }
 
     public void updateUser( User user ) {
@@ -209,5 +222,9 @@ public class DBHelper {
 
     public String getPhotoPath() {
         return photoPath;
+    }
+
+    public String getInterestPath() {
+        return interestPath;
     }
 }
