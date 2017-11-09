@@ -17,6 +17,8 @@ public class DBHelper {
     FirebaseDatabase db;
     FirebaseUser user;
 
+    /* Paths under root to particular data collections on Firebase */
+
     private final String userPath = "User/";
     private final String userContactListPath = "User_Contact_List/";
     private final String loginRecordPath = "Login_Record/";
@@ -70,6 +72,12 @@ public class DBHelper {
     public Queue<MatchedUser> getMatchedUsers(FirebaseUser user) {
         return null;
     }
+
+    /* Database CRUD methods */
+
+    /* TODO ADD Read methods */
+
+    /* Methods to add data to Firebase */
 
     public boolean addNewUser( User user ) {
         db.getReference(getUserPath()).child( user.getUid() ).setValue( user );
@@ -235,6 +243,8 @@ public class DBHelper {
         return checkExists( getMessagePath() + messageID );
     }
 
+    /* Methods to remove data from Firebase */
+
     public boolean removeUser( String userID ) {
         db.getReference(getUserPath()).child( userID ).setValue( null );
 
@@ -249,7 +259,7 @@ public class DBHelper {
 
     public boolean removeFromLoginRecord( String userID, String timestamp ) {
         db.getReference( getLoginRecordPath() ).child( userID ).child( timestamp ).setValue( null );
-        
+
         return !checkExists( getLoginRecordPath() + userID + "/" + timestamp );
     }
 
@@ -386,6 +396,8 @@ public class DBHelper {
         return !checkExists( getMessagePath() + messageID );
     }
 
+    /* Methods to update data on Firebase */
+
     public void updateUser( User user ) {
         Map<String, Object> updates = new HashMap<>();
 
@@ -440,9 +452,13 @@ public class DBHelper {
         db.getReference( getMessagePath() ).child( messageID ).updateChildren( updates );
     }
 
+    /* Helper methods */
+
     public boolean checkExists( String path ) {
         return ( db.getReference( path ) != null );
     }
+
+    /* Getters */
 
     public String getNewChildKey( String path ) {
         return db.getReference( path ).push().getKey();
