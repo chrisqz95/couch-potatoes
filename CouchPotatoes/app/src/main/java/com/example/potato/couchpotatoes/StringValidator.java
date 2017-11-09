@@ -10,11 +10,7 @@ public class StringValidator {
 
     private static final int MIN_PASS_LENGTH = 5;
 
-    // regex matching for alphanumeric string, starting with either letter or number
-    private static final String ALPHA_NUMERIC_REGEX = "^[\\p{Alnum}]+$";
 
-    // regex for password checking
-    private static final String PASSWORD_REGEX = "^[\\p{Alnum}\\p{Punct}]+$";
 
     /**
      * Default Constructor
@@ -63,8 +59,11 @@ public class StringValidator {
     public static boolean isAlphaNumeric(String target) {
         if (target == null) return false;
         if (target.isEmpty()) return false;
+        
+        // regex matching for alphanumeric string, starting with either letter or number
+        String alphanumericRegex = "^[\\p{Alnum}]+$";
 
-        return target.matches(ALPHA_NUMERIC_REGEX);
+        return target.matches(alphanumericRegex);
     }
 
     /**
@@ -75,7 +74,11 @@ public class StringValidator {
      */
     public static boolean isValidPassword(String target) {
         if (TextUtils.isEmpty(target) || target.length() < MIN_PASS_LENGTH) return false;
-        return target.matches(PASSWORD_REGEX);
+        
+        // regex for password checking
+        String passwordRegex = "^[\\p{Alnum}\\p{Punct}]+$";
+
+        return target.matches(passwordRegex);
     }
 
     /**
