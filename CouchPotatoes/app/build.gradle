@@ -1,6 +1,7 @@
 apply plugin: 'com.android.application'
 
 android {
+//    compileSdkVersion 21
     compileSdkVersion 26
     defaultConfig {
         applicationId "com.example.potato.couchpotatoes"
@@ -16,6 +17,7 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    buildToolsVersion '26.0.2'
 }
 
 dependencies {
