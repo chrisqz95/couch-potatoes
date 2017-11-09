@@ -55,6 +55,8 @@ public class DBHelper {
         user = auth.getCurrentUser();
     }
 
+    /* User account methods */
+
     public boolean loginUser(String email, String password) {
         //Activity.finish();
         /*
@@ -100,6 +102,10 @@ public class DBHelper {
 
     public void fetchCurrentUser() {
         user = auth.getCurrentUser();
+    }
+
+    public void resetCurrentUser() {
+        user = null;
     }
 
     public Queue<MatchedUser> getMatchedUsers(FirebaseUser user) {
