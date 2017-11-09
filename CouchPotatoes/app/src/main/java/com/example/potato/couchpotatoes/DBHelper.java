@@ -1,5 +1,9 @@
 package com.example.potato.couchpotatoes;
 
+import android.support.annotation.NonNull;
+
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.*;
 import com.google.firebase.database.*;
 
@@ -52,7 +56,24 @@ public class DBHelper {
     }
 
     public boolean loginUser(String email, String password) {
+        //Activity.finish();
+        /*
+        auth.signInWithEmailAndPassword( email, password ).addOnCompleteListener(LoginActivity.this, new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if ( task.isSuccessful() ) {
+                            user = auth.getCurrentUser();
+                        }
+                        else {
+                            user = null;
+                        }
+                    }
+                });
+
+        return ( user != null );
+        */
         if (auth.signInWithEmailAndPassword(email, password).isSuccessful()) {
+            user = auth.getCurrentUser();
             return true;
         }
         else {

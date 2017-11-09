@@ -5,6 +5,7 @@ import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
 import android.app.LoaderManager.LoaderCallbacks;
 import android.content.CursorLoader;
+import android.content.Intent;
 import android.content.Loader;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
@@ -27,6 +28,12 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseUser;
 
 import java.security.Timestamp;
 import java.text.SimpleDateFormat;
@@ -86,6 +93,13 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 false, false
         );
         */
+        //helper.createUser( "test@test.com", "cse1102017" );
+
+        if ( helper.user != null ) {
+            //Log.d( "TEST", helper.user.toString() );
+            startActivity( new Intent( getApplicationContext(), MainActivity.class ) );
+            finish();
+        }
 
 
         super.onCreate(savedInstanceState);
@@ -329,20 +343,50 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
         @Override
         protected Boolean doInBackground(Void... params) {
-            return helper.loginUser(mEmail, mPassword);
+            //return helper.loginUser(mEmail, mPassword);
+            helper.auth.signInWithEmailAndPassword(mEmail, mPassword)
+                    .addOnCompleteListener(LoginActivity.this, new OnCompleteListener<AuthResult>() {
+                        @Override
+                        public void onComplete(@NonNull Task<AuthResult> task) {
+                            showProgress(false);
+
+                            if (task.isSuccessful()) {
+                                // Sign in success, update UI with the signed-in user's information
+                                Log.d("TEST", "signInWithEmail:success");
+                                helper.user = helper.auth.getCurrentUser();
+                                startActivity( new Intent( getApplicationContext(), MainActivity.class ) );
+                                finish();
+                                //updateUI(user);
+                            } else {
+                                helper.user = null;
+                                // If sign in fails, display a message to the user.
+                                Log.w("TEST", "signInWithEmail:failure", task.getException());
+                                //showProgress(false);
+                                mPasswordView.setError(getString(R.string.error_incorrect_password));
+                                mPasswordView.requestFocus();
+                                //Toast.makeText(EmailPasswordActivity.this, "Authentication failed.",
+                                //        Toast.LENGTH_SHORT).show();
+                                //updateUI(null);
+                            }
+
+                            // ...
+                        }
+                    });
+            return ( helper.user != null );
             // TODO: createUser
         }
 
         @Override
         protected void onPostExecute(final Boolean success) {
             mAuthTask = null;
-            showProgress(false);
 
             if (success) {
-                finish();
+                //finish();
+                //startActivity( new Intent( getApplicationContext(), MainActivity.class ) );
             } else {
-                mPasswordView.setError(getString(R.string.error_incorrect_password));
-                mPasswordView.requestFocus();
+                //showProgress(false);
+                //mPasswordView.setError(getString(R.string.error_incorrect_password));
+                //mPasswordView.requestFocus();
             }
         }
 
