@@ -26,7 +26,7 @@ public class MainActivity extends AppCompatActivity {
 
         userID = (android.widget.TextView) findViewById(R.id.userID);
 
-        if ( helper.user != null ) {
+        if ( helper.isUserLoggedIn() ) {
             userID.setText( helper.user.getEmail() );
         }
         else {

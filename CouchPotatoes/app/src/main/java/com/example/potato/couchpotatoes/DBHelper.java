@@ -90,6 +90,10 @@ public class DBHelper {
         }
     }
 
+    public boolean isUserLoggedIn() {
+        return ( user != null );
+    }
+
     public Queue<MatchedUser> getMatchedUsers(FirebaseUser user) {
         return null;
     }

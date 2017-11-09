@@ -95,7 +95,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         */
         //helper.createUser( "test@test.com", "cse1102017" );
 
-        if ( helper.user != null ) {
+        if ( helper.isUserLoggedIn() ) {
             //Log.d( "TEST", helper.user.toString() );
             startActivity( new Intent( getApplicationContext(), MainActivity.class ) );
             finish();
