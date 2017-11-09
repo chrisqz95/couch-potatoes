@@ -59,6 +59,7 @@ public class DBHelper {
 
     public boolean loginUser(String email, String password) {
         //Activity.finish();
+        // TODO
         /*
         auth.signInWithEmailAndPassword( email, password ).addOnCompleteListener(LoginActivity.this, new OnCompleteListener<AuthResult>() {
                     @Override
@@ -73,7 +74,6 @@ public class DBHelper {
                 });
 
         return ( user != null );
-        */
         if (auth.signInWithEmailAndPassword(email, password).isSuccessful()) {
             user = auth.getCurrentUser();
             return true;
@@ -81,6 +81,8 @@ public class DBHelper {
         else {
             return false;
         }
+        */
+        return false;
     }
 
     public boolean createUser(String email, String password) {
