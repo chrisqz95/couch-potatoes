@@ -94,6 +94,14 @@ public class DBHelper {
         return ( user != null );
     }
 
+    public boolean isUserLoggedOut() {
+        return !isUserLoggedIn();
+    }
+
+    public void fetchCurrentUser() {
+        user = auth.getCurrentUser();
+    }
+
     public Queue<MatchedUser> getMatchedUsers(FirebaseUser user) {
         return null;
     }

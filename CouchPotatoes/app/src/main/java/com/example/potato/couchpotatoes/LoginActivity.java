@@ -353,12 +353,12 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                             if (task.isSuccessful()) {
                                 // Sign in success, update UI with the signed-in user's information
                                 Log.d("TEST", "signInWithEmail:success");
-                                helper.user = helper.auth.getCurrentUser();
+                                helper.fetchCurrentUser();
                                 startActivity( new Intent( getApplicationContext(), MainActivity.class ) );
                                 finish();
                                 //updateUI(user);
                             } else {
-                                helper.user = null;
+                                //helper.user = null;
                                 // If sign in fails, display a message to the user.
                                 Log.w("TEST", "signInWithEmail:failure", task.getException());
                                 //showProgress(false);
@@ -372,7 +372,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                             // ...
                         }
                     });
-            return ( helper.user != null );
+            return ( helper.isUserLoggedIn() );
             // TODO: createUser
         }
 
