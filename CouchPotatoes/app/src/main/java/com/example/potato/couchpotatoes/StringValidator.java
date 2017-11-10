@@ -10,8 +10,6 @@ public class StringValidator {
 
     private static final int MIN_PASS_LENGTH = 5;
 
-
-
     /**
      * Default Constructor
      */
