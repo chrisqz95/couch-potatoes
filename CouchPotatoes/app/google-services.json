@@ -1,0 +1,99 @@
+{
+  "project_info": {
+    "project_number": "522024298468",
+    "firebase_url": "https://couch-potatoes-47758.firebaseio.com",
+    "project_id": "couch-potatoes-47758",
+    "storage_bucket": "couch-potatoes-47758.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:522024298468:android:63f0d573e7b9518f",
+        "android_client_info": {
+          "package_name": "com.example.potato.couchpotatoes"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "522024298468-49kjeupurtiarikg6aih1jei1s83gehs.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.potato.couchpotatoes",
+            "certificate_hash": "9fc475afb09607501b04cab44da6c0030ed700dc"
+          }
+        },
+        {
+          "client_id": "522024298468-anv24j4fi447cboctp52r475i4l3uvop.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAOQLTdZYbo4LyPdWO5Av1PUAQ3KyCehOw"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "522024298468-anv24j4fi447cboctp52r475i4l3uvop.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:522024298468:android:bf40f5f17095815f",
+        "android_client_info": {
+          "package_name": "com.example.cse110.couchpotatostuff"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "522024298468-vjcaqnbamqus60i69j3uk0a4fusl4ddi.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.cse110.couchpotatostuff",
+            "certificate_hash": "b72c442f9274b960ab349ed6d1c92b04fa4af9a6"
+          }
+        },
+        {
+          "client_id": "522024298468-anv24j4fi447cboctp52r475i4l3uvop.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAOQLTdZYbo4LyPdWO5Av1PUAQ3KyCehOw"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "522024298468-anv24j4fi447cboctp52r475i4l3uvop.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
