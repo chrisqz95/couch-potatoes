@@ -42,6 +42,7 @@ public class MessageActivity extends AppCompatActivity {
     String userID, chatRoom, messageID, timestamp, message;
     TextView userName;
     Map<String,String> messageIDs = new HashMap<>();
+    Map<String,String> messageSenders = new HashMap<>();
     DialogInterface.OnClickListener dialogClickListener;
     DialogInterface.OnClickListener dialogClickListener3;
 
@@ -141,6 +142,7 @@ public class MessageActivity extends AppCompatActivity {
                             listItems.add( listItem );
                             listAdapter.notifyDataSetChanged();
                             messageIDs.put( listItem, dataSnapshot.getKey() );
+                            messageSenders.put( dataSnapshot.getKey(), from );
                             Log.d( "TEST", listItem + " " + dataSnapshot.getKey() );
                         }
 
@@ -288,9 +290,12 @@ public class MessageActivity extends AppCompatActivity {
                     }
                 };
 
-                AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext());
-                builder.setMessage( message ).setPositiveButton("Edit", dialogClickListener2)
-                        .setNegativeButton("Delete", dialogClickListener2).setNeutralButton( "Cancel", dialogClickListener2).show();
+                // Only alter message if current user is the sender
+                if ( messageSenders.get( messageIDs.get( message ) ).equals( (String) getIntent().getExtras().get( "userName" ) ) ) {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext());
+                    builder.setMessage(message).setPositiveButton("Edit", dialogClickListener2)
+                            .setNegativeButton("Delete", dialogClickListener2).setNeutralButton("Cancel", dialogClickListener2).show();
+                }
             }
         });
     }
