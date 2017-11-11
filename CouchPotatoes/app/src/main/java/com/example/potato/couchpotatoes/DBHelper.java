@@ -7,6 +7,8 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.*;
 import com.google.firebase.database.*;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Queue;
@@ -503,6 +505,10 @@ public class DBHelper {
 
     public String getNewChildKey( String path ) {
         return db.getReference( path ).push().getKey();
+    }
+
+    public String getNewTimestamp() {
+        return (String) (new SimpleDateFormat( "yyyy-MM-dd HH:mm:ss" ).format( new Date()));
     }
 
     public String getUserPath() {

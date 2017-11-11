@@ -15,4 +15,6 @@
     </string>
     <string name="title_activity_login2">Sign in</string>
     <string name="title_activity_main">MainActivity</string>
+    <string name="title_activity_chat_room">ChatRoomActivity</string>
+    <string name="title_activity_message">MessageActivity</string>
 </resources>

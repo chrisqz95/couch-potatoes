@@ -120,6 +120,9 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         });
         */
 
+        startActivity( new Intent( getApplicationContext(), ChatRoomActivity.class ) );
+        finish();
+
         if ( helper.isUserLoggedIn() ) {
             //Log.d( "TEST", helper.user.toString() );
             startActivity( new Intent( getApplicationContext(), MainActivity.class ) );
