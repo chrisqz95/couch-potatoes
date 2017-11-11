@@ -489,7 +489,7 @@ public class DBHelper {
         Map<String, Object> updates = new HashMap<>();
 
         updates.put( "user_id", userID );
-        updates.put( "name", userID );
+        updates.put( "name", name );
         updates.put( "chat_id", chatID );
         updates.put( "timestamp", timestamp );
         updates.put( "text", text );
