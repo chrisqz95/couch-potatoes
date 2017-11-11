@@ -1,6 +1,7 @@
 package com.example.potato.couchpotatoes;
 
 import android.support.annotation.NonNull;
+import android.util.Log;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -94,6 +95,39 @@ public class DBHelper {
         else {
             return false;
         }
+    }
+
+    public void updateAuthUserProfile( UserProfileChangeRequest changes ) {
+        if ( user != null ) {
+            user.updateProfile(changes)
+                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            if (task.isSuccessful()) {
+                                Log.d("TEST", "User profile updated.");
+                                Log.d("TEST", "User name: " + user.getDisplayName());
+                            }
+                        }
+                    });
+        }
+    }
+
+    public void updateAuthUserDisplayName ( String displayName ) {
+        UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
+                .setDisplayName( displayName )
+                .build();
+
+        updateAuthUserProfile( profileUpdates );
+    }
+
+    public String getAuthUserDisplayName () {
+        if ( user != null ) {
+            return user.getDisplayName();
+        }
+
+        Log.d( "TEST", "User is not logged in! Cannot get display name!" );
+
+        return "";
     }
 
     public boolean isUserLoggedIn() {
