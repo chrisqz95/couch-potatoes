@@ -64,8 +64,17 @@ public class MessageActivity extends AppCompatActivity {
                         String lastName = (String) dataSnapshot.child( "lastName" ).getValue();
 
                         // Get user's name as a single string
+                        String name = helper.getFullName( firstName, middleName, lastName );
+
                         // If null, use userID instead
-                        String name = helper.getFullName( userID, firstName, middleName, lastName );
+                        if ( name.equals( "" ) ) {
+                            if ( userID != null ) {
+                                name = userID.substring(name.length(), name.length() - 8);
+                            }
+                            else {
+                                name = "No name";
+                            }
+                        }
 
                         helper.addToChatMessage( chatRoom, messageID );
                         helper.addToMessage( messageID, userID, name, chatRoom, timestamp, message );

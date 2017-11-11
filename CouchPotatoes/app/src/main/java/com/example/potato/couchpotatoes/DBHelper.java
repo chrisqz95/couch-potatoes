@@ -517,13 +517,12 @@ public class DBHelper {
      * Concatenates first, middle, and last names and returns result.
      * If first, middle, and last names are null, returns userID instead.
      *
-     * @param userID
      * @param firstName
      * @param middleName
      * @param lastName
-     * @return Returns result of concatenating all names. Else returns userID.
+     * @return Returns result of concatenating all names.
      */
-    public String getFullName( String userID, String firstName, String middleName, String lastName ) {
+    public String getFullName( String firstName, String middleName, String lastName ) {
         String name = "";
 
         if ( firstName != null ) {
@@ -536,9 +535,6 @@ public class DBHelper {
         if ( lastName != null ) {
             name += " ";
             name += lastName;
-        }
-        if ( name.equals( "" ) ) {
-            name = userID.substring( name.length(), name.length() - 8 );
         }
 
         return name;
