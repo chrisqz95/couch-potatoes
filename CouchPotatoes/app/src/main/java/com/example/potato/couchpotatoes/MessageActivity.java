@@ -42,14 +42,10 @@ public class MessageActivity extends AppCompatActivity {
 
         userID = (String) getIntent().getExtras().get( "userID" );
         chatRoom = (String) getIntent().getExtras().get( "chatID" );
-        //firstName = (String) getIntent().getExtras().get( "firstName" );
-        //middleName = (String) getIntent().getExtras().get( "middleName" );
-        //lastName = (String) getIntent().getExtras().get( "lastName" );
 
-        chatConversation.setText( "" );
+        //chatConversation.setText( "" );
 
-        //Log.d( "TEST", userID );
-
+        // Add event handler to submit a new message to Firebase upon clicking the Send button
         sendButton.setOnClickListener( new View.OnClickListener() {
             @Override
             public void onClick( View view ) {
@@ -57,10 +53,9 @@ public class MessageActivity extends AppCompatActivity {
                 timestamp = helper.getNewTimestamp();
                 message = inputMessage.getText().toString();
 
-                inputMessage.setText( "" );
+                //inputMessage.setText( "" );
 
-                //helper.addToChatMessage( chatRoom, messageID );
-                //helper.addToMessage( messageID, userID, chatRoom, timestamp, message );
+                // Fetch the user's name from Firebase and attach user's name to message
                 helper.db.getReference( helper.getUserPath() + userID ).addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
@@ -69,13 +64,9 @@ public class MessageActivity extends AppCompatActivity {
                         String lastName = (String) dataSnapshot.child( "lastName" ).getValue();
 
                         String name = "";
-                        /*
-                        name = name.concat( firstName );
-                        name = name.concat( " " );
-                        name = name.concat( middleName );
-                        name = name.concat( " " );
-                        name = name.concat( lastName );
-                        */
+
+                        // Get user's name as a single string
+                        // If null, use userID instead
                         if ( firstName != null ) {
                             name += firstName;
                         }
@@ -87,28 +78,23 @@ public class MessageActivity extends AppCompatActivity {
                             name += " ";
                             name += lastName;
                         }
+                        if ( name == null ) {
+                            name = userID.substring( name.length(), name.length() - 8 );
+                        }
 
                         helper.addToChatMessage( chatRoom, messageID );
-                        helper.addToMessage( messageID, name, chatRoom, timestamp, message );
+                        helper.addToMessage( messageID, userID, name, chatRoom, timestamp, message );
                     }
 
                     @Override
                     public void onCancelled(DatabaseError databaseError) {
-
+                        Log.d( "TEST", databaseError.toString() );
                     }
                 });
             }
         });
 
-        /*
-        inputMessage.setOnClickListener( new View.OnClickListener() {
-            @Override
-            public void onClick( View view ) {
-                inputMessage.setText( "" );
-            }
-        });
-        */
-
+        // Add event handler to fetch and display all messages in the current chat
         helper.db.getReference( helper.getChatMessagePath() + chatRoom ).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -119,10 +105,11 @@ public class MessageActivity extends AppCompatActivity {
 
                     chatConversation.setText( "" );
 
+                    // Fetch all information corresponding to the current message
                     helper.db.getReference( helper.getMessagePath() + messageID ).addValueEventListener(new ValueEventListener() {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
-                            String from = (String) dataSnapshot.child( "user_id" ).getValue();
+                            String from = (String) dataSnapshot.child( "name" ).getValue();
                             String chatID = (String) dataSnapshot.child( "chat_id" ).getValue();
                             String message = (String) dataSnapshot.child( "text" ).getValue();
                             String timestamp = (String) dataSnapshot.child( "timestamp" ).getValue();
@@ -132,7 +119,7 @@ public class MessageActivity extends AppCompatActivity {
 
                         @Override
                         public void onCancelled(DatabaseError databaseError) {
-
+                            Log.d( "TEST", databaseError.toString() );
                         }
                     });
                 }
@@ -140,21 +127,8 @@ public class MessageActivity extends AppCompatActivity {
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-
+                Log.d( "TEST", databaseError.toString() );
             }
         });
-
     }
-
-    /*
-    private void appendToChatConversation(DataSnapshot snapshot) {
-        Iterator<DataSnapshot> messages = snapshot.getChildren().iterator();
-
-        while ( messages.hasNext() ) {
-            String message = (String) messages.next().toString();
-            chatConversation.append( userID + ": " + message );
-        }
-    }
-    */
-
 }

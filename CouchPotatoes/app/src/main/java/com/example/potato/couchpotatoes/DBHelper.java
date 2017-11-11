@@ -277,8 +277,9 @@ public class DBHelper {
         return checkExists( getChatMessagePath() + chatID + "/" + messageID );
     }
 
-    public boolean addToMessage( String messageID, String userID, String chatID, String timestamp, String text ) {
+    public boolean addToMessage( String messageID, String userID, String name, String chatID, String timestamp, String text ) {
         db.getReference( getMessagePath() ).child( messageID ).child( "user_id" ).setValue( userID );
+        db.getReference( getMessagePath() ).child( messageID ).child( "name" ).setValue( name );
         db.getReference( getMessagePath() ).child( messageID ).child( "chat_id" ).setValue( chatID );
         db.getReference( getMessagePath() ).child( messageID ).child( "timestamp" ).setValue( timestamp );
         db.getReference( getMessagePath() ).child( messageID ).child( "text" ).setValue( text );
@@ -484,10 +485,11 @@ public class DBHelper {
         db.getReference( getPartnerPreferencePath() ).child( userID ).updateChildren( updates );
     }
 
-    public void updateMessage( String messageID, String userID, String chatID, String timestamp, String text ) {
+    public void updateMessage( String messageID, String userID, String name, String chatID, String timestamp, String text ) {
         Map<String, Object> updates = new HashMap<>();
 
         updates.put( "user_id", userID );
+        updates.put( "name", userID );
         updates.put( "chat_id", chatID );
         updates.put( "timestamp", timestamp );
         updates.put( "text", text );

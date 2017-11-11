@@ -58,6 +58,6 @@
             android:lineSpacingExtra="12sp"
             android:textAlignment="textStart"
             android:textSize="18sp"
-            android:hint="Message will appear here ..."/>
+            android:hint="Messages will appear here ..."/>
     </ScrollView>
 </android.support.constraint.ConstraintLayout>

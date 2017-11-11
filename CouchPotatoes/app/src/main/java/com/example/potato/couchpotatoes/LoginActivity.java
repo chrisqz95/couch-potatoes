@@ -383,16 +383,19 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         @Override
         protected Boolean doInBackground(Void... params) {
             //return helper.loginUser(mEmail, mPassword);
+            // Attempt the login using the passed credentials
             helper.auth.signInWithEmailAndPassword(mEmail, mPassword)
                     .addOnCompleteListener(LoginActivity.this, new OnCompleteListener<AuthResult>() {
                         @Override
                         public void onComplete(@NonNull Task<AuthResult> task) {
                             showProgress(false);
 
+                            // Continue to main activity upon successful login
+                            // Else, notify user of unsuccessful login
                             if (task.isSuccessful()) {
                                 // Sign in success, update UI with the signed-in user's information
                                 Log.d("TEST", "signInWithEmail:success");
-                                helper.fetchCurrentUser();
+                                //helper.fetchCurrentUser();
                                 /*
                                 CurrentUser newUser = new CurrentUser(
                                         "test@test.com", helper.auth.getUid(), "Tom", null, "Cat", "1/1/1980",
@@ -405,27 +408,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                                 */
                                 Log.d( "TEST", "User " + helper.auth.getUid() + " signed in successfully." );
                                 startActivity( new Intent( getApplicationContext(), MainActivity.class ) );
-                                //Intent intent = new Intent( getApplicationContext(), MainActivity.class );
-                                //intent.putExtra( "firstName", )
                                 finish();
-                                /*
-                                helper.db.getReference( helper.getUserPath() + helper.auth.getUid() ).addValueEventListener(new ValueEventListener() {
-                                    @Override
-                                    public void onDataChange(DataSnapshot dataSnapshot) {
-                                        Intent intent = new Intent( getApplicationContext(), MainActivity.class );
-                                        intent.putExtra( "firstName", (String) dataSnapshot.child( "first_name" ).getValue() );
-                                        intent.putExtra( "middleName", (String) dataSnapshot.child( "middle_name" ).getValue() );
-                                        intent.putExtra( "lastName", (String) dataSnapshot.child( "last_name" ).getValue() );
-                                        startActivity( intent );
-                                        finish();
-                                    }
-
-                                    @Override
-                                    public void onCancelled(DatabaseError databaseError) {
-
-                                    }
-                                });
-                                */
                                 //updateUI(user);
                             } else {
                                 //helper.user = null;
@@ -450,6 +433,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         protected void onPostExecute(final Boolean success) {
             mAuthTask = null;
 
+            /*
             if (success) {
                 //finish();
                 //startActivity( new Intent( getApplicationContext(), MainActivity.class ) );
@@ -458,6 +442,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 //mPasswordView.setError(getString(R.string.error_incorrect_password));
                 //mPasswordView.requestFocus();
             }
+            */
         }
 
         @Override

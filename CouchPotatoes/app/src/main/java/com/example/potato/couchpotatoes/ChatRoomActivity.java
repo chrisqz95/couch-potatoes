@@ -44,12 +44,14 @@ public class ChatRoomActivity extends AppCompatActivity {
             }
         });
         */
+
         listView = (ListView) findViewById(R.id.chatList);
         listAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, listItems);
         listView.setAdapter( listAdapter );
 
         //helper = new DBHelper();
 
+        // Get and display chatIDs of all chats the user belongs to
         helper.db.getReference( helper.getUserChatPath() + userID ).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -66,28 +68,20 @@ public class ChatRoomActivity extends AppCompatActivity {
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-
+                Log.d( "TEST", databaseError.toString() );
             }
         });
 
+        // Add event handler to begin MessageActivity corresponding to the clicked chatID
         listView.setOnItemClickListener( new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick( AdapterView<?> parent, View view, int position, long id ) {
                 String chatID = String.valueOf( parent.getItemAtPosition( position ));
-                //String firstName = (String) getIntent().getExtras().get( "firstName" );
-                //String middleName = (String) getIntent().getExtras().get( "middleName" );
-                //String lastName = (String) getIntent().getExtras().get( "lastName" );
-                //String userID = "1"; // TODO change to use DBHelper after logging in
 
-                //Log.d( "TEST", "CLIKED " + chatID );
                 Intent intent = new Intent( getApplicationContext(), MessageActivity.class );
                 intent.putExtra( "userID",  userID );
                 intent.putExtra( "chatID", chatID );
-                //Log.d( "TEST", userID );
-                //Log.d( "TEST", helper.auth.getUid() );
-                //intent.putExtra( "firstName", firstName );
-                //intent.putExtra( "middleName", middleName );
-                //intent.putExtra( "lastName", lastName );
+
                 startActivity( intent );
                 //finish();
             }
