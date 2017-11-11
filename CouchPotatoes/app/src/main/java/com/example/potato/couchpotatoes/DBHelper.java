@@ -513,6 +513,27 @@ public class DBHelper {
         return (String) (new SimpleDateFormat( "yyyy-MM-dd  HH:mm:ss" ).format( new Date()));
     }
 
+    public String getFullName( String userID, String firstName, String middleName, String lastName ) {
+        String name = "";
+
+        if ( firstName != null ) {
+            name += firstName;
+        }
+        if ( middleName != null ) {
+            name += " ";
+            name += middleName;
+        }
+        if ( lastName != null ) {
+            name += " ";
+            name += lastName;
+        }
+        if ( name.equals( "" ) ) {
+            name = userID.substring( name.length(), name.length() - 8 );
+        }
+
+        return name;
+    }
+
     public String getUserPath() {
         return userPath;
     }

@@ -43,11 +43,14 @@ public class MainActivity extends AppCompatActivity {
                     String firstName = (String) dataSnapshot.child( "firstName" ).getValue();
                     String middleName = (String) dataSnapshot.child( "middleName" ).getValue();
                     String lastName = (String) dataSnapshot.child( "lastName" ).getValue();
+                    String userID = helper.auth.getUid();
 
-                    String name = "";
+                    //String name = "";
+                    String name = helper.getFullName( userID, firstName, middleName, lastName );
 
                     // Get user's name as a single string
                     // If null, use userID instead
+                    /*
                     if ( firstName != null ) {
                         name += firstName;
                     }
@@ -62,6 +65,7 @@ public class MainActivity extends AppCompatActivity {
                     if ( name == null ) {
                         name = helper.auth.getUid() .substring( name.length(), name.length() - 8 );
                     }
+                    */
                     userName.setText( name );
                 }
 
