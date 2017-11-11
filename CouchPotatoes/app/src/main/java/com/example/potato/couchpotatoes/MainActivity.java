@@ -48,7 +48,7 @@ public class MainActivity extends AppCompatActivity {
                     // Get user's name as a single string
                     // If null, use userID instead
                     String name = helper.getFullName( userID, firstName, middleName, lastName );
-                    
+
                     userName.setText( name );
                 }
 

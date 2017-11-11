@@ -513,6 +513,16 @@ public class DBHelper {
         return (String) (new SimpleDateFormat( "yyyy-MM-dd  HH:mm:ss" ).format( new Date()));
     }
 
+    /**
+     * Concatenates first, middle, and last names and returns result.
+     * If first, middle, and last names are null, returns userID instead.
+     *
+     * @param userID
+     * @param firstName
+     * @param middleName
+     * @param lastName
+     * @return Returns result of concatenating all names. Else returns userID.
+     */
     public String getFullName( String userID, String firstName, String middleName, String lastName ) {
         String name = "";
 
