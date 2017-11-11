@@ -57,6 +57,9 @@ public class ChatRoomActivity extends AppCompatActivity {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Iterator<DataSnapshot> elems = dataSnapshot.getChildren().iterator();
 
+                // Make sure not to display already existing chatIDs more than once
+                listItems.clear();
+
                 while ( elems.hasNext() ) {
                     String nextElem = elems.next().getKey();
                     listItems.add( nextElem );
