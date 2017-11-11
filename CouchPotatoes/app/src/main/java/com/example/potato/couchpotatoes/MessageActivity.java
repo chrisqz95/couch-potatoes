@@ -114,7 +114,7 @@ public class MessageActivity extends AppCompatActivity {
                             String message = (String) dataSnapshot.child( "text" ).getValue();
                             String timestamp = (String) dataSnapshot.child( "timestamp" ).getValue();
 
-                            chatConversation.append( "  " + from + ": " + message + "\n" );
+                            chatConversation.append( "  " + from + "    " + timestamp + ":\n" + "  " + message + "\n" );
                         }
 
                         @Override

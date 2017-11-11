@@ -510,7 +510,7 @@ public class DBHelper {
     }
 
     public String getNewTimestamp() {
-        return (String) (new SimpleDateFormat( "yyyy-MM-dd HH:mm:ss" ).format( new Date()));
+        return (String) (new SimpleDateFormat( "yyyy-MM-dd  HH:mm:ss" ).format( new Date()));
     }
 
     public String getUserPath() {
