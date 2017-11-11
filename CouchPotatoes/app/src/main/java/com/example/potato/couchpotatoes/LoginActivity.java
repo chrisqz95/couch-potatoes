@@ -120,8 +120,9 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         });
         */
 
-        startActivity( new Intent( getApplicationContext(), ChatRoomActivity.class ) );
-        finish();
+        //startActivity( new Intent( getApplicationContext(), ChatRoomActivity.class ));
+        //finish();
+        //helper.addToUserChat( helper.auth.getUid(), "c1" );
 
         if ( helper.isUserLoggedIn() ) {
             //Log.d( "TEST", helper.user.toString() );
@@ -383,7 +384,27 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                                 Log.d("TEST", "signInWithEmail:success");
                                 helper.fetchCurrentUser();
                                 startActivity( new Intent( getApplicationContext(), MainActivity.class ) );
+                                //Intent intent = new Intent( getApplicationContext(), MainActivity.class );
+                                //intent.putExtra( "firstName", )
                                 finish();
+                                /*
+                                helper.db.getReference( helper.getUserPath() + helper.auth.getUid() ).addValueEventListener(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(DataSnapshot dataSnapshot) {
+                                        Intent intent = new Intent( getApplicationContext(), MainActivity.class );
+                                        intent.putExtra( "firstName", (String) dataSnapshot.child( "first_name" ).getValue() );
+                                        intent.putExtra( "middleName", (String) dataSnapshot.child( "middle_name" ).getValue() );
+                                        intent.putExtra( "lastName", (String) dataSnapshot.child( "last_name" ).getValue() );
+                                        startActivity( intent );
+                                        finish();
+                                    }
+
+                                    @Override
+                                    public void onCancelled(DatabaseError databaseError) {
+
+                                    }
+                                });
+                                */
                                 //updateUI(user);
                             } else {
                                 //helper.user = null;

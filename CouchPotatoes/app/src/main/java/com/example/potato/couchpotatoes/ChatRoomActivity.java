@@ -21,10 +21,11 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 public class ChatRoomActivity extends AppCompatActivity {
+    DBHelper helper = new DBHelper();
     ArrayList<String> listItems = new ArrayList<>();
     ArrayAdapter<String> listAdapter;
     ListView listView;
-    String userID = "1";
+    String userID = helper.auth.getUid();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,7 +48,7 @@ public class ChatRoomActivity extends AppCompatActivity {
         listAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, listItems);
         listView.setAdapter( listAdapter );
 
-        DBHelper helper = new DBHelper();
+        //helper = new DBHelper();
 
         helper.db.getReference( helper.getUserChatPath() + userID ).addValueEventListener(new ValueEventListener() {
             @Override
@@ -73,14 +74,20 @@ public class ChatRoomActivity extends AppCompatActivity {
             @Override
             public void onItemClick( AdapterView<?> parent, View view, int position, long id ) {
                 String chatID = String.valueOf( parent.getItemAtPosition( position ));
-                String userID = "1"; // TODO change to use DBHelper after logging in
+                //String firstName = (String) getIntent().getExtras().get( "firstName" );
+                //String middleName = (String) getIntent().getExtras().get( "middleName" );
+                //String lastName = (String) getIntent().getExtras().get( "lastName" );
+                //String userID = "1"; // TODO change to use DBHelper after logging in
 
                 //Log.d( "TEST", "CLIKED " + chatID );
                 Intent intent = new Intent( getApplicationContext(), MessageActivity.class );
                 intent.putExtra( "userID",  userID );
                 intent.putExtra( "chatID", chatID );
+                //intent.putExtra( "firstName", firstName );
+                //intent.putExtra( "middleName", middleName );
+                //intent.putExtra( "lastName", lastName );
                 startActivity( intent );
-                finish();
+                //finish();
             }
         });
     }

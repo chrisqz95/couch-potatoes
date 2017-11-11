@@ -26,7 +26,7 @@ public class MessageActivity extends AppCompatActivity {
     Button sendButton;
     EditText inputMessage;
     TextView chatConversation;
-    String userID, chatRoom;
+    String userID, chatRoom, firstName, middleName, lastName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,6 +41,9 @@ public class MessageActivity extends AppCompatActivity {
 
         userID = (String) getIntent().getExtras().get( "userID" );
         chatRoom = (String) getIntent().getExtras().get( "chatID" );
+        //firstName = (String) getIntent().getExtras().get( "firstName" );
+        //middleName = (String) getIntent().getExtras().get( "middleName" );
+        //lastName = (String) getIntent().getExtras().get( "lastName" );
 
         chatConversation.setText( "" );
 
@@ -74,6 +77,8 @@ public class MessageActivity extends AppCompatActivity {
 
                 while ( messages.hasNext() ) {
                     String messageID = messages.next().getKey();
+
+                    chatConversation.setText( "" );
 
                     helper.db.getReference( helper.getMessagePath() + messageID ).addValueEventListener(new ValueEventListener() {
                         @Override

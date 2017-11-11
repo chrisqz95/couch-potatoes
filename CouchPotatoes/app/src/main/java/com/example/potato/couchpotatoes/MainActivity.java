@@ -15,6 +15,7 @@ public class MainActivity extends AppCompatActivity {
     private DBHelper helper;
     private android.widget.TextView userID;
     private android.widget.Button logout;
+    private android.widget.Button chat;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -25,6 +26,8 @@ public class MainActivity extends AppCompatActivity {
         helper = new DBHelper();
 
         userID = (android.widget.TextView) findViewById(R.id.userID);
+        logout = (android.widget.Button) findViewById(R.id.logout);
+        chat = (android.widget.Button) findViewById(R.id.viewChats);
 
         if ( helper.isUserLoggedIn() ) {
             userID.setText( helper.user.getEmail() );
@@ -32,8 +35,6 @@ public class MainActivity extends AppCompatActivity {
         else {
             userID.setText("Not logged in ...");
         }
-
-        logout = findViewById(R.id.logout);
 
         logout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -44,6 +45,24 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        chat.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity( new Intent( getApplicationContext(), ChatRoomActivity.class ) );
+                finish();
+                //String firstName = (String) getIntent().getExtras().get( "firstName" );
+                //String middleName = (String) getIntent().getExtras().get( "middleName" );
+                //String lastName = (String) getIntent().getExtras().get( "lastName" );
+
+                //Intent intent = new Intent( getApplicationContext(), ChatRoomActivity.class );
+                //intent.putExtra( "firstName", firstName );
+                //intent.putExtra( "middleName", middleName );
+                //intent.putExtra( "lastName", lastName );
+                //startActivity( intent );
+            }
+        });
+
+        /*
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -52,6 +71,7 @@ public class MainActivity extends AppCompatActivity {
                         .setAction("Action", null).show();
             }
         });
+        */
     }
 
 }
