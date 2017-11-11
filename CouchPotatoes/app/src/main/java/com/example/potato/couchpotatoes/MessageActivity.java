@@ -43,6 +43,7 @@ public class MessageActivity extends AppCompatActivity {
     TextView userName;
     Map<String,String> messageIDs = new HashMap<>();
     Map<String,String> messageSenders = new HashMap<>();
+    Map<String,String> messageText = new HashMap<>();
     DialogInterface.OnClickListener dialogClickListener;
     DialogInterface.OnClickListener dialogClickListener3;
 
@@ -146,6 +147,7 @@ public class MessageActivity extends AppCompatActivity {
                             listAdapter.notifyDataSetChanged();
                             messageIDs.put( listItem, dataSnapshot.getKey() );
                             messageSenders.put( dataSnapshot.getKey(), from );
+                            messageText.put( dataSnapshot.getKey(), message );
                             Log.d( "TEST", listItem + " " + dataSnapshot.getKey() );
                         }
 
@@ -257,6 +259,7 @@ public class MessageActivity extends AppCompatActivity {
                                 final EditText input = new EditText(listView.getContext());
 // Specify the type of input expected; this, for example, sets the input as a password, and will mask the text
                                 input.setInputType(InputType.TYPE_CLASS_TEXT);
+                                input.setText( messageText.get( messageIDs.get( message) ) );
                                 builder3.setView(input);
 
 // Set up the buttons
