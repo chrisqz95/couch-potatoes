@@ -6,6 +6,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -26,7 +27,7 @@ public class MessageActivity extends AppCompatActivity {
     Button sendButton;
     EditText inputMessage;
     TextView chatConversation;
-    String userID, chatRoom, firstName, middleName, lastName;
+    String userID, chatRoom, messageID, timestamp, message;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,17 +48,55 @@ public class MessageActivity extends AppCompatActivity {
 
         chatConversation.setText( "" );
 
+        //Log.d( "TEST", userID );
+
         sendButton.setOnClickListener( new View.OnClickListener() {
             @Override
             public void onClick( View view ) {
-                String messageID = helper.getNewChildKey( helper.getChatMessagePath() + chatRoom );
-                String timestamp = helper.getNewTimestamp();
-                String message = inputMessage.getText().toString();
+                messageID = helper.getNewChildKey( helper.getChatMessagePath() + chatRoom );
+                timestamp = helper.getNewTimestamp();
+                message = inputMessage.getText().toString();
 
                 inputMessage.setText( "" );
 
-                helper.addToChatMessage( chatRoom, messageID );
-                helper.addToMessage( messageID, userID, chatRoom, timestamp, message );
+                //helper.addToChatMessage( chatRoom, messageID );
+                //helper.addToMessage( messageID, userID, chatRoom, timestamp, message );
+                helper.db.getReference( helper.getUserPath() + userID ).addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        String firstName = (String) dataSnapshot.child( "firstName" ).getValue();
+                        String middleName = (String) dataSnapshot.child( "middleName" ).getValue();
+                        String lastName = (String) dataSnapshot.child( "lastName" ).getValue();
+
+                        String name = "";
+                        /*
+                        name = name.concat( firstName );
+                        name = name.concat( " " );
+                        name = name.concat( middleName );
+                        name = name.concat( " " );
+                        name = name.concat( lastName );
+                        */
+                        if ( firstName != null ) {
+                            name += firstName;
+                        }
+                        if ( middleName != null ) {
+                            name += " ";
+                            name += middleName;
+                        }
+                        if ( lastName != null ) {
+                            name += " ";
+                            name += lastName;
+                        }
+
+                        helper.addToChatMessage( chatRoom, messageID );
+                        helper.addToMessage( messageID, name, chatRoom, timestamp, message );
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
             }
         });
 

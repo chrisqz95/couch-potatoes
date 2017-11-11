@@ -83,6 +83,8 @@ public class ChatRoomActivity extends AppCompatActivity {
                 Intent intent = new Intent( getApplicationContext(), MessageActivity.class );
                 intent.putExtra( "userID",  userID );
                 intent.putExtra( "chatID", chatID );
+                //Log.d( "TEST", userID );
+                //Log.d( "TEST", helper.auth.getUid() );
                 //intent.putExtra( "firstName", firstName );
                 //intent.putExtra( "middleName", middleName );
                 //intent.putExtra( "lastName", lastName );

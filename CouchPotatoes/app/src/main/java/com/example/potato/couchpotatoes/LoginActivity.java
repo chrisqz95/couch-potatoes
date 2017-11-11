@@ -82,13 +82,14 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         helper = new DBHelper();
 
         /* COMMENTED CODE BELOW USED FOR TESTING. WILL REMOVE WHEN DONE TESTING */
-        /*
+
+                /*
         CurrentUser newUser = new CurrentUser(
                 "test@test.com", helper.getNewChildKey( helper.getUserPath() ), "Tom", null, "Cat", "1/1/1980",
                 "M", null, null, null, "TEST BIO", 0.0, 0.0,
                 false, false
         );
-
+        helper.addNewUser( newUser );
 
         CurrentUser newUser2 = new CurrentUser(
                 "test2@test.com", helper.getNewChildKey( helper.getUserPath() ), "Tim", null, "Jones", "12/1/1985",
@@ -96,7 +97,15 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 false, false
         );
         */
-        //helper.createUser( "test@test.com", "cse1102017" );
+        /*
+        helper.createUser( "test@test.com", "cse1102017" );
+        CurrentUser newUser = new CurrentUser(
+                "test@test.com", helper.auth.getUid(), "Tom", null, "Cat", "1/1/1980",
+                "M", null, null, null, "TEST BIO", 0.0, 0.0,
+                false, false
+        );
+        helper.addNewUser( newUser );
+        */
         /*
         boolean test = false;
 
@@ -123,6 +132,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         //startActivity( new Intent( getApplicationContext(), ChatRoomActivity.class ));
         //finish();
         //helper.addToUserChat( helper.auth.getUid(), "c1" );
+        //helper.createUser( "test2@test.com", "cse1102017" );
 
         if ( helper.isUserLoggedIn() ) {
             //Log.d( "TEST", helper.user.toString() );
@@ -383,6 +393,17 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                                 // Sign in success, update UI with the signed-in user's information
                                 Log.d("TEST", "signInWithEmail:success");
                                 helper.fetchCurrentUser();
+                                /*
+                                CurrentUser newUser = new CurrentUser(
+                                        "test@test.com", helper.auth.getUid(), "Tom", null, "Cat", "1/1/1980",
+                                        "M", null, null, null, "TEST BIO", 0.0, 0.0,
+                                        false, false
+                                );
+                                helper.addNewUser( newUser );
+                                helper.addToUserChat( helper.auth.getUid(), "c1" );
+                                helper.addToChatUser( "c1", helper.auth.getUid() );
+                                */
+                                Log.d( "TEST", "User " + helper.auth.getUid() + " signed in successfully." );
                                 startActivity( new Intent( getApplicationContext(), MainActivity.class ) );
                                 //Intent intent = new Intent( getApplicationContext(), MainActivity.class );
                                 //intent.putExtra( "firstName", )

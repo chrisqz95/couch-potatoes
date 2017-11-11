@@ -49,7 +49,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 startActivity( new Intent( getApplicationContext(), ChatRoomActivity.class ) );
-                finish();
+                //finish();
                 //String firstName = (String) getIntent().getExtras().get( "firstName" );
                 //String middleName = (String) getIntent().getExtras().get( "middleName" );
                 //String lastName = (String) getIntent().getExtras().get( "lastName" );
