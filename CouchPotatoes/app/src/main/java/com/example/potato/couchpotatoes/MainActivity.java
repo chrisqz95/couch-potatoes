@@ -86,7 +86,10 @@ public class MainActivity extends AppCompatActivity {
         chat.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity( new Intent( getApplicationContext(), ChatRoomActivity.class ) );
+                Intent intent = new Intent( getApplicationContext(), ChatRoomActivity.class );
+                intent.putExtra( "userName", userName.getText() );
+                startActivity( intent );
+                //startActivity( new Intent( getApplicationContext(), ChatRoomActivity.class ) );
                 //finish();
             }
         });

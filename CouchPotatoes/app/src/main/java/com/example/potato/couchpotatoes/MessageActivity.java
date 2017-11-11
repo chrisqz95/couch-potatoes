@@ -28,6 +28,7 @@ public class MessageActivity extends AppCompatActivity {
     EditText inputMessage;
     TextView chatConversation;
     String userID, chatRoom, messageID, timestamp, message;
+    TextView userName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,6 +36,9 @@ public class MessageActivity extends AppCompatActivity {
         setContentView(R.layout.activity_message);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        userName = (android.widget.TextView) findViewById(R.id.userName);
+        userName.setText( (String) getIntent().getExtras().get( "userName" ) );
 
         sendButton = (Button) findViewById(R.id.sendButton);
         inputMessage = (EditText) findViewById(R.id.inputMessage);

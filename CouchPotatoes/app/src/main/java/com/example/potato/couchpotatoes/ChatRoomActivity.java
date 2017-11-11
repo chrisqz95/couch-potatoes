@@ -12,6 +12,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -26,6 +27,7 @@ public class ChatRoomActivity extends AppCompatActivity {
     ArrayAdapter<String> listAdapter;
     ListView listView;
     String userID = helper.auth.getUid();
+    TextView userName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,6 +46,9 @@ public class ChatRoomActivity extends AppCompatActivity {
             }
         });
         */
+
+        userName = (android.widget.TextView) findViewById(R.id.userName);
+        userName.setText( (String) getIntent().getExtras().get( "userName" ) );
 
         listView = (ListView) findViewById(R.id.chatList);
         listAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, listItems);
@@ -84,6 +89,7 @@ public class ChatRoomActivity extends AppCompatActivity {
                 Intent intent = new Intent( getApplicationContext(), MessageActivity.class );
                 intent.putExtra( "userID",  userID );
                 intent.putExtra( "chatID", chatID );
+                intent.putExtra( "userName", (String) getIntent().getExtras().get( "userName" ) );
 
                 startActivity( intent );
                 //finish();
