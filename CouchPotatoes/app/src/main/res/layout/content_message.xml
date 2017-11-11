@@ -55,9 +55,10 @@
             android:id="@+id/chatConversations"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:hint="Messages will appear here ..."
             android:lineSpacingExtra="12sp"
             android:textAlignment="textStart"
             android:textSize="18sp"
-            android:hint="Messages will appear here ..."/>
+            android:visibility="visible" />
     </ScrollView>
 </android.support.constraint.ConstraintLayout>

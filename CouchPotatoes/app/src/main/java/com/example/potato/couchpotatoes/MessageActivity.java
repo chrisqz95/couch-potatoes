@@ -29,6 +29,7 @@ public class MessageActivity extends AppCompatActivity {
     TextView chatConversation;
     String userID, chatRoom, messageID, timestamp, message;
     TextView userName;
+    final int MESSAGE_FETCH_LIMIT = 15;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -93,7 +94,7 @@ public class MessageActivity extends AppCompatActivity {
         });
 
         // Add event handler to fetch and display all messages in the current chat
-        helper.db.getReference( helper.getChatMessagePath() + chatRoom ).addValueEventListener(new ValueEventListener() {
+        helper.db.getReference( helper.getChatMessagePath() + chatRoom ).limitToLast( MESSAGE_FETCH_LIMIT ).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Iterator<DataSnapshot> messages = dataSnapshot.getChildren().iterator();
