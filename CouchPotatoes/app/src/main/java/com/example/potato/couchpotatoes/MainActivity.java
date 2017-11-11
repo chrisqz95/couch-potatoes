@@ -56,13 +56,14 @@ public class MainActivity extends AppCompatActivity {
 
                     // If null, use userID instead
                     if ( name.equals( "" ) ) {
-                        if ( userID != null ) {
-                            name = userID.substring(name.length(), name.length() - USERID_SUBSTRING_LENGTH );
+                        if ( userID != null && !userID.equals( "" ) ) {
+                            //name = userID.substring(userID.length(), userID.length() - USERID_SUBSTRING_LENGTH );
+                            name = userID.substring( 0, USERID_SUBSTRING_LENGTH );
                         }
                         else {
                             name = "No name";
                         }
-                    } else if ( helper.getAuthUserDisplayName().equals( "" ) ){
+                    } else if ( helper.getAuthUserDisplayName() != null && helper.getAuthUserDisplayName().equals( "" ) ){
                         helper.updateAuthUserDisplayName( name );
                     }
 
@@ -95,7 +96,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent( getApplicationContext(), ChatRoomActivity.class );
-                intent.putExtra( "userName", userName.getText() );
+                //intent.putExtra( "userName", userName.getText() );
                 startActivity( intent );
                 //startActivity( new Intent( getApplicationContext(), ChatRoomActivity.class ) );
                 //finish();

@@ -31,6 +31,7 @@ public class ChatRoomActivity extends AppCompatActivity {
     String userID = helper.auth.getUid();
     TextView userName;
     Map<String,String> chats = new HashMap<>();
+    String displayName = helper.getAuthUserDisplayName();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,7 +52,8 @@ public class ChatRoomActivity extends AppCompatActivity {
         */
 
         userName = (android.widget.TextView) findViewById(R.id.userName);
-        userName.setText( (String) getIntent().getExtras().get( "userName" ) );
+        //userName.setText( (String) getIntent().getExtras().get( "userName" ) );
+        userName.setText( displayName );
 
         listView = (ListView) findViewById(R.id.chatList);
         listAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, listItems);
@@ -122,9 +124,9 @@ public class ChatRoomActivity extends AppCompatActivity {
                 //Log.d( "TEST", chatID );
 
                 Intent intent = new Intent( getApplicationContext(), MessageActivity.class );
-                intent.putExtra( "userID",  userID );
+                //intent.putExtra( "userID",  userID );
                 intent.putExtra( "chatID", chatID );
-                intent.putExtra( "userName", (String) getIntent().getExtras().get( "userName" ) );
+                //intent.putExtra( "userName", displayName );
 
                 startActivity( intent );
                 //finish();

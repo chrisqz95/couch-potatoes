@@ -39,7 +39,7 @@ public class MessageActivity extends AppCompatActivity {
     ArrayList<String> listItems = new ArrayList<>();
     ArrayAdapter<String> listAdapter;
     ListView listView;
-    String userID, chatRoom, messageID, timestamp, message;
+    String userID, chatRoom, displayName, messageID, timestamp, message;
     TextView userName;
     Map<String,String> messageIDs = new HashMap<>();
     Map<String,String> messageSenders = new HashMap<>();
@@ -55,8 +55,11 @@ public class MessageActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        displayName = helper.getAuthUserDisplayName();
+
         userName = (android.widget.TextView) findViewById(R.id.userName);
-        userName.setText( (String) getIntent().getExtras().get( "userName" ) );
+        //userName.setText( (String) getIntent().getExtras().get( "userName" ) );
+        userName.setText( displayName );
 
         sendButton = (Button) findViewById(R.id.sendButton);
         inputMessage = (EditText) findViewById(R.id.inputMessage);
@@ -67,7 +70,7 @@ public class MessageActivity extends AppCompatActivity {
         listAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, listItems);
         listView.setAdapter( listAdapter );
 
-        userID = (String) getIntent().getExtras().get( "userID" );
+        userID = helper.auth.getUid();
         chatRoom = (String) getIntent().getExtras().get( "chatID" );
 
         //chatConversation.setText( "" );
@@ -221,7 +224,7 @@ public class MessageActivity extends AppCompatActivity {
                             case DialogInterface.BUTTON_POSITIVE:
                                 //Yes button clicked
                                 Log.d( "TEST", "YES" );
-                                helper.updateMessage( messageIDs.get( message ), helper.auth.getUid(), (String) getIntent().getExtras().get( "userName" ), chatRoom, helper.getNewTimestamp(), "New message" );
+                                helper.updateMessage( messageIDs.get( message ), helper.auth.getUid(), displayName, chatRoom, helper.getNewTimestamp(), "New message" );
                                 break;
 
                             case DialogInterface.BUTTON_NEGATIVE:
@@ -261,7 +264,7 @@ public class MessageActivity extends AppCompatActivity {
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
                                         String newMessage = input.getText().toString();
-                                        helper.updateMessage( messageIDs.get( message ), helper.auth.getUid(), (String) getIntent().getExtras().get( "userName" ), chatRoom, helper.getNewTimestamp(), newMessage );
+                                        helper.updateMessage( messageIDs.get( message ), helper.auth.getUid(), displayName, chatRoom, helper.getNewTimestamp(), newMessage );
                                     }
                                 });
                                 builder3.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -291,7 +294,7 @@ public class MessageActivity extends AppCompatActivity {
                 };
 
                 // Only alter message if current user is the sender
-                if ( messageSenders.get( messageIDs.get( message ) ).equals( (String) getIntent().getExtras().get( "userName" ) ) ) {
+                if ( messageSenders.get( messageIDs.get( message ) ).equals( displayName ) ) {
                     AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext());
                     builder.setMessage(message).setPositiveButton("Edit", dialogClickListener2)
                             .setNegativeButton("Delete", dialogClickListener2).setNeutralButton("Cancel", dialogClickListener2).show();
