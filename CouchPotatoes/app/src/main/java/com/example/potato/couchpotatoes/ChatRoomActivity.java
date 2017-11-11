@@ -19,7 +19,9 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 
 public class ChatRoomActivity extends AppCompatActivity {
     DBHelper helper = new DBHelper();
@@ -28,6 +30,7 @@ public class ChatRoomActivity extends AppCompatActivity {
     ListView listView;
     String userID = helper.auth.getUid();
     TextView userName;
+    Map<String,String> chats = new HashMap<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,12 +69,41 @@ public class ChatRoomActivity extends AppCompatActivity {
                 listItems.clear();
 
                 while ( elems.hasNext() ) {
-                    String nextElem = elems.next().getKey();
-                    listItems.add( nextElem );
-                    Log.d( "TEST", nextElem );
+                    String chatID = elems.next().getKey();
+                    //listItems.add( nextElem );
+                    //Log.d( "TEST", nextElem );
+                    helper.db.getReference( helper.getChatUserPath() + chatID ).addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            Iterator<DataSnapshot> users = dataSnapshot.getChildren().iterator();
+
+                            String userNames = "";
+
+                            while ( users.hasNext() ) {
+                                if ( !userNames.equals( "" ) ) {
+                                    userNames += ", ";
+                                }
+
+                                String currUser = (String) users.next().getValue();
+                                //Log.d( "TEST", currUser );
+
+                                //listItems.add( currUser );
+                                userNames += currUser;
+                            }
+                            chats.put( userNames, dataSnapshot.getKey() );
+                            //listItems.remove( userNames ); // remove duplicate if present
+                            listItems.add( userNames );
+                            listAdapter.notifyDataSetChanged();
+                        }
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+                            Log.d( "TEST", databaseError.toString() );
+                        }
+                    });
                 }
 
-                listAdapter.notifyDataSetChanged();
+                //listAdapter.notifyDataSetChanged();
             }
 
             @Override
@@ -84,7 +116,10 @@ public class ChatRoomActivity extends AppCompatActivity {
         listView.setOnItemClickListener( new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick( AdapterView<?> parent, View view, int position, long id ) {
-                String chatID = String.valueOf( parent.getItemAtPosition( position ));
+                String chatID = chats.get( String.valueOf( parent.getItemAtPosition( position )) );
+
+                //Log.d( "TEST", String.valueOf( parent.getItemAtPosition( position )) );
+                //Log.d( "TEST", chatID );
 
                 Intent intent = new Intent( getApplicationContext(), MessageActivity.class );
                 intent.putExtra( "userID",  userID );

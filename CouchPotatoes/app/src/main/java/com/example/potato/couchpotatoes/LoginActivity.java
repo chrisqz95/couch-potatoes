@@ -403,8 +403,11 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                                         false, false
                                 );
                                 helper.addNewUser( newUser );
+
                                 helper.addToUserChat( helper.auth.getUid(), "c1" );
-                                helper.addToChatUser( "c1", helper.auth.getUid() );
+                                helper.addToChatUser( "c1", helper.auth.getUid(),
+                                        helper.getFullName( newUser.getFirstName(),
+                                                newUser.getMiddleName(), newUser.getLastName() ));
                                 */
                                 Log.d( "TEST", "User " + helper.auth.getUid() + " signed in successfully." );
                                 startActivity( new Intent( getApplicationContext(), MainActivity.class ) );

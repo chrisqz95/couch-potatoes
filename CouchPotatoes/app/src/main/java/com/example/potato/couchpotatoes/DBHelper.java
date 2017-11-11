@@ -265,8 +265,8 @@ public class DBHelper {
         return checkExists( getUserChatPath() + userID + "/" + chatID );
     }
 
-    public boolean addToChatUser( String chatID, String userID ) {
-        db.getReference( getChatUserPath() ).child( chatID ).child( userID ).setValue( true );
+    public boolean addToChatUser( String chatID, String userID, String userName ) {
+        db.getReference( getChatUserPath() ).child( chatID ).child( userID ).setValue( userName );
 
         return checkExists( getChatUserPath() + chatID + "/" + userID );
     }
