@@ -26,7 +26,7 @@ public class RegistrationActivity extends AppCompatActivity {
     EditText mGender;
     Button submit;
     CurrentUser user;
-    String email;
+    String email, password;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,72 +44,59 @@ public class RegistrationActivity extends AppCompatActivity {
         mGender = (EditText) findViewById(R.id.gender);
         submit = (Button) findViewById(R.id.Submit);
 
-        // TODO Delete user account if registration process is aborted or reopen registration process if
-        // user closes app during registration
-
+        // Attempt to submit user registration information
         submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-                /*
-                if ( attemptRegistration() ) {
-                  startActivity( new Intent( getApplicationContext(), MainActivity.class ) );
-                  finish();
-                }
-                else {
-                    // TODO Could not create User
-                }
-                */
                 attemptRegistration();
             }
         });
-
-        /*
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
-        */
     }
 
     protected void attemptRegistration() {
         email = (String) getIntent().getExtras().get( "email" );
-        String password = (String) getIntent().getExtras().get( "password" );
+        password = (String) getIntent().getExtras().get( "password" );
 
+        // Remove password from Intent extras
+        getIntent().putExtra( "password", "" );
+
+        // Attempt to create a Firebase Authentication user account with the provided login credentials
         helper.auth.createUserWithEmailAndPassword( email, password ).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
 
-        email = helper.auth.getCurrentUser().getEmail();
-        String userID = helper.auth.getUid();
-        String firstName = mFirstName.getText().toString();
-        String middleName = mMiddleName.getText().toString();
-        String lastName = mLastName.getText().toString();
-        String birthDate = mBirthDate.getText().toString();
-        String gender = mGender.getText().toString();
-        String city = "";
-        String state = "";
-        String country = "";
-        String bio = "";
-        String displayName = helper.getFullName( firstName, middleName, lastName );
-        Double latitude = 0.0;
-        Double longitude = 0.0;
-        boolean locked = false;
-        boolean suspended = false;
+                //email = helper.auth.getCurrentUser().getEmail();
 
-        user = new CurrentUser(
-                email, userID, firstName, middleName, lastName, birthDate, gender, city, state, country, bio,
-                latitude, longitude, locked, suspended );
+                // TODO USE STRING VALIDATOR
+                String userID = helper.auth.getUid();
+                String firstName = mFirstName.getText().toString();
+                String middleName = mMiddleName.getText().toString();
+                String lastName = mLastName.getText().toString();
+                String birthDate = mBirthDate.getText().toString();
+                String gender = mGender.getText().toString();
+                String city = "";
+                String state = "";
+                String country = "";
+                String bio = "";
+                String displayName = helper.getFullName( firstName, middleName, lastName );
+                Double latitude = 0.0;
+                Double longitude = 0.0;
+                boolean locked = false;
+                boolean suspended = false;
 
-        //helper.updateAuthUserDisplayName( displayName );
+                // Create new user object
+                user = new CurrentUser(
+                    email, userID, firstName, middleName, lastName, birthDate, gender, city, state, country, bio,
+                    latitude, longitude, locked, suspended );
+
+                //helper.updateAuthUserDisplayName( displayName );
+
+                // Create new Firebase Authentication user account update request to update user's display name
                 UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
                         .setDisplayName( displayName )
                         .build();
 
+                // Update Firebase Authentication user's display name
                 helper.auth.getCurrentUser().updateProfile(profileUpdates)
                         .addOnCompleteListener(new OnCompleteListener<Void>() {
                             @Override
@@ -119,47 +106,41 @@ public class RegistrationActivity extends AppCompatActivity {
                                     Log.d("TEST", "User name: " + helper.auth.getCurrentUser().getDisplayName());
 
 
-        String password = (String) getIntent().getExtras().get( "password" );
+                                    //password = (String) getIntent().getExtras().get( "password" );
 
-        helper.auth.signInWithEmailAndPassword( email, password ).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-            @Override
-            public void onComplete(@NonNull Task<AuthResult> task) {
-                getIntent().putExtra( "password", "" );
+                                    // Log user into new Firebase Authentication account
+                                    helper.auth.signInWithEmailAndPassword( email, password ).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<AuthResult> task) {
+                                            //getIntent().putExtra( "password", "" );
 
-                // Add user account info to Firebase
-                helper.addNewUser( user );
-                helper.fetchCurrentUser();
+                                            // Add user account info to Firebase Database
+                                            helper.addNewUser( user );
 
-                // Add user to a new chat containing only the user
-                String newChatID = helper.getNewChildKey( helper.getChatUserPath() );
-                String userID = helper.auth.getUid();
-                //String displayName = helper.getAuthUserDisplayName();
-                String displayName = helper.auth.getCurrentUser().getDisplayName();
+                                            // Get new FirebaseUser
+                                            helper.fetchCurrentUser();
 
-                Log.d( "TEST", "DISPLAY NAME: " + displayName );
+                                            // Add the new user to a new chat containing only the new user
+                                            String newChatID = helper.getNewChildKey( helper.getChatUserPath() );
+                                            String userID = helper.auth.getUid();
+                                            String displayName = helper.getAuthUserDisplayName();
+                                            //String displayName = helper.auth.getCurrentUser().getDisplayName();
 
-                helper.addToChatUser( newChatID, userID, displayName );
-                helper.addToUserChat( userID, newChatID );
+                                            Log.d( "TEST", "DISPLAY NAME: " + displayName );
 
-                startActivity( new Intent( getApplicationContext(), MainActivity.class ) );
-                finish();
-            }
-        });
+                                            helper.addToChatUser( newChatID, userID, displayName );
+                                            helper.addToUserChat( userID, newChatID );
 
-                            }
+                                            // Registration complete. Redirect the new user the the main activity.
+                                            startActivity( new Intent( getApplicationContext(), MainActivity.class ) );
+                                            finish();
+                                        }
+                                    });
+
+                                }
                             }
                         });
-
-        //helper.addNewUser( user );
-
-        //Log.d( "TEST", displayName );
-
-                //startActivity( new Intent( getApplicationContext(), MainActivity.class ) );
-                //finish();
-
             }
         });
-        // TODO return helper.addNewUser( user );
-        //return false;
     }
 }

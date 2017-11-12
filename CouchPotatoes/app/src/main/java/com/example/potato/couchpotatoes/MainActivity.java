@@ -40,42 +40,12 @@ public class MainActivity extends AppCompatActivity {
         chat = (android.widget.Button) findViewById(R.id.viewChats);
 
         // Display user's name if logged in
-        // Else, redirect user to login page
         if ( helper.isUserLoggedIn() ) {
-            //userID.setText( helper.user.getEmail() );
-            helper.db.getReference( helper.getUserPath() + helper.auth.getUid() ).addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-                    String firstName = (String) dataSnapshot.child( "firstName" ).getValue();
-                    String middleName = (String) dataSnapshot.child( "middleName" ).getValue();
-                    String lastName = (String) dataSnapshot.child( "lastName" ).getValue();
-                    String userID = helper.auth.getUid();
+            String displayName = helper.getAuthUserDisplayName();
 
-                    // Get user's name as a single string
-                    String name = helper.getFullName( firstName, middleName, lastName );
-
-                    // If null, use userID instead
-                    if ( name.equals( "" ) ) {
-                        if ( userID != null && !userID.equals( "" ) ) {
-                            //name = userID.substring(userID.length(), userID.length() - USERID_SUBSTRING_LENGTH );
-                            name = userID.substring( 0, USERID_SUBSTRING_LENGTH );
-                        }
-                        else {
-                            name = "No name";
-                        }
-                    } else if ( helper.getAuthUserDisplayName() != null && helper.getAuthUserDisplayName().equals( "" ) ){
-                        helper.updateAuthUserDisplayName( name );
-                    }
-
-                    userName.setText( name );
-                }
-
-                @Override
-                public void onCancelled(DatabaseError databaseError) {
-                    Log.d( "TEST", databaseError.toString() );
-                }
-            });
+            userName.setText( displayName );
         }
+        // Else, redirect user to login page
         else {
             startActivity( new Intent( getApplicationContext(), LoginActivity.class ) );
             finish();
@@ -98,21 +68,7 @@ public class MainActivity extends AppCompatActivity {
                 Intent intent = new Intent( getApplicationContext(), ChatRoomActivity.class );
                 //intent.putExtra( "userName", userName.getText() );
                 startActivity( intent );
-                //startActivity( new Intent( getApplicationContext(), ChatRoomActivity.class ) );
-                //finish();
             }
         });
-
-        /*
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
-        */
     }
-
 }
