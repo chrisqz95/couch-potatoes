@@ -23,6 +23,7 @@ public class DBHelper {
     FirebaseAuth auth;
     FirebaseDatabase db;
     FirebaseUser user;
+    FirebaseAuthException authException;
 
     /* Paths under root to particular data collections on Firebase */
 
@@ -88,13 +89,50 @@ public class DBHelper {
         return false;
     }
 
-    public boolean createUser(String email, String password) {
+    public void createUser(String email, String password) {
+        /*
         if (auth.createUserWithEmailAndPassword(email, password).isSuccessful()) {
             return true;
         }
         else {
             return false;
         }
+        */
+        // Source: https://stackoverflow.com/questions/40093781/check-if-given-email-exists
+
+        auth.createUserWithEmailAndPassword( email, password ).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+            @Override
+            public void onComplete(@NonNull Task<AuthResult> task) {
+                    if (!task.isSuccessful()) {
+                        try {
+                            throw task.getException();
+                        }
+                        // if user enters weak password.
+                        catch (FirebaseAuthWeakPasswordException weakPassword) {
+                            Log.d("TEST", "onComplete: weak_password");
+                            authException = weakPassword;
+                        }
+                        // if user enters wrong password.
+                        catch (FirebaseAuthInvalidCredentialsException malformedEmail) {
+                            Log.d("TEST", "onComplete: malformed_email");
+                            authException = malformedEmail;
+                        }
+                        // if email is already in use
+                        catch (FirebaseAuthUserCollisionException existEmail) {
+                            Log.d("TEST", "onComplete: exist_email");
+                            authException = existEmail;
+
+                        } catch (Exception e) {
+                            Log.d("TEST", "onComplete: " + e.getMessage());
+                        }
+                    }
+                    else {
+                        authException = null;
+                    }
+            }
+        });
+
+        //return false; // TODO
     }
 
     public void updateAuthUserProfile( UserProfileChangeRequest changes ) {
@@ -534,7 +572,7 @@ public class DBHelper {
     /* Helper methods */
 
     public boolean checkExists( String path ) {
-        return ( db.getReference( path ) != null );
+        return ( db.getReference( path ).getKey() != null );
     }
 
     /* Getters */

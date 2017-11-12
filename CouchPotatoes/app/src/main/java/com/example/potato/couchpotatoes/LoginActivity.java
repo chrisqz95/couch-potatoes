@@ -5,6 +5,7 @@ import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
 import android.app.LoaderManager.LoaderCallbacks;
 import android.content.CursorLoader;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.Loader;
 import android.content.pm.PackageManager;
@@ -16,6 +17,7 @@ import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
@@ -33,6 +35,9 @@ import android.widget.Toast;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
+import com.google.firebase.auth.FirebaseAuthUserCollisionException;
+import com.google.firebase.auth.FirebaseAuthWeakPasswordException;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -73,6 +78,8 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     private EditText mPasswordView;
     private View mProgressView;
     private View mLoginFormView;
+    private int loginAttempts = 0;
+    private final int MIN_LOGIN_ATTEMPTS_NOTIFY_EMAIL_EXISTS = 2;
 
     // Firebase wrapper class.
     DBHelper helper;
@@ -132,12 +139,31 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         //startActivity( new Intent( getApplicationContext(), ChatRoomActivity.class ));
         //finish();
         //helper.addToUserChat( helper.auth.getUid(), "c1" );
-        //helper.createUser( "test2@test.com", "cse1102017" );
+        //helper.createUser( "test3@test.com", "cse1102017" );
+        //Log.d( "TESTTEST", helper.checkExists( helper.getUserPath() + helper.auth.getUid() ) );
 
+        // If user is logged in, have user finish Registration if needed or go to MainActivity
         if ( helper.isUserLoggedIn() ) {
-            //Log.d( "TEST", helper.user.toString() );
-            startActivity( new Intent( getApplicationContext(), MainActivity.class ) );
-            finish();
+            //Log.d( "TEST3", helper.user.getDisplayName() );
+
+            helper.fetchCurrentUser();
+
+            //if ( helper.checkExists( helper.getUserPath() + helper.auth.getUid() ) )  {
+            //    Log.d( "TESTTEST", "USER EXISTS" );
+            //}
+            //else {
+            //    Log.d( "TESTTEST", "USER DOES NOT EXIST" );
+            //}
+
+            // If user is logged in and has not finished registration, redirect user to RegistrationActivity
+            //if ( !helper.checkExists(helper.getUserPath() + helper.auth.getUid() ) ) {
+            //    startActivity( new Intent( getApplicationContext(), RegistrationActivity.class ) );
+            //    finish();
+            //}
+            //else {
+                startActivity(new Intent(getApplicationContext(), MainActivity.class));
+                finish();
+            //}
         }
 
 
@@ -389,13 +415,12 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                         @Override
                         public void onComplete(@NonNull Task<AuthResult> task) {
                             showProgress(false);
-
                             // Continue to main activity upon successful login
                             // Else, notify user of unsuccessful login
                             if (task.isSuccessful()) {
                                 // Sign in success, update UI with the signed-in user's information
                                 Log.d("TEST", "signInWithEmail:success");
-                                //helper.fetchCurrentUser();
+                                helper.fetchCurrentUser();
                                 /*
                                 CurrentUser newUser = new CurrentUser(
                                         "test@test.com", helper.auth.getUid(), "Tom", null, "Cat", "1/1/1980",
@@ -410,19 +435,102 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                                                 newUser.getMiddleName(), newUser.getLastName() ));
                                 */
                                 Log.d( "TEST", "User " + helper.auth.getUid() + " signed in successfully." );
-                                startActivity( new Intent( getApplicationContext(), MainActivity.class ) );
-                                finish();
+
+                                // If user is logged in and has not finished registration, redirect user to RegistrationActivity
+                                //if ( !helper.checkExists(helper.getUserPath() + helper.auth.getUid() ) ) {
+                                //    startActivity( new Intent( getApplicationContext(), RegistrationActivity.class ) );
+                                //    finish();
+                                //} else {
+                                    startActivity(new Intent(getApplicationContext(), MainActivity.class));
+                                    finish();
+                                //}
                                 //updateUI(user);
                             } else {
+                                showProgress(true);
                                 //helper.user = null;
                                 // If sign in fails, display a message to the user.
                                 Log.w("TEST", "signInWithEmail:failure", task.getException());
                                 //showProgress(false);
-                                mPasswordView.setError(getString(R.string.error_incorrect_password));
-                                mPasswordView.requestFocus();
+                                /*
+                                ++loginAttempts;
+
+                                if ( loginAttempts >= MIN_LOGIN_ATTEMPTS_NOTIFY_EMAIL_EXISTS &&
+                                        helper.authException instanceof FirebaseAuthUserCollisionException ) {
+                                    AlertDialog.Builder builder = new AlertDialog.Builder(mLoginFormView.getContext());
+                                    builder.setTitle("Email already in use.")
+                                            .setMessage("Email '" + mEmailView.getText() + "' is already in use.")
+                                            .setNegativeButton("Ok", new DialogInterface.OnClickListener() {
+                                                @Override
+                                                public void onClick(DialogInterface dialog, int which) {
+                                                    dialog.cancel();
+                                                }
+                                            })
+                                            .setIcon(android.R.drawable.ic_dialog_alert)
+                                            .show();
+                                }
+                                */
+                                //helper.createUser( "test3@test.com", "cse1102017" );
+                                //mPasswordView.setError(getString(R.string.error_incorrect_password));
+                                //mPasswordView.requestFocus();
                                 //Toast.makeText(EmailPasswordActivity.this, "Authentication failed.",
                                 //        Toast.LENGTH_SHORT).show();
                                 //updateUI(null);
+                                helper.auth.createUserWithEmailAndPassword( mEmail, mPassword ).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<AuthResult> task) {
+                                        showProgress(false);
+
+                                        if (!task.isSuccessful()) {
+                                            try {
+                                                throw task.getException();
+                                            }
+                                            // if user enters weak password.
+                                            catch (FirebaseAuthWeakPasswordException weakPassword) {
+                                                Log.d("TEST", "onComplete: weak_password");
+                                                //authException = weakPassword;
+                                            }
+                                            // if user enters wrong password.
+                                            catch (FirebaseAuthInvalidCredentialsException malformedEmail) {
+                                                Log.d("TEST", "onComplete: malformed_email");
+                                                //authException = malformedEmail;
+                                            }
+                                            // if email is already in use
+                                            catch (FirebaseAuthUserCollisionException existEmail) {
+                                                Log.d("TEST", "onComplete: exist_email");
+                                                //authException = existEmail;
+                                                    AlertDialog.Builder builder = new AlertDialog.Builder(mLoginFormView.getContext());
+                                                    builder.setTitle("Email already in use.")
+                                                            .setMessage("Email '" + mEmailView.getText() + "' is already in use.")
+                                                            .setNegativeButton("Ok", new DialogInterface.OnClickListener() {
+                                                                @Override
+                                                                public void onClick(DialogInterface dialog, int which) {
+                                                                    dialog.cancel();
+                                                                }
+                                                            })
+                                                            .setIcon(android.R.drawable.ic_dialog_alert)
+                                                            .show();
+                                            } catch (Exception e) {
+                                                Log.d("TEST", "onComplete: " + e.getMessage());
+                                            }
+                                        }
+                                        else {
+                                            //authException = null;
+
+
+                                            // BEGIN REGISTRATION PROCESS
+                                            Intent intent = new Intent( getApplicationContext(), RegistrationActivity.class );
+                                            //intent.putExtra( "userID", helper.auth.getUid() );
+                                            intent.putExtra( "email", mEmail );
+                                            intent.putExtra( "password", mPassword );
+
+                                            // Delete and recreate user account after user has completed full regisration
+                                            helper.auth.getCurrentUser().delete();
+
+                                            startActivity( intent );
+                                            finish();
+                                        }
+                                    }
+                                });
                             }
 
                             // ...
