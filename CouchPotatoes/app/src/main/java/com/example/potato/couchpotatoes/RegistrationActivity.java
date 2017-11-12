@@ -15,6 +15,7 @@ import android.widget.EditText;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.UserProfileChangeRequest;
 
 public class RegistrationActivity extends AppCompatActivity {
     DBHelper helper = new DBHelper();
@@ -25,6 +26,7 @@ public class RegistrationActivity extends AppCompatActivity {
     EditText mGender;
     Button submit;
     CurrentUser user;
+    String email;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,14 +77,14 @@ public class RegistrationActivity extends AppCompatActivity {
     }
 
     protected void attemptRegistration() {
-        String email = (String) getIntent().getExtras().get( "email" );
+        email = (String) getIntent().getExtras().get( "email" );
         String password = (String) getIntent().getExtras().get( "password" );
 
         helper.auth.createUserWithEmailAndPassword( email, password ).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
 
-        String email = helper.auth.getCurrentUser().getEmail();
+        email = helper.auth.getCurrentUser().getEmail();
         String userID = helper.auth.getUid();
         String firstName = mFirstName.getText().toString();
         String middleName = mMiddleName.getText().toString();
@@ -103,7 +105,19 @@ public class RegistrationActivity extends AppCompatActivity {
                 email, userID, firstName, middleName, lastName, birthDate, gender, city, state, country, bio,
                 latitude, longitude, locked, suspended );
 
-        helper.updateAuthUserDisplayName( displayName );
+        //helper.updateAuthUserDisplayName( displayName );
+                UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
+                        .setDisplayName( displayName )
+                        .build();
+
+                helper.auth.getCurrentUser().updateProfile(profileUpdates)
+                        .addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+                                if (task.isSuccessful()) {
+                                    Log.d("TEST", "User profile updated.");
+                                    Log.d("TEST", "User name: " + helper.auth.getCurrentUser().getDisplayName());
+
 
         String password = (String) getIntent().getExtras().get( "password" );
 
@@ -112,12 +126,29 @@ public class RegistrationActivity extends AppCompatActivity {
             public void onComplete(@NonNull Task<AuthResult> task) {
                 getIntent().putExtra( "password", "" );
 
+                // Add user account info to Firebase
                 helper.addNewUser( user );
+                helper.fetchCurrentUser();
+
+                // Add user to a new chat containing only the user
+                String newChatID = helper.getNewChildKey( helper.getChatUserPath() );
+                String userID = helper.auth.getUid();
+                //String displayName = helper.getAuthUserDisplayName();
+                String displayName = helper.auth.getCurrentUser().getDisplayName();
+
+                Log.d( "TEST", "DISPLAY NAME: " + displayName );
+
+                helper.addToChatUser( newChatID, userID, displayName );
+                helper.addToUserChat( userID, newChatID );
 
                 startActivity( new Intent( getApplicationContext(), MainActivity.class ) );
                 finish();
             }
         });
+
+                            }
+                            }
+                        });
 
         //helper.addNewUser( user );
 
