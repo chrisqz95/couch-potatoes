@@ -268,6 +268,11 @@ public class MessageActivity extends AppCompatActivity {
                                     public void onClick(DialogInterface dialog, int which) {
                                         String newMessage = input.getText().toString();
                                         helper.updateMessage( messageIDs.get( message ), helper.auth.getUid(), displayName, chatRoom, helper.getNewTimestamp(), newMessage );
+
+                                        // KNOWN BUG: updating message does not automatically clear and reload message list
+                                        // Reload current activity to fix this for now
+                                        finish();
+                                        startActivity( getIntent() );
                                     }
                                 });
                                 builder3.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
