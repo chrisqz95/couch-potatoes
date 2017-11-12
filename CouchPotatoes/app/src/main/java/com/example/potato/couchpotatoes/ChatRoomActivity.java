@@ -24,14 +24,14 @@ import java.util.Iterator;
 import java.util.Map;
 
 public class ChatRoomActivity extends AppCompatActivity {
-    DBHelper helper = new DBHelper();
-    ArrayList<String> listItems = new ArrayList<>();
-    ArrayAdapter<String> listAdapter;
-    ListView listView;
-    TextView userName;
-    Map<String,String> chats = new HashMap<>();
-    String userID = helper.auth.getUid();
-    String displayName = helper.getAuthUserDisplayName();
+    private DBHelper helper = new DBHelper();
+    private ArrayList<String> listItems = new ArrayList<>();
+    private ArrayAdapter<String> listAdapter;
+    private ListView listView;
+    private TextView userName;
+    private Map<String,String> chats = new HashMap<>();
+    private String userID = helper.auth.getUid();
+    private String displayName = helper.getAuthUserDisplayName();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
