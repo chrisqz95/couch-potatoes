@@ -40,28 +40,17 @@ public class ChatRoomActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        /*
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
-        */
-
+        // Display the user's display name
         userName = (android.widget.TextView) findViewById(R.id.userName);
-        //userName.setText( (String) getIntent().getExtras().get( "userName" ) );
         userName.setText( displayName );
 
+        // Use a ListView to display the list of chats
         listView = (ListView) findViewById(R.id.chatList);
         listAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, listItems);
         listView.setAdapter( listAdapter );
 
-        //helper = new DBHelper();
-
-        // Get and display chatIDs of all chats the user belongs to
+        // Fetch and display all chats the current user belongs to.
+        // The names of all chat members that belong to a chat are displayed and identify each chat.
         helper.db.getReference( helper.getUserChatPath() + userID ).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -70,10 +59,11 @@ public class ChatRoomActivity extends AppCompatActivity {
                 // Make sure not to display already existing chatIDs more than once
                 listItems.clear();
 
+                // Get the next chat
                 while ( elems.hasNext() ) {
                     String chatID = elems.next().getKey();
-                    //listItems.add( nextElem );
-                    //Log.d( "TEST", nextElem );
+
+                    // Fetch the names of all users that belong to the selected chat
                     helper.db.getReference( helper.getChatUserPath() + chatID ).addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
@@ -81,20 +71,24 @@ public class ChatRoomActivity extends AppCompatActivity {
 
                             String userNames = "";
 
+                            // Concatenate the names of all users that belong to the current chat, delimited by a comma.
                             while ( users.hasNext() ) {
                                 if ( !userNames.equals( "" ) ) {
                                     userNames += ", ";
                                 }
 
                                 String currUser = (String) users.next().getValue();
-                                //Log.d( "TEST", currUser );
 
-                                //listItems.add( currUser );
                                 userNames += currUser;
                             }
+
+                            // Keep track of the chatID corresponding to the list of user names
                             chats.put( userNames, dataSnapshot.getKey() );
-                            //listItems.remove( userNames ); // remove duplicate if present
+
+                            // Add the list of user names identifying the current chat to the ListView
                             listItems.add( userNames );
+
+                            // Notify ListAdapter of changes
                             listAdapter.notifyDataSetChanged();
                         }
 
@@ -114,20 +108,17 @@ public class ChatRoomActivity extends AppCompatActivity {
             }
         });
 
-        // Add event handler to begin MessageActivity corresponding to the clicked chatID
+        // Add an event handler to begin the MessageActivity corresponding to the clicked chatID
         listView.setOnItemClickListener( new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick( AdapterView<?> parent, View view, int position, long id ) {
-                String chatID = chats.get( String.valueOf( parent.getItemAtPosition( position )) );
+                String chatID = chats.get( String.valueOf( parent.getItemAtPosition( position ) ) );
 
-                //Log.d( "TEST", String.valueOf( parent.getItemAtPosition( position )) );
-                //Log.d( "TEST", chatID );
-
+                // Create new Intent, keeping track of the selected chatID
                 Intent intent = new Intent( getApplicationContext(), MessageActivity.class );
-                //intent.putExtra( "userID",  userID );
                 intent.putExtra( "chatID", chatID );
-                //intent.putExtra( "userName", displayName );
 
+                // Begin the messaging activity corresponding to the selected chat
                 startActivity( intent );
                 //finish();
             }

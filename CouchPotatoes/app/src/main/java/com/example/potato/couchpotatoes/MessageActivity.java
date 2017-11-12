@@ -45,7 +45,7 @@ public class MessageActivity extends AppCompatActivity {
     Map<String,String> messageSenders = new HashMap<>();
     Map<String,String> messageText = new HashMap<>();
     DialogInterface.OnClickListener dialogClickListener;
-    DialogInterface.OnClickListener dialogClickListener3;
+    //DialogInterface.OnClickListener dialogClickListener3;
 
     final int MESSAGE_FETCH_LIMIT = 15;
 
@@ -56,27 +56,29 @@ public class MessageActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        displayName = helper.getAuthUserDisplayName();
-
-        userName = (android.widget.TextView) findViewById(R.id.userName);
-        //userName.setText( (String) getIntent().getExtras().get( "userName" ) );
-        userName.setText( displayName );
-
         sendButton = (Button) findViewById(R.id.sendButton);
         inputMessage = (EditText) findViewById(R.id.inputMessage);
-        //chatConversation = (TextView) findViewById(R.id.chatConversations);
-        listView = (ListView) findViewById(R.id.chatConversation);
 
-        //listView = (ListView) findViewById(R.id.chatList);
+        // Use a ListView to display the list of messages
+        listView = (ListView) findViewById(R.id.chatConversation);
         listAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, listItems);
         listView.setAdapter( listAdapter );
 
+        // Get the current user's display name
+        displayName = helper.getAuthUserDisplayName();
+
+        // Display the current user's display name
+        userName = (android.widget.TextView) findViewById(R.id.userName);
+        userName.setText( displayName );
+
+        // Get the current user's id
         userID = helper.auth.getUid();
+
+        // Get the current chat room's id
         chatRoom = (String) getIntent().getExtras().get( "chatID" );
 
-        //chatConversation.setText( "" );
-
-        // Add event handler to submit a new message to Firebase upon clicking the Send button
+        // Add an event handler to submit a new message to the current chat upon clicking the Send button.
+        // Message will be sent to Firebase Database.
         sendButton.setOnClickListener( new View.OnClickListener() {
             @Override
             public void onClick( View view ) {
@@ -84,49 +86,26 @@ public class MessageActivity extends AppCompatActivity {
                 timestamp = helper.getNewTimestamp();
                 message = inputMessage.getText().toString();
 
+                // Clear the message text field on submitting a message
                 inputMessage.setText( "" );
 
-                // Fetch the user's name from Firebase and attach user's name to message
-                helper.db.getReference( helper.getUserPath() + userID ).addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        String firstName = (String) dataSnapshot.child( "firstName" ).getValue();
-                        String middleName = (String) dataSnapshot.child( "middleName" ).getValue();
-                        String lastName = (String) dataSnapshot.child( "lastName" ).getValue();
-
-                        // Get user's name as a single string
-                        String name = helper.getFullName( firstName, middleName, lastName );
-
-                        // If null, use userID instead
-                        if ( name.equals( "" ) ) {
-                            if ( userID != null ) {
-                                name = userID.substring(name.length(), name.length() - 8);
-                            }
-                            else {
-                                name = "No name";
-                            }
-                        }
-
-                        helper.addToChatMessage( chatRoom, messageID );
-                        helper.addToMessage( messageID, userID, name, chatRoom, timestamp, message );
-                    }
-
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
-                        Log.d( "TEST", databaseError.toString() );
-                    }
-                });
+                // Add the message to the chat.
+                // Message data will be sent to the Firebase Database accordingly.
+                helper.addToChatMessage( chatRoom, messageID );
+                helper.addToMessage( messageID, userID, displayName, chatRoom, timestamp, message );
             }
         });
 
-        // Add event handler to fetch and display all messages in the current chat
+        // Add an event handler to fetch and display all messages in the current chat
         helper.db.getReference( helper.getChatMessagePath() + chatRoom ).limitToLast( MESSAGE_FETCH_LIMIT ).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Iterator<DataSnapshot> messages = dataSnapshot.getChildren().iterator();
 
+                // Upon receiving new data, do not display previous messages more than once
                 listItems.clear();
 
+                // Fetch and display the messages
                 while ( messages.hasNext() ) {
                     String messageID = messages.next().getKey();
 
@@ -141,13 +120,24 @@ public class MessageActivity extends AppCompatActivity {
                             String message = (String) dataSnapshot.child( "text" ).getValue();
                             String timestamp = (String) dataSnapshot.child( "timestamp" ).getValue();
 
-                            //chatConversation.append( "  " + from + "    " + timestamp + ":\n" + "  " + message + "\n" );
+                            // Add the user's display name and the timestamp to the message
                             String listItem = "  " + from + "    " + timestamp + ":\n" + "  " + message + "\n";
+
+                            // Add the current message to the list
                             listItems.add( listItem );
+
+                            // Notify the ListAdapter of changes
                             listAdapter.notifyDataSetChanged();
+
+                            // Keep track of the messageID corresponding to the current message
                             messageIDs.put( listItem, dataSnapshot.getKey() );
+
+                            // Keep track of the sender of the current message
                             messageSenders.put( dataSnapshot.getKey(), from );
+
+                            // Keep track of the text content of the current message
                             messageText.put( dataSnapshot.getKey(), message );
+
                             Log.d( "TEST", listItem + " " + dataSnapshot.getKey() );
                         }
 
@@ -165,109 +155,88 @@ public class MessageActivity extends AppCompatActivity {
             }
         });
 
+        // Add an event handler to each message and allow the current user to edit or delete their messages.
         listView.setOnItemClickListener( new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick( AdapterView<?> parent, View view, int position, long id ) {
+                // Identify the clicked message
                 message = String.valueOf( parent.getItemAtPosition( position ));
 
-                //helper.removeFromMessage( messageIDs.get( message ) );
-                //helper.removeFromChatMessage( chatRoom, messageIDs.get( message ) );
-
-                //Log.d( "TEST", message );
-                //Log.d( "TEST", messageIDs.get( message ) );
-                // source: https://stackoverflow.com/questions/2478517/how-to-display-a-yes-no-dialog-box-on-android
-                /*
-                DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        switch (which){
-                            case DialogInterface.BUTTON_POSITIVE:
-                                //Yes button clicked
-                                Log.d( "TEST", "YES" );
-                                helper.removeFromMessage( messageIDs.get( message ) );
-                                helper.removeFromChatMessage( chatRoom, messageIDs.get( message ) );
-                                break;
-
-                            case DialogInterface.BUTTON_NEGATIVE:
-                                //No button clicked
-                                Log.d( "TEST", "NO" );
-                                break;
-                        }
-                    }
-                };
-
-                AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext());
-                builder.setMessage( message + "\nDelete this message?" ).setPositiveButton("Yes", dialogClickListener)
-                        .setNegativeButton("No", dialogClickListener).show();
-                        */
+                // Create DialogInterface click listener to delete the clicked message
                 dialogClickListener = new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         switch (which){
+                            // Case to delete the clicked message
                             case DialogInterface.BUTTON_POSITIVE:
                                 //Yes button clicked
                                 Log.d( "TEST", "YES" );
                                 helper.removeFromMessage( messageIDs.get( message ) );
                                 helper.removeFromChatMessage( chatRoom, messageIDs.get( message ) );
                                 break;
-
+                            // Case to cancel delete operation
                             case DialogInterface.BUTTON_NEGATIVE:
-                                //No button clicked
+                                // Do nothing. User does not want to delete the clicked message
                                 Log.d( "TEST", "NO" );
                                 break;
                         }
                     }
                 };
 
+                /*
                 dialogClickListener3 = new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         switch (which){
                             case DialogInterface.BUTTON_POSITIVE:
                                 //Yes button clicked
-                                Log.d( "TEST", "YES" );
-                                helper.updateMessage( messageIDs.get( message ), helper.auth.getUid(), displayName, chatRoom, helper.getNewTimestamp(), "New message" );
+                                String newMessage = input.getText().toString();
+                                helper.updateMessage( messageIDs.get( message ), helper.auth.getUid(),
+                                        displayName, chatRoom, helper.getNewTimestamp(), newMessage );
+
+                                // KNOWN BUG: updating message does not automatically clear and reload message list
+                                // Reload current activity to fix this for now
+                                finish();
+                                startActivity( getIntent() );
                                 break;
 
                             case DialogInterface.BUTTON_NEGATIVE:
                                 //No button clicked
                                 Log.d( "TEST", "NO" );
+                                dialog.cancel();
                                 break;
                         }
                     }
                 };
+                */
 
+                // Create DialogInterface to prompt the user to edit or delete the clicked message.
                 DialogInterface.OnClickListener dialogClickListener2 = new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         switch (which){
+                            // Case to prompt user to edit the message
                             case DialogInterface.BUTTON_POSITIVE:
-                                //Yes button clicked
-                                Log.d( "TEST", "YES" );
-                                //helper.removeFromMessage( messageIDs.get( message ) );
-                                //helper.removeFromChatMessage( chatRoom, messageIDs.get( message ) );
-                                /*
-                                AlertDialog.Builder builder3 = new AlertDialog.Builder(listView.getContext());
-                                builder3.setMessage( message + "\nEdit this message?" ).setPositiveButton("Yes", dialogClickListener3)
-                                        .setNegativeButton("No", dialogClickListener3).show();
-                                        */
                                 //Source: https://stackoverflow.com/questions/10903754/input-text-dialog-android
+
+                                // Create AlertDialog to read user input and prompt the user to confirm changes
+                                // to the clicked message.
                                 AlertDialog.Builder builder3 = new AlertDialog.Builder(listView.getContext());
                                 builder3.setTitle("Title");
 
-// Set up the input
                                 final EditText input = new EditText(listView.getContext());
-// Specify the type of input expected; this, for example, sets the input as a password, and will mask the text
+
                                 input.setInputType(InputType.TYPE_CLASS_TEXT);
                                 input.setText( messageText.get( messageIDs.get( message) ) );
                                 builder3.setView(input);
 
-// Set up the buttons
+                                // Case to submit changes and edit the clicked message
                                 builder3.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
                                         String newMessage = input.getText().toString();
-                                        helper.updateMessage( messageIDs.get( message ), helper.auth.getUid(), displayName, chatRoom, helper.getNewTimestamp(), newMessage );
+                                        helper.updateMessage( messageIDs.get( message ), helper.auth.getUid(),
+                                                displayName, chatRoom, helper.getNewTimestamp(), newMessage );
 
                                         // KNOWN BUG: updating message does not automatically clear and reload message list
                                         // Reload current activity to fix this for now
@@ -275,6 +244,8 @@ public class MessageActivity extends AppCompatActivity {
                                         startActivity( getIntent() );
                                     }
                                 });
+
+                                // Case to cancel changes to the clicked message
                                 builder3.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
@@ -284,28 +255,37 @@ public class MessageActivity extends AppCompatActivity {
                                 builder3.setTitle( "Edit Message:" );
 
                                 builder3.show();
-                                Log.d( "TEST", "NO" );
-                                break;
 
-                            case DialogInterface.BUTTON_NEGATIVE:
-                                //No button clicked
-                                AlertDialog.Builder builder = new AlertDialog.Builder(listView.getContext());
-                                builder.setMessage( message + "\nDelete this message?" ).setPositiveButton("Yes", dialogClickListener)
-                                        .setNegativeButton("No", dialogClickListener).show();
                                 Log.d( "TEST", "NO" );
                                 break;
+                            // Case to prompt user to delete message
+                            case DialogInterface.BUTTON_NEGATIVE:
+                                // Create AlertDialog to prompt the user to delete the clicked message.
+                                AlertDialog.Builder builder = new AlertDialog.Builder(listView.getContext());
+                                builder.setMessage( message + "\nDelete this message?" )
+                                        .setPositiveButton("Yes", dialogClickListener)
+                                        .setNegativeButton("No", dialogClickListener)
+                                        .show();
+                                Log.d( "TEST", "NO" );
+                                break;
+                            // Case to cancel
                             case DialogInterface.BUTTON_NEUTRAL:
+                                // Do nothing. User does not want to edit or delete the message.
                                 Log.d( "TEST", "NEUTRAL" );
                                 break;
                         }
                     }
                 };
 
-                // Only alter message if current user is the sender
+                // Only prompt the current user to edit or delete the clicked message if the current user originally sent
+                // the message.
                 if ( messageSenders.get( messageIDs.get( message ) ).equals( displayName ) ) {
                     AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext());
-                    builder.setMessage(message).setPositiveButton("Edit", dialogClickListener2)
-                            .setNegativeButton("Delete", dialogClickListener2).setNeutralButton("Cancel", dialogClickListener2).show();
+                    builder.setMessage(message)
+                            .setPositiveButton("Edit", dialogClickListener2)
+                            .setNegativeButton("Delete", dialogClickListener2)
+                            .setNeutralButton("Cancel", dialogClickListener2)
+                            .show();
                 }
             }
         });
