@@ -35,17 +35,16 @@ public class MessageActivity extends AppCompatActivity {
     DBHelper helper = new DBHelper();
     Button sendButton;
     EditText inputMessage;
-    //TextView chatConversation;
     ArrayList<String> listItems = new ArrayList<>();
     ArrayAdapter<String> listAdapter;
     ListView listView;
-    String userID, chatRoom, displayName, messageID, timestamp, message;
     TextView userName;
     Map<String,String> messageIDs = new HashMap<>();
     Map<String,String> messageSenders = new HashMap<>();
     Map<String,String> messageText = new HashMap<>();
     DialogInterface.OnClickListener dialogClickListener;
     //DialogInterface.OnClickListener dialogClickListener3;
+    String userID, chatRoom, displayName, messageID, timestamp, message;
 
     final int MESSAGE_FETCH_LIMIT = 15;
 

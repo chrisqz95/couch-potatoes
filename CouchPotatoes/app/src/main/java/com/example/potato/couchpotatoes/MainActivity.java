@@ -25,7 +25,6 @@ public class MainActivity extends AppCompatActivity {
     private android.widget.TextView userName;
     private android.widget.Button logout;
     private android.widget.Button chat;
-    private final int USERID_SUBSTRING_LENGTH = 8;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

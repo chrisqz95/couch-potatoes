@@ -78,8 +78,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     private EditText mPasswordView;
     private View mProgressView;
     private View mLoginFormView;
-    private int loginAttempts = 0;
-    private final int MIN_LOGIN_ATTEMPTS_NOTIFY_EMAIL_EXISTS = 2;
 
     // Firebase wrapper class.
     DBHelper helper;

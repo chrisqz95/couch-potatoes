@@ -28,9 +28,9 @@ public class ChatRoomActivity extends AppCompatActivity {
     ArrayList<String> listItems = new ArrayList<>();
     ArrayAdapter<String> listAdapter;
     ListView listView;
-    String userID = helper.auth.getUid();
     TextView userName;
     Map<String,String> chats = new HashMap<>();
+    String userID = helper.auth.getUid();
     String displayName = helper.getAuthUserDisplayName();
 
     @Override
