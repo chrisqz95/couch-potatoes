@@ -1,12 +1,15 @@
 package com.example.potato.couchpotatoes;
 
 import android.support.annotation.NonNull;
+import android.util.Log;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.*;
 import com.google.firebase.database.*;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Queue;
@@ -20,6 +23,7 @@ public class DBHelper {
     FirebaseAuth auth;
     FirebaseDatabase db;
     FirebaseUser user;
+    FirebaseAuthException authException;
 
     /* Paths under root to particular data collections on Firebase */
 
@@ -85,13 +89,83 @@ public class DBHelper {
         return false;
     }
 
-    public boolean createUser(String email, String password) {
+    public void createUser(String email, String password) {
+        /*
         if (auth.createUserWithEmailAndPassword(email, password).isSuccessful()) {
             return true;
         }
         else {
             return false;
         }
+        */
+        // Source: https://stackoverflow.com/questions/40093781/check-if-given-email-exists
+
+        auth.createUserWithEmailAndPassword( email, password ).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+            @Override
+            public void onComplete(@NonNull Task<AuthResult> task) {
+                    if (!task.isSuccessful()) {
+                        try {
+                            throw task.getException();
+                        }
+                        // if user enters weak password.
+                        catch (FirebaseAuthWeakPasswordException weakPassword) {
+                            Log.d("TEST", "onComplete: weak_password");
+                            authException = weakPassword;
+                        }
+                        // if user enters wrong password.
+                        catch (FirebaseAuthInvalidCredentialsException malformedEmail) {
+                            Log.d("TEST", "onComplete: malformed_email");
+                            authException = malformedEmail;
+                        }
+                        // if email is already in use
+                        catch (FirebaseAuthUserCollisionException existEmail) {
+                            Log.d("TEST", "onComplete: exist_email");
+                            authException = existEmail;
+
+                        } catch (Exception e) {
+                            Log.d("TEST", "onComplete: " + e.getMessage());
+                        }
+                    }
+                    else {
+                        authException = null;
+                    }
+            }
+        });
+
+        //return false; // TODO
+    }
+
+    public void updateAuthUserProfile( UserProfileChangeRequest changes ) {
+        if ( user != null ) {
+            user.updateProfile(changes)
+                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            if (task.isSuccessful()) {
+                                Log.d("TEST", "User profile updated.");
+                                Log.d("TEST", "User name: " + user.getDisplayName());
+                            }
+                        }
+                    });
+        }
+    }
+
+    public void updateAuthUserDisplayName ( String displayName ) {
+        UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
+                .setDisplayName( displayName )
+                .build();
+
+        updateAuthUserProfile( profileUpdates );
+    }
+
+    public String getAuthUserDisplayName () {
+        if ( user != null ) {
+            return user.getDisplayName();
+        }
+
+        Log.d( "TEST", "User is not logged in! Cannot get display name!" );
+
+        return "";
     }
 
     public boolean isUserLoggedIn() {
@@ -263,8 +337,8 @@ public class DBHelper {
         return checkExists( getUserChatPath() + userID + "/" + chatID );
     }
 
-    public boolean addToChatUser( String chatID, String userID ) {
-        db.getReference( getChatUserPath() ).child( chatID ).child( userID ).setValue( true );
+    public boolean addToChatUser( String chatID, String userID, String userName ) {
+        db.getReference( getChatUserPath() ).child( chatID ).child( userID ).setValue( userName );
 
         return checkExists( getChatUserPath() + chatID + "/" + userID );
     }
@@ -275,8 +349,9 @@ public class DBHelper {
         return checkExists( getChatMessagePath() + chatID + "/" + messageID );
     }
 
-    public boolean addToMessage( String messageID, String userID, String chatID, String timestamp, String text ) {
+    public boolean addToMessage( String messageID, String userID, String name, String chatID, String timestamp, String text ) {
         db.getReference( getMessagePath() ).child( messageID ).child( "user_id" ).setValue( userID );
+        db.getReference( getMessagePath() ).child( messageID ).child( "name" ).setValue( name );
         db.getReference( getMessagePath() ).child( messageID ).child( "chat_id" ).setValue( chatID );
         db.getReference( getMessagePath() ).child( messageID ).child( "timestamp" ).setValue( timestamp );
         db.getReference( getMessagePath() ).child( messageID ).child( "text" ).setValue( text );
@@ -482,10 +557,11 @@ public class DBHelper {
         db.getReference( getPartnerPreferencePath() ).child( userID ).updateChildren( updates );
     }
 
-    public void updateMessage( String messageID, String userID, String chatID, String timestamp, String text ) {
+    public void updateMessage( String messageID, String userID, String name, String chatID, String timestamp, String text ) {
         Map<String, Object> updates = new HashMap<>();
 
         updates.put( "user_id", userID );
+        updates.put( "name", name );
         updates.put( "chat_id", chatID );
         updates.put( "timestamp", timestamp );
         updates.put( "text", text );
@@ -496,13 +572,44 @@ public class DBHelper {
     /* Helper methods */
 
     public boolean checkExists( String path ) {
-        return ( db.getReference( path ) != null );
+        return ( db.getReference( path ).getKey() != null );
     }
 
     /* Getters */
 
     public String getNewChildKey( String path ) {
         return db.getReference( path ).push().getKey();
+    }
+
+    public String getNewTimestamp() {
+        return (String) (new SimpleDateFormat( "yyyy-MM-dd  HH:mm:ss" ).format( new Date()));
+    }
+
+    /**
+     * Concatenates first, middle, and last names and returns result.
+     * If first, middle, and last names are null, returns userID instead.
+     *
+     * @param firstName
+     * @param middleName
+     * @param lastName
+     * @return Returns result of concatenating all names.
+     */
+    public String getFullName( String firstName, String middleName, String lastName ) {
+        String name = "";
+
+        if ( firstName != null ) {
+            name += firstName;
+        }
+        if ( middleName != null ) {
+            name += " ";
+            name += middleName;
+        }
+        if ( lastName != null ) {
+            name += " ";
+            name += lastName;
+        }
+
+        return name;
     }
 
     public String getUserPath() {

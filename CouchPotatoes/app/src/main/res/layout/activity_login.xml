@@ -75,3 +75,7 @@
         </LinearLayout>
     </ScrollView>
 </LinearLayout>
+
+    <!--
+                    android:text="@string/action_sign_in"
+                    -->

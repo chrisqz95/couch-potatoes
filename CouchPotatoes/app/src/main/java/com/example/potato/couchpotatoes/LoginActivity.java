@@ -5,6 +5,7 @@ import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
 import android.app.LoaderManager.LoaderCallbacks;
 import android.content.CursorLoader;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.Loader;
 import android.content.pm.PackageManager;
@@ -16,6 +17,7 @@ import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
@@ -33,6 +35,9 @@ import android.widget.Toast;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
+import com.google.firebase.auth.FirebaseAuthUserCollisionException;
+import com.google.firebase.auth.FirebaseAuthWeakPasswordException;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -77,52 +82,16 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     // Firebase wrapper class.
     DBHelper helper;
 
+    // TODO USE STRING VALIDATOR
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         helper = new DBHelper();
 
-        /* COMMENTED CODE BELOW USED FOR TESTING. WILL REMOVE WHEN DONE TESTING */
-        /*
-        CurrentUser newUser = new CurrentUser(
-                "test@test.com", helper.getNewChildKey( helper.getUserPath() ), "Tom", null, "Cat", "1/1/1980",
-                "M", null, null, null, "TEST BIO", 0.0, 0.0,
-                false, false
-        );
-
-
-        CurrentUser newUser2 = new CurrentUser(
-                "test2@test.com", helper.getNewChildKey( helper.getUserPath() ), "Tim", null, "Jones", "12/1/1985",
-                "M", null, null, null, "TEST BIO 2", 0.0, 0.0,
-                false, false
-        );
-        */
-        //helper.createUser( "test@test.com", "cse1102017" );
-        /*
-        boolean test = false;
-
-        helper.db.getReference("Test/" ).addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                if ( dataSnapshot != null ) {
-                    Log.d( "TEST", dataSnapshot.getKey() );
-                    Log.d( "TEST", "" + dataSnapshot.getValue() );
-                    test = (boolean)dataSnapshot.getValue();
-                }
-                else {
-                    Log.d( "TEST", "EMPTY" );
-                }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                Log.d( "ERROR", databaseError.toString() );
-            }
-        });
-        */
-
+        // If user is logged in, have user finish Registration if needed or go to MainActivity
         if ( helper.isUserLoggedIn() ) {
-            //Log.d( "TEST", helper.user.toString() );
-            startActivity( new Intent( getApplicationContext(), MainActivity.class ) );
+            helper.fetchCurrentUser();
+            startActivity(new Intent(getApplicationContext(), MainActivity.class));
             finish();
         }
 
@@ -368,43 +337,120 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
         @Override
         protected Boolean doInBackground(Void... params) {
-            //return helper.loginUser(mEmail, mPassword);
+            // Attempt the login using the passed credentials
             helper.auth.signInWithEmailAndPassword(mEmail, mPassword)
                     .addOnCompleteListener(LoginActivity.this, new OnCompleteListener<AuthResult>() {
                         @Override
                         public void onComplete(@NonNull Task<AuthResult> task) {
                             showProgress(false);
-
+                            // Continue to main activity upon successful login
                             if (task.isSuccessful()) {
                                 // Sign in success, update UI with the signed-in user's information
                                 Log.d("TEST", "signInWithEmail:success");
+
                                 helper.fetchCurrentUser();
-                                startActivity( new Intent( getApplicationContext(), MainActivity.class ) );
+
+                                Log.d( "TEST", "User " + helper.auth.getUid() + " signed in successfully." );
+
+                                startActivity(new Intent(getApplicationContext(), MainActivity.class));
                                 finish();
+
                                 //updateUI(user);
-                            } else {
-                                //helper.user = null;
+                            }
+                            // Else, attempt to create a new user with the passed login credentials
+                            else {
+                                showProgress(true);
+
                                 // If sign in fails, display a message to the user.
                                 Log.w("TEST", "signInWithEmail:failure", task.getException());
+
                                 //showProgress(false);
-                                mPasswordView.setError(getString(R.string.error_incorrect_password));
-                                mPasswordView.requestFocus();
+                                //mPasswordView.setError(getString(R.string.error_incorrect_password));
+                                //mPasswordView.requestFocus();
                                 //Toast.makeText(EmailPasswordActivity.this, "Authentication failed.",
                                 //        Toast.LENGTH_SHORT).show();
                                 //updateUI(null);
-                            }
 
-                            // ...
+                                // Attempt to create a new user with the passed login credentials
+                                helper.auth.createUserWithEmailAndPassword( mEmail, mPassword ).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<AuthResult> task) {
+                                        showProgress(false);
+
+                                        // Take appropriate action if unsuccessful
+                                        if (!task.isSuccessful()) {
+                                            try {
+                                                throw task.getException();
+                                            }
+                                            // if user enters weak password.
+                                            catch (FirebaseAuthWeakPasswordException weakPassword) {
+                                                Log.d("TEST", "onComplete: weak_password");
+                                                //authException = weakPassword;
+                                            }
+                                            // if user enters wrong password.
+                                            catch (FirebaseAuthInvalidCredentialsException malformedEmail) {
+                                                Log.d("TEST", "onComplete: malformed_email");
+                                                //authException = malformedEmail;
+                                            }
+                                            // if email is already in use
+                                            catch (FirebaseAuthUserCollisionException existEmail) {
+                                                Log.d("TEST", "onComplete: exist_email");
+
+                                                //authException = existEmail;
+
+                                                // Create and display an alert dialogue to notify user that the desired email is
+                                                // already in use
+                                                AlertDialog.Builder builder = new AlertDialog.Builder(mLoginFormView.getContext());
+                                                builder.setTitle("Email already in use.")
+                                                        .setMessage("Email '" + mEmailView.getText() + "' is already in use.")
+                                                        .setNegativeButton("Ok", new DialogInterface.OnClickListener() {
+                                                                @Override
+                                                                public void onClick(DialogInterface dialog, int which) {
+                                                                    dialog.cancel();
+                                                                }
+                                                            })
+                                                        .setIcon(android.R.drawable.ic_dialog_alert)
+                                                        .show();
+
+                                                // Notify user of incorrect password
+                                                mPasswordView.setError(getString(R.string.error_incorrect_password));
+                                                mPasswordView.requestFocus();
+                                            } catch (Exception e) {
+                                                Log.d("TEST", "onComplete: " + e.getMessage());
+                                            }
+                                        }
+                                        // Firebase Authentication successfully created the new account
+                                        else {
+                                            //authException = null;
+
+                                            // Create intent to begin registration activity
+                                            Intent intent = new Intent( getApplicationContext(), RegistrationActivity.class );
+                                            intent.putExtra( "email", mEmail );
+                                            intent.putExtra( "password", mPassword );
+
+                                            // Delete created user account and recreate after user has completed full registration.
+                                            // This is done so that accounts will not persist if a user aborts the registration
+                                            // process.
+                                            helper.auth.getCurrentUser().delete();
+
+                                            // Begin registration activity
+                                            startActivity( intent );
+                                            finish();
+                                        }
+                                    }
+                                });
+                            }
                         }
                     });
+
             return ( helper.isUserLoggedIn() );
-            // TODO: createUser
         }
 
         @Override
         protected void onPostExecute(final Boolean success) {
             mAuthTask = null;
 
+            /*
             if (success) {
                 //finish();
                 //startActivity( new Intent( getApplicationContext(), MainActivity.class ) );
@@ -413,6 +459,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 //mPasswordView.setError(getString(R.string.error_incorrect_password));
                 //mPasswordView.requestFocus();
             }
+            */
         }
 
         @Override
