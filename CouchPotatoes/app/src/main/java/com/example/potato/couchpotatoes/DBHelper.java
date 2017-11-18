@@ -20,10 +20,11 @@ import java.util.Queue;
 
 public class DBHelper {
 
-    FirebaseAuth auth;
-    FirebaseDatabase db;
-    FirebaseUser user;
-    FirebaseAuthException authException;
+
+    private FirebaseAuth auth;
+    private FirebaseDatabase db;
+    private FirebaseUser user;
+    private FirebaseAuthException authException;
 
     /* Paths under root to particular data collections on Firebase */
 
@@ -60,6 +61,19 @@ public class DBHelper {
     }
 
     /* User account methods */
+
+    public FirebaseAuth getAuth() {
+        return auth;
+    }
+
+    public FirebaseDatabase getDb() {
+        return db;
+    }
+
+    public FirebaseUser getUser() {
+        return user;
+    }
+
 
     public boolean loginUser(String email, String password) {
         //Activity.finish();

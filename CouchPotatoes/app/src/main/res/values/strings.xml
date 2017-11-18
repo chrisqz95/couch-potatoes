@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">CouchPotatoes</string>
+    <string name="app_name">Couch Potatoes</string>
 
     <!-- Strings related to login -->
     <string name="prompt_email">Email</string>
@@ -7,13 +7,14 @@
     <string name="action_sign_in">Sign in or register</string>
     <string name="action_sign_in_short">Sign in</string>
     <string name="error_invalid_email">This email address is invalid</string>
-    <string name="error_invalid_password">This password is too short</string>
-    <string name="error_incorrect_password">This password is incorrect</string>
+    <string name="error_invalid_password">Password is too short, enter a minimum of 5 characters.</string>
+    <string name="error_incorrect_password">This password is incorrect.</string>
     <string name="error_field_required">This field is required</string>
     <string name="permission_rationale">"Contacts permissions are needed for providing email
         completions."
     </string>
     <string name="title_activity_login2">Sign in</string>
+    <string name="title_activity_login">Sign in</string>
     <string name="title_activity_main">MainActivity</string>
 
     <!-- Strings Used in Sign Up Activity -->
@@ -56,8 +57,32 @@
 
     <string name="title_activity_chat_room">ChatRoomActivity</string>
     <string name="title_activity_message">MessageActivity</string>
+    <string name="title_reset_password">ResetPassword</string>
+    <string name="title_activity_registration">SOmething</string>
 
-	
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_activity_registration">RegistrationActivity</string>
+	
+    <string name="auth_failed">Authentication failed, check your email and password or sign up</string>
+    <string name="change_password">Change Password</string>
+    <string name="send_password_reset_email">Send Password reset email</string>
+    <string name="hint_email">Email</string>
+    <string name="hint_password">Password</string>
+    <string name="hint_name">Fullname</string>
+    <string name="btn_login">LOGIN</string>
+    <string name="btn_link_to_register">Not a member? Get registered now!</string>
+    <string name="btn_link_to_login">Already registered.</string>
+    <string name="btn_forgot_password">Forgot your password?</string>
+    <string name="btn_reset_password">Reset Password</string>
+    <string name="btn_back"><![CDATA[<< Back]]></string>
+    <string name="hint_new_email">New Email</string>
+    <string name="btn_change">Change</string>
+    <string name="btn_send">Send</string>
+    <string name="btn_remove">Remove</string>
+    <string name="btn_sign_out">Sign Out</string>
+    <string name="lbl_forgot_password">Forgot password?</string>
+    <string name="forgot_password_msg">Enter in your registered Email to be sent password reset instructions.</string>
+    <string name="lbl_reset_password_success_generic">An email has been sent to the given email with further instructions.</string>
+    <string name="reset_password_success_msg_1">An email has been sent to </string>
+    <string name="reset_password_success_msg_2"> with further instructions.</string>
 </resources>

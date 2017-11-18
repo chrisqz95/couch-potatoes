@@ -71,7 +71,7 @@ public class MessageActivity extends AppCompatActivity {
         userName.setText( displayName );
 
         // Get the current user's id
-        userID = helper.auth.getUid();
+        userID = helper.getAuth().getUid();
 
         // Get the current chat room's id
         chatRoom = (String) getIntent().getExtras().get( "chatID" );
@@ -96,7 +96,7 @@ public class MessageActivity extends AppCompatActivity {
         });
 
         // Add an event handler to fetch and display all messages in the current chat
-        helper.db.getReference( helper.getChatMessagePath() + chatRoom ).limitToLast( MESSAGE_FETCH_LIMIT ).addValueEventListener(new ValueEventListener() {
+        helper.getDb().getReference( helper.getChatMessagePath() + chatRoom ).limitToLast( MESSAGE_FETCH_LIMIT ).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Iterator<DataSnapshot> messages = dataSnapshot.getChildren().iterator();
@@ -111,7 +111,7 @@ public class MessageActivity extends AppCompatActivity {
                     //chatConversation.setText( "" );
 
                     // Fetch all information corresponding to the current message
-                    helper.db.getReference( helper.getMessagePath() + messageID ).addValueEventListener(new ValueEventListener() {
+                    helper.getDb().getReference( helper.getMessagePath() + messageID ).addValueEventListener(new ValueEventListener() {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
                             String from = (String) dataSnapshot.child( "name" ).getValue();
@@ -190,7 +190,7 @@ public class MessageActivity extends AppCompatActivity {
                             case DialogInterface.BUTTON_POSITIVE:
                                 //Yes button clicked
                                 String newMessage = input.getText().toString();
-                                helper.updateMessage( messageIDs.get( message ), helper.auth.getUid(),
+                                helper.updateMessage( messageIDs.get( message ), helper.getAuth().getUid(),
                                         displayName, chatRoom, helper.getNewTimestamp(), newMessage );
 
                                 // KNOWN BUG: updating message does not automatically clear and reload message list
@@ -234,7 +234,7 @@ public class MessageActivity extends AppCompatActivity {
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
                                         String newMessage = input.getText().toString();
-                                        helper.updateMessage( messageIDs.get( message ), helper.auth.getUid(),
+                                        helper.updateMessage( messageIDs.get( message ), helper.getAuth().getUid(),
                                                 displayName, chatRoom, helper.getNewTimestamp(), newMessage );
 
                                         // KNOWN BUG: updating message does not automatically clear and reload message list

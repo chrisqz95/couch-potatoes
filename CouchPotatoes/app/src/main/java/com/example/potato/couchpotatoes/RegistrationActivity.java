@@ -3,8 +3,6 @@ package com.example.potato.couchpotatoes;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -35,7 +33,7 @@ public class RegistrationActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        Log.d( "TEST", helper.auth.getUid() );
+        Log.d( "TEST", helper.getAuth().getUid() );
 
         mFirstName = (EditText) findViewById(R.id.firstName);
         mMiddleName = (EditText) findViewById(R.id.middleName);
@@ -61,14 +59,14 @@ public class RegistrationActivity extends AppCompatActivity {
         getIntent().putExtra( "password", "" );
 
         // Attempt to create a Firebase Authentication user account with the provided login credentials
-        helper.auth.createUserWithEmailAndPassword( email, password ).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+        helper.getAuth().createUserWithEmailAndPassword( email, password ).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
 
-                //email = helper.auth.getCurrentUser().getEmail();
+                //email = helper.getAuth().getCurrentUser().getEmail();
 
                 // TODO USE STRING VALIDATOR
-                String userID = helper.auth.getUid();
+                String userID = helper.getAuth().getUid();
                 String firstName = mFirstName.getText().toString();
                 String middleName = mMiddleName.getText().toString();
                 String lastName = mLastName.getText().toString();
@@ -97,19 +95,19 @@ public class RegistrationActivity extends AppCompatActivity {
                         .build();
 
                 // Update Firebase Authentication user's display name
-                helper.auth.getCurrentUser().updateProfile(profileUpdates)
+                helper.getAuth().getCurrentUser().updateProfile(profileUpdates)
                         .addOnCompleteListener(new OnCompleteListener<Void>() {
                             @Override
                             public void onComplete(@NonNull Task<Void> task) {
                                 if (task.isSuccessful()) {
                                     Log.d("TEST", "User profile updated.");
-                                    Log.d("TEST", "User name: " + helper.auth.getCurrentUser().getDisplayName());
+                                    Log.d("TEST", "User name: " + helper.getAuth().getCurrentUser().getDisplayName());
 
 
                                     //password = (String) getIntent().getExtras().get( "password" );
 
                                     // Log user into new Firebase Authentication account
-                                    helper.auth.signInWithEmailAndPassword( email, password ).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                                    helper.getAuth().signInWithEmailAndPassword( email, password ).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                                         @Override
                                         public void onComplete(@NonNull Task<AuthResult> task) {
                                             //getIntent().putExtra( "password", "" );
@@ -122,9 +120,9 @@ public class RegistrationActivity extends AppCompatActivity {
 
                                             // Add the new user to a new chat containing only the new user
                                             String newChatID = helper.getNewChildKey( helper.getChatUserPath() );
-                                            String userID = helper.auth.getUid();
+                                            String userID = helper.getAuth().getUid();
                                             String displayName = helper.getAuthUserDisplayName();
-                                            //String displayName = helper.auth.getCurrentUser().getDisplayName();
+                                            //String displayName = helper.getAuth().getCurrentUser().getDisplayName();
 
                                             Log.d( "TEST", "DISPLAY NAME: " + displayName );
 
