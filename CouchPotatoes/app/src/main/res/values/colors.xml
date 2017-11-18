@@ -1,6 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#3F51B5</color>
-    <color name="colorPrimaryDark">#303F9F</color>
-    <color name="colorAccent">#FF4081</color>
+    <color name="bg_main">#f9f8f9</color>
+    <color name="bg_select">#cfced0</color>
+
+    <color name="colorPrimary">#ffffff</color>
+    <color name="colorPrimaryDark">#7568ed</color>
+    <color name="textColorPrimary">#7568ed</color>
+
+    <color name="colorAccent">#a49ce5</color>
+
+    <color name="primaryColor">#7568ed</color>
+    <color name="primaryLightColor">#aa96ff</color>
+    <color name="primaryDarkColor">#3c3dba</color>
+    <color name="secondaryColor">#a49ce5</color>
+    <color name="secondaryLightColor">#d7cdff</color>
+    <color name="secondaryDarkColor">#746eb3</color>
+    <color name="white">#ffffff</color>
+
+    <color name="primaryTextColor">#303540</color>
+    <color name="secondaryTextColor">#000000</color>
+
+    <color name="hint">#E1E0F5</color>
+    <color name="shadow">#DBD8F8</color>
+
+    <color name="success">#14CC80</color>
+    <color name="reject">#ff6861</color>
 </resources>

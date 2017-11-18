@@ -3,21 +3,11 @@ package com.example.potato.couchpotatoes;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
-import android.app.LoaderManager.LoaderCallbacks;
-import android.content.CursorLoader;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.Loader;
-import android.content.pm.PackageManager;
-import android.database.Cursor;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
-import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
-import android.support.design.widget.Snackbar;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
@@ -25,8 +15,6 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.inputmethod.EditorInfo;
-import android.widget.ArrayAdapter;
-import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -35,73 +23,43 @@ import android.widget.Toast;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
-import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
-import com.google.firebase.auth.FirebaseAuthUserCollisionException;
-import com.google.firebase.auth.FirebaseAuthWeakPasswordException;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.ValueEventListener;
-
-import java.security.Timestamp;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-
-import static android.Manifest.permission.READ_CONTACTS;
 
 /**
  * A login screen that offers login via email/password.
  */
-public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<Cursor> {
+public class LoginActivity extends AppCompatActivity {
+    // TODO replace strings with variables
 
-    /**
-     * Id to identity READ_CONTACTS permission request.
-     */
-    private static final int REQUEST_READ_CONTACTS = 0;
-
-    /**
-     * A dummy authentication store containing known user names and passwords.
-     * TODO: remove after connecting to a real authentication system.
-     */
-    private static final String[] DUMMY_CREDENTIALS = new String[]{
-            "foo@example.com:hello", "bar@example.com:world"
-    };
     /**
      * Keep track of the login task to ensure we can cancel it if requested.
      */
     private UserLoginTask mAuthTask = null;
 
     // UI references.
-    private AutoCompleteTextView mEmailView;
+    private EditText mEmailView;
     private EditText mPasswordView;
     private View mProgressView;
     private View mLoginFormView;
 
     // Firebase wrapper class.
-    DBHelper helper;
-
-    // TODO USE STRING VALIDATOR
+    private DBHelper dbHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        helper = new DBHelper();
+        dbHelper = new DBHelper();
 
         // If user is logged in, have user finish Registration if needed or go to MainActivity
-        if ( helper.isUserLoggedIn() ) {
-            helper.fetchCurrentUser();
+        if ( dbHelper.isUserLoggedIn() ) {
+            dbHelper.fetchCurrentUser();
             startActivity(new Intent(getApplicationContext(), MainActivity.class));
             finish();
         }
 
-
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login);
+        setContentView(R.layout.activity_login2);
 
         // Set up the login form.
-        mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
-        populateAutoComplete();
+        mEmailView = (EditText) findViewById(R.id.email);
         mPasswordView = (EditText) findViewById(R.id.password);
         mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
@@ -114,61 +72,48 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             }
         });
 
-        Button mEmailSignInButton = (Button) findViewById(R.id.email_sign_in_button);
-        mEmailSignInButton.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                attemptLogin();
-            }
-        });
+        Button mSignInButton = (Button) findViewById(R.id.btn_login);
+        mSignInButton.setOnClickListener(onClickListener);
+
+        Button mSignUpButton = (Button) findViewById(R.id.btn_signup);
+        mSignUpButton.setOnClickListener(onClickListener);
+
+        Button mResetPasswordButton = (Button) findViewById(R.id.btn_reset_password);
+        mResetPasswordButton.setOnClickListener(onClickListener);
 
         mLoginFormView = findViewById(R.id.login_form);
-        mProgressView = findViewById(R.id.login_progress);
-    }
-
-    private void populateAutoComplete() {
-        if (!mayRequestContacts()) {
-            return;
-        }
-
-        getLoaderManager().initLoader(0, null, this);
-    }
-
-    private boolean mayRequestContacts() {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
-            return true;
-        }
-        if (checkSelfPermission(READ_CONTACTS) == PackageManager.PERMISSION_GRANTED) {
-            return true;
-        }
-        if (shouldShowRequestPermissionRationale(READ_CONTACTS)) {
-            Snackbar.make(mEmailView, R.string.permission_rationale, Snackbar.LENGTH_INDEFINITE)
-                    .setAction(android.R.string.ok, new View.OnClickListener() {
-                        @Override
-                        @TargetApi(Build.VERSION_CODES.M)
-                        public void onClick(View v) {
-                            requestPermissions(new String[]{READ_CONTACTS}, REQUEST_READ_CONTACTS);
-                        }
-                    });
-        } else {
-            requestPermissions(new String[]{READ_CONTACTS}, REQUEST_READ_CONTACTS);
-        }
-        return false;
+        mProgressView = findViewById(R.id.login_progressbar);
     }
 
     /**
-     * Callback received when a permissions request has been completed.
+     * OnClickListener to handle each button
+     * Buttons:
+     *      btn_login
+     *      btn_signup
+     *      btn_reset_password
      */
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
-                                           @NonNull int[] grantResults) {
-        if (requestCode == REQUEST_READ_CONTACTS) {
-            if (grantResults.length == 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                populateAutoComplete();
+    private OnClickListener onClickListener = new OnClickListener() {
+        @Override
+        public void onClick(final View v) {
+            switch (v.getId()) {
+                case R.id.btn_login:
+                    attemptLogin();
+                    break;
+
+                case R.id.btn_signup:
+                    // TODO switch to signup Activity
+//                    startActivity(new Intent(getApplicationContext(), SignUpActivity.class));
+                    finish();
+                    break;
+
+                case R.id.btn_reset_password:
+                    startActivity(new Intent(getApplicationContext(), ResetPasswordActivity.class));
+                    finish();
+                    break;
+
             }
         }
-    }
-
+    };
 
     /**
      * Attempts to sign in or register the account specified by the login form.
@@ -191,7 +136,8 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         View focusView = null;
 
         // Check for a valid password, if the user entered one.
-        if (!TextUtils.isEmpty(password) && !isPasswordValid(password)) {
+        if (!StringValidator.isValidPassword(password)) {
+            // TODO change the message
             mPasswordView.setError(getString(R.string.error_invalid_password));
             focusView = mPasswordView;
             cancel = true;
@@ -202,7 +148,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             mEmailView.setError(getString(R.string.error_field_required));
             focusView = mEmailView;
             cancel = true;
-        } else if (!isEmailValid(email)) {
+        } else if (!StringValidator.isValidEmail(email)) {
             mEmailView.setError(getString(R.string.error_invalid_email));
             focusView = mEmailView;
             cancel = true;
@@ -219,16 +165,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             mAuthTask = new UserLoginTask(email, password);
             mAuthTask.execute((Void) null);
         }
-    }
-
-    private boolean isEmailValid(String email) {
-        //TODO: Replace this with your own logic
-        return email.contains("@");
-    }
-
-    private boolean isPasswordValid(String password) {
-        //TODO: Replace this with your own logic
-        return password.length() > 4;
     }
 
     /**
@@ -267,60 +203,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         }
     }
 
-    @Override
-    public Loader<Cursor> onCreateLoader(int i, Bundle bundle) {
-        return new CursorLoader(this,
-                // Retrieve data rows for the device user's 'profile' contact.
-                Uri.withAppendedPath(ContactsContract.Profile.CONTENT_URI,
-                        ContactsContract.Contacts.Data.CONTENT_DIRECTORY), ProfileQuery.PROJECTION,
-
-                // Select only email addresses.
-                ContactsContract.Contacts.Data.MIMETYPE +
-                        " = ?", new String[]{ContactsContract.CommonDataKinds.Email
-                .CONTENT_ITEM_TYPE},
-
-                // Show primary email addresses first. Note that there won't be
-                // a primary email address if the user hasn't specified one.
-                ContactsContract.Contacts.Data.IS_PRIMARY + " DESC");
-    }
-
-    @Override
-    public void onLoadFinished(Loader<Cursor> cursorLoader, Cursor cursor) {
-        List<String> emails = new ArrayList<>();
-        cursor.moveToFirst();
-        while (!cursor.isAfterLast()) {
-            emails.add(cursor.getString(ProfileQuery.ADDRESS));
-            cursor.moveToNext();
-        }
-
-        addEmailsToAutoComplete(emails);
-    }
-
-    @Override
-    public void onLoaderReset(Loader<Cursor> cursorLoader) {
-
-    }
-
-    private void addEmailsToAutoComplete(List<String> emailAddressCollection) {
-        //Create adapter to tell the AutoCompleteTextView what to show in its dropdown list.
-        ArrayAdapter<String> adapter =
-                new ArrayAdapter<>(LoginActivity.this,
-                        android.R.layout.simple_dropdown_item_1line, emailAddressCollection);
-
-        mEmailView.setAdapter(adapter);
-    }
-
-
-    private interface ProfileQuery {
-        String[] PROJECTION = {
-                ContactsContract.CommonDataKinds.Email.ADDRESS,
-                ContactsContract.CommonDataKinds.Email.IS_PRIMARY,
-        };
-
-        int ADDRESS = 0;
-        int IS_PRIMARY = 1;
-    }
-
     /**
      * Represents an asynchronous login/registration task used to authenticate
      * the user.
@@ -338,7 +220,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         @Override
         protected Boolean doInBackground(Void... params) {
             // Attempt the login using the passed credentials
-            helper.auth.signInWithEmailAndPassword(mEmail, mPassword)
+            dbHelper.getAuth().signInWithEmailAndPassword(mEmail, mPassword)
                     .addOnCompleteListener(LoginActivity.this, new OnCompleteListener<AuthResult>() {
                         @Override
                         public void onComplete(@NonNull Task<AuthResult> task) {
@@ -348,118 +230,27 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                                 // Sign in success, update UI with the signed-in user's information
                                 Log.d("TEST", "signInWithEmail:success");
 
-                                helper.fetchCurrentUser();
+                                dbHelper.fetchCurrentUser();
 
-                                Log.d( "TEST", "User " + helper.auth.getUid() + " signed in successfully." );
+                                Log.d( "TEST", "User " + dbHelper.getAuth().getUid() + " signed in successfully." );
 
                                 startActivity(new Intent(getApplicationContext(), MainActivity.class));
                                 finish();
 
-                                //updateUI(user);
-                            }
-                            // Else, attempt to create a new user with the passed login credentials
-                            else {
-                                showProgress(true);
+                            } else {
+                                Toast.makeText(LoginActivity.this, getString(R.string.auth_failed),
+                                        Toast.LENGTH_LONG).show();
 
-                                // If sign in fails, display a message to the user.
-                                Log.w("TEST", "signInWithEmail:failure", task.getException());
-
-                                //showProgress(false);
-                                //mPasswordView.setError(getString(R.string.error_incorrect_password));
-                                //mPasswordView.requestFocus();
-                                //Toast.makeText(EmailPasswordActivity.this, "Authentication failed.",
-                                //        Toast.LENGTH_SHORT).show();
-                                //updateUI(null);
-
-                                // Attempt to create a new user with the passed login credentials
-                                helper.auth.createUserWithEmailAndPassword( mEmail, mPassword ).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                                    @Override
-                                    public void onComplete(@NonNull Task<AuthResult> task) {
-                                        showProgress(false);
-
-                                        // Take appropriate action if unsuccessful
-                                        if (!task.isSuccessful()) {
-                                            try {
-                                                throw task.getException();
-                                            }
-                                            // if user enters weak password.
-                                            catch (FirebaseAuthWeakPasswordException weakPassword) {
-                                                Log.d("TEST", "onComplete: weak_password");
-                                                //authException = weakPassword;
-                                            }
-                                            // if user enters wrong password.
-                                            catch (FirebaseAuthInvalidCredentialsException malformedEmail) {
-                                                Log.d("TEST", "onComplete: malformed_email");
-                                                //authException = malformedEmail;
-                                            }
-                                            // if email is already in use
-                                            catch (FirebaseAuthUserCollisionException existEmail) {
-                                                Log.d("TEST", "onComplete: exist_email");
-
-                                                //authException = existEmail;
-
-                                                // Create and display an alert dialogue to notify user that the desired email is
-                                                // already in use
-                                                AlertDialog.Builder builder = new AlertDialog.Builder(mLoginFormView.getContext());
-                                                builder.setTitle("Email already in use.")
-                                                        .setMessage("Email '" + mEmailView.getText() + "' is already in use.")
-                                                        .setNegativeButton("Ok", new DialogInterface.OnClickListener() {
-                                                                @Override
-                                                                public void onClick(DialogInterface dialog, int which) {
-                                                                    dialog.cancel();
-                                                                }
-                                                            })
-                                                        .setIcon(android.R.drawable.ic_dialog_alert)
-                                                        .show();
-
-                                                // Notify user of incorrect password
-                                                mPasswordView.setError(getString(R.string.error_incorrect_password));
-                                                mPasswordView.requestFocus();
-                                            } catch (Exception e) {
-                                                Log.d("TEST", "onComplete: " + e.getMessage());
-                                            }
-                                        }
-                                        // Firebase Authentication successfully created the new account
-                                        else {
-                                            //authException = null;
-
-                                            // Create intent to begin registration activity
-                                            Intent intent = new Intent( getApplicationContext(), RegistrationActivity.class );
-                                            intent.putExtra( "email", mEmail );
-                                            intent.putExtra( "password", mPassword );
-
-                                            // Delete created user account and recreate after user has completed full registration.
-                                            // This is done so that accounts will not persist if a user aborts the registration
-                                            // process.
-                                            helper.auth.getCurrentUser().delete();
-
-                                            // Begin registration activity
-                                            startActivity( intent );
-                                            finish();
-                                        }
-                                    }
-                                });
                             }
                         }
                     });
 
-            return ( helper.isUserLoggedIn() );
+            return ( dbHelper.isUserLoggedIn() );
         }
 
         @Override
         protected void onPostExecute(final Boolean success) {
             mAuthTask = null;
-
-            /*
-            if (success) {
-                //finish();
-                //startActivity( new Intent( getApplicationContext(), MainActivity.class ) );
-            } else {
-                //showProgress(false);
-                //mPasswordView.setError(getString(R.string.error_incorrect_password));
-                //mPasswordView.requestFocus();
-            }
-            */
         }
 
         @Override

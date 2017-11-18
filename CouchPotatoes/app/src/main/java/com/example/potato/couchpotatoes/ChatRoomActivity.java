@@ -30,7 +30,7 @@ public class ChatRoomActivity extends AppCompatActivity {
     private ListView listView;
     private TextView userName;
     private Map<String,String> chats = new HashMap<>();
-    private String userID = helper.auth.getUid();
+    private String userID = helper.getAuth().getUid();
     private String displayName = helper.getAuthUserDisplayName();
 
     @Override
@@ -51,7 +51,7 @@ public class ChatRoomActivity extends AppCompatActivity {
 
         // Fetch and display all chats the current user belongs to.
         // The names of all chat members that belong to a chat are displayed and identify each chat.
-        helper.db.getReference( helper.getUserChatPath() + userID ).addValueEventListener(new ValueEventListener() {
+        helper.getDb().getReference( helper.getUserChatPath() + userID ).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Iterator<DataSnapshot> elems = dataSnapshot.getChildren().iterator();
@@ -64,7 +64,7 @@ public class ChatRoomActivity extends AppCompatActivity {
                     String chatID = elems.next().getKey();
 
                     // Fetch the names of all users that belong to the selected chat
-                    helper.db.getReference( helper.getChatUserPath() + chatID ).addListenerForSingleValueEvent(new ValueEventListener() {
+                    helper.getDb().getReference( helper.getChatUserPath() + chatID ).addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
                             Iterator<DataSnapshot> users = dataSnapshot.getChildren().iterator();
