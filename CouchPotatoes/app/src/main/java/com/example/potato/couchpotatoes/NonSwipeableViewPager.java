@@ -1,4 +1,4 @@
-package com.cse110.potato.couchpotatoes;
+package com.example.potato.couchpotatoes;
 
 import android.content.Context;
 import android.support.v4.view.ViewPager;
