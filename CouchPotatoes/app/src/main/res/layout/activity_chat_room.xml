@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.potato.couchpotatoes.MainActivity">
+    tools:context="com.example.potato.couchpotatoes.ChatRoomActivity">
 
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
@@ -24,19 +24,9 @@
             android:background="?attr/colorPrimary"
             app:popupTheme="@style/AppTheme.PopupOverlay" />
 
-        <Button
-            android:id="@+id/logout"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="logout" />
-
     </android.support.design.widget.AppBarLayout>
 
-    <include
-        layout="@layout/content_main"
-        android:layout_height="424dp"
-        tools:layout_editor_absoluteY="143dp" />
+    <include layout="@layout/content_chat_room" />
 
     <!--
     <android.support.design.widget.FloatingActionButton
