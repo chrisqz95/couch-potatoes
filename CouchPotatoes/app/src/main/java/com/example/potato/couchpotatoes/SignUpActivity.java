@@ -1,7 +1,10 @@
 package com.example.potato.couchpotatoes;
 
+import android.app.ActionBar;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
@@ -13,6 +16,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -20,6 +24,7 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -57,11 +62,14 @@ public class SignUpActivity extends AppCompatActivity {
     private static int minAge = 18;
 
     private static CurrentUser currentUser = new CurrentUser();
-    private static DBHelper dbHelper = new DBHelper();
+    private static DBHelper dbHelper;
     private static Calendar calendar;
-    private static String tempEmail = "";
-    private static String tempPass = "";
-    private static String tempPassConfirm = "";
+    private static String tempEmail;
+    private static String tempPass;
+    private static String tempPassConfirm;
+    private static String tempFirstName;
+    private static String tempMiddleName;
+    private static String tempLastName;
     private static int tempDoBYear, tempDoBMonth, tempDoBDay;
 
 
@@ -80,21 +88,66 @@ public class SignUpActivity extends AppCompatActivity {
         mViewPager = (NonSwipeableViewPager) findViewById(R.id.container);
         mViewPager.setAdapter(mSectionsPagerAdapter);
 
+        // Intialise variables
+        dbHelper = new DBHelper();
         calendar = Calendar.getInstance();
         tempDoBYear = calendar.get(Calendar.YEAR);
         tempDoBMonth = calendar.get(Calendar.MONTH);
         tempDoBDay = calendar.get(Calendar.DAY_OF_MONTH);
+
+        // Add back button in ActionBar
+        android.support.v7.app.ActionBar actionBar = getSupportActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);
     }
 
     /**
-     * Overrides the back button from ending the activity to returning to the previous fragment.
-     * If on first fragment, ends activity.
+     * Function for ActionBar back button.
+     */
+    public boolean onOptionsItemSelected(MenuItem item){
+        cancelSignUp();
+        return true;
+    }
+
+    /**
+     * Overrides the back button from ending the activity.
      */
     public void onBackPressed(){
-        if (mViewPager.getCurrentItem() <= 0)
+        cancelSignUp();
+    }
+
+    /**
+     * Function to handle going back to LoginActivity.
+     * If on email and password page, simply go back to LoginActivity.
+     * If on info form, ask to confirm aborting account creation and go to LoginActivity if so.
+     */
+    public void cancelSignUp(){
+        // If on email password fragment, start LoginActivity and end SignUpActivity
+        if (mViewPager.getCurrentItem() <= 0) {
+            startActivity(new Intent(getApplicationContext(), LoginActivity.class));
             this.finish();
-        else
-            mViewPager.setCurrentItem(mViewPager.getCurrentItem() - 1);
+        } else {
+        // Else, show user confirmation dialog and delete user from FireBase if confirmed
+            new AlertDialog.Builder(this)
+                    .setTitle(getString(R.string.sign_up_abort_title))
+                    .setTitle(getString(R.string.sign_up_abort_message))
+                    .setIcon(android.R.drawable.ic_dialog_info)
+                    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int whichButton) {
+                            dbHelper.getAuth().getCurrentUser().delete().addOnCompleteListener(new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task) {
+                                    if (task.isSuccessful()) {
+                                        Toast.makeText(SignUpActivity.this,
+                                                getString(R.string.sign_up_abort_toast_message),
+                                                Toast.LENGTH_SHORT).show();
+                                    }
+                                }
+                            });
+                            startActivity(new Intent(getApplicationContext(), LoginActivity.class));
+                            finish();
+                        }})
+                    .setNegativeButton(android.R.string.no, null).show();
+        }
     }
 
     /**
@@ -118,40 +171,51 @@ public class SignUpActivity extends AppCompatActivity {
                                  Bundle savedInstanceState) {
             final View rootView = inflater.inflate(R.layout.fragment_sign_up_email_password, container, false);
 
-            final EditText emailText = rootView.findViewById(R.id.fragment_sign_up_email_text);
-            final EditText passwordText = rootView.findViewById(R.id.fragment_sign_up_password_text);
-            final EditText passwordConfirmText = rootView.findViewById(R.id.fragment_sign_up_password_confirm_text);
+            final EditText mEmailText = rootView.findViewById(R.id.fragment_sign_up_email_text);
+            final EditText mPasswordText = rootView.findViewById(R.id.fragment_sign_up_password_text);
+            final EditText mPasswordConfirmText = rootView.findViewById(R.id.fragment_sign_up_password_confirm_text);
 
-            Button nextButton = rootView.findViewById(R.id.fragment_sign_up_email_password_next_button);
+            Button mEmailPasswordNextButton = rootView.findViewById(R.id.fragment_sign_up_email_password_next_button);
 
-            nextButton.setOnClickListener(new View.OnClickListener() {
+            mEmailText.clearFocus();
+
+            mEmailPasswordNextButton.setOnClickListener(new View.OnClickListener() {
                 /**
                  * Verifies email with StringValidator
-                 * Displays error if email is invalid - continues to next fragment if valid
+                 * Displays error if email or password is invalid
+                 * Creates user and continues to next fragment if valid
                  */
                 public void onClick(View v) {
-                    tempEmail = emailText.getText().toString();
-                    tempPass = passwordText.getText().toString();
-                    tempPassConfirm = passwordConfirmText.getText().toString();
+                    // Read current fields
+                    tempEmail = mEmailText.getText().toString();
+                    tempPass = mPasswordText.getText().toString();
+                    tempPassConfirm = mPasswordConfirmText.getText().toString();
 
+                    // Check if email is empty or invalid
                     if (tempEmail.isEmpty() || !StringValidator.isValidEmail(tempEmail)) {
-                        emailText.setError(getString(R.string.sign_up_invalid_email));
-                        emailText.requestFocus();
+                        mEmailText.setError(getString(R.string.sign_up_invalid_email));
+                        mEmailText.requestFocus();
                         return;
-                    }
+                    } else
+                        mEmailText.setError(null);
 
+                    // Check if password is invalid
                     if (!StringValidator.isValidPassword(tempPass)) {
-                        passwordText.setError(getString(R.string.sign_up_invalid_password));
-                        passwordText.requestFocus();
+                        mPasswordText.setError(getString(R.string.sign_up_invalid_password));
+                        mPasswordText.requestFocus();
                         return;
-                    }
+                    } else
+                        mPasswordText.setError(null);
 
+                    // Check if passwords match
                     if (!StringValidator.checkPasswords(tempPass, tempPassConfirm)) {
-                        passwordConfirmText.setError(getString(R.string.sign_up_non_matching_passwords));
-                        passwordConfirmText.requestFocus();
+                        mPasswordConfirmText.setError(getString(R.string.sign_up_non_matching_passwords));
+                        mPasswordConfirmText.requestFocus();
                         return;
-                    }
+                    } else
+                        mPasswordConfirmText.setError(null);
 
+                    // Use DBHelper to create the user and handle exceptions, continues to next fragment if successful
                     dbHelper.getAuth().createUserWithEmailAndPassword(tempEmail, tempPass)
                             .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                                 @Override
@@ -160,14 +224,14 @@ public class SignUpActivity extends AppCompatActivity {
                                         try {
                                             throw task.getException();
                                         } catch (FirebaseAuthWeakPasswordException e) {
-                                            passwordText.setError(getString(R.string.sign_up_invalid_password));
-                                            passwordText.requestFocus();
+                                            mPasswordText.setError(getString(R.string.sign_up_invalid_password));
+                                            mPasswordText.requestFocus();
                                         } catch (FirebaseAuthInvalidCredentialsException e) {
-                                            emailText.setError(getString(R.string.sign_up_invalid_email));
-                                            emailText.requestFocus();
+                                            mEmailText.setError(getString(R.string.sign_up_invalid_email));
+                                            mEmailText.requestFocus();
                                         } catch (FirebaseAuthUserCollisionException e) {
-                                            emailText.setError(getString(R.string.sign_up_email_collision));
-                                            emailText.requestFocus();
+                                            mEmailText.setError(getString(R.string.sign_up_email_collision));
+                                            mEmailText.requestFocus();
                                         } catch (Exception e) {
                                         }
                                     } else {
@@ -202,103 +266,102 @@ public class SignUpActivity extends AppCompatActivity {
                                  Bundle savedInstanceState) {
             final View rootView = inflater.inflate(R.layout.fragment_sign_up_info_form, container, false);
 
-            final EditText firstNameText = rootView.findViewById(R.id.fragment_sign_up_info_form_first_name_text);
-            final EditText middleNameText = rootView.findViewById(R.id.fragment_sign_up_info_form_middle_name_text);
-            final EditText lastNameText = rootView.findViewById(R.id.fragment_sign_up_info_form_last_name_text);
-            final Button datePickerButton = rootView.findViewById(R.id.fragment_sign_up_info_form_date_picker_button);
-            final CheckBox genderPreferenceCheckBoxMale = rootView.findViewById(R.id.fragment_sign_up_info_form_gender_preference_male_checkbox);
-            final CheckBox genderPreferenceCheckBoxFemale = rootView.findViewById(R.id.fragment_sign_up_info_form_gender_preference_female_checkbox);
-            final CheckBox genderPreferenceCheckBoxOther = rootView.findViewById(R.id.fragment_sign_up_info_form_gender_preference_other_checkbox);
-            Button signUpButton = rootView.findViewById(R.id.fragment_sign_up_info_form_sign_up_button);
+            final EditText mFirstNameText = rootView.findViewById(R.id.fragment_sign_up_info_form_first_name_text);
+            final EditText mMiddleNameText = rootView.findViewById(R.id.fragment_sign_up_info_form_middle_name_text);
+            final EditText mLastNameText = rootView.findViewById(R.id.fragment_sign_up_info_form_last_name_text);
+            final TextView mDateText = rootView.findViewById(R.id.fragment_sign_up_info_form_date_text);
+            final Button mDatePickerButton = rootView.findViewById(R.id.fragment_sign_up_info_form_date_picker_button);
+            final CheckBox mGenderPreferenceCheckBoxMale = rootView.findViewById(R.id.fragment_sign_up_info_form_gender_preference_male_checkbox);
+            final CheckBox mGenderPreferenceCheckBoxFemale = rootView.findViewById(R.id.fragment_sign_up_info_form_gender_preference_female_checkbox);
+            final CheckBox mGenderPreferenceCheckBoxOther = rootView.findViewById(R.id.fragment_sign_up_info_form_gender_preference_other_checkbox);
+            Button mSignUpButton = rootView.findViewById(R.id.fragment_sign_up_info_form_sign_up_button);
 
-            datePickerButton.setOnClickListener(new View.OnClickListener(){
+            mDatePickerButton.setOnClickListener(new View.OnClickListener(){
                 @RequiresApi(api = Build.VERSION_CODES.N)
                 public void onClick(View v){
                     DatePickerDialog datePickerDialog = new DatePickerDialog(getContext(), AlertDialog.THEME_HOLO_DARK,new DatePickerDialog.OnDateSetListener() {
                         /**
-                         * Uses DatePickerDialog to have user enter DoB upon click, displays current date as default option and
-                         * stores user entered date in currentUser.dob string variable.
+                         * Uses DatePickerDialog to have user enter DoB upon click, displays current date
+                         * 18 years ago as default option and stores user entered date in temp variables.
                          */
                         @Override
                         public void onDateSet(DatePicker datePicker, int y, int m, int d) {
                             tempDoBYear = y;
                             tempDoBMonth = m + 1;
                             tempDoBDay = d;
-                            String datePickerButtonString = getString(R.string.sign_up_dob) + "  :  "
+                            String mDatePickerButtonString = getString(R.string.sign_up_dob) + "  :  "
                                     + tempDoBYear + "/" + tempDoBMonth + "/" + tempDoBDay;
-                            datePickerButton.setText(datePickerButtonString);
+                            mDatePickerButton.setText(mDatePickerButtonString);
                         }
                     }, calendar.get(Calendar.YEAR) - minAge, calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
                     datePickerDialog.show();
                 }
             });
-            signUpButton.setOnClickListener(new View.OnClickListener(){
+            mSignUpButton.setOnClickListener(new View.OnClickListener(){
                 public void onClick(View v){
-                    /**
-                     * Boolean flag to not create the user account if any fields are invalid.
-                     */
+                    // Boolean flag to not create the user account if any fields are invalid.
                     boolean errorFlag = false;
-                    /**
-                     * Check first name for valid alpha and non empty
-                     */
-                    if (firstNameText.getText().toString().isEmpty()){
-                        errorFlag = true;
-                        firstNameText.setError(getString(R.string.sign_up_missing_name));
-                    } else if (!StringValidator.isAlpha(firstNameText.getText().toString())){
-                        errorFlag = true;
-                        firstNameText.setError(getString(R.string.sign_up_invalid_name));
-                    }
 
-                    /**
-                     * Check middle name for valid alpha
-                     */
-                    if (!StringValidator.isAlpha(middleNameText.getText().toString()) && !middleNameText.getText().toString().isEmpty()){
-                        errorFlag = true;
-                        middleNameText.setError(getString(R.string.sign_up_invalid_name));
-                    }
+                    // Read current fields
+                    tempFirstName = mFirstNameText.getText().toString();
+                    tempMiddleName = mMiddleNameText.getText().toString();
+                    tempLastName = mLastNameText.getText().toString();
 
-                    /**
-                     * Check last name for valid alpha and non empty
-                     */
-                    if (lastNameText.getText().toString().isEmpty()){
+                    // Check first name for valid alpha and non empty
+                    if (tempFirstName.isEmpty()){
                         errorFlag = true;
-                        lastNameText.setError(getString(R.string.sign_up_missing_name));
-                    } else if (!StringValidator.isAlpha(lastNameText.getText().toString())){
+                        mFirstNameText.setError(getString(R.string.sign_up_missing_name));
+                    } else if (!StringValidator.isAlpha(tempFirstName)){
                         errorFlag = true;
-                        lastNameText.setError(getString(R.string.sign_up_invalid_name));
-                    }
+                        mFirstNameText.setError(getString(R.string.sign_up_invalid_name));
+                    } else
+                        mFirstNameText.setError(null);
 
-                    /**
-                     * Check if user entered DoB
-                     */
+
+                    // Check middle name for valid alpha
+                    if (!StringValidator.isAlpha(tempMiddleName) && !tempMiddleName.isEmpty()){
+                        errorFlag = true;
+                        mMiddleNameText.setError(getString(R.string.sign_up_invalid_name));
+                    } else
+                        mMiddleNameText.setError(null);
+
+                    // Check last name for valid alpha and non empty
+                    if (tempLastName.isEmpty()){
+                        errorFlag = true;
+                        mLastNameText.setError(getString(R.string.sign_up_missing_name));
+                    } else if (!StringValidator.isAlpha(tempLastName)){
+                        errorFlag = true;
+                        mLastNameText.setError(getString(R.string.sign_up_invalid_name));
+                    } else
+                        mLastNameText.setError(null);
+
+                     // Check if user entered DoB
                     if (!checkOver18(tempDoBYear, tempDoBMonth, tempDoBDay)){
                         errorFlag = true;
-                        datePickerButton.setTextColor(getResources().getColor(R.color.colorSignUpError));
+                        mDateText.setTextColor(getResources().getColor(R.color.colorSignUpError));
                     } else {
-                        datePickerButton.setTextColor(getResources().getColor(R.color.common_google_signin_btn_text_light));
+                        mDateText.setTextColor(getResources().getColor(R.color.common_google_signin_btn_text_light));
                     }
 
-                    /**
-                     * Check if user selected at least one gender
-                     */
-                    if (!genderPreferenceCheckBoxMale.isChecked() && !genderPreferenceCheckBoxFemale.isChecked() && !genderPreferenceCheckBoxOther.isChecked()){
+                    // Check if user selected at least one gender
+                    if (!mGenderPreferenceCheckBoxMale.isChecked() && !mGenderPreferenceCheckBoxFemale.isChecked() && !mGenderPreferenceCheckBoxOther.isChecked()){
                         errorFlag = true;
-                        genderPreferenceCheckBoxMale.setTextColor((getResources().getColor(R.color.colorSignUpError)));
-                        genderPreferenceCheckBoxFemale.setTextColor((getResources().getColor(R.color.colorSignUpError)));
-                        genderPreferenceCheckBoxOther.setTextColor((getResources().getColor(R.color.colorSignUpError)));
+                        mGenderPreferenceCheckBoxMale.setTextColor((getResources().getColor(R.color.colorSignUpError)));
+                        mGenderPreferenceCheckBoxFemale.setTextColor((getResources().getColor(R.color.colorSignUpError)));
+                        mGenderPreferenceCheckBoxOther.setTextColor((getResources().getColor(R.color.colorSignUpError)));
                     } else {
-                        genderPreferenceCheckBoxMale.setTextColor(getResources().getColor(R.color.common_google_signin_btn_text_light));
-                        genderPreferenceCheckBoxFemale.setTextColor(getResources().getColor(R.color.common_google_signin_btn_text_light));
-                        genderPreferenceCheckBoxOther.setTextColor(getResources().getColor(R.color.common_google_signin_btn_text_light));
+                        mGenderPreferenceCheckBoxMale.setTextColor(getResources().getColor(R.color.common_google_signin_btn_text_light));
+                        mGenderPreferenceCheckBoxFemale.setTextColor(getResources().getColor(R.color.common_google_signin_btn_text_light));
+                        mGenderPreferenceCheckBoxOther.setTextColor(getResources().getColor(R.color.common_google_signin_btn_text_light));
                     }
 
                     if (!errorFlag){
-                        currentUser.setFirstName(firstNameText.getText().toString());
-                        currentUser.setMiddleName(middleNameText.getText().toString());
-                        currentUser.setLastName(lastNameText.getText().toString());
+                        // Enter information into FireBase
+                        // TODO: Update FireBase
 
-                        // TODO: Logic to connect to FireBase via DBHelper
-
+                        // Start LoginActivity and end SignUpActivity
+                        Toast.makeText(getActivity(), getString(R.string.sign_up_success_toast_message), Toast.LENGTH_SHORT).show();
+                        startActivity(new Intent(getContext(), LoginActivity.class));
                         getActivity().finish();
                     }
                 }

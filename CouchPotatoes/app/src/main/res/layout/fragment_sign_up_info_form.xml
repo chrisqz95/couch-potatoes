@@ -8,15 +8,24 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="com.cse110.potato.couchpotatoes.LoginActivity">
+    tools:context="com.example.potato.couchpotatoes.LoginActivity">
     <ScrollView
         android:layout_width="fill_parent"
         android:layout_height="wrap_content">
+
         <LinearLayout
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
+            <!-- Prevent keyboard from showing on startup -->
+            <LinearLayout
+                android:focusable="true"
+                android:focusableInTouchMode="true"
+                android:layout_width="0px"
+                android:layout_height="0px"/>
+
+            <!-- First Name -->
             <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
@@ -34,6 +43,7 @@
                     android:singleLine="true" />
             </android.support.design.widget.TextInputLayout>
 
+            <!-- Middle Name -->
             <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
@@ -51,6 +61,7 @@
                     android:singleLine="true" />
             </android.support.design.widget.TextInputLayout>
 
+            <!-- Last Name -->
             <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
@@ -68,18 +79,24 @@
                     android:singleLine="true" />
             </android.support.design.widget.TextInputLayout>
 
-
+            <!-- Date of Birth -->
+            <TextView
+                android:id="@+id/fragment_sign_up_info_form_date_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/sign_up_dob_prompt"
+                android:textSize="16dp"
+                android:layout_marginTop="16dp" />
 
             <Button
                 android:id="@+id/fragment_sign_up_info_form_date_picker_button"
                 style="?android:textAppearanceSmall"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
                 android:text="@string/sign_up_dob"
                 android:textStyle="bold" />
 
-
+            <!-- Gender -->
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -96,6 +113,7 @@
                 android:paddingTop="8dp"
                 />
 
+            <!-- Gender Preferences -->
             <TextView
                 android:id="@+id/fragment_sign_up_info_form_gender_preference_text"
                 android:layout_width="match_parent"
@@ -126,6 +144,7 @@
                     android:text="@string/sign_up_other" />
             </LinearLayout>
 
+            <!-- Location -->
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -142,6 +161,7 @@
                 android:paddingTop="8dp"
                 />
 
+            <!-- Next -->
             <Button
                 android:id="@+id/fragment_sign_up_info_form_sign_up_button"
                 style="?android:textAppearanceSmall"

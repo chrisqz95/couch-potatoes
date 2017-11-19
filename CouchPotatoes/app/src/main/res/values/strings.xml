@@ -54,8 +54,23 @@
     <string name="sign_up_non_matching_passwords">Passwords don\'t match.</string>
     <string name="sign_up_missing_name">Please enter a name.</string>
     <string name="sign_up_invalid_name">Please enter a valid name.</string>
-    <string name="sign_up_missing_dob">Please Enter Date of Birth</string>
+    <string name="sign_up_dob_prompt">You must be at least 18 years old to use this app.</string>
     <string name="sign_up_missing_gender_preference">Please Select At Least One</string>
+
+
+    <string name="sign_up_abort_title">Exit Account Creation</string>
+    <!--
+    <string name="sign_up_abort_message">If you leave now, your account will not be eligible for matching.
+    You can login with your credentials and resume account creation via Edit Profile.</string>
+    -->
+    <string name="sign_up_abort_message">Do you want to exit account creation?</string>
+    <string name="sign_up_abort_toast_message">Account Creation Canceled.</string>
+    <string name="sign_up_success_toast_message">Account Created.</string>
+
+
+
+
+
 
     <string name="title_activity_chat_room">ChatRoomActivity</string>
     <string name="title_activity_message">MessageActivity</string>
