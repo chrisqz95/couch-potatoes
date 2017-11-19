@@ -1,7 +1,9 @@
 package com.example.potato.couchpotatoes;
 
+import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.os.Build;
+import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -11,8 +13,6 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.os.Bundle;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -20,6 +20,14 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.Toast;
+
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
+import com.google.firebase.auth.FirebaseAuthUserCollisionException;
+import com.google.firebase.auth.FirebaseAuthWeakPasswordException;
 
 import java.util.Calendar;
 
@@ -46,9 +54,16 @@ public class SignUpActivity extends AppCompatActivity {
      * tempPass - Holds temp password for account creation
      * TODO: Resolve storage of temp variables.
      */
+    private static int minAge = 18;
+
     private static CurrentUser currentUser = new CurrentUser();
     private static DBHelper dbHelper = new DBHelper();
-    private static String tempPass;
+    private static Calendar calendar;
+    private static String tempEmail = "";
+    private static String tempPass = "";
+    private static String tempPassConfirm = "";
+    private static int tempDoBYear, tempDoBMonth, tempDoBDay;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,6 +79,11 @@ public class SignUpActivity extends AppCompatActivity {
         // Set up the ViewPager with the sections adapter.
         mViewPager = (NonSwipeableViewPager) findViewById(R.id.container);
         mViewPager.setAdapter(mSectionsPagerAdapter);
+
+        calendar = Calendar.getInstance();
+        tempDoBYear = calendar.get(Calendar.YEAR);
+        tempDoBMonth = calendar.get(Calendar.MONTH);
+        tempDoBDay = calendar.get(Calendar.DAY_OF_MONTH);
     }
 
     /**
@@ -78,88 +98,84 @@ public class SignUpActivity extends AppCompatActivity {
     }
 
     /**
-     * Fragment class for reading in email from user
+     * Fragment class for reading in email and password from user
      */
-    public static class SignUpEmailFragment extends Fragment {
+    public static class SignUpEmailPasswordFragment extends Fragment {
 
-        public SignUpEmailFragment() {
+        public SignUpEmailPasswordFragment() {
         }
 
         /**
          * Returns a new instance of this fragment.
          */
-        public static SignUpEmailFragment newInstance() {
-            SignUpEmailFragment fragment = new SignUpEmailFragment();
+        public static SignUpEmailPasswordFragment newInstance() {
+            SignUpEmailPasswordFragment fragment = new SignUpEmailPasswordFragment();
             return fragment;
         }
 
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
-            final View rootView = inflater.inflate(R.layout.fragment_sign_up_email, container, false);
+            final View rootView = inflater.inflate(R.layout.fragment_sign_up_email_password, container, false);
 
             final EditText emailText = rootView.findViewById(R.id.fragment_sign_up_email_text);
-            Button nextButton = rootView.findViewById(R.id.fragment_sign_up_email_next_button);
+            final EditText passwordText = rootView.findViewById(R.id.fragment_sign_up_password_text);
+            final EditText passwordConfirmText = rootView.findViewById(R.id.fragment_sign_up_password_confirm_text);
 
-            nextButton.setOnClickListener(new View.OnClickListener(){
+            Button nextButton = rootView.findViewById(R.id.fragment_sign_up_email_password_next_button);
+
+            nextButton.setOnClickListener(new View.OnClickListener() {
                 /**
                  * Verifies email with StringValidator
                  * Displays error if email is invalid - continues to next fragment if valid
                  */
-                public void onClick(View v){
-                    if (StringValidator.isValidEmail(emailText.getText().toString())){
-                        currentUser.setEmail(emailText.getText().toString());
-                        mViewPager.setCurrentItem(mViewPager.getCurrentItem() + 1);
-                    } else {
-                        emailText.setError(getString(R.string.error_invalid_email));
+                public void onClick(View v) {
+                    tempEmail = emailText.getText().toString();
+                    tempPass = passwordText.getText().toString();
+                    tempPassConfirm = passwordConfirmText.getText().toString();
+
+                    if (tempEmail.isEmpty() || !StringValidator.isValidEmail(tempEmail)) {
+                        emailText.setError(getString(R.string.sign_up_invalid_email));
+                        emailText.requestFocus();
+                        return;
                     }
-                }
-            });
-            return rootView;
-        }
-    }
-    /**
-     * Fragment class for reading in password from user
-     */
-    public static class SignUpPasswordFragment extends Fragment {
 
-        public SignUpPasswordFragment() {
-        }
-
-        /**
-         * Returns a new instance of this fragment.
-         */
-        public static SignUpPasswordFragment newInstance() {
-            SignUpPasswordFragment fragment = new SignUpPasswordFragment();
-            return fragment;
-        }
-
-        @Override
-        public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                                 Bundle savedInstanceState) {
-            final View rootView = inflater.inflate(R.layout.fragment_sign_up_password, container, false);
-
-            final EditText passwordText = rootView.findViewById(R.id.fragment_sign_up_password_text);
-            final EditText passwordConfirmText = rootView.findViewById(R.id.fragment_sign_up_password_confirm_text);
-            Button nextButton = rootView.findViewById(R.id.fragment_sign_up_password_next_button);
-
-            nextButton.setOnClickListener(new View.OnClickListener(){
-                /**
-                 * Verifies password with StringValidator
-                 * Displays error if password is invalid or does not match
-                 * continues to next fragment if valid
-                 */
-                public void onClick(View v){
-                    if (StringValidator.isValidPassword(passwordText.getText().toString())) {
-                        if (StringValidator.checkPasswords(passwordText.getText().toString(), passwordConfirmText.getText().toString())) {
-                            tempPass = passwordText.getText().toString();
-                            mViewPager.setCurrentItem(mViewPager.getCurrentItem() + 1);
-                        } else {
-                            passwordConfirmText.setError(getString(R.string.sign_up_non_matching_passwords));
-                        }
-                    } else {
+                    if (!StringValidator.isValidPassword(tempPass)) {
                         passwordText.setError(getString(R.string.sign_up_invalid_password));
+                        passwordText.requestFocus();
+                        return;
                     }
+
+                    if (!StringValidator.checkPasswords(tempPass, tempPassConfirm)) {
+                        passwordConfirmText.setError(getString(R.string.sign_up_non_matching_passwords));
+                        passwordConfirmText.requestFocus();
+                        return;
+                    }
+
+                    dbHelper.getAuth().createUserWithEmailAndPassword(tempEmail, tempPass)
+                            .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                                @Override
+                                public void onComplete(@NonNull Task<AuthResult> task) {
+                                    if (!task.isSuccessful()) {
+                                        try {
+                                            throw task.getException();
+                                        } catch (FirebaseAuthWeakPasswordException e) {
+                                            passwordText.setError(getString(R.string.sign_up_invalid_password));
+                                            passwordText.requestFocus();
+                                        } catch (FirebaseAuthInvalidCredentialsException e) {
+                                            emailText.setError(getString(R.string.sign_up_invalid_email));
+                                            emailText.requestFocus();
+                                        } catch (FirebaseAuthUserCollisionException e) {
+                                            emailText.setError(getString(R.string.sign_up_email_collision));
+                                            emailText.requestFocus();
+                                        } catch (Exception e) {
+                                        }
+                                    } else {
+                                        mViewPager.setCurrentItem(mViewPager.getCurrentItem() + 1);
+                                    }
+
+                                }
+                            });
                 }
             });
             return rootView;
@@ -198,18 +214,21 @@ public class SignUpActivity extends AppCompatActivity {
             datePickerButton.setOnClickListener(new View.OnClickListener(){
                 @RequiresApi(api = Build.VERSION_CODES.N)
                 public void onClick(View v){
-                    DatePickerDialog datePickerDialog = new DatePickerDialog(getContext(), new DatePickerDialog.OnDateSetListener() {
+                    DatePickerDialog datePickerDialog = new DatePickerDialog(getContext(), AlertDialog.THEME_HOLO_DARK,new DatePickerDialog.OnDateSetListener() {
                         /**
                          * Uses DatePickerDialog to have user enter DoB upon click, displays current date as default option and
                          * stores user entered date in currentUser.dob string variable.
                          */
                         @Override
                         public void onDateSet(DatePicker datePicker, int y, int m, int d) {
-                            currentUser.setDob("" + y + "/" + (m + 1) + "/" + d);
-                            datePickerButton.setText(getString(R.string.sign_up_dob) + "  :  " + currentUser.getDob());
+                            tempDoBYear = y;
+                            tempDoBMonth = m + 1;
+                            tempDoBDay = d;
+                            String datePickerButtonString = getString(R.string.sign_up_dob) + "  :  "
+                                    + tempDoBYear + "/" + tempDoBMonth + "/" + tempDoBDay;
+                            datePickerButton.setText(datePickerButtonString);
                         }
-                    }, Calendar.getInstance().get(Calendar.YEAR), Calendar.getInstance().get(Calendar.MONTH),
-                            Calendar.getInstance().get(Calendar.DAY_OF_MONTH));
+                    }, calendar.get(Calendar.YEAR) - minAge, calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
                     datePickerDialog.show();
                 }
             });
@@ -252,7 +271,7 @@ public class SignUpActivity extends AppCompatActivity {
                     /**
                      * Check if user entered DoB
                      */
-                    if (currentUser.getDob() == null){
+                    if (!checkOver18(tempDoBYear, tempDoBMonth, tempDoBDay)){
                         errorFlag = true;
                         datePickerButton.setTextColor(getResources().getColor(R.color.colorSignUpError));
                     } else {
@@ -286,6 +305,17 @@ public class SignUpActivity extends AppCompatActivity {
             });
             return rootView;
         }
+
+        private boolean checkOver18(int year, int month, int day){
+            if (year > calendar.get(Calendar.YEAR) - minAge)
+                return false;
+            else if (year == calendar.get(Calendar.YEAR) - minAge && month > calendar.get(Calendar.MONTH))
+                return false;
+            else if (year == calendar.get(Calendar.YEAR) - minAge && month == calendar.get(Calendar.MONTH)
+                    && day > calendar.get(Calendar.DAY_OF_MONTH))
+                return false;
+            return true;
+        }
     }
 
     /**
@@ -304,19 +334,17 @@ public class SignUpActivity extends AppCompatActivity {
             // Return a new instance of the corresponding fragment position.
             switch(position){
                 case 0:
-                    return SignUpEmailFragment.newInstance();
+                    return SignUpEmailPasswordFragment.newInstance();
                 case 1:
-                    return SignUpPasswordFragment.newInstance();
-                case 2:
                     return SignUpInfoFormFragment.newInstance();
             }
-            return SignUpEmailFragment.newInstance();
+            return SignUpEmailPasswordFragment.newInstance();
         }
 
         @Override
         public int getCount() {
-            // Total of 3 pages
-            return 3;
+            // Total of 2 pages
+            return 2;
         }
     }
 }

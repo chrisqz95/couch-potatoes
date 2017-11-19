@@ -18,8 +18,9 @@
     <string name="title_activity_main">MainActivity</string>
 
     <!-- Strings Used in Sign Up Activity -->
-
+    <string name="sign_up_email_string">Please Enter Your Email.</string>
     <string name="sign_up_prompt_email">Email</string>
+    <string name="sign_up_password_string">Please Enter A Password.</string>
     <string name="sign_up_prompt_password">Password</string>
     <string name="sign_up_prompt_password_confirm">Password (Confirm)</string>
 
@@ -47,6 +48,7 @@
         <item>UCSD</item>
     </string-array>
 
+    <string name="sign_up_email_collision">Email already exists.</string>
     <string name="sign_up_invalid_email">Please enter a valid email.</string>
     <string name="sign_up_invalid_password">Invalid password.</string>
     <string name="sign_up_non_matching_passwords">Passwords don\'t match.</string>

@@ -102,7 +102,7 @@ public class LoginActivity extends AppCompatActivity {
 
                 case R.id.btn_signup:
                     // TODO switch to signup Activity
-//                    startActivity(new Intent(getApplicationContext(), SignUpActivity.class));
+                    startActivity(new Intent(getApplicationContext(), SignUpActivity.class));
                     finish();
                     break;
 
