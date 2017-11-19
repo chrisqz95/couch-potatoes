@@ -15,4 +15,6 @@
     </string>
     <string name="title_activity_login2">Sign in</string>
     <string name="title_activity_main">MainActivity</string>
+    <string name="dating_page">dating</string>
+    <string name="friends_page">friends</string>
 </resources>
