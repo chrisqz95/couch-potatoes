@@ -5,16 +5,12 @@ package com.example.potato.couchpotatoes;
  */
 
 public abstract class User {
-    private String email;
     private String uid;
     private String firstName;
     private String middleName;
     private String lastName;
-    private String dob;
+    private String birthDate;
     private String gender;
-    private String city;
-    private String state;
-    private String country;
     private String bio;
     private double latitude;
     private double longitude;
@@ -23,32 +19,19 @@ public abstract class User {
 
     public User () {}
 
-    public User ( String email, String uid, String firstName, String middleName, String lastName, String dob,
-                  String gender, String city, String state, String country, String bio,
-                  double latitude, double longitude, boolean locked, boolean suspended ) {
-        this.email = email;
+    public User ( String uid, String firstName, String middleName, String lastName, String birthDate,
+                  String gender, String bio, double latitude, double longitude, boolean locked, boolean suspended ) {
         this.uid = uid;
         this.firstName = firstName;
         this.middleName = middleName;
         this.lastName = lastName;
-        this.dob = dob;
+        this.birthDate = birthDate;
         this.gender = gender;
-        this.city = city;
-        this.state = state;
-        this.country = country;
         this.bio = bio;
         this.latitude = latitude;
         this.longitude = longitude;
         this.locked = locked;
         this.suspended = suspended;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
     }
 
     public String getUid() {
@@ -83,44 +66,12 @@ public abstract class User {
         this.lastName = lastName;
     }
 
-    public String getDob() {
-        return dob;
-    }
-
-    public void setDob(String dob) {
-        this.dob = dob;
-    }
-
     public String getGender() {
         return gender;
     }
 
     public void setGender(String gender) {
         this.gender = gender;
-    }
-
-    public String getCity() {
-        return city;
-    }
-
-    public void setCity(String city) {
-        this.city = city;
-    }
-
-    public String getState() {
-        return state;
-    }
-
-    public void setState(String state) {
-        this.state = state;
-    }
-
-    public String getCountry() {
-        return country;
-    }
-
-    public void setCountry(String country) {
-        this.country = country;
     }
 
     public String getBio() {
@@ -161,5 +112,13 @@ public abstract class User {
 
     public void setSuspended(boolean suspended) {
         this.suspended = suspended;
+    }
+
+    public String getBirthDate() {
+        return birthDate;
+    }
+
+    public void setBirthDate(String birthDate) {
+        this.birthDate = birthDate;
     }
 }
