@@ -55,11 +55,6 @@ public class MainActivity extends AppCompatActivity
     private SwipePlaceHolderView mSwipeView;
     private Context mContext;
 
-    // For the navigation side bar
-    private String[] mPlanetTitles;
-    private DrawerLayout mDrawerLayout;
-    private ListView mDrawerList;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -68,7 +63,7 @@ public class MainActivity extends AppCompatActivity
 
         // places toolbar on top of the screen
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        // setSupportActionBar(toolbar);
+        setSupportActionBar(toolbar);
 
         // adds toggle button for the sidebar on the toolbar
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
