@@ -9,7 +9,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -26,10 +28,21 @@ import com.mindorks.placeholderview.annotations.swipe.SwipeInState;
 import com.mindorks.placeholderview.annotations.swipe.SwipeOut;
 import com.mindorks.placeholderview.annotations.swipe.SwipeOutState;
 
+// for the side bar activity
+import android.support.design.widget.NavigationView;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuItem;
+
 /**
  * The home page which shows potential matches.
  */
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity
+        implements NavigationView.OnNavigationItemSelectedListener {
     private DBHelper helper;
     private android.widget.Button logout;
     private android.widget.ImageButton rejectBtn;
@@ -43,11 +56,17 @@ public class MainActivity extends AppCompatActivity {
     private SwipePlaceHolderView mSwipeView;
     private Context mContext;
 
+    // For the navigation side bar
+    private String[] mPlanetTitles;
+    private DrawerLayout mDrawerLayout;
+    private ListView mDrawerList;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         helper = new DBHelper();
+
 
         // Find the id's of the buttons
         profileBtn = (android.widget.ImageButton) findViewById(R.id.profileBtn);
@@ -57,6 +76,7 @@ public class MainActivity extends AppCompatActivity {
         acceptBtn = (android.widget.ImageButton) findViewById(R.id.acceptBtn);
         rejectBtn = (android.widget.ImageButton) findViewById(R.id.rejectBtn);
         logout = findViewById(R.id.logout);
+
 
         // Set up how many cards are displayed as a stack
         mSwipeView = (SwipePlaceHolderView) findViewById(R.id.swipeView);
@@ -109,6 +129,8 @@ public class MainActivity extends AppCompatActivity {
                 finish();
             }
         });
+
+
     }
 
     /**
@@ -206,5 +228,38 @@ public class MainActivity extends AppCompatActivity {
         private void onSwipeOutState() {
             Log.d("EVENT", "onSwipeOutState");
         }
+    }
+
+    /*
+     * Handles action in the sidebar menu
+     */
+    @Override
+    public boolean onNavigationItemSelected(MenuItem item) {
+        // Handle navigation view item clicks here.
+        int id = item.getItemId();
+
+        if (id == R.id.nav_profile) {
+            // TODO: go to profile activity
+
+        } else if (id == R.id.nav_chats) {
+            // TODO: go to ChatActivity
+
+        } else if (id == R.id.nav_find_matches) {
+            // TODO: go to "Find Matches"
+
+        } else if (id == R.id.nav_settings) {
+            // TODO: go to SettingsActivity
+
+        } else if (id == R.id.nav_info) {
+            // TODO: go to Page with device information
+
+        } else if (id == R.id.nav_logout) {
+            // TODO: go to LoginActivity
+
+        }
+
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawer.closeDrawer(GravityCompat.START);
+        return true;
     }
 }

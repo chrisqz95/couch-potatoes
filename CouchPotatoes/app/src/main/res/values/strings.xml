@@ -17,4 +17,7 @@
     <string name="title_activity_main">MainActivity</string>
     <string name="dating_page">dating</string>
     <string name="friends_page">friends</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
 </resources>

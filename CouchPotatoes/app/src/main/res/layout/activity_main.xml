@@ -1,84 +1,108 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
+<android.support.v4.widget.DrawerLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
+    android:id="@+id/drawer_layout"
     android:layout_height="match_parent"
-    android:background="@color/cardview_light_background"
-    android:orientation="vertical"
-    tools:context=".MainActivity">
+    android:layout_width="match_parent">
 
-    <LinearLayout
+    <!--layout of the main content of home page-->
+    <FrameLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
-        android:layout_height="65dp"
-        android:layout_gravity="top"
-        android:gravity="center_horizontal|center"
-        android:orientation="horizontal">
+        android:layout_height="match_parent"
+        android:background="@color/cardview_light_background"
+        android:orientation="vertical"
+        tools:context=".MainActivity">
 
-        <ImageButton
-            android:id="@+id/profileBtn"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_marginRight="0dp"
-            android:backgroundTint="@color/cardview_light_background"
-            android:tint="@android:color/holo_blue_dark"
-            app:srcCompat="@android:drawable/ic_menu_gallery" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="65dp"
+            android:layout_gravity="top"
+            android:gravity="center_horizontal|center"
+            android:orientation="horizontal">
 
-        <Button
-            android:id="@+id/datingBtn"
-            android:layout_width="100dp"
-            android:layout_height="45dp"
-            android:text="@string/dating_page" />
+            <ImageButton
+                android:id="@+id/profileBtn"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_marginRight="0dp"
+                android:backgroundTint="@color/cardview_light_background"
+                android:tint="@android:color/holo_blue_dark"
+                app:srcCompat="@android:drawable/ic_menu_gallery" />
 
-        <Button
-            android:id="@+id/friendsBtn"
-            android:layout_width="100dp"
-            android:layout_height="45dp"
-            android:text="@string/friends_page" />
+            <Button
+                android:id="@+id/datingBtn"
+                android:layout_width="100dp"
+                android:layout_height="45dp"
+                android:text="@string/dating_page" />
 
-        <ImageButton
-            android:id="@+id/messengerBtn"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:backgroundTint="@color/cardview_light_background"
-            android:tint="@android:color/holo_blue_dark"
-            app:srcCompat="@android:drawable/sym_action_chat" />
-    </LinearLayout>
+            <Button
+                android:id="@+id/friendsBtn"
+                android:layout_width="100dp"
+                android:layout_height="45dp"
+                android:text="@string/friends_page" />
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="65dp"
-        android:layout_gravity="bottom"
-        android:gravity="center"
-        android:orientation="horizontal">
+            <ImageButton
+                android:id="@+id/messengerBtn"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:backgroundTint="@color/cardview_light_background"
+                android:tint="@android:color/holo_blue_dark"
+                app:srcCompat="@android:drawable/sym_action_chat" />
+        </LinearLayout>
 
-        <Button
-            android:id="@+id/logout"
-            android:layout_width="85dp"
-            android:layout_height="45dp"
-            android:layout_marginRight="30dp"
-            android:text="logout" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="65dp"
+            android:layout_gravity="bottom"
+            android:gravity="center"
+            android:orientation="horizontal">
 
-        <ImageButton
-            android:id="@+id/rejectBtn"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:background="@android:drawable/ic_delete" />
+            <Button
+                android:id="@+id/logout"
+                android:layout_width="85dp"
+                android:layout_height="45dp"
+                android:layout_marginRight="30dp"
+                android:text="logout" />
 
-        <ImageButton
-            android:id="@+id/acceptBtn"
-            android:layout_width="45dp"
-            android:layout_height="45dp"
-            android:layout_marginLeft="30dp"
-            android:background="@android:drawable/ic_input_add" />
+            <ImageButton
+                android:id="@+id/rejectBtn"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:background="@android:drawable/ic_delete" />
 
-    </LinearLayout>
+            <ImageButton
+                android:id="@+id/acceptBtn"
+                android:layout_width="45dp"
+                android:layout_height="45dp"
+                android:layout_marginLeft="30dp"
+                android:background="@android:drawable/ic_input_add" />
 
-    <com.mindorks.placeholderview.SwipePlaceHolderView
-        android:id="@+id/swipeView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        </LinearLayout>
 
-    </com.mindorks.placeholderview.SwipePlaceHolderView>
-</FrameLayout>
+
+
+        <com.mindorks.placeholderview.SwipePlaceHolderView
+            android:id="@+id/swipeView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+        </com.mindorks.placeholderview.SwipePlaceHolderView>
+
+    </FrameLayout>
+
+    <!--Layout of the side bar menu-->
+    <android.support.design.widget.NavigationView
+        android:id="@+id/nav_view"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        android:fitsSystemWindows="true"
+        app:headerLayout="@layout/sidebar_header"
+        app:menu="@layout/sidebar_drawer" />
+
+</android.support.v4.widget.DrawerLayout>

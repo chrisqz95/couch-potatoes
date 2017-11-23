@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_profile"
+            android:icon="@drawable/profile"
+            android:title="View Profile" />
+        <item
+            android:id="@+id/nav_chats"
+            android:icon="@drawable/speech_bubble"
+            android:title="Show Chats" />
+        <item
+            android:id="@+id/nav_find_matches"
+            android:icon="@drawable/heart"
+            android:title="Find Matches" />
+
+        <item
+            android:id="@+id/nav_settings"
+            android:icon="@drawable/settings_1"
+            android:title="Settings" />
+        <item
+            android:id="@+id/nav_info"
+            android:icon="@drawable/info"
+            android:title="About Us" />
+        <item
+            android:id="@+id/nav_logout"
+            android:icon="@drawable/logout"
+            android:title="Log Out" />
+    </group>
+
+</menu>
