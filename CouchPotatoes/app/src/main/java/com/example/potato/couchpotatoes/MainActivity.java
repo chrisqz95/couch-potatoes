@@ -55,6 +55,10 @@ public class MainActivity extends AppCompatActivity
     private SwipePlaceHolderView mSwipeView;
     private Context mContext;
 
+    // For the side navigation bar
+    private DrawerLayout mDrawer;
+    private NavigationView navView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -63,14 +67,18 @@ public class MainActivity extends AppCompatActivity
 
         // places toolbar on top of the screen
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+        //setSupportActionBar(toolbar);
 
         // adds toggle button for the sidebar on the toolbar
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        mDrawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.addDrawerListener(toggle);
+                this, mDrawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        mDrawer.addDrawerListener(toggle);
         toggle.syncState();
+
+        // set up side navigation bar
+        navView = (NavigationView) findViewById(R.id.nav_view);
+        navView.setNavigationItemSelectedListener(this);
 
         // Find the id's of the buttons
         profileBtn = (android.widget.ImageButton) findViewById(R.id.profileBtn);
@@ -234,9 +242,19 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-    /*
-     * Handles action in the sidebar menu
-     */
+    // Handles pressing back button when sidebar is on the screen
+    @Override
+    public void onBackPressed() {
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        if (drawer.isDrawerOpen(GravityCompat.START)) {
+            drawer.closeDrawer(GravityCompat.START);
+        } else {
+            super.onBackPressed();
+        }
+    }
+
+
+    // Handles action in the sidebar menu
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
