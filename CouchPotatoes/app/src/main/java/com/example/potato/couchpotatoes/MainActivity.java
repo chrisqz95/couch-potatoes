@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -67,6 +66,16 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
         helper = new DBHelper();
 
+        // places toolbar on top of the screen
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        // setSupportActionBar(toolbar);
+
+        // adds toggle button for the sidebar on the toolbar
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawer.addDrawerListener(toggle);
+        toggle.syncState();
 
         // Find the id's of the buttons
         profileBtn = (android.widget.ImageButton) findViewById(R.id.profileBtn);
@@ -240,21 +249,27 @@ public class MainActivity extends AppCompatActivity
 
         if (id == R.id.nav_profile) {
             // TODO: go to profile activity
+            // Make substitute screen appear
 
         } else if (id == R.id.nav_chats) {
             // TODO: go to ChatActivity
+            // Make substitute screen appear
 
         } else if (id == R.id.nav_find_matches) {
             // TODO: go to "Find Matches"
+            // Make substitute screen appear
 
         } else if (id == R.id.nav_settings) {
             // TODO: go to SettingsActivity
+            // Make substitute screen appear
 
         } else if (id == R.id.nav_info) {
             // TODO: go to Page with device information
+            // Make substitute screen appear
 
         } else if (id == R.id.nav_logout) {
             // TODO: go to LoginActivity
+            // Make substitute screen appear
 
         }
 
