@@ -35,8 +35,8 @@
 
     <include
         layout="@layout/content_main"
-        android:layout_height="424dp"
-        tools:layout_editor_absoluteY="143dp" />
+        android:layout_height="321dp"
+        tools:layout_editor_absoluteY="247dp" />
 
     <!--
     <android.support.design.widget.FloatingActionButton
