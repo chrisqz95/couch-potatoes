@@ -1,9 +1,12 @@
 package com.example.potato.couchpotatoes;
 
+import android.*;
+import android.Manifest;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -14,6 +17,7 @@ import android.os.StrictMode;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -27,8 +31,12 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 
+import com.bumptech.glide.Glide;
+import com.firebase.ui.storage.images.FirebaseImageLoader;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
@@ -38,6 +46,8 @@ import com.google.firebase.storage.UploadTask;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
+
+import static android.content.pm.PackageManager.PERMISSION_DENIED;
 
 public class MainActivity extends AppCompatActivity {
     private DBHelper helper;
@@ -50,11 +60,12 @@ public class MainActivity extends AppCompatActivity {
     private Button uploadImage;
     private static final int PICK_FROM_CAMERA = 1;
     private static final int PICK_FROM_FILE = 2;
+    private static int CAN_WRITE_TO_EXTERNAL_STORAGE = 0;
     private InputStream is, is2;
     private String userID, photoID;
     private DialogInterface.OnClickListener dialogClickListener;
     private EditText input;
-    private ContentResolver res;
+    //private ContentResolver res;
 
     // Image chooser source: https://www.youtube.com/watch?v=UiqmekHYCSU
 
@@ -69,32 +80,55 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        res = getContentResolver();
+        // Check for permissions to write to external storage
+        int permissionCheck = ContextCompat.checkSelfPermission(MainActivity.this,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE);
+
+        if ( permissionCheck != PackageManager.PERMISSION_GRANTED ) {
+            ActivityCompat.requestPermissions(MainActivity.this,
+                    new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                    CAN_WRITE_TO_EXTERNAL_STORAGE );
+        }
+        else {
+            CAN_WRITE_TO_EXTERNAL_STORAGE = 1;
+        }
 
         final String[] items = new String[] { "From Camera", "From SD Card" };
         ArrayAdapter<String> adapter = new ArrayAdapter<String>( this, android.R.layout.select_dialog_item, items );
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Select Image");
+        builder.setTitle("Select Photo");
         builder.setAdapter(adapter, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
+                // Pick photo from camera
                 if ( which == 0 ) {
-                    Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE );
-                    File file = new File(Environment.getExternalStorageDirectory(), "snapshot" + String.valueOf( System.currentTimeMillis() + ".jpg"));
+                    if ( CAN_WRITE_TO_EXTERNAL_STORAGE == 0 ) {
+                        // Notify User cannot upload photo from camera
+                        AlertDialog.Builder builderStoragePermissions = new AlertDialog.Builder(MainActivity.this);
+                        builderStoragePermissions.setMessage( "App does not have permission to access external storage! Could not upload photo from camera." )
+                                .setPositiveButton("Ok", dialogClickListener)
+                                .show();
+                    }
+                    else {
 
-                    imageCaptureUri = Uri.fromFile( file );
+                        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                        File file = new File(Environment.getExternalStorageDirectory(), "snapshot" + String.valueOf(System.currentTimeMillis() + ".jpg"));
 
-                    try {
-                        intent.putExtra(MediaStore.EXTRA_OUTPUT, imageCaptureUri );
-                        intent.putExtra("return data", true );
+                        imageCaptureUri = Uri.fromFile(file);
 
-                        startActivityForResult( intent, PICK_FROM_CAMERA);
-                    } catch ( Exception e ) {
-                        e.printStackTrace();
+                        try {
+                            intent.putExtra(MediaStore.EXTRA_OUTPUT, imageCaptureUri);
+                            intent.putExtra("return data", true);
+
+                            startActivityForResult(intent, PICK_FROM_CAMERA);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
                     }
 
                     dialog.cancel();
                 }
+                // Pick photo from SD Card
                 else {
                     Intent intent = new Intent();
                     intent.setType( "image/*" );
@@ -164,8 +198,8 @@ public class MainActivity extends AppCompatActivity {
         if ( resultCode != RESULT_OK )
             return;
 
-        Bitmap bitmap = null;
-        String path = "";
+        //Bitmap bitmap = null;
+        //String path = "";
 
         if ( requestCode == PICK_FROM_FILE) {
             imageCaptureUri = data.getData();
@@ -177,9 +211,10 @@ public class MainActivity extends AppCompatActivity {
         } catch ( FileNotFoundException e ) {
             e.printStackTrace();
         }
-        if ( is != null ) {
-            bitmap = BitmapFactory.decodeStream( is );
-        }
+
+        //if ( is != null ) {
+        //    bitmap = BitmapFactory.decodeStream( is );
+        //}
 
         /*
         if ( requestCode == PICK_FROM_FILE) {
@@ -233,21 +268,19 @@ public class MainActivity extends AppCompatActivity {
         }
         */
 
-        mImageView.setImageBitmap( bitmap );
+        //mImageView.setImageBitmap( bitmap );
 
         dialogClickListener = new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 switch (which){
-                    // Case to delete the clicked message
+                    // Case to upload photo
                     case DialogInterface.BUTTON_POSITIVE:
-                        //Yes button clicked
                         Log.d( "TEST", "YES" );
                         UploadImage( is2 );
                         break;
-                    // Case to cancel delete operation
+                    // Case to cancel photo upload
                     case DialogInterface.BUTTON_NEGATIVE:
-                        // Do nothing. User does not want to delete the clicked message
                         Log.d( "TEST", "NO" );
                         break;
                 }
@@ -267,10 +300,10 @@ public class MainActivity extends AppCompatActivity {
                 .setPositiveButton("Upload", dialogClickListener)
                 .setView(input)
                 //.setView( view )
-                //.setNeutralButton("Cancel", dialogClickListener2)
                 .show();
     }
 
+    /*
     public String getRealPathFromURI ( Uri uri ) {
         String[] proj = { MediaStore.Images.Media.DATA };
         Cursor cursor = managedQuery(uri, proj, null, null, null );
@@ -279,25 +312,38 @@ public class MainActivity extends AppCompatActivity {
         cursor.moveToFirst();
         return cursor.getString( column_index );
     }
+    */
 
-    public void UploadImage ( InputStream is2 ) {
+    public void UploadImage ( InputStream imgStream ) {
         // Upload image
         photoID = helper.getNewChildKey( helper.getPhotoPath() );
         userID = helper.getAuth().getUid();
 
         StorageReference ref = helper.getStorage().getReference().child( helper.getPhotoPath() + userID + "/" + photoID );
 
-        UploadTask uploadTask = ref.putStream( is2 );
+        UploadTask uploadTask = ref.putStream( imgStream );
 
         uploadTask.addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
                 Log.d( "TEST", "File uplaod failed" );
+
+                // Notify User of failed upload
+                AlertDialog.Builder builderUploadFailed = new AlertDialog.Builder(MainActivity.this);
+                builderUploadFailed.setMessage( "Upload failed! Please try again." )
+                        .setPositiveButton("Ok", null )
+                        .show();
             }
         }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                 Log.d( "TEST", "File upload success" );
+
+                // Notify User of successful upload
+                AlertDialog.Builder builderUploadSuccess = new AlertDialog.Builder(MainActivity.this);
+                builderUploadSuccess.setMessage( "Upload successful!" )
+                        .setPositiveButton("Ok", null )
+                        .show();
 
                 // Get photo uri from Firebase Storage
                 Uri downloadUrl = taskSnapshot.getDownloadUrl();
@@ -312,37 +358,31 @@ public class MainActivity extends AppCompatActivity {
                 helper.addToUserPhoto( userID, photoID );
                 helper.addToPhoto( photoID, userID, title, descr, uri );
 
-                //testAttachPhotoListener( photoID );
-            }
-        });
-    }
+                // Update image view with photo
+                // Note: Here we only want to add listener once to verify photo upload
+                helper.getDb().getReference( helper.getPhotoPath() ).child( photoID ).child( "uri" ).addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        if ( dataSnapshot.getValue() != null ) {
+                            // Get reference to photo on Firebase Storage
+                            StorageReference uriRef = helper.getStorage().getReferenceFromUrl( dataSnapshot.getValue().toString() );
 
-    /*
-    public void testAttachPhotoListener ( String photoID ) {
-        helper.getDb().getReference( helper.getPhotoPath() + photoID ).child( "uri" ).addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                if ( dataSnapshot.getValue() != null ) {
-                    Uri uri = Uri.parse(dataSnapshot.getValue().toString());
-
-                    try {
-                        is = res.openInputStream(uri);
-                        if (is != null) {
-                            Bitmap bitmap = BitmapFactory.decodeStream(is);
-                            mImageView.setImageBitmap(bitmap);
+                            // Set ImageView to contain photo
+                            Glide.with(MainActivity.this)
+                                    .using(new FirebaseImageLoader())
+                                    .load(uriRef)
+                                    .into(mImageView);
                         }
-                    } catch (FileNotFoundException e) {
-                        e.printStackTrace();
                     }
-                }
-            }
 
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                //TODO
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+                        //TODO
+                        Log.d( "TEST", databaseError.getMessage() );
+                    }
+                });
             }
         });
     }
-    */
 }
 
