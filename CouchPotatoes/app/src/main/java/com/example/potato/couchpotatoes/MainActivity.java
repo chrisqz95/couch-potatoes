@@ -102,6 +102,9 @@ public class MainActivity extends AppCompatActivity {
                     new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
                     CAN_WRITE_TO_EXTERNAL_STORAGE );
         }
+        else {
+            CAN_WRITE_TO_EXTERNAL_STORAGE = PackageManager.PERMISSION_GRANTED;
+        }
 
         // Create AlertDialog to prompt user for location of photo to upload
         final String[] items = new String[] { "From Camera", "From SD Card" };
