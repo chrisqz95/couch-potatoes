@@ -1,5 +1,6 @@
 package com.example.potato.couchpotatoes;
 
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -17,14 +18,20 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.InputType;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
@@ -46,6 +53,8 @@ public class MainActivity extends AppCompatActivity {
     private InputStream is, is2;
     private String userID, photoID;
     private DialogInterface.OnClickListener dialogClickListener;
+    private EditText input;
+    private ContentResolver res;
 
     // Image chooser source: https://www.youtube.com/watch?v=UiqmekHYCSU
 
@@ -59,6 +68,8 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        res = getContentResolver();
 
         final String[] items = new String[] { "From Camera", "From SD Card" };
         ArrayAdapter<String> adapter = new ArrayAdapter<String>( this, android.R.layout.select_dialog_item, items );
@@ -96,6 +107,7 @@ public class MainActivity extends AppCompatActivity {
         final AlertDialog dialog = builder.create();
 
         mImageView = (ImageView) findViewById( R.id.testImageView );
+        //mImageView = (ImageView) findViewById( R.id.imageViewPhoto );
         uploadImage = (Button) findViewById( R.id.uploadImage);
         uploadImage.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -242,10 +254,19 @@ public class MainActivity extends AppCompatActivity {
             }
         };
 
+        //LayoutInflater factory = LayoutInflater.from(MainActivity.this);
+        //final View view = factory.inflate(R.layout.content_image_view, null);
+        input = new EditText(MainActivity.this);
+
+        input.setInputType(InputType.TYPE_CLASS_TEXT);
+        //input.setText( "Enter title" );
+
         AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
-        builder.setMessage( "Upload image?" )
-                .setNegativeButton("No", dialogClickListener)
-                .setPositiveButton("Yes", dialogClickListener)
+        builder.setMessage( "Enter description:" )
+                .setNegativeButton("Cancel", dialogClickListener)
+                .setPositiveButton("Upload", dialogClickListener)
+                .setView(input)
+                //.setView( view )
                 //.setNeutralButton("Cancel", dialogClickListener2)
                 .show();
     }
@@ -284,13 +305,44 @@ public class MainActivity extends AppCompatActivity {
                 Log.d( "TEST", "Download URL: " + downloadUrl );
 
                 String title = imageCaptureUri.getLastPathSegment();
-                String descr = "";
+                String descr = input.getText().toString();
                 String uri = ( downloadUrl != null ) ? downloadUrl.toString() : "";
 
                 // Add photo meta data to Firebase Database
                 helper.addToUserPhoto( userID, photoID );
                 helper.addToPhoto( photoID, userID, title, descr, uri );
+
+                //testAttachPhotoListener( photoID );
             }
         });
     }
+
+    /*
+    public void testAttachPhotoListener ( String photoID ) {
+        helper.getDb().getReference( helper.getPhotoPath() + photoID ).child( "uri" ).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if ( dataSnapshot.getValue() != null ) {
+                    Uri uri = Uri.parse(dataSnapshot.getValue().toString());
+
+                    try {
+                        is = res.openInputStream(uri);
+                        if (is != null) {
+                            Bitmap bitmap = BitmapFactory.decodeStream(is);
+                            mImageView.setImageBitmap(bitmap);
+                        }
+                    } catch (FileNotFoundException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                //TODO
+            }
+        });
+    }
+    */
 }
+
