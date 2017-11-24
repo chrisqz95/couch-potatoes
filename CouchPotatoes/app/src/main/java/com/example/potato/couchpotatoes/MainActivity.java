@@ -67,7 +67,7 @@ public class MainActivity extends AppCompatActivity
 
         // places toolbar on top of the screen
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        //setSupportActionBar(toolbar);
+        setSupportActionBar(toolbar);
 
         // adds toggle button for the sidebar on the toolbar
         mDrawer = (DrawerLayout) findViewById(R.id.drawer_layout);
