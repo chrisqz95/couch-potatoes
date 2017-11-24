@@ -36,6 +36,10 @@
                 android:label="@string/title_activity_message"
                 android:theme="@style/AppTheme.NoActionBar" />
         <activity
+            android:name=".SignUpActivity"
+            android:label="@string/title_activity_sign_up"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
                 android:name=".RegistrationActivity"
                 android:label="@string/title_activity_registration"
                 android:theme="@style/AppTheme.NoActionBar"/>
