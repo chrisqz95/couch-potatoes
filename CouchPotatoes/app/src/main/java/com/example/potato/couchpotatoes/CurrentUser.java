@@ -2,6 +2,7 @@ package com.example.potato.couchpotatoes;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.Map;
 
 /**
@@ -10,6 +11,9 @@ import java.util.Map;
 
 public class CurrentUser extends User {
     private ArrayList<String> contactList = new ArrayList<String>();
+    private LinkedList<String> matchedUsersId = new LinkedList<>();
+    // may or may not need. Alternative is to populate one a linked list in HomeActivity instead.
+    private LinkedList<MatchedUser> matchedUsers = new LinkedList<>();
 
     public CurrentUser () {}
 
