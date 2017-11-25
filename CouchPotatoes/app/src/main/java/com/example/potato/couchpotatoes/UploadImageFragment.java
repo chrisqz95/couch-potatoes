@@ -275,6 +275,7 @@ public class UploadImageFragment extends Fragment implements View.OnClickListene
                 // Note: Here we only want to add listener once to verify photo upload
                 // NOTE: Image View is only used to check for successful file upload.
                 //       Remove image view and all code below in actual app.
+                /*
                 helper.getDb().getReference( helper.getPhotoPath() ).child( photoID ).child( "uri" ).addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
@@ -297,6 +298,7 @@ public class UploadImageFragment extends Fragment implements View.OnClickListene
                         Log.d( "TEST", databaseError.getMessage() );
                     }
                 });
+                */
             }
         });
     }
