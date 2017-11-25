@@ -1,119 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="com.example.potato.couchpotatoes.MainActivity"
     tools:showIn="@layout/activity_main">
 
-    <!--app bar on top of the screen-->
-    <android.support.design.widget.AppBarLayout
-        android:layout_width="match_parent"
+    <Button
+        android:id="@+id/viewChats"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:fitsSystemWindows="true"
-        android:theme="@style/AppTheme.AppBarOverlay">
+        android:layout_marginBottom="394dp"
+        android:layout_marginEnd="4dp"
+        android:layout_marginStart="292dp"
+        android:layout_marginTop="3dp"
+        android:text="Chat"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-        <!--toolbar containing-->
-        <android.support.v7.widget.Toolbar
-            android:id="@+id/toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            >
+    <fragment
+        android:id="@+id/fragment"
+        android:name="com.example.potato.couchpotatoes.UploadImageFragment"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:layout="@layout/fragment_upload_image" />
 
-        </android.support.v7.widget.Toolbar>
-
-    </android.support.design.widget.AppBarLayout>
-
-    <!--layout of the main content of home page-->
-    <FrameLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/cardview_light_background"
-        android:orientation="vertical"
-        tools:context=".MainActivity">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="65dp"
-            android:layout_gravity="top"
-            android:gravity="center_horizontal|center"
-            android:orientation="horizontal">
-
-            <ImageButton
-                android:id="@+id/profileBtn"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:layout_marginRight="0dp"
-                android:backgroundTint="@color/cardview_light_background"
-                android:tint="@android:color/holo_blue_dark"
-                app:srcCompat="@android:drawable/ic_menu_gallery" />
-
-            <Button
-                android:id="@+id/datingBtn"
-                android:layout_width="100dp"
-                android:layout_height="45dp"
-                android:text="@string/dating_page" />
-
-            <Button
-                android:id="@+id/friendsBtn"
-                android:layout_width="100dp"
-                android:layout_height="45dp"
-                android:text="@string/friends_page" />
-
-            <ImageButton
-                android:id="@+id/messengerBtn"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:backgroundTint="@color/cardview_light_background"
-                android:tint="@android:color/holo_blue_dark"
-                app:srcCompat="@android:drawable/sym_action_chat" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="65dp"
-            android:layout_gravity="bottom"
-            android:gravity="center"
-            android:orientation="horizontal">
-
-            <Button
-                android:id="@+id/logout"
-                android:layout_width="85dp"
-                android:layout_height="45dp"
-                android:layout_marginRight="30dp"
-                android:text="logout" />
-
-            <ImageButton
-                android:id="@+id/rejectBtn"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:background="@android:drawable/ic_delete" />
-
-            <ImageButton
-                android:id="@+id/acceptBtn"
-                android:layout_width="45dp"
-                android:layout_height="45dp"
-                android:layout_marginLeft="30dp"
-                android:background="@android:drawable/ic_input_add" />
-
-        </LinearLayout>
-
-
-
-        <com.mindorks.placeholderview.SwipePlaceHolderView
-            android:id="@+id/swipeView"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-        </com.mindorks.placeholderview.SwipePlaceHolderView>
-
-    </FrameLayout>
-
-</LinearLayout>
+</android.support.constraint.ConstraintLayout>

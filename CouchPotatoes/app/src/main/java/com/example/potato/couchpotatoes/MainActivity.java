@@ -1,31 +1,12 @@
 package com.example.potato.couchpotatoes;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
-import android.widget.FrameLayout;
-import android.widget.ImageView;
-import android.widget.ListView;
-import android.widget.TextView;
-
-import com.bumptech.glide.Glide;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.mindorks.placeholderview.SwipeDecor;
-import com.mindorks.placeholderview.SwipePlaceHolderView;
-import com.mindorks.placeholderview.annotations.Click;
-import com.mindorks.placeholderview.annotations.Layout;
-import com.mindorks.placeholderview.annotations.Resolve;
-import com.mindorks.placeholderview.annotations.swipe.SwipeCancelState;
-import com.mindorks.placeholderview.annotations.swipe.SwipeIn;
-import com.mindorks.placeholderview.annotations.swipe.SwipeInState;
-import com.mindorks.placeholderview.annotations.swipe.SwipeOut;
-import com.mindorks.placeholderview.annotations.swipe.SwipeOutState;
 
 // for the side bar activity
 import android.support.design.widget.NavigationView;
@@ -37,29 +18,17 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
-/**
- * The home page which shows potential matches.
- */
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
     private DBHelper helper;
+    private android.widget.TextView userName;
     private android.widget.Button logout;
-    private android.widget.ImageButton rejectBtn;
-    private android.widget.ImageButton acceptBtn;
-    private android.widget.ImageButton profileBtn;
-    private android.widget.Button datingBtn;
-    private android.widget.Button friendsBtn;
-    private android.widget.ImageButton messengerBtn;
-
-    // For the user cards
-    private SwipePlaceHolderView mSwipeView;
-    private Context mContext;
+    private android.widget.Button chat;
 
     // For the side navigation bar
     private DrawerLayout mDrawer;
     private NavigationView navView;
 
-    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
@@ -69,180 +38,54 @@ public class MainActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        // adds toggle button for the sidebar on the toolbar
+        // enables toggle button for the sidebar on the toolbar
         mDrawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, mDrawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         mDrawer.addDrawerListener(toggle);
         toggle.syncState();
 
-        // set up side navigation bar
+        userName = (android.widget.TextView) findViewById(R.id.userName);
+        logout = (android.widget.Button) findViewById(R.id.logout);
+        chat = (android.widget.Button) findViewById(R.id.viewChats);
+        
+		// set up side navigation bar
         navView = (NavigationView) findViewById(R.id.nav_view);
         navView.setNavigationItemSelectedListener(this);
 
-        // Find the id's of the buttons
-        profileBtn = (android.widget.ImageButton) findViewById(R.id.profileBtn);
-        datingBtn = (android.widget.Button) findViewById(R.id.datingBtn);
-        friendsBtn = (android.widget.Button) findViewById(R.id.friendsBtn);
-        messengerBtn = (android.widget.ImageButton) findViewById(R.id.messengerBtn);
-        acceptBtn = (android.widget.ImageButton) findViewById(R.id.acceptBtn);
-        rejectBtn = (android.widget.ImageButton) findViewById(R.id.rejectBtn);
-        logout = findViewById(R.id.logout);
+        // Display user's name if logged in
+        if ( helper.isUserLoggedIn() ) {
+            String displayName = helper.getAuthUserDisplayName();
 
+            userName.setText( displayName );
+        }
+        // Else, redirect user to login page
+        else {
+            startActivity( new Intent( getApplicationContext(), LoginActivity.class ) );
+            finish();
+        }
 
-        // Set up how many cards are displayed as a stack
-        mSwipeView = (SwipePlaceHolderView) findViewById(R.id.swipeView);
-        mContext = getApplicationContext();
-        mSwipeView.getBuilder().setDisplayViewCount(3).setSwipeDecor(new SwipeDecor()
-                .setPaddingTop(20).setRelativeScale(0.01f));
-
-        // Adds fake users for testing purposes
-        User user_test1 = new MatchedUser(null, null, "Bob", null, "Smith",
-                null, null, "Los Angleles", null, null, null,
-                0, 0, false, false);
-        User user_test2 = new MatchedUser(null, null, "Gary", null, "Gillespie",
-                null, null, "La Jolla", null, null, null,
-                0, 0, false, false);
-        User user_test3 = new MatchedUser(null, null, "Amy", null, "Blah",
-                null, null, "New York City", null, null, null,
-                0, 0, false, false);
-        User user_test4 = new MatchedUser(null, null, "Thomas", null, "Anderson",
-                null, null, "New York City", null, null, null,
-                0, 0, false, false);
-        User user_test5 = new MatchedUser(null, null, "Anita", null, "Bath",
-                null, null, "New York City", null, null, null,
-                0, 0, false, false);
-        mSwipeView.addView(new UserCard(mContext, user_test1, mSwipeView));
-        mSwipeView.addView(new UserCard(mContext, user_test2, mSwipeView));
-        mSwipeView.addView(new UserCard(mContext, user_test3, mSwipeView));
-        mSwipeView.addView(new UserCard(mContext, user_test4, mSwipeView));
-        mSwipeView.addView(new UserCard(mContext, user_test5, mSwipeView));
-
-        // Simulate a swipe right or left by pressing the bottom buttons
-        acceptBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mSwipeView.doSwipe(true);
-            }
-        });
-        rejectBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mSwipeView.doSwipe(false);
-            }
-        });
-
-        // Log out and display the log in screen
+        // Add event handler to logout button to begin user logout
         logout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                helper.auth.signOut();
+                helper.getAuth().signOut();
                 startActivity( new Intent( getApplicationContext(), LoginActivity.class ) );
                 finish();
             }
         });
 
-
+        // Add event handler to chat button to start the ChatRoomActivity
+        chat.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent( getApplicationContext(), ChatRoomActivity.class );
+                //intent.putExtra( "userName", userName.getText() );
+                startActivity( intent );
+            }
+        });
     }
-
-    /**
-     * Grabs a user's info and displays it in a swipe-able card.
-     *
-     *
-     */
-    @Layout(R.layout.card_view)
-    public class UserCard {
-        @com.mindorks.placeholderview.annotations.View(R.id.profileImageView)
-        private ImageView profileImageView;
-
-        @com.mindorks.placeholderview.annotations.View(R.id.nameAgeTxt)
-        private TextView nameAgeTxt;
-
-        @com.mindorks.placeholderview.annotations.View(R.id.locationNameTxt)
-        private TextView locationNameTxt;
-
-        private User mUser;
-        private Context mContext;
-        private SwipePlaceHolderView mSwipeView;
-        private String image;
-
-        /**
-         * Create a card which displays a user's info.
-         *
-         * @param context - current activity
-         * @param user - the user to display info for
-         * @param swipeView - space used to detect a swipe
-         */
-        public UserCard(Context context, User user, SwipePlaceHolderView swipeView) {
-            mContext = context;
-            mUser = user;
-            mSwipeView = swipeView;
-        }
-
-        /**
-         * When the card is clicked, open a page displaying more user info.
-         */
-        @Click(R.id.cardView)
-        private void onClick() {
-            Intent intent = new Intent(getApplicationContext(), UserActivity.class);
-            intent.putExtra("UserInfo", mUser);
-            startActivity(intent);
-        }
-
-        /**
-         * Populate the image and text fields of the card.
-         */
-        @Resolve
-        private void onResolved() {
-            image = "http://www.aft.com/components/com_easyblog/themes/wireframe/images/placeholder-image.png";
-            Glide.with(mContext).load(image).into(profileImageView);
-            nameAgeTxt.setText(mUser.getFirstName());
-            locationNameTxt.setText(mUser.getCity());
-        }
-
-        /**
-         * When the card is swiped left, log the event
-         */
-        @SwipeOut
-        private void onSwipedOut() {
-            Log.d("EVENT", "onSwipedOut");
-            mSwipeView.addView(this);
-        }
-
-        /**
-         * When the card is released but wasn't swiped, reset to its original position
-         */
-        @SwipeCancelState
-        private void onSwipeCancelState() {
-            Log.d("EVENT", "onSwipeCancelState");
-        }
-
-        /**
-         * When the card is swiped right, log the event
-         */
-        @SwipeIn
-        private void onSwipeIn() {
-            Log.d("EVENT", "onSwipedIn");
-        }
-
-        /**
-         * Detects when the card is moved enough to the right to count as an accept
-         */
-        @SwipeInState
-        private void onSwipeInState() {
-            Log.d("EVENT", "onSwipeInState");
-        }
-
-        /**
-         * Detects when the card is moved enough to the left to count as a reject
-         */
-        @SwipeOutState
-        private void onSwipeOutState() {
-            Log.d("EVENT", "onSwipeOutState");
-        }
-    }
-
-    // Handles pressing back button when sidebar is on the screen
+// Handles pressing back button when sidebar is on the screen
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
