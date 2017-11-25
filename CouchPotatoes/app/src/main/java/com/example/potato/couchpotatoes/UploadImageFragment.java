@@ -48,6 +48,8 @@ import static android.app.Activity.RESULT_OK;
 // NOTE: Image View is only used to check for successful file upload.
 //       Remove image view in actual app.
 // Image chooser source: https://www.youtube.com/watch?v=UiqmekHYCSU
+//
+// Fragment onClickListener source: https://stackoverflow.com/questions/18711433/button-listener-for-button-in-fragment-in-android
 
 public class UploadImageFragment extends Fragment implements View.OnClickListener {
     private static final int PICK_FROM_CAMERA = 1;
