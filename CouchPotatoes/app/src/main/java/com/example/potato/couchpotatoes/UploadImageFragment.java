@@ -85,7 +85,7 @@ public class UploadImageFragment extends Fragment implements View.OnClickListene
         view = inflater.inflate(R.layout.fragment_upload_image, container, false);
         btnUploadImage = (Button) view.findViewById(R.id.btnUploadImage);
         btnUploadImage.setOnClickListener(this);
-        mImageView = (ImageView) view.findViewById( R.id.testUploadImageView );
+        //mImageView = (ImageView) view.findViewById( R.id.testUploadImageView );
 
         // Check for permissions to write to external storage
         int permissionCheck = ContextCompat.checkSelfPermission(view.getContext(),
