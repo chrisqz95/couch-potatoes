@@ -7,6 +7,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.*;
 import com.google.firebase.database.*;
+import com.google.firebase.storage.FirebaseStorage;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -23,6 +24,7 @@ public class DBHelper {
 
     private FirebaseAuth auth;
     private FirebaseDatabase db;
+    private FirebaseStorage storage;
     private FirebaseUser user;
     private FirebaseAuthException authException;
 
@@ -57,6 +59,7 @@ public class DBHelper {
     public DBHelper() {
         auth = FirebaseAuth.getInstance();
         db = FirebaseDatabase.getInstance();
+        storage = FirebaseStorage.getInstance();
         user = auth.getCurrentUser();
     }
 
@@ -724,5 +727,13 @@ public class DBHelper {
 
     public String getLoginRecordPath() {
         return loginRecordPath;
+    }
+
+    public FirebaseStorage getStorage() {
+        return storage;
+    }
+
+    public void setStorage(FirebaseStorage storage) {
+        this.storage = storage;
     }
 }
