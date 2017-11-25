@@ -268,10 +268,6 @@ public class MainActivity extends AppCompatActivity
             // TODO: go to ChatActivity
             // Make substitute screen appear
 
-        } else if (id == R.id.nav_find_matches) {
-            // TODO: go to "Find Matches"
-            // Make substitute screen appear
-
         } else if (id == R.id.nav_settings) {
             // TODO: go to SettingsActivity
             // Make substitute screen appear
