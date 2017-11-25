@@ -12,43 +12,6 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="65dp"
-        android:layout_gravity="top"
-        android:gravity="center_horizontal|center"
-        android:orientation="horizontal">
-
-        <ImageButton
-            android:id="@+id/profileBtn"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_marginRight="0dp"
-            android:backgroundTint="@color/cardview_light_background"
-            android:tint="@android:color/holo_blue_dark"
-            app:srcCompat="@android:drawable/ic_menu_gallery" />
-
-        <Button
-            android:id="@+id/datingBtn"
-            android:layout_width="100dp"
-            android:layout_height="45dp"
-            android:text="@string/dating_page" />
-
-        <Button
-            android:id="@+id/friendsBtn"
-            android:layout_width="100dp"
-            android:layout_height="45dp"
-            android:text="@string/friends_page" />
-
-        <ImageButton
-            android:id="@+id/messengerBtn"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:backgroundTint="@color/cardview_light_background"
-            android:tint="@android:color/holo_blue_dark"
-            app:srcCompat="@android:drawable/sym_action_chat" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="65dp"
         android:layout_gravity="bottom"
         android:gravity="center"
         android:orientation="horizontal">

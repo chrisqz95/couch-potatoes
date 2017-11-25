@@ -1,14 +1,24 @@
 package com.example.potato.couchpotatoes;
 
+import android.app.ActionBar;
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.app.DialogFragment;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -26,6 +36,8 @@ import com.mindorks.placeholderview.annotations.swipe.SwipeInState;
 import com.mindorks.placeholderview.annotations.swipe.SwipeOut;
 import com.mindorks.placeholderview.annotations.swipe.SwipeOutState;
 
+import org.w3c.dom.Text;
+
 /**
  * The home page which shows potential matches.
  */
@@ -34,10 +46,6 @@ public class MainActivity extends AppCompatActivity {
     private android.widget.Button logout;
     private android.widget.ImageButton rejectBtn;
     private android.widget.ImageButton acceptBtn;
-    private android.widget.ImageButton profileBtn;
-    private android.widget.Button datingBtn;
-    private android.widget.Button friendsBtn;
-    private android.widget.ImageButton messengerBtn;
 
     // For the user cards
     private SwipePlaceHolderView mSwipeView;
@@ -45,15 +53,13 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        // Sets up the activity layout
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         helper = new DBHelper();
+        ActionBar actionBar = getActionBar();
 
         // Find the id's of the buttons
-        profileBtn = (android.widget.ImageButton) findViewById(R.id.profileBtn);
-        datingBtn = (android.widget.Button) findViewById(R.id.datingBtn);
-        friendsBtn = (android.widget.Button) findViewById(R.id.friendsBtn);
-        messengerBtn = (android.widget.ImageButton) findViewById(R.id.messengerBtn);
         acceptBtn = (android.widget.ImageButton) findViewById(R.id.acceptBtn);
         rejectBtn = (android.widget.ImageButton) findViewById(R.id.rejectBtn);
         logout = findViewById(R.id.logout);
@@ -112,9 +118,55 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
+     * Creates a dialog containing the info of a user and the similar interests they share.
+     */
+    public static class UserInfoDialogFragment extends DialogFragment {
+        /**
+         * Creates a dialog fragment using a user object
+         * @param user - user to get info from
+         * @return dialog containing user info
+         */
+        public static UserInfoDialogFragment newInstance(User user) {
+            UserInfoDialogFragment frag = new UserInfoDialogFragment();
+            Bundle args = new Bundle();
+
+            // Pass the user object into the dialog
+            args.putSerializable("UserInfo", user);
+            frag.setArguments(args);
+            return frag;
+        }
+
+        // When the dialog is created, show the info
+        @Override
+        public Dialog onCreateDialog(Bundle savedInstanceState) {
+            // Sets up the dialog layout
+            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+            LayoutInflater inflater = getActivity().getLayoutInflater();
+            View content = inflater.inflate(R.layout.user_dialog, null);
+            User mUser = (User) getArguments().getSerializable("UserInfo");
+
+            // Creates a close button to dismiss the dialog
+            builder.setView(content).setNegativeButton(R.string.close, new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
+                    // User closed the dialog
+                    UserInfoDialogFragment.this.getDialog().cancel();
+                }
+            });
+
+            // Populates the user info text views
+            TextView nameAgeTxt = (TextView) content.findViewById(R.id.nameAgeTxt);
+            TextView locationTxt = (TextView) content.findViewById(R.id.locationTxt);
+            nameAgeTxt.setText(mUser.getFirstName());
+            locationTxt.setText(mUser.getCity());
+
+            return builder.create();
+        }
+    }
+
+    /**
      * Grabs a user's info and displays it in a swipe-able card.
      *
-     *
+     * Source: https://blog.mindorks.com/android-tinder-swipe-view-example-3eca9b0d4794
      */
     @Layout(R.layout.card_view)
     public class UserCard {
@@ -148,11 +200,10 @@ public class MainActivity extends AppCompatActivity {
         /**
          * When the card is clicked, open a page displaying more user info.
          */
-        @Click(R.id.cardView)
+        @Click(R.id.cardText)
         private void onClick() {
-            Intent intent = new Intent(getApplicationContext(), UserActivity.class);
-            intent.putExtra("UserInfo", mUser);
-            startActivity(intent);
+            UserInfoDialogFragment userFrag = UserInfoDialogFragment.newInstance(mUser);
+            userFrag.show(getFragmentManager(), "info");
         }
 
         /**
@@ -160,10 +211,20 @@ public class MainActivity extends AppCompatActivity {
          */
         @Resolve
         private void onResolved() {
+            // Loads the profile image
             image = "http://www.aft.com/components/com_easyblog/themes/wireframe/images/placeholder-image.png";
             Glide.with(mContext).load(image).into(profileImageView);
             nameAgeTxt.setText(mUser.getFirstName());
             locationNameTxt.setText(mUser.getCity());
+
+            /**
+             * When the profile image is clicked, open the user gallery activity
+             */
+            profileImageView.setOnClickListener(new View.OnClickListener() {
+                public void onClick(View view) {
+                    startActivity(new Intent(MainActivity.this, UserGalleryActivity.class));
+                }
+            });
         }
 
         /**
