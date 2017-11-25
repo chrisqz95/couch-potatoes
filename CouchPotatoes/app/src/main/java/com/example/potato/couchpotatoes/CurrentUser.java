@@ -1,5 +1,7 @@
 package com.example.potato.couchpotatoes;
 
+import java.util.ArrayList;
+
 /**
  * Created by Admin on 11/7/17.
  */
@@ -10,12 +12,25 @@ public class CurrentUser extends User {
     private String state;
     private String country;
 
+    /* TODO DISCUSS NEED FOR FIELDS BELOW
+    //
+    private int min_age_preference;
+    private int max_age_preference;
+
+    // Note: When updating fields below, need to either refetch data from Firebase after submitting
+    //       the new data or add the new data here in addition to submitting the new data to Firebase
+    private ArrayList<String> contacts = new ArrayList<>();
+    ArrayList<String> photos = new ArrayList<>();
+    ArrayList<User_Interest> interests = new ArrayList<>();
+    ArrayList<String> genderPreferences = new ArrayList<>();
+    */
+
     public CurrentUser () {}
 
     public CurrentUser ( String userID, String firstName, String middleName, String lastName,
-                         String birthDate, String gender, String bio, double latitude, double longitude,
+                         String birth_date, String gender, String bio, double latitude, double longitude,
                          boolean locked, boolean suspended, String email, String city, String state, String country ) {
-        super( userID, firstName, middleName, lastName, birthDate, gender, bio, latitude, longitude, locked, suspended );
+        super( userID, firstName, middleName, lastName, birth_date, gender, bio, latitude, longitude, locked, suspended );
 
         this.setEmail(email);
         this.setCity(city);

@@ -9,7 +9,7 @@ public abstract class User {
     private String firstName;
     private String middleName;
     private String lastName;
-    private String birthDate;
+    private String birth_date; // TODO Do not use Camel Case here; Need to update on SQL database first before change
     private String gender;
     private String bio;
     private double latitude;
@@ -19,13 +19,13 @@ public abstract class User {
 
     public User () {}
 
-    public User ( String uid, String firstName, String middleName, String lastName, String birthDate,
+    public User ( String uid, String firstName, String middleName, String lastName, String birth_date,
                   String gender, String bio, double latitude, double longitude, boolean locked, boolean suspended ) {
         this.uid = uid;
         this.firstName = firstName;
         this.middleName = middleName;
         this.lastName = lastName;
-        this.birthDate = birthDate;
+        this.birth_date = birth_date;
         this.gender = gender;
         this.bio = bio;
         this.latitude = latitude;
@@ -115,10 +115,10 @@ public abstract class User {
     }
 
     public String getBirthDate() {
-        return birthDate;
+        return birth_date;
     }
 
     public void setBirthDate(String birthDate) {
-        this.birthDate = birthDate;
+        this.birth_date = birthDate;
     }
 }

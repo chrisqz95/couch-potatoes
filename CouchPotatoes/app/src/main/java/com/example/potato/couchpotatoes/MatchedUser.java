@@ -8,8 +8,8 @@ public final class MatchedUser extends User {
     public MatchedUser () {}
 
     public MatchedUser ( String userID, String firstName, String middleName, String lastName,
-                         String birthDate, String gender, String bio, double latitude, double longitude,
+                         String birth_date, String gender, String bio, double latitude, double longitude,
                          boolean locked, boolean suspended ) {
-        super( userID, firstName, middleName, lastName, birthDate, gender, bio, latitude, longitude, locked, suspended );
+        super( userID, firstName, middleName, lastName, birth_date, gender, bio, latitude, longitude, locked, suspended );
     }
 }

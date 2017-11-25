@@ -84,8 +84,8 @@ public class RegistrationActivity extends AppCompatActivity {
 
                 // Create new user object
                 user = new CurrentUser(
-                    email, userID, firstName, middleName, lastName, birthDate, gender, city, state, country, bio,
-                    latitude, longitude, locked, suspended );
+                    userID, firstName, middleName, lastName, birthDate, gender, bio,
+                    latitude, longitude, locked, suspended, email, city, state, country );
 
                 //helper.updateAuthUserDisplayName( displayName );
 

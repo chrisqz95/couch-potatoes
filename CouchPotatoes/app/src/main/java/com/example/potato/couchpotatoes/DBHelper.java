@@ -74,11 +74,10 @@ public class DBHelper {
         return user;
     }
 
-
+    /*
     public boolean loginUser(String email, String password) {
         //Activity.finish();
         // TODO
-        /*
         auth.signInWithEmailAndPassword( email, password ).addOnCompleteListener(LoginActivity.this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
@@ -99,9 +98,9 @@ public class DBHelper {
         else {
             return false;
         }
-        */
         return false;
     }
+    */
 
     public void createUser(String email, String password) {
         /*
@@ -208,8 +207,29 @@ public class DBHelper {
 
     /* Methods to add data to Firebase */
 
-    public boolean addNewUser( User user ) {
+    public boolean addNewUser( CurrentUser user ) {
         db.getReference(getUserPath()).child( user.getUid() ).setValue( user );
+
+        return checkExists( getUserPath() + user.getUid() );
+    }
+
+    public boolean addNewUser( String userID, String firstName, String middleName, String lastName,
+                               String birth_date, String gender, String bio, double latitude, double longitude,
+                               boolean locked, boolean suspended, String email, String city, String state, String country ) {
+        db.getReference(getUserPath()).child( userID ).child( "birth_date" ).setValue( birth_date );
+        db.getReference(getUserPath()).child( userID ).child( "email" ).setValue( email );
+        db.getReference(getUserPath()).child( userID ).child( "bio" ).setValue( bio );
+        db.getReference(getUserPath()).child( userID ).child( "gender" ).setValue( gender );
+        db.getReference(getUserPath()).child( userID ).child( "firstName" ).setValue( firstName );
+        db.getReference(getUserPath()).child( userID ).child( "middleName" ).setValue( middleName );
+        db.getReference(getUserPath()).child( userID ).child( "lastName" ).setValue( lastName );
+        db.getReference(getUserPath()).child( userID ).child( "latitude" ).setValue( latitude );
+        db.getReference(getUserPath()).child( userID ).child( "longitude" ).setValue( longitude );
+        db.getReference(getUserPath()).child( userID ).child( "locked" ).setValue( locked );
+        db.getReference(getUserPath()).child( userID ).child( "suspended" ).setValue( suspended );
+        db.getReference(getUserPath()).child( userID ).child( "city" ).setValue( city );
+        db.getReference(getUserPath()).child( userID ).child( "state" ).setValue( state );
+        db.getReference(getUserPath()).child( userID ).child( "country" ).setValue( country );
 
         return checkExists( getUserPath() + user.getUid() );
     }
@@ -528,15 +548,15 @@ public class DBHelper {
 
     /* Methods to update data on Firebase */
 
-    public void updateUser( User user ) {
+    public void updateUser( CurrentUser user ) {
         Map<String, Object> updates = new HashMap<>();
 
         updates.put("email", user.getEmail());
-        updates.put("uid", user.getUid());
+        //updates.put("uid", user.getUid());
         updates.put("firstName", user.getFirstName());
         updates.put("middleName", user.getMiddleName());
         updates.put("lastName", user.getLastName());
-        updates.put("dob", user.getDob());
+        updates.put("birth_date", user.getBirthDate());
         updates.put("gender", user.getGender());
         updates.put("city", user.getCity());
         updates.put("state", user.getState());
@@ -550,6 +570,16 @@ public class DBHelper {
         db.getReference(getUserPath()).child(user.getUid()).updateChildren(updates);
     }
 
+    // Use to update a single field of the User object on the Firebase Database
+    // Example: To update a user's email to "test@test.com":   updateUserField( userID, "email", "test@test.com" );
+    public void updateUserField ( String userID, String keyField, String newValue ) {
+        Map<String, Object> updates = new HashMap<>();
+
+        updates.put( keyField, newValue );
+
+        db.getReference(getUserPath()).child( userID ).updateChildren(updates);
+    }
+
     public void updatePhoto( String photoID, String userID, String title, String description, String uri ) {
         Map<String, Object> updates = new HashMap<>();
 
@@ -561,11 +591,39 @@ public class DBHelper {
         db.getReference( getPhotoPath() ).child( photoID ).updateChildren( updates );
     }
 
+    public void updatePhotoField ( String photoID, String keyField, String newValue ) {
+        Map<String, Object> updates = new HashMap<>();
+
+        updates.put( keyField, newValue );
+
+        db.getReference(getUserPath()).child( photoID ).updateChildren(updates);
+    }
+
     public void updatePartnerPreference( String userID, int min_age, int max_age, Map<String, Object> gender ) {
         Map<String, Object> updates = new HashMap<>();
 
         updates.put( "min_age", min_age );
         updates.put( "max_age", max_age );
+        updates.put( "gender", gender );
+
+        db.getReference( getPartnerPreferencePath() ).child( userID ).updateChildren( updates );
+    }
+
+    // Note: ageField is one of "min_age, max_age"
+    // Note: DO NOT USE TO UPDATE gender
+    public void updatePartnerPreferenceAgeField( String userID, String ageField, int newValue ) {
+        Map<String, Object> updates = new HashMap<>();
+
+        updates.put( ageField, newValue );
+
+        db.getReference( getPartnerPreferencePath() ).child( userID ).updateChildren( updates );
+    }
+
+    // Note: gender contains one or more of "male, female, non-binary"
+    // Note: DO NOT USE TO UPDATE min_age or max_age
+    public void updatePartnerPreferenceGender( String userID, Map<String, Object> gender ) {
+        Map<String, Object> updates = new HashMap<>();
+
         updates.put( "gender", gender );
 
         db.getReference( getPartnerPreferencePath() ).child( userID ).updateChildren( updates );
@@ -581,6 +639,14 @@ public class DBHelper {
         updates.put( "text", text );
 
         db.getReference( getMessagePath() ).child( messageID ).updateChildren( updates );
+    }
+
+    public void updateMessageField( String messageID, String keyField, String newValue ) {
+        Map<String, Object> updates = new HashMap<>();
+
+        updates.put( keyField, newValue );
+
+        db.getReference( getPartnerPreferencePath() ).child( messageID ).updateChildren( updates );
     }
 
     /* Helper methods */
