@@ -58,7 +58,7 @@ public class MatchingActivity extends AppCompatActivity
         adapter.addFragment(MatchPageFragment.newInstance(matchedFriendList), tabTitles[1]);
 
         // line of code below causes app to crash; commenting out for app functionality -Mervin
-        viewPager.setAdapter(adapter);
+        // viewPager.setAdapter(adapter);
         tabLayout.post(new Runnable() {
             @Override
             public void run() {
