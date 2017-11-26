@@ -27,9 +27,11 @@ public class MainActivity extends AppCompatActivity {
 
         // Display user's name if logged in
         if ( helper.isUserLoggedIn() ) {
-            String displayName = helper.getAuthUserDisplayName();
+//            String displayName = helper.getAuthUserDisplayName();
 
-            userName.setText( displayName );
+//            userName.setText( displayName );
+            startActivity(new Intent(getApplicationContext(), MatchingActivity.class));
+            finish();
         }
         // Else, redirect user to login page
         else {
