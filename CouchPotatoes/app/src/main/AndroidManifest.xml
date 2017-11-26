@@ -21,7 +21,8 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".LoginActivity"
-            android:label="@string/app_name">
+            android:label="@string/app_name"
+            android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -51,7 +52,11 @@
         <activity
                 android:name=".ResetPasswordActivity"
                 android:label="@string/title_reset_password"
-                android:theme="@style/AppTheme.NoActionBar">
+                android:theme="@style/AppTheme.NoActionBar"/>
+        <activity
+                android:name=".MatchingActivity"
+                android:label="Couch Potatoes">
+                <!--android:theme="@style/AppTheme">-->
 
         </activity>
     </application>

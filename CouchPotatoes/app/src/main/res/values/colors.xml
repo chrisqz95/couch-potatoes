@@ -5,21 +5,34 @@
     <color name="bg_main">#f9f8f9</color>
     <color name="bg_select">#cfced0</color>
 
-    <color name="colorPrimary">#ffffff</color>
-    <color name="colorPrimaryDark">#7568ed</color>
-    <color name="textColorPrimary">#7568ed</color>
+    <color name="colorPrimary">#ff6a6a</color>
+    <color name="colorPrimaryDark">#c7373f</color>
+    <color name="textColorPrimary">#16181d</color>
+    <color name="colorAccent">#ff6a6a</color>
 
-    <color name="colorAccent">#a49ce5</color>
+    <!--<color name="colorPrimary">#ffffff</color>-->
+    <!--<color name="colorPrimaryDark">#7568ed</color>-->
+    <!--<color name="textColorPrimary">#7568ed</color>-->
 
-    <color name="primaryColor">#7568ed</color>
-    <color name="primaryLightColor">#aa96ff</color>
-    <color name="primaryDarkColor">#3c3dba</color>
+    <!--<color name="colorAccent">#a49ce5</color>-->
+
+    <color name="primaryColor">#ff6a6a</color>
+    <color name="primaryDarkColor">#c7373f</color>
+    <color name="primaryLightColor">#ff9c98</color>
     <color name="secondaryColor">#a49ce5</color>
     <color name="secondaryLightColor">#d7cdff</color>
     <color name="secondaryDarkColor">#746eb3</color>
+
+    <!--<color name="primaryColor">#7568ed</color>-->
+    <!--<color name="primaryLightColor">#aa96ff</color>-->
+    <!--<color name="primaryDarkColor">#3c3dba</color>-->
+    <!--<color name="secondaryColor">#a49ce5</color>-->
+    <!--<color name="secondaryLightColor">#d7cdff</color>-->
+    <!--<color name="secondaryDarkColor">#746eb3</color>-->
     <color name="white">#ffffff</color>
 
-    <color name="primaryTextColor">#303540</color>
+    <!--<color name="primaryTextColor">#303540</color>-->
+    <color name="primaryTextColor">#16181d</color>
     <color name="secondaryTextColor">#000000</color>
 
     <color name="hint">#E1E0F5</color>
