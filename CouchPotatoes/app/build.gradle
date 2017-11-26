@@ -37,5 +37,4 @@ dependencies {
     compile 'com.firebaseui:firebase-ui-storage:0.6.0'
     compile 'de.hdodenhof:circleimageview:2.2.0'
 }
-
 apply plugin: 'com.google.gms.google-services'
