@@ -25,15 +25,20 @@ public class MatchingActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 	private DBHelper helper;
     private final String[] tabTitles = new String[] { "Date", "Friend" };
+
     // For the side navigation bar
     private DrawerLayout mDrawer;
     private NavigationView navView;
+    private android.widget.TextView sidebarUserName;
+    private android.widget.TextView sidebarUserEmail;
 
     // list of matches for dating and friending
 //    private List<MatchedUser> matchedDateList = new ArrayList<>();
 //    private List<MatchedUser> matchedFriendList = new ArrayList<>();
     private ArrayList<String> matchedDateList = new ArrayList<>();
     private ArrayList<String> matchedFriendList = new ArrayList<>();
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,6 +81,19 @@ public class MatchingActivity extends AppCompatActivity
         // set up side navigation bar layout
         navView = (NavigationView) findViewById(R.id.nav_view);
         navView.setNavigationItemSelectedListener(this);
+
+        sidebarUserName = (android.widget.TextView) navView.getHeaderView(0)
+                .findViewById(R.id.sidebar_username);
+        sidebarUserEmail = (android.widget.TextView) navView.getHeaderView(0)
+                .findViewById(R.id.sidebar_user_email);
+
+        // fetches user's name and email
+        String displayName = helper.getAuthUserDisplayName();
+        String displayEmail = helper.getUser().getEmail();
+
+        // displays user's name and email on the sidebar header
+        sidebarUserName.setText( displayName );
+        sidebarUserEmail.setText( displayEmail );
 
     }
 
