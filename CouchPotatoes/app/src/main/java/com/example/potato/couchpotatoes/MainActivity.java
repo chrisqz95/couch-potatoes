@@ -1,6 +1,7 @@
 package com.example.potato.couchpotatoes;
 
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -11,6 +12,8 @@ public class MainActivity extends AppCompatActivity {
     private android.widget.TextView userName;
     private android.widget.Button logout;
     private android.widget.Button chat;
+
+    private PullUserInfoTask mPullTask = null;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -30,6 +33,7 @@ public class MainActivity extends AppCompatActivity {
             // String displayName = helper.getAuthUserDisplayName();
 
             // userName.setText( displayName );
+
             startActivity(new Intent(getApplicationContext(), MatchingActivity.class));
             finish();
         }
@@ -59,5 +63,52 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
+
+    /**
+     * Attempt to pull the user's info
+     */
+    private void attemptPullUserInfo() {
+        if (mPullTask == null) {
+            return;
+        }
+
+        // TODO if there is any logic that needs to go before starting the task is put here
+
+        mPullTask = new PullUserInfoTask();
+        // TODO:  we can pass in anything into the method below and will appear in doInBackground.
+        // see documentation for more details
+        mPullTask.execute((Void) null);
+    }
+
+
+    // If we need to pass some sort of information to the asyncTast, replace the first
+    // Void with the object type we need
+    public class PullUserInfoTask extends AsyncTask<Void, Void, Boolean> {
+
+        // TODO use firebase to fill in this information
+        private CurrentUser user;
+
+
+
+        // TODO pass in any needed information here
+        PullUserInfoTask() {}
+
+        // alternatively, we can pass in information during execute in which we will get the info here
+        @Override
+        protected Boolean doInBackground(Void... params) {
+            // TODO: on success do this
+            // We will need to change User object to implement Parcelable so that we can pass both Current user and
+            // MatchedUser to different activites/fragments
+//        Intent intent = new Intent(getApplicationContext(), MatchingActivity.class);
+//        intent.putExtra("UserObject", user);
+//        startActivity(intent);
+            // TODO to retrieve it later, use
+            // CurrentUser user = getIntent().getParcelableExtra("UserObject");
+
+            return false;
+        }
+
+    }
+
 }
 
