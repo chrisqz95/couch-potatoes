@@ -3,6 +3,7 @@
 <!--top header of the side navigation bar menu-->
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="@dimen/nav_header_height"
     android:background="@drawable/side_nav_bar"
@@ -12,7 +13,8 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    android:theme="@style/ThemeOverlay.AppCompat.Dark">
+    android:theme="@style/ThemeOverlay.AppCompat.Dark"
+    tools:context="com.example.potato.couchpotatoes.MainActivity">
 
     <!--Circular image of the user's profile picture-->
     <de.hdodenhof.circleimageview.CircleImageView
@@ -26,16 +28,15 @@
 
     <!--displays the user's name-->
     <TextView
+        android:id="@+id/sidebar_username"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingTop="@dimen/nav_header_vertical_spacing"
-        android:text="Couch Potatoes"
         android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
 
     <!--displays the user's email-->
     <TextView
-        android:id="@+id/textView"
+        android:id="@+id/sidebar_user_email"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="couch@potato.com" />
+        android:layout_height="wrap_content" />
 </LinearLayout>

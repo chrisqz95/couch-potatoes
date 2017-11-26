@@ -22,6 +22,8 @@ public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
     private DBHelper helper;
     private android.widget.TextView userName;
+    private android.widget.TextView sidebarUserName;
+    private android.widget.TextView sidebarUserEmail;
     private android.widget.Button logout;
     private android.widget.Button chat;
 
@@ -38,26 +40,34 @@ public class MainActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        // enables toggle button for the sidebar on the toolbar
+        // enables toggle button on toolbar to open the sidebar
         mDrawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, mDrawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+                this, mDrawer, toolbar, R.string.navigation_drawer_open,
+                R.string.navigation_drawer_close);
         mDrawer.addDrawerListener(toggle);
         toggle.syncState();
+
+        // set up side navigation bar layout
+        navView = (NavigationView) findViewById(R.id.nav_view);
+        navView.setNavigationItemSelectedListener(this);
 
         userName = (android.widget.TextView) findViewById(R.id.userName);
         logout = (android.widget.Button) findViewById(R.id.logout);
         chat = (android.widget.Button) findViewById(R.id.viewChats);
-        
-		// set up side navigation bar
-        navView = (NavigationView) findViewById(R.id.nav_view);
-        navView.setNavigationItemSelectedListener(this);
+        sidebarUserName = (android.widget.TextView) navView.getHeaderView(0)
+                .findViewById(R.id.sidebar_username);
+        sidebarUserEmail = (android.widget.TextView) navView.getHeaderView(0)
+                .findViewById(R.id.sidebar_user_email);
 
         // Display user's name if logged in
         if ( helper.isUserLoggedIn() ) {
             String displayName = helper.getAuthUserDisplayName();
+            String displayEmail = helper.getUser().getEmail();
 
             userName.setText( displayName );
+            sidebarUserName.setText( displayName );
+            sidebarUserEmail.setText( displayEmail );
         }
         // Else, redirect user to login page
         else {
@@ -85,7 +95,7 @@ public class MainActivity extends AppCompatActivity
             }
         });
     }
-// Handles pressing back button when sidebar is on the screen
+    // Handles pressing back button in bottom navigation bar when sidebar is on the screen
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -105,24 +115,23 @@ public class MainActivity extends AppCompatActivity
 
         if (id == R.id.nav_profile) {
             // TODO: go to profile activity
-            // Make substitute screen appear
 
         } else if (id == R.id.nav_chats) {
-            // TODO: go to ChatActivity
-            // Make substitute screen appear
+            // redirects user to ChatRoomActivity.xml
+            Intent intent = new Intent( getApplicationContext(), ChatRoomActivity.class );
+            startActivity( intent );
 
         } else if (id == R.id.nav_settings) {
             // TODO: go to SettingsActivity
-            // Make substitute screen appear
 
         } else if (id == R.id.nav_info) {
             // TODO: go to Page with device information
-            // Make substitute screen appear
 
         } else if (id == R.id.nav_logout) {
-            // TODO: go to LoginActivity
-            // Make substitute screen appear
-
+            // logs out and redirects user to LoginActivity.xml
+            helper.getAuth().signOut();
+            startActivity( new Intent( getApplicationContext(), LoginActivity.class ) );
+            finish();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

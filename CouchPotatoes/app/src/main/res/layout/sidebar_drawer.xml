@@ -1,10 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    tools:context="com.example.potato.couchpotatoes.MainActivity">
 
-    <group android:checkableBehavior="single">
+    <!--Options displayed in the sidebar menu-->
+
+    <group
+        android:id="@+id/nav_menu_top"
+        android:checkableBehavior="single">
         <item
             android:id="@+id/nav_profile"
             android:icon="@drawable/profile"
@@ -13,6 +19,11 @@
             android:id="@+id/nav_chats"
             android:icon="@drawable/speech_bubble"
             android:title="Show Chats" />
+    </group>
+
+    <group
+        android:id="@+id/nav_menu_bottom"
+        android:checkableBehavior="none">
         <item
             android:id="@+id/nav_settings"
             android:icon="@drawable/settings_1"
