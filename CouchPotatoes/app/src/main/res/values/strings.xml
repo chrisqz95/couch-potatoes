@@ -16,6 +16,8 @@
     <string name="title_activity_login2">Sign in</string>
     <string name="title_activity_login">Sign in</string>
     <string name="title_activity_main">MainActivity</string>
+	<string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
 
     <!-- Strings Used in Sign Up Activity -->
     <string name="sign_up_email_string">Please Enter Your Email.</string>
@@ -95,7 +97,7 @@
     <string name="btn_change">Change</string>
     <string name="btn_send">Send</string>
     <string name="btn_remove">Remove</string>
-    <string name="btn_sign_out">Sign Out</string>
+    <string name="btn_logout">Log Out</string>
     <string name="lbl_forgot_password">Forgot password?</string>
     <string name="forgot_password_msg">Enter in your registered Email to be sent password reset instructions.</string>
     <string name="lbl_reset_password_success_generic">An email has been sent to the given email with further instructions.</string>

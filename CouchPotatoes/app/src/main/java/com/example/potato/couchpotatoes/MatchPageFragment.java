@@ -1,6 +1,7 @@
 package com.example.potato.couchpotatoes;
 
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,8 +16,8 @@ public class MatchPageFragment extends Fragment {
     public static final String ARG_LIST = "ARG_LIST";
 
     private ArrayList<String> matchedUserList;
-    private Button matchButton;
-    private Button unmatchButton;
+    private FloatingActionButton matchButton;
+    private FloatingActionButton unmatchButton;
 
     /**
      * TODO: NOTE IF WE WANT TO PASS IN THE LIST DIRECTLY, WE NEED TO MAKE MATCHEDUSER EXTEND PARCELABLE
@@ -48,8 +49,8 @@ public class MatchPageFragment extends Fragment {
         super.onCreate(savedInstanceState);
         matchedUserList = getArguments().getStringArrayList(ARG_LIST);
 
-        matchButton = (Button) getActivity().findViewById(R.id.fab_match);
-        unmatchButton = (Button) getActivity().findViewById(R.id.fab_unmatch);
+        matchButton = (FloatingActionButton) getActivity().findViewById(R.id.fab_match);
+        unmatchButton = (FloatingActionButton) getActivity().findViewById(R.id.fab_unmatch);
 
         matchButton.setOnClickListener(onClickListener);
         unmatchButton.setOnClickListener(onClickListener);
