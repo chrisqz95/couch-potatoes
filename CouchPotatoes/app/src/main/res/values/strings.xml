@@ -71,8 +71,13 @@
 
 
 
-
-
+    <!--Strings related to sidebar navigation-->
+    <string name="sidebar_profile">View Profile</string>
+    <string name="sidebar_matches">Find Matches</string>
+    <string name="sidebar_chats">Show Chats</string>
+    <string name="sidebar_settings">Settings</string>
+    <string name="sidebar_aboutUs">About Us</string>
+    <string name="sidebar_logout">Log Out</string>
 
     <string name="title_activity_chat_room">ChatRoomActivity</string>
     <string name="title_activity_message">MessageActivity</string>

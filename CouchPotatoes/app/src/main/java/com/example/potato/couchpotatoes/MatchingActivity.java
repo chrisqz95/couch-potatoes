@@ -117,6 +117,9 @@ public class MatchingActivity extends AppCompatActivity
 		if (id == R.id.nav_profile) {
 	        // TODO: go to profile activity
 
+        } else if (id == R.id.nav_matches) {
+            // TODO: if not already in page, redirect page to MainActivity
+
 		} else if (id == R.id.nav_chats) {
             // redirects user to ChatRoomActivity.xml
             Intent intent = new Intent( getApplicationContext(), ChatRoomActivity.class );
