@@ -76,7 +76,7 @@ public class RegistrationActivity extends AppCompatActivity {
                 String state = "";
                 String country = "";
                 String bio = "";
-                String displayName = helper.getFullName( firstName, middleName, lastName );
+                String profilePic = "";
                 Double latitude = 0.0;
                 Double longitude = 0.0;
                 boolean locked = false;
@@ -85,9 +85,9 @@ public class RegistrationActivity extends AppCompatActivity {
                 // Create new user object
                 user = new CurrentUser(
                     userID, firstName, middleName, lastName, birthDate, gender, bio,
-                    latitude, longitude, locked, suspended, email, city, state, country );
+                    profilePic, latitude, longitude, locked, suspended, email, city, state, country );
 
-                //helper.updateAuthUserDisplayName( displayName );
+                String displayName = user.getDisplayName();
 
                 // Create new Firebase Authentication user account update request to update user's display name
                 UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()

@@ -19,7 +19,7 @@ import java.util.Queue;
  */
 
 public class DBHelper {
-
+    private static DBHelper uniqueInstance;
 
     private FirebaseAuth auth;
     private FirebaseDatabase db;
@@ -54,10 +54,17 @@ public class DBHelper {
     private final String chatMessagePath = "Chat_Message/";
     private final String messagePath = "Message/";
 
-    public DBHelper() {
+    private DBHelper() {
         auth = FirebaseAuth.getInstance();
         db = FirebaseDatabase.getInstance();
         user = auth.getCurrentUser();
+    }
+
+    public static DBHelper getInstance() {
+        if ( uniqueInstance == null ) {
+            uniqueInstance = new DBHelper();
+        }
+        return uniqueInstance;
     }
 
     /* User account methods */
@@ -74,43 +81,10 @@ public class DBHelper {
         return user;
     }
 
-    /*
-    public boolean loginUser(String email, String password) {
-        //Activity.finish();
-        // TODO
-        auth.signInWithEmailAndPassword( email, password ).addOnCompleteListener(LoginActivity.this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if ( task.isSuccessful() ) {
-                            user = auth.getCurrentUser();
-                        }
-                        else {
-                            user = null;
-                        }
-                    }
-                });
 
-        return ( user != null );
-        if (auth.signInWithEmailAndPassword(email, password).isSuccessful()) {
-            user = auth.getCurrentUser();
-            return true;
-        }
-        else {
-            return false;
-        }
-        return false;
-    }
-    */
+    // Note: Login using Firebase Auth API
 
     public void createUser(String email, String password) {
-        /*
-        if (auth.createUserWithEmailAndPassword(email, password).isSuccessful()) {
-            return true;
-        }
-        else {
-            return false;
-        }
-        */
         // Source: https://stackoverflow.com/questions/40093781/check-if-given-email-exists
 
         auth.createUserWithEmailAndPassword( email, password ).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
@@ -144,8 +118,6 @@ public class DBHelper {
                     }
             }
         });
-
-        //return false; // TODO
     }
 
     public void updateAuthUserProfile( UserProfileChangeRequest changes ) {
@@ -214,11 +186,12 @@ public class DBHelper {
     }
 
     public boolean addNewUser( String userID, String firstName, String middleName, String lastName,
-                               String birth_date, String gender, String bio, double latitude, double longitude,
+                               String birth_date, String gender, String bio, String profilePic, double latitude, double longitude,
                                boolean locked, boolean suspended, String email, String city, String state, String country ) {
         db.getReference(getUserPath()).child( userID ).child( "birth_date" ).setValue( birth_date );
         db.getReference(getUserPath()).child( userID ).child( "email" ).setValue( email );
         db.getReference(getUserPath()).child( userID ).child( "bio" ).setValue( bio );
+        db.getReference(getUserPath()).child( userID ).child( "profilePic" ).setValue( profilePic );
         db.getReference(getUserPath()).child( userID ).child( "gender" ).setValue( gender );
         db.getReference(getUserPath()).child( userID ).child( "firstName" ).setValue( firstName );
         db.getReference(getUserPath()).child( userID ).child( "middleName" ).setValue( middleName );
@@ -562,6 +535,7 @@ public class DBHelper {
         updates.put("state", user.getState());
         updates.put("country", user.getCountry());
         updates.put("bio", user.getBio());
+        updates.put("profilePic", user.getProfilePic());
         updates.put("latitude", user.getLatitude());
         updates.put("longitude", user.getLongitude());
         updates.put("locked", user.isLocked());
@@ -663,33 +637,6 @@ public class DBHelper {
 
     public String getNewTimestamp() {
         return (String) (new SimpleDateFormat( "yyyy-MM-dd  HH:mm:ss" ).format( new Date()));
-    }
-
-    /**
-     * Concatenates first, middle, and last names and returns result.
-     * If first, middle, and last names are null, returns userID instead.
-     *
-     * @param firstName
-     * @param middleName
-     * @param lastName
-     * @return Returns result of concatenating all names.
-     */
-    public String getFullName( String firstName, String middleName, String lastName ) {
-        String name = "";
-
-        if ( firstName != null ) {
-            name += firstName;
-        }
-        if ( middleName != null ) {
-            name += " ";
-            name += middleName;
-        }
-        if ( lastName != null ) {
-            name += " ";
-            name += lastName;
-        }
-
-        return name;
     }
 
     public String getUserPath() {

@@ -12,6 +12,7 @@ public abstract class User {
     private String birth_date; // TODO Do not use Camel Case here; Need to update on SQL database first before change
     private String gender;
     private String bio;
+    private String profilePic;
     private double latitude;
     private double longitude;
     private boolean locked;
@@ -20,7 +21,8 @@ public abstract class User {
     public User () {}
 
     public User ( String uid, String firstName, String middleName, String lastName, String birth_date,
-                  String gender, String bio, double latitude, double longitude, boolean locked, boolean suspended ) {
+                  String gender, String bio, String profilePic, double latitude, double longitude,
+                  boolean locked, boolean suspended ) {
         this.uid = uid;
         this.firstName = firstName;
         this.middleName = middleName;
@@ -28,6 +30,7 @@ public abstract class User {
         this.birth_date = birth_date;
         this.gender = gender;
         this.bio = bio;
+        this.profilePic = profilePic;
         this.latitude = latitude;
         this.longitude = longitude;
         this.locked = locked;
@@ -120,5 +123,36 @@ public abstract class User {
 
     public void setBirthDate(String birthDate) {
         this.birth_date = birthDate;
+    }
+
+    public String getProfilePic() {
+        return profilePic;
+    }
+
+    public void setProfilePic(String profilePic) {
+        this.profilePic = profilePic;
+    }
+
+    /**
+     * Concatenates first, middle, and last names and returns result.
+     *
+     * @return Returns result of concatenating all names.
+     */
+    public String getDisplayName() {
+        String name = "";
+
+        if ( firstName != null ) {
+            name += firstName;
+        }
+        if ( middleName != null ) {
+            name += " ";
+            name += middleName;
+        }
+        if ( lastName != null ) {
+            name += " ";
+            name += lastName;
+        }
+
+        return name;
     }
 }

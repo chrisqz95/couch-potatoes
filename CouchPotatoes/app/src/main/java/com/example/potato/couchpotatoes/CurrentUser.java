@@ -28,9 +28,9 @@ public class CurrentUser extends User {
     public CurrentUser () {}
 
     public CurrentUser ( String userID, String firstName, String middleName, String lastName,
-                         String birth_date, String gender, String bio, double latitude, double longitude,
+                         String birth_date, String gender, String bio, String profilePic, double latitude, double longitude,
                          boolean locked, boolean suspended, String email, String city, String state, String country ) {
-        super( userID, firstName, middleName, lastName, birth_date, gender, bio, latitude, longitude, locked, suspended );
+        super( userID, firstName, middleName, lastName, birth_date, gender, bio, profilePic,latitude, longitude, locked, suspended );
 
         this.setEmail(email);
         this.setCity(city);
