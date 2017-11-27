@@ -1,6 +1,7 @@
 package com.example.potato.couchpotatoes;
 
 import android.*;
+import android.Manifest;
 import android.app.Fragment;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -50,11 +51,14 @@ import static android.app.Activity.RESULT_OK;
 // Image chooser source: https://www.youtube.com/watch?v=UiqmekHYCSU
 //
 // Fragment onClickListener source: https://stackoverflow.com/questions/18711433/button-listener-for-button-in-fragment-in-android
+// Runtime Permissions source:
 
 public class UploadImageFragment extends Fragment implements View.OnClickListener {
     private static final int PICK_FROM_CAMERA = 1;
     private static final int PICK_FROM_FILE = 2;
-    private static int CAN_WRITE_TO_EXTERNAL_STORAGE = PackageManager.PERMISSION_DENIED;
+    private static final int REQUEST_WRITE_TO_EXTERNAL_STORAGE = 20;
+
+    private int canWriteToExternalStorage = PackageManager.PERMISSION_DENIED;
 
     private DBHelper helper;
 
@@ -93,66 +97,95 @@ public class UploadImageFragment extends Fragment implements View.OnClickListene
 
         // If no permissions, try to get permission to write to external storage
         if ( permissionCheck != PackageManager.PERMISSION_GRANTED ) {
+            // Display explanation of need for permission to user
+            // TODO
+            //if ( ActivityCompat.shouldShowRequestPermissionRationale( getActivity(),
+            //        Manifest.permission.WRITE_EXTERNAL_STORAGE ) ) {
+            //}
+        }
+        // No explanation needed, request permission
+        else {
             ActivityCompat.requestPermissions(getActivity(),
                     new String[]{android.Manifest.permission.WRITE_EXTERNAL_STORAGE},
-                    CAN_WRITE_TO_EXTERNAL_STORAGE );
+                    REQUEST_WRITE_TO_EXTERNAL_STORAGE );
+
+            // TODO Rewrite so that this is set on permission request result instead
+            canWriteToExternalStorage = PackageManager.PERMISSION_GRANTED;
         }
+
+        // If write to external storage denied, only allow app to read images from SD Card
+        if ( canWriteToExternalStorage == PackageManager.PERMISSION_DENIED ) {
+            final String[] items = new String[] { "From SD Card" };
+            ArrayAdapter<String> adapter = new ArrayAdapter<String>( view.getContext(), android.R.layout.select_dialog_item, items );
+            builder = new AlertDialog.Builder(view.getContext());
+            builder.setTitle("Select Photo");
+            builder.setAdapter(adapter, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                        // Create Intent to choose a file from SD Card and delegate to "onActivityResult"
+                        Intent intent = new Intent();
+                        intent.setType( "image/*" );
+                        intent.setAction( Intent.ACTION_GET_CONTENT );
+                        startActivityForResult( Intent.createChooser(intent, "Complete action using"), PICK_FROM_FILE );
+                }
+            });
+        }
+        // Write to external storage allowed, allow app to use camera to write a new image taken to the SD Card
+        // and then upload the new image
         else {
-            CAN_WRITE_TO_EXTERNAL_STORAGE = PackageManager.PERMISSION_GRANTED;
-        }
-
-        // Create AlertDialog to prompt user for location of photo to upload
-        final String[] items = new String[] { "From Camera", "From SD Card" };
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>( view.getContext(), android.R.layout.select_dialog_item, items );
-        builder = new AlertDialog.Builder(view.getContext());
-        builder.setTitle("Select Photo");
-        builder.setAdapter(adapter, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                // Pick photo from camera
-                if ( which == 0 ) {
-                    // Check permissions to write to external storage
-                    if ( CAN_WRITE_TO_EXTERNAL_STORAGE == PackageManager.PERMISSION_DENIED ) {
-                        // Notify User cannot upload photo from camera
-                        AlertDialog.Builder builderStoragePermissions = new AlertDialog.Builder(view.getContext());
-                        builderStoragePermissions.setMessage( "App does not have permission to access external storage! Could not upload photo from camera." )
-                                .setPositiveButton("Ok", dialogClickListener)
-                                .show();
-                    }
-                    else {
-                        // Create Intent to capture a new photo using the camera
-                        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-
-                        // Write the new photo to the user's SD Card
-                        File file = new File(Environment.getExternalStorageDirectory(), "snapshot" + String.valueOf(System.currentTimeMillis() + ".jpg"));
-
-                        // Get the photo's uri
-                        imageCaptureUri = Uri.fromFile(file);
-
-                        // Delegate to "onActivityResult"
-                        try {
-                            intent.putExtra(MediaStore.EXTRA_OUTPUT, imageCaptureUri);
-                            intent.putExtra("return data", true);
-
-                            startActivityForResult(intent, PICK_FROM_CAMERA);
-                        } catch (Exception e) {
-                            e.printStackTrace();
+            // Create AlertDialog to prompt user for location of photo to upload
+            final String[] items = new String[] { "From Camera", "From SD Card" };
+            ArrayAdapter<String> adapter = new ArrayAdapter<String>( view.getContext(), android.R.layout.select_dialog_item, items );
+            builder = new AlertDialog.Builder(view.getContext());
+            builder.setTitle("Select Photo");
+            builder.setAdapter(adapter, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    // Pick photo from camera
+                    if ( which == 0 ) {
+                        // Check permissions to write to external storage
+                        if ( canWriteToExternalStorage == PackageManager.PERMISSION_DENIED ) {
+                            // Notify User cannot upload photo from camera
+                            AlertDialog.Builder builderStoragePermissions = new AlertDialog.Builder(view.getContext());
+                            builderStoragePermissions.setMessage( "App does not have permission to write to external storage! Cannot upload photo taken using camera." )
+                                    .setPositiveButton("Ok", dialogClickListener)
+                                    .show();
                         }
-                    }
+                        else {
+                            // Create Intent to capture a new photo using the camera
+                            Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 
-                    // Close dialog and delegate to Intent
-                    dialog.cancel();
+                            // Write the new photo to the user's SD Card
+                            File file = new File(Environment.getExternalStorageDirectory(), "snapshot" + String.valueOf(System.currentTimeMillis() + ".jpg"));
+
+                            // Get the photo's uri
+                            imageCaptureUri = Uri.fromFile(file);
+
+                            // Delegate to "onActivityResult"
+                            try {
+                                intent.putExtra(MediaStore.EXTRA_OUTPUT, imageCaptureUri);
+                                intent.putExtra("return data", true);
+
+                                startActivityForResult(intent, PICK_FROM_CAMERA);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        }
+
+                        // Close dialog and delegate to Intent
+                        dialog.cancel();
+                    }
+                    // Pick photo from SD Card
+                    else {
+                        // Create Intent to choose a file from SD Card and delegate to "onActivityResult"
+                        Intent intent = new Intent();
+                        intent.setType( "image/*" );
+                        intent.setAction( Intent.ACTION_GET_CONTENT );
+                        startActivityForResult( Intent.createChooser(intent, "Complete action using"), PICK_FROM_FILE );
+                    }
                 }
-                // Pick photo from SD Card
-                else {
-                    // Create Intent to choose a file from SD Card and delegate to "onActivityResult"
-                    Intent intent = new Intent();
-                    intent.setType( "image/*" );
-                    intent.setAction( Intent.ACTION_GET_CONTENT );
-                    startActivityForResult( Intent.createChooser(intent, "Complete action using"), PICK_FROM_FILE );
-                }
-            }
-        });
+            });
+        }
 
         dialog = builder.create();
 
@@ -165,6 +198,26 @@ public class UploadImageFragment extends Fragment implements View.OnClickListene
         view = v;
 
         dialog.show();
+    }
+
+    @Override
+    public void onRequestPermissionsResult ( int requestCode, String permissions[], int[] grantResults ) {
+        if ( canWriteToExternalStorage == PackageManager.PERMISSION_GRANTED ) {
+            Log.d( "TEST", "CAN WRITE" );
+        }
+        else {
+            Log.d( "TEST", "CANNOT WRITE" );
+        }
+        switch ( requestCode ) {
+            case REQUEST_WRITE_TO_EXTERNAL_STORAGE: {
+                if ( grantResults.length > 0 && grantResults[ 0 ] == PackageManager.PERMISSION_GRANTED ) {
+                    canWriteToExternalStorage = PackageManager.PERMISSION_GRANTED;
+                }
+                else {
+                    canWriteToExternalStorage = PackageManager.PERMISSION_DENIED;
+                }
+            }
+        }
     }
 
     // Get photo chosen by User and prompt user to upload photo
@@ -294,7 +347,6 @@ public class UploadImageFragment extends Fragment implements View.OnClickListene
 
                     @Override
                     public void onCancelled(DatabaseError databaseError) {
-                        //TODO
                         Log.d( "TEST", databaseError.getMessage() );
                     }
                 });
