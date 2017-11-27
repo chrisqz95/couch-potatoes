@@ -41,7 +41,7 @@ public class ChatRoomActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         // Display the user's display name
-        userName = (android.widget.TextView) findViewById(R.id.userName);
+        userName = (TextView) findViewById(R.id.userName);
         userName.setText( displayName );
 
         // Use a ListView to display the list of chats
