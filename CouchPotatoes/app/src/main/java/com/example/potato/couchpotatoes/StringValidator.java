@@ -2,6 +2,9 @@ package com.example.potato.couchpotatoes;
 
 import android.text.TextUtils;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+
 /**
  * Validates strings to be of the correct type.
  * Author: Alan Mai
@@ -10,8 +13,6 @@ public class StringValidator {
 
     private static final int MIN_PASS_LENGTH = 5;
 
-
-
     /**
      * Default Constructor
      */
@@ -19,8 +20,8 @@ public class StringValidator {
 
     /**
      * Verifies if the given string is a proper email address.
+     * Credit to the users on stackoverflow:
      * Taken from https://stackoverflow.com/questions/12947620/email-address-validation-in-android-on-edittext
-     *
      * @param target the string to be checked as an email address.
      * @return <code>true</code> if the string is a proper email address.
      */
@@ -93,4 +94,23 @@ public class StringValidator {
         return TextUtils.equals(target1, target2);
     }
 
+    /**
+     * Checks if the given string is a valid date
+     * Credit to the users on stackoverflow:
+     * https://stackoverflow.com/questions/2149680/regex-date-format-validation-on-java/18252071#18252071
+     * @param date Formatted as "yyyy/MM/dd"
+     * @return <code>true</code> if a valid date string
+     */
+    public static boolean checkValidDate(String date) {
+            if (date == null || !date.matches("\\d{4}/[01]\\d/[0-3]\\d"))
+                return false;
+            SimpleDateFormat df = new SimpleDateFormat("yyyy/MM/dd");
+            df.setLenient(false);
+            try {
+                df.parse(date);
+                return true;
+            } catch (ParseException ex) {
+                return false;
+            }
+    }
 }
