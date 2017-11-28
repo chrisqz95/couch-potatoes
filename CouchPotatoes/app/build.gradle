@@ -33,6 +33,7 @@ dependencies {
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
     apply plugin: 'com.google.gms.google-services'
     compile 'com.google.firebase:firebase-core:11.4.2'
+    compile 'com.github.Mariovc:ImagePicker:1.2.0'
 }
 
 apply plugin: 'com.google.gms.google-services'

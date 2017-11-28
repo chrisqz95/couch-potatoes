@@ -29,6 +29,7 @@
 
     <string name="pref_title_display_name">Display name</string>
     <string name="pref_default_display_name">John Smith</string>
+    <string name="user_bio_hint">Say something about yourself...</string>
 
     <string name="pref_title_add_friends_to_messages">Add friends to messages</string>
     <string-array name="pref_example_list_titles">
@@ -42,42 +43,64 @@
         <item>-1</item>
     </string-array>
 
-    <!-- Example settings for Data & Sync -->
-    <string name="pref_header_data_sync">Data &amp; sync</string>
 
-    <string name="pref_title_sync_frequency">Sync frequency</string>
-    <string-array name="pref_sync_frequency_titles">
-        <item>15 minutes</item>
-        <item>30 minutes</item>
-        <item>1 hour</item>
-        <item>3 hours</item>
-        <item>6 hours</item>
-        <item>Never</item>
-    </string-array>
-    <string-array name="pref_sync_frequency_values">
-        <item>15</item>
-        <item>30</item>
-        <item>60</item>
-        <item>180</item>
-        <item>360</item>
-        <item>-1</item>
+    <string name="pref_header_profile">Profile</string>
+    <string name="pref_header_settings">Settings</string>
+
+    <string-array name="gender_list">
+        <item>Male</item>
+        <item>Female</item>
+        <item>Non-binary</item>
     </string-array>
 
-    <string-array name="list_preference_entries">
-        <item>Entry 1</item>
-        <item>Entry 2</item>
-        <item>Entry 3</item>
+    <string-array name="movie_preferences">
+        <item>Action</item>
+        <item>Adventure</item>
+        <item>Animation</item>
+        <item>Biography</item>
+        <item>Comedy</item>
+        <item>Crime</item>
+        <item>Documentary</item>
+        <item>Drama</item>
+        <item>Family</item>
+        <item>Fantasy</item>
+        <item>Film-Noir</item>
+        <item>History</item>
+        <item>Horror</item>
+        <item>Music</item>
+        <item>Musical</item>
+        <item>Mystery</item>
+        <item>Romance</item>
+        <item>Sci-Fi</item>
+        <item>Sport</item>
+        <item>Thriller</item>
+        <item>War</item>
+        <item>Western</item>
     </string-array>
 
-    <string-array name="list_preference_entry_values">
-        <item>1</item>
-        <item>2</item>
-        <item>3</item>
+    <string-array name="sexual_preferences">
+        <item>Male</item>
+        <item>Female</item>
+        <item>Non-Binary</item>
     </string-array>
+
+    <string name="pref_title_preferences">Preferences:</string>
+    <string name="pref_title_interests">Interests:</string>
+
+    <string-array name="empty_array"/>
 
     <string-array name="multi_select_list_preference_default_value" />
+    <string name="submit">submit</string>
 
-    <string name="pref_title_system_sync_settings">System sync settings</string>
+    <string name="pref_title_TEMPORARY">John Doe</string>
+    <string name="pref_title_photos">Photos</string>
+    <string name="pref_title_sexuality">Sexual Preference</string>
+    <string name="pref_title_movies">Movies</string>
+    <string name="pref_title_music">Music</string>
+    <string name="pref_title_sports">Sports</string>
+    <string name="pref_title_tvshows">TV Shows</string>
+    <string name="pref_title_hobbies">Hobbies</string>
+    <string name="pref_title_foods">Foods</string>
 
     <!-- Example settings for Notifications -->
     <string name="pref_header_notifications">Notifications</string>
