@@ -33,7 +33,7 @@ public class MessageActivity extends AppCompatActivity {
     ScrollView scrollView;
     DBHelper helper = new DBHelper();
     DatabaseReference reference1, reference2;
-    String userID, chatRoom, displayName, messageID, timestamp, message;
+    String userID, chatRoom, displayName, messageID, timestamp, message, companion;
     TextView userName;
 
     Map<String, String> messageIDs = new HashMap<>();
@@ -61,16 +61,19 @@ public class MessageActivity extends AppCompatActivity {
         // Get the current user's display name
         displayName = helper.getAuthUserDisplayName();
 
-        // Display the current user's display name
 
-        userName = (TextView) findViewById(R.id.userName);
-        userName.setText(displayName);
 
         // Get the current user's id
         userID = helper.getAuth().getUid();
 
         // Get the current chat room's id
         chatRoom = (String) getIntent().getExtras().get("chatID");
+        // Get the other person in the chat
+        companion = (String) getIntent().getExtras().get("otherUsers");
+
+        // Display the current user's display name
+        userName = (TextView) findViewById(R.id.userName);
+        userName.setText(companion);
         //reference1 = new Firebase("https://androidchatapp-76776.firebaseio.com/messages/" + UserDetails.username + "_" + UserDetails.chatWith);
         //reference2 = new Firebase("https://androidchatapp-76776.firebaseio.com/messages/" + UserDetails.chatWith + "_" + UserDetails.username);
 
