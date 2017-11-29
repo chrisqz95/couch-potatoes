@@ -32,7 +32,9 @@ import android.view.MenuItem;
 public class MatchingActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 	private DBHelper helper;
-    private final String[] tabTitles = new String[] { "Date", "Friend" };
+    private final String[] tabTitles = new String[] { "Date", "Friend", "Test" };
+    private final String DATE_MATCH_TYPE = "DATE";
+    private final String FRIEND_MATCH_TYPE = "FRIEND";
 
     // For the side navigation bar
     private DrawerLayout mDrawer;
@@ -66,13 +68,14 @@ public class MatchingActivity extends AppCompatActivity
 
         adapter = new MatchFragmentPagerAdapter(getSupportFragmentManager());
         // add fragments to the view pager
-        fFragment = MatchPageFragment.newInstance(matchedFriendList);
-        dFragment = MatchPageFragment.newInstance(matchedDateList);
+        fFragment = MatchPageFragment.newInstance(matchedFriendList, FRIEND_MATCH_TYPE );
+        dFragment = MatchPageFragment.newInstance(matchedDateList, DATE_MATCH_TYPE );
         //adapter.addFragment(MatchPageFragment.newInstance(matchedDateList), tabTitles[0]);
         //adapter.addFragment(MatchPageFragment.newInstance(matchedFriendList), tabTitles[1]);
         //adapter.addFragment(MatchPageFragment.newInstance(matchedFriendList), tabTitles[1]);
         adapter.addFragment(dFragment, tabTitles[0]);
         adapter.addFragment(fFragment, tabTitles[1]);
+        //adapter.addFragment(MatchPageFragment.newInstance(new ArrayList<String>(), "Test" ), tabTitles[0]);
 
         // line of code below causes app to crash; commenting out for app functionality -Mervin
         viewPager.setAdapter(adapter);
