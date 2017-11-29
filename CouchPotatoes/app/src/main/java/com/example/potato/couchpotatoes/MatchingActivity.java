@@ -126,8 +126,8 @@ public class MatchingActivity extends AppCompatActivity
             startActivity( intent );
 
         } else if (id == R.id.nav_settings) {
-            // TODO: go to SettingsActivity
-
+            Intent intent = new Intent( getApplicationContext(), PreferencesActivity.class );
+            startActivity( intent );
         } else if (id == R.id.nav_info) {
             // TODO: go to Page with device information
 
