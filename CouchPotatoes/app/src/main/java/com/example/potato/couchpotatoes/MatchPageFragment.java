@@ -23,20 +23,24 @@ import java.util.Map;
 public class MatchPageFragment extends Fragment {
     public static final String ARG_LIST = "ARG_LIST";
 
+    /*
     private final String DATE_MATCH_TYPE = "DATE";
     private final String FRIEND_MATCH_TYPE = "FRIEND";
+    */
 
     private ArrayList<String> matchedUserList;
     private FloatingActionButton matchButton;
     private FloatingActionButton unmatchButton;
     private DBHelper helper;
 
-    private TabLayout tabLayout;
+    //private TabLayout tabLayout;
 
     private String currMatchID;
+    /*
     private String currDateMatchID;
     private String currFriendMatchID;
     private String matchType;
+    */
     private TextView textView;
 
     /**
@@ -56,10 +60,11 @@ public class MatchPageFragment extends Fragment {
      * @param matchedUserList
      * @return
      */
-    public static MatchPageFragment newInstance(ArrayList<String> matchedUserList, String matchType ) {
+    //public static MatchPageFragment newInstance(ArrayList<String> matchedUserList, String matchType ) {
+    public static MatchPageFragment newInstance(ArrayList<String> matchedUserList ) {
         Bundle args = new Bundle();
         args.putStringArrayList(ARG_LIST, matchedUserList);
-        args.putString( "matchType", matchType );
+        //args.putString( "matchType", matchType );
         MatchPageFragment fragment = new MatchPageFragment();
         fragment.setArguments(args);
         return fragment;
@@ -72,7 +77,7 @@ public class MatchPageFragment extends Fragment {
         helper = new DBHelper();
 
         matchedUserList = getArguments().getStringArrayList(ARG_LIST);
-        matchType = getArguments().getString( "matchType" );
+        //matchType = getArguments().getString( "matchType" );
 
         matchButton = (FloatingActionButton) getActivity().findViewById(R.id.fab_match);
         unmatchButton = (FloatingActionButton) getActivity().findViewById(R.id.fab_unmatch);
@@ -83,6 +88,7 @@ public class MatchPageFragment extends Fragment {
     private View.OnClickListener onClickListener = new View.OnClickListener() {
         @Override
         public void onClick(final View v) {
+            /*
             String currUserID = helper.getAuth().getUid();
             String timestamp = "0000-00-00 00:00:00";
 
@@ -109,6 +115,7 @@ public class MatchPageFragment extends Fragment {
                     }
                     break;
             }
+            */
         }
     };
 
@@ -124,19 +131,16 @@ public class MatchPageFragment extends Fragment {
             textView.setText( "No new matches. Try adding more interests!" );
         }
         else {
-            Log.d( "TEST", matchType );
-            //String tag = getFragmentManager().getBackStackEntryAt( getFragmentManager().getBackStackEntryCount() - 1 ).getName();
-            //Log.d( "TEST", tag );
-            Log.d( "TEST", Integer.toString( view.getId() ) );
-
             currMatchID = matchedUserList.get( 0 );
 
+            /*
             if ( matchType.equals( DATE_MATCH_TYPE ) ) {
                 currDateMatchID = currMatchID;
             }
             else if ( matchType.equals( FRIEND_MATCH_TYPE ) ) {
                 currFriendMatchID = currMatchID;
             }
+            */
 
             helper.getDb().getReference( helper.getUserPath() + currMatchID ).addValueEventListener(new ValueEventListener() {
                 @Override
@@ -197,8 +201,20 @@ public class MatchPageFragment extends Fragment {
         }
         return str;
     }
-    */
-    public void printMatchType () {
-        Log.d( "TEST", matchType );
+    public String getMatchType() {
+        return matchType;
     }
+
+    public String getPotentMatchID() {
+        String currID = "";
+
+        if ( matchType.equals( DATE_MATCH_TYPE ) ) {
+            currID = currDateMatchID;
+        }
+        else if ( matchType.equals( FRIEND_MATCH_TYPE ) ) {
+            currID = currFriendMatchID;
+        }
+        return currID;
+    }
+    */
 }

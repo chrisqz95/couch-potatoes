@@ -3,7 +3,9 @@ package com.example.potato.couchpotatoes;
 import java.util.ArrayList;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -28,6 +30,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Button;
 
 public class MatchingActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -68,17 +71,100 @@ public class MatchingActivity extends AppCompatActivity
 
         adapter = new MatchFragmentPagerAdapter(getSupportFragmentManager());
         // add fragments to the view pager
-        fFragment = MatchPageFragment.newInstance(matchedFriendList, FRIEND_MATCH_TYPE );
-        dFragment = MatchPageFragment.newInstance(matchedDateList, DATE_MATCH_TYPE );
+        //fFragment = MatchPageFragment.newInstance(matchedFriendList, FRIEND_MATCH_TYPE );
+        //dFragment = MatchPageFragment.newInstance(matchedDateList, DATE_MATCH_TYPE );
         //adapter.addFragment(MatchPageFragment.newInstance(matchedDateList), tabTitles[0]);
         //adapter.addFragment(MatchPageFragment.newInstance(matchedFriendList), tabTitles[1]);
-        //adapter.addFragment(MatchPageFragment.newInstance(matchedFriendList), tabTitles[1]);
+        fFragment = MatchPageFragment.newInstance(matchedFriendList);
+        dFragment = MatchPageFragment.newInstance(matchedDateList);
         adapter.addFragment(dFragment, tabTitles[0]);
         adapter.addFragment(fFragment, tabTitles[1]);
-        //adapter.addFragment(MatchPageFragment.newInstance(new ArrayList<String>(), "Test" ), tabTitles[0]);
 
         // line of code below causes app to crash; commenting out for app functionality -Mervin
         viewPager.setAdapter(adapter);
+
+        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                Log.d( "TEST", Integer.toString( position ) );
+                FloatingActionButton likeButton = findViewById(R.id.fab_match);
+                FloatingActionButton dislikeButton = findViewById(R.id.fab_unmatch);
+
+                if ( position == 0 ) {
+                    likeButton.setOnClickListener(
+                            new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    String currUserID = helper.getAuth().getUid();
+                                    if ( !matchedDateList.isEmpty() ) {
+                                        String potentMatchID = matchedDateList.get(0);
+                                        String timestamp = "0000-00-00 00:00:00";
+
+                                        helper.addToLike(currUserID, potentMatchID, timestamp);
+                                        helper.addToDate( currUserID, potentMatchID, timestamp );
+                                    }
+                                }
+                            }
+                    );
+                    dislikeButton.setOnClickListener(
+                            new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    String currUserID = helper.getAuth().getUid();
+                                    if ( !matchedDateList.isEmpty() ) {
+                                        String potentMatchID = matchedDateList.get(0);
+                                        String timestamp = "0000-00-00 00:00:00";
+
+                                        helper.addToDislike(currUserID, potentMatchID, timestamp);
+                                    }
+                                }
+                            }
+                    );
+                }
+                else {
+                    likeButton.setOnClickListener(
+                            new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    String currUserID = helper.getAuth().getUid();
+                                    if ( !matchedFriendList.isEmpty() ) {
+                                        String potentMatchID = matchedFriendList.get(0);
+                                        String timestamp = "0000-00-00 00:00:00";
+
+                                        helper.addToLike(currUserID, potentMatchID, timestamp);
+                                        helper.addToBefriend( currUserID, potentMatchID, timestamp );
+                                    }
+                                }
+                            }
+                    );
+                    dislikeButton.setOnClickListener(
+                            new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    String currUserID = helper.getAuth().getUid();
+                                    if ( !matchedFriendList.isEmpty() ) {
+                                        String potentMatchID = matchedFriendList.get(0);
+                                        String timestamp = "0000-00-00 00:00:00";
+
+                                        helper.addToDislike(currUserID, potentMatchID, timestamp);
+                                    }
+                                }
+                            }
+                    );
+                }
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
+
 
         tabLayout.post(new Runnable() {
             @Override
@@ -213,6 +299,39 @@ public class MatchingActivity extends AppCompatActivity
 
                 adapter.notifyDataSetChanged();
                 viewPager.setAdapter(adapter);
+
+                // Set default action button listeners ( before Layout tabs are pressed )
+                FloatingActionButton likeButton = findViewById(R.id.fab_match);
+                FloatingActionButton dislikeButton = findViewById(R.id.fab_unmatch);
+                likeButton.setOnClickListener(
+                        new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                String currUserID = helper.getAuth().getUid();
+                                if ( !matchedDateList.isEmpty() ) {
+                                    String potentMatchID = matchedDateList.get(0);
+                                    String timestamp = "0000-00-00 00:00:00";
+
+                                    helper.addToLike(currUserID, potentMatchID, timestamp);
+                                    helper.addToDate( currUserID, potentMatchID, timestamp );
+                                }
+                            }
+                        }
+                );
+                dislikeButton.setOnClickListener(
+                        new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                String currUserID = helper.getAuth().getUid();
+                                if ( !matchedDateList.isEmpty() ) {
+                                    String potentMatchID = matchedDateList.get(0);
+                                    String timestamp = "0000-00-00 00:00:00";
+
+                                    helper.addToDislike(currUserID, potentMatchID, timestamp);
+                                }
+                            }
+                        }
+                );
             }
 
             @Override
