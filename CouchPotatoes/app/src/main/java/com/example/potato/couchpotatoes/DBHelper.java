@@ -55,6 +55,8 @@ public class DBHelper {
     private final String chatUserPath = "Chat_User/";
     private final String chatMessagePath = "Chat_Message/";
     private final String messagePath = "Message/";
+    private final String potentDatePath = "User_Potential_Date/";
+    private final String potentFriendPath = "User_Potential_Friend/";
 
     public DBHelper() {
         auth = FirebaseAuth.getInstance();
@@ -735,5 +737,13 @@ public class DBHelper {
 
     public void setStorage(FirebaseStorage storage) {
         this.storage = storage;
+    }
+
+    public String getPotentDatePath() {
+        return potentDatePath;
+    }
+
+    public String getPotentFriendPath() {
+        return potentFriendPath;
     }
 }
