@@ -139,8 +139,8 @@ public class MatchingActivity extends AppCompatActivity
         int id = item.getItemId();
 
 		if (id == R.id.nav_profile) {
-	        // TODO: go to profile activity
-
+            Intent intent = new Intent( getApplicationContext(), PreferencesActivity.class );
+            startActivity( intent );
         } else if (id == R.id.nav_matches) {
             // TODO: if not already in page, redirect page to MainActivity
 
@@ -150,7 +150,7 @@ public class MatchingActivity extends AppCompatActivity
             startActivity( intent );
 
         } else if (id == R.id.nav_settings) {
-            Intent intent = new Intent( getApplicationContext(), PreferencesActivity.class );
+            Intent intent = new Intent( getApplicationContext(), SettingsActivity.class );
             startActivity( intent );
         } else if (id == R.id.nav_info) {
             // TODO: go to Page with device information
