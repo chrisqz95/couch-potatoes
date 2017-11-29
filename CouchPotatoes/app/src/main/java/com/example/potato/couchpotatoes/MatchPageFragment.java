@@ -128,6 +128,7 @@ public class MatchPageFragment extends Fragment {
                     userInfo += "bio:"; userInfo += getTabs( 12 ); userInfo += bio; userInfo += "\n";
                     */
 
+                    // TODO Maybe fetch and display profile pic here also
                     userInfo += "First Name:"; userInfo += firstName; userInfo += "\n";
                     userInfo += "Middle Name:"; userInfo += middleName; userInfo += "\n";
                     userInfo += "Last Name:"; userInfo += lastName; userInfo += "\n";
