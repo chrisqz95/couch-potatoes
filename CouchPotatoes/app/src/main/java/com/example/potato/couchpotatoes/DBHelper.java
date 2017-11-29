@@ -308,12 +308,14 @@ public class DBHelper {
 
     public boolean addToBefriend( String actorUserID, String receiverUserID, String timestamp ) {
         db.getReference( getBefriendPath() ).child( actorUserID ).child( receiverUserID ).child( "timestamp" ).setValue( timestamp );
+        db.getReference( getBefriendPath() ).child( actorUserID ).child( receiverUserID ).child( "chatCreated" ).setValue( false );
 
         return checkExists( getBefriendPath() + actorUserID + "/" + receiverUserID );
     }
 
     public boolean addToDate( String actorUserID, String receiverUserID, String timestamp ) {
         db.getReference( getDatePath() ).child( actorUserID ).child( receiverUserID ).child( "timestamp" ).setValue( timestamp );
+        db.getReference( getDatePath() ).child( actorUserID ).child( receiverUserID ).child( "chatCreated" ).setValue( false );
 
         return checkExists( getDatePath() + actorUserID + "/" + receiverUserID );
     }
