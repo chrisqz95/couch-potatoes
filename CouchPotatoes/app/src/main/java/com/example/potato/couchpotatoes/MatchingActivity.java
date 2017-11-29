@@ -31,6 +31,8 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
+import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 
 public class MatchingActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -55,6 +57,10 @@ public class MatchingActivity extends AppCompatActivity
     private MatchFragmentPagerAdapter adapter;
     private MatchViewPager viewPager;
 
+    private ProgressBar spinner;
+
+    private LinearLayout likeAndDislikeLayout;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -63,6 +69,11 @@ public class MatchingActivity extends AppCompatActivity
 
         final TabLayout tabLayout = (TabLayout) findViewById(R.id.matching_tabs);
         viewPager = (MatchViewPager) findViewById(R.id.matching_viewpager);
+        viewPager.setVisibility(View.GONE);
+        likeAndDislikeLayout = (LinearLayout) findViewById(R.id.likeAndDislikeLayout);
+        likeAndDislikeLayout.setVisibility(View.GONE);
+        spinner = (ProgressBar)findViewById(R.id.progressBar);
+        spinner.setVisibility(View.VISIBLE);
 
         adapter = new MatchFragmentPagerAdapter(getSupportFragmentManager());
 
@@ -293,6 +304,12 @@ public class MatchingActivity extends AppCompatActivity
 
                 adapter.notifyDataSetChanged();
                 viewPager.setAdapter(adapter);
+
+                // Done fetching potent matches from Firebase
+                // Hide spinner and display Matching Activity Views
+                spinner.setVisibility(View.GONE);
+                viewPager.setVisibility(View.VISIBLE);
+                likeAndDislikeLayout.setVisibility(View.VISIBLE);
 
                 // NOTE: Temporary workaround for now: Set default action button listeners ( before Layout tabs are pressed )
                 FloatingActionButton likeButton = findViewById(R.id.fab_match);
