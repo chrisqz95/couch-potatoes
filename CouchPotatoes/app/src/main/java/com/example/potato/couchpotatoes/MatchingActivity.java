@@ -6,11 +6,19 @@ import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.GenericTypeIndicator;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 // for the side bar activity
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -38,7 +46,10 @@ public class MatchingActivity extends AppCompatActivity
     private ArrayList<String> matchedDateList = new ArrayList<>();
     private ArrayList<String> matchedFriendList = new ArrayList<>();
 
-
+    private MatchFragmentPagerAdapter adapter;
+    private MatchViewPager viewPager;
+    private MatchPageFragment fFragment;
+    private MatchPageFragment dFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,20 +62,33 @@ public class MatchingActivity extends AppCompatActivity
         matchedFriendList.add("Nestor");
 
         final TabLayout tabLayout = (TabLayout) findViewById(R.id.matching_tabs);
-        final MatchViewPager viewPager = (MatchViewPager) findViewById(R.id.matching_viewpager);
-        MatchFragmentPagerAdapter adapter = new MatchFragmentPagerAdapter(getSupportFragmentManager());
+        viewPager = (MatchViewPager) findViewById(R.id.matching_viewpager);
+
+        adapter = new MatchFragmentPagerAdapter(getSupportFragmentManager());
         // add fragments to the view pager
-        adapter.addFragment(MatchPageFragment.newInstance(matchedDateList), tabTitles[0]);
-        adapter.addFragment(MatchPageFragment.newInstance(matchedFriendList), tabTitles[1]);
+        fFragment = MatchPageFragment.newInstance(matchedFriendList);
+        dFragment = MatchPageFragment.newInstance(matchedDateList);
+        //adapter.addFragment(MatchPageFragment.newInstance(matchedDateList), tabTitles[0]);
+        //adapter.addFragment(MatchPageFragment.newInstance(matchedFriendList), tabTitles[1]);
+        //adapter.addFragment(MatchPageFragment.newInstance(matchedFriendList), tabTitles[1]);
+        adapter.addFragment(dFragment, tabTitles[0]);
+        adapter.addFragment(fFragment, tabTitles[1]);
 
         // line of code below causes app to crash; commenting out for app functionality -Mervin
         viewPager.setAdapter(adapter);
+
         tabLayout.post(new Runnable() {
             @Override
             public void run() {
                 tabLayout.setupWithViewPager(viewPager);
             }
         });
+
+        // Fetch list of potential friends from Firebase
+        fetchPotentFriendsFromFirebase();
+
+        // Fetch list of potential dates from Firebase
+        fetchPotentDatesFromFirebase();
 
 		// places toolbar on top of the screen
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -141,5 +165,55 @@ public class MatchingActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    public void fetchPotentFriendsFromFirebase () {
+        helper.getDb().getReference( helper.getPotentFriendPath() + helper.getAuth().getUid() ).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Iterator<DataSnapshot> potentDates = dataSnapshot.getChildren().iterator();
+
+                matchedFriendList.clear();
+
+                while ( potentDates.hasNext() ) {
+                    matchedFriendList.add( (String) potentDates.next().getValue() );
+                }
+
+                Log.d( "TEST", matchedFriendList.toString() );
+
+                adapter.notifyDataSetChanged();
+                viewPager.setAdapter(adapter);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.d( "TEST", databaseError.getMessage() );
+            }
+        });
+    }
+
+    public void fetchPotentDatesFromFirebase () {
+        helper.getDb().getReference( helper.getPotentDatePath() + helper.getAuth().getUid() ).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Iterator<DataSnapshot> potentDates = dataSnapshot.getChildren().iterator();
+
+                matchedDateList.clear();
+
+                while ( potentDates.hasNext() ) {
+                    matchedDateList.add( (String) potentDates.next().getValue() );
+                }
+
+                Log.d( "TEST", matchedDateList.toString() );
+
+                adapter.notifyDataSetChanged();
+                viewPager.setAdapter(adapter);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.d( "TEST", databaseError.getMessage() );
+            }
+        });
     }
 }
