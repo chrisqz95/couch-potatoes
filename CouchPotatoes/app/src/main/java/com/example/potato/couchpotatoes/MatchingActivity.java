@@ -58,8 +58,8 @@ public class MatchingActivity extends AppCompatActivity
         helper = new DBHelper();
 
         // TODO CHANGE THIS THIS IS TEMPORARY
-        matchedDateList.add("Della");
-        matchedFriendList.add("Nestor");
+        //matchedDateList.add("Della");
+        //matchedFriendList.add("Nestor");
 
         final TabLayout tabLayout = (TabLayout) findViewById(R.id.matching_tabs);
         viewPager = (MatchViewPager) findViewById(R.id.matching_viewpager);
