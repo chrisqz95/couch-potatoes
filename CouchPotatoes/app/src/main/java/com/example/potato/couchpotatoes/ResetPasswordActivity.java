@@ -53,6 +53,11 @@ public class ResetPasswordActivity extends AppCompatActivity {
         }
     };
 
+    public void onBackPressed(){
+        startActivity(new Intent(getApplicationContext(), LoginActivity.class));
+        finish();
+    }
+
     private void attemptResetPassword() {
         if (mResetTask != null) {
             return;
