@@ -35,9 +35,10 @@ import android.widget.Button;
 public class MatchingActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 	private DBHelper helper;
-    private final String[] tabTitles = new String[] { "Date", "Friend", "Test" };
-    private final String DATE_MATCH_TYPE = "DATE";
-    private final String FRIEND_MATCH_TYPE = "FRIEND";
+    private final String[] tabTitles = new String[] { "Date", "Friend" };
+
+    private final int VIEW_PAGER_DATE_TAB_POSITION = 0;
+    private final int VIEW_PAGER_FRIEND_TAB_POSITION = 1;
 
     // For the side navigation bar
     private DrawerLayout mDrawer;
@@ -53,8 +54,6 @@ public class MatchingActivity extends AppCompatActivity
 
     private MatchFragmentPagerAdapter adapter;
     private MatchViewPager viewPager;
-    private MatchPageFragment fFragment;
-    private MatchPageFragment dFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,27 +61,19 @@ public class MatchingActivity extends AppCompatActivity
         setContentView(R.layout.activity_matching);
         helper = new DBHelper();
 
-        // TODO CHANGE THIS THIS IS TEMPORARY
-        //matchedDateList.add("Della");
-        //matchedFriendList.add("Nestor");
-
         final TabLayout tabLayout = (TabLayout) findViewById(R.id.matching_tabs);
         viewPager = (MatchViewPager) findViewById(R.id.matching_viewpager);
 
         adapter = new MatchFragmentPagerAdapter(getSupportFragmentManager());
+
         // add fragments to the view pager
-        //fFragment = MatchPageFragment.newInstance(matchedFriendList, FRIEND_MATCH_TYPE );
-        //dFragment = MatchPageFragment.newInstance(matchedDateList, DATE_MATCH_TYPE );
-        //adapter.addFragment(MatchPageFragment.newInstance(matchedDateList), tabTitles[0]);
-        //adapter.addFragment(MatchPageFragment.newInstance(matchedFriendList), tabTitles[1]);
-        fFragment = MatchPageFragment.newInstance(matchedFriendList);
-        dFragment = MatchPageFragment.newInstance(matchedDateList);
-        adapter.addFragment(dFragment, tabTitles[0]);
-        adapter.addFragment(fFragment, tabTitles[1]);
+        adapter.addFragment(MatchPageFragment.newInstance(matchedDateList), tabTitles[0]);
+        adapter.addFragment(MatchPageFragment.newInstance(matchedFriendList), tabTitles[1]);
 
         // line of code below causes app to crash; commenting out for app functionality -Mervin
         viewPager.setAdapter(adapter);
 
+        // Change behavior of like and dislike buttons based on currently selected tab
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -91,11 +82,11 @@ public class MatchingActivity extends AppCompatActivity
 
             @Override
             public void onPageSelected(int position) {
-                Log.d( "TEST", Integer.toString( position ) );
                 FloatingActionButton likeButton = findViewById(R.id.fab_match);
                 FloatingActionButton dislikeButton = findViewById(R.id.fab_unmatch);
 
-                if ( position == 0 ) {
+                // If Date tab selected, have like button add to Date object on Firebase
+                if ( position == VIEW_PAGER_DATE_TAB_POSITION ) {
                     likeButton.setOnClickListener(
                             new View.OnClickListener() {
                                 @Override
@@ -126,7 +117,8 @@ public class MatchingActivity extends AppCompatActivity
                             }
                     );
                 }
-                else {
+                // If Friend tab selected, have like button add to Befriend object on Firebase
+                else if ( position == VIEW_PAGER_FRIEND_TAB_POSITION  ){
                     likeButton.setOnClickListener(
                             new View.OnClickListener() {
                                 @Override
@@ -258,6 +250,7 @@ public class MatchingActivity extends AppCompatActivity
         return true;
     }
 
+    // Populates the machtedFriendList with the list of potential friends and notifies the adapter of changes
     public void fetchPotentFriendsFromFirebase () {
         helper.getDb().getReference( helper.getPotentFriendPath() + helper.getAuth().getUid() ).addValueEventListener(new ValueEventListener() {
             @Override
@@ -270,7 +263,7 @@ public class MatchingActivity extends AppCompatActivity
                     matchedFriendList.add( (String) potentDates.next().getValue() );
                 }
 
-                Log.d( "TEST", matchedFriendList.toString() );
+                //Log.d( "TEST", matchedFriendList.toString() );
 
                 adapter.notifyDataSetChanged();
                 viewPager.setAdapter(adapter);
@@ -283,6 +276,7 @@ public class MatchingActivity extends AppCompatActivity
         });
     }
 
+    // Populates the machtedDateList with the list of potential dates and notifies the adapter of changes
     public void fetchPotentDatesFromFirebase () {
         helper.getDb().getReference( helper.getPotentDatePath() + helper.getAuth().getUid() ).addValueEventListener(new ValueEventListener() {
             @Override
@@ -295,12 +289,12 @@ public class MatchingActivity extends AppCompatActivity
                     matchedDateList.add( (String) potentDates.next().getValue() );
                 }
 
-                Log.d( "TEST", matchedDateList.toString() );
+                //Log.d( "TEST", matchedDateList.toString() );
 
                 adapter.notifyDataSetChanged();
                 viewPager.setAdapter(adapter);
 
-                // Set default action button listeners ( before Layout tabs are pressed )
+                // NOTE: Temporary workaround for now: Set default action button listeners ( before Layout tabs are pressed )
                 FloatingActionButton likeButton = findViewById(R.id.fab_match);
                 FloatingActionButton dislikeButton = findViewById(R.id.fab_unmatch);
                 likeButton.setOnClickListener(
