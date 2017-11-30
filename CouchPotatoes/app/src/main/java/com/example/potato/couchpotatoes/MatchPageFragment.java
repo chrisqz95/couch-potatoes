@@ -1,5 +1,6 @@
 package com.example.potato.couchpotatoes;
 
+import android.content.Intent;
 import android.graphics.Paint;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -12,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -28,6 +30,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+//public class MatchPageFragment extends Fragment implements View.OnClickListener {
 public class MatchPageFragment extends Fragment {
     public static final String ARG_LIST = "ARG_LIST";
 
@@ -44,6 +47,7 @@ public class MatchPageFragment extends Fragment {
     private TextView interestsHeader;
     private TextView interestsText;
     private TextView userInfoText;
+    private LinearLayout matchingUserInfoLayout;
 
     private ImageView imgView;
 
@@ -88,9 +92,13 @@ public class MatchPageFragment extends Fragment {
         matchButton.setOnClickListener(onClickListener);
         unmatchButton.setOnClickListener(onClickListener);
     }
+
     private View.OnClickListener onClickListener = new View.OnClickListener() {
         @Override
         public void onClick(final View v) {
+            Log.d( "TEST", "FRAGMENT CLICKED" );
+            //Intent intent = new Intent(getActivity().getApplicationContext(), ChatRoomActivity.class);
+            //startActivity(intent);
             /* NOTE: MAY NOT NEED THIS
             String currUserID = helper.getAuth().getUid();
             String timestamp = "0000-00-00 00:00:00";
@@ -122,6 +130,14 @@ public class MatchPageFragment extends Fragment {
         }
     };
 
+    /*
+    @Override
+    // Show upload dialog when Fragment's btnUploadImage button is clicked
+    public void onClick(View v) {
+
+    }
+    */
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -133,6 +149,7 @@ public class MatchPageFragment extends Fragment {
         interestsHeader = (TextView) view.findViewById(R.id.interestsHeader);
         interestsText = (TextView) view.findViewById(R.id.interestsText);
         userInfoText = (TextView) view.findViewById(R.id.userInfoText);
+        matchingUserInfoLayout = (LinearLayout) view.findViewById(R.id.matchingUserInfoLayout);
 
         if ( matchedUserList.isEmpty() ) {
             //textView.setText( "No new matches. Try adding more interests!" );
@@ -140,6 +157,18 @@ public class MatchPageFragment extends Fragment {
         }
         else {
             currMatchID = matchedUserList.get( 0 );
+
+            matchingUserInfoLayout.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Log.d( "TEST", "USER INFO FRAGMENT CLICKED" );
+                    //Log.d( "TEST", currMatchID );
+                    // TODO
+                    Intent intent = new Intent( getActivity().getApplicationContext(), MatchUserInfoActivity.class );
+                    intent.putExtra( "currMatchID", currMatchID );
+                    startActivity( intent );
+                }
+            });
 
             helper.getDb().getReference( helper.getUserPath() + currMatchID ).addValueEventListener(new ValueEventListener() {
                 @Override

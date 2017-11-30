@@ -58,6 +58,8 @@ public class MatchingActivity extends AppCompatActivity
 
     private ImageView imgView;
 
+    //private LinearLayout matchingUserInfoLayout;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -73,6 +75,17 @@ public class MatchingActivity extends AppCompatActivity
         likeAndDislikeLayout.setVisibility(View.GONE);
         spinner = (ProgressBar)findViewById(R.id.progressBar);
         spinner.setVisibility(View.VISIBLE);
+
+        /*
+        matchingUserInfoLayout = (LinearLayout) findViewById(R.id.matchingUserInfoLayout);
+
+        matchingUserInfoLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d( "TEST", "CLICKED" );
+            }
+        });
+        */
 
         adapter = new MatchFragmentPagerAdapter(getSupportFragmentManager());
 
@@ -126,6 +139,17 @@ public class MatchingActivity extends AppCompatActivity
                             @Override
                             public void onCancelled(DatabaseError databaseError) {
                                 Log.d("TEST", databaseError.getMessage());
+                            }
+                        });
+
+                        imgView.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                Log.d( "TEST", "IMG CLICKED" );
+                                //TODO
+                                //Intent intent = new Intent( getApplicationContext(), ( INSERT IMAGE GALLERY ACTIVITY CLASS ) );
+                                //intent.putExtra( "targetUserID", matchedDateList.get(0) );
+                                //startActivity( intent );
                             }
                         });
                     }
@@ -191,6 +215,17 @@ public class MatchingActivity extends AppCompatActivity
                             @Override
                             public void onCancelled(DatabaseError databaseError) {
                                 Log.d("TEST", databaseError.getMessage());
+                            }
+                        });
+
+                        imgView.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                Log.d( "TEST", "IMG CLICKED" );
+                                //TODO
+                                //Intent intent = new Intent( getApplicationContext(), ( INSERT IMAGE GALLERY ACTIVITY CLASS ) );
+                                //intent.putExtra( "targetUserID", matchedFriendList.get(0) );
+                                //startActivity( intent );
                             }
                         });
                     }
@@ -400,6 +435,17 @@ public class MatchingActivity extends AppCompatActivity
                         @Override
                         public void onCancelled(DatabaseError databaseError) {
                             Log.d("TEST", databaseError.getMessage());
+                        }
+                    });
+
+                    imgView.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Log.d( "TEST", "IMG CLICKED" );
+                            //TODO
+                            //Intent intent = new Intent( getApplicationContext(), ( INSERT IMAGE GALLERY ACTIVITY CLASS ) );
+                            //intent.putExtra( "targetUserID", matchedDateList.get(0) );
+                            //startActivity( intent );
                         }
                     });
                 }
