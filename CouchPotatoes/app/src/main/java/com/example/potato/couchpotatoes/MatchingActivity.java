@@ -99,18 +99,18 @@ public class MatchingActivity extends AppCompatActivity
                 if ( position == VIEW_PAGER_DATE_TAB_POSITION ) {
                     // Try to fetch profile pic from Firebase and update ImageView
                     // If profile pic is null, display default profile pic instead
-                    helper.getDb().getReference( helper.getUserPath() ).child( matchedDateList.get(0) ).child( "profile_pic" ).addValueEventListener(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(DataSnapshot dataSnapshot) {
-                            String url = "";
+                    if ( !matchedDateList.isEmpty() ) {
+                        helper.getDb().getReference(helper.getUserPath()).child(matchedDateList.get(0)).child("profile_pic").addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                String url = "";
 
-                            if ( dataSnapshot != null && dataSnapshot.getValue() != null ) {
-                                url = (String) dataSnapshot.getValue();
-                            }
-                            else {
-                                // Default Profile Pic
-                                url = "gs://couch-potatoes-47758.appspot.com/Default/ProfilePic/potato_1_profile_pic.png";
-                            }
+                                if (dataSnapshot != null && dataSnapshot.getValue() != null) {
+                                    url = (String) dataSnapshot.getValue();
+                                } else {
+                                    // Default Profile Pic
+                                    url = "gs://couch-potatoes-47758.appspot.com/Default/ProfilePic/potato_1_profile_pic.png";
+                                }
 
                                 if (imgView != null) {
                                     StorageReference uriRef = helper.getStorage().getReferenceFromUrl(url);
@@ -121,13 +121,14 @@ public class MatchingActivity extends AppCompatActivity
                                             .load(uriRef)
                                             .into(imgView);
                                 }
-                        }
+                            }
 
-                        @Override
-                        public void onCancelled(DatabaseError databaseError) {
-                            Log.d( "TEST", databaseError.getMessage() );
-                        }
-                    });
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
+                                Log.d("TEST", databaseError.getMessage());
+                            }
+                        });
+                    }
 
                     likeButton.setOnClickListener(
                             new View.OnClickListener() {
@@ -163,35 +164,36 @@ public class MatchingActivity extends AppCompatActivity
                 else if ( position == VIEW_PAGER_FRIEND_TAB_POSITION  ){
                     // Try to fetch profile pic from Firebase and update ImageView
                     // If profile pic is null, display default profile pic instead
-                    helper.getDb().getReference( helper.getUserPath() ).child( matchedFriendList.get(0) ).child( "profile_pic" ).addValueEventListener(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(DataSnapshot dataSnapshot) {
-                            String url = "";
+                    if ( !matchedFriendList.isEmpty() ) {
+                        helper.getDb().getReference(helper.getUserPath()).child(matchedFriendList.get(0)).child("profile_pic").addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                String url = "";
 
-                            if ( dataSnapshot != null && dataSnapshot.getValue() != null ) {
-                                url = (String) dataSnapshot.getValue();
+                                if (dataSnapshot != null && dataSnapshot.getValue() != null) {
+                                    url = (String) dataSnapshot.getValue();
+                                } else {
+                                    // Default Profile Pic
+                                    url = "gs://couch-potatoes-47758.appspot.com/Default/ProfilePic/potato_2_profile_pic.png";
+                                }
+
+                                if (imgView != null) {
+                                    StorageReference uriRef = helper.getStorage().getReferenceFromUrl(url);
+
+                                    // Set ImageView to contain photo
+                                    Glide.with(getApplicationContext())
+                                            .using(new FirebaseImageLoader())
+                                            .load(uriRef)
+                                            .into(imgView);
+                                }
                             }
-                            else {
-                                // Default Profile Pic
-                                url = "gs://couch-potatoes-47758.appspot.com/Default/ProfilePic/potato_2_profile_pic.png";
+
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
+                                Log.d("TEST", databaseError.getMessage());
                             }
-
-                            if (imgView != null) {
-                                StorageReference uriRef = helper.getStorage().getReferenceFromUrl(url);
-
-                                // Set ImageView to contain photo
-                                Glide.with(getApplicationContext())
-                                        .using(new FirebaseImageLoader())
-                                        .load(uriRef)
-                                        .into(imgView);
-                            }
-                        }
-
-                        @Override
-                        public void onCancelled(DatabaseError databaseError) {
-                            Log.d( "TEST", databaseError.getMessage() );
-                        }
-                    });
+                        });
+                    }
 
                     likeButton.setOnClickListener(
                             new View.OnClickListener() {
@@ -371,35 +373,36 @@ public class MatchingActivity extends AppCompatActivity
                 // NOTE: Temporary workaround for now: ( Want functionality before Layout tabs are pressed )
                 // Try to fetch profile pic from Firebase and update ImageView
                 // If profile pic is null, display default profile pic instead
-                helper.getDb().getReference( helper.getUserPath() ).child( matchedDateList.get(0) ).child( "profile_pic" ).addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        String url = "";
+                if ( !matchedDateList.isEmpty() ) {
+                    helper.getDb().getReference(helper.getUserPath()).child(matchedDateList.get(0)).child("profile_pic").addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            String url = "";
 
-                        if ( dataSnapshot != null && dataSnapshot.getValue() != null ) {
-                            url = (String) dataSnapshot.getValue();
+                            if (dataSnapshot != null && dataSnapshot.getValue() != null) {
+                                url = (String) dataSnapshot.getValue();
+                            } else {
+                                // Default Profile Pic
+                                url = "gs://couch-potatoes-47758.appspot.com/Default/ProfilePic/potato_1_profile_pic.png";
+                            }
+
+                            if (imgView != null) {
+                                StorageReference uriRef = helper.getStorage().getReferenceFromUrl(url);
+
+                                // Set ImageView to contain photo
+                                Glide.with(getApplicationContext())
+                                        .using(new FirebaseImageLoader())
+                                        .load(uriRef)
+                                        .into(imgView);
+                            }
                         }
-                        else {
-                            // Default Profile Pic
-                            url = "gs://couch-potatoes-47758.appspot.com/Default/ProfilePic/potato_1_profile_pic.png";
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+                            Log.d("TEST", databaseError.getMessage());
                         }
-
-                        if (imgView != null) {
-                            StorageReference uriRef = helper.getStorage().getReferenceFromUrl(url);
-
-                            // Set ImageView to contain photo
-                            Glide.with(getApplicationContext())
-                                    .using(new FirebaseImageLoader())
-                                    .load(uriRef)
-                                    .into(imgView);
-                        }
-                    }
-
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
-                        Log.d( "TEST", databaseError.getMessage() );
-                    }
-                });
+                    });
+                }
 
                 // Done fetching potent matches from Firebase
                 // Hide spinner and display Matching Activity Views

@@ -43,6 +43,7 @@ public class MatchPageFragment extends Fragment {
     private TextView bioText;
     private TextView interestsHeader;
     private TextView interestsText;
+    private TextView userInfoText;
 
     private ImageView imgView;
 
@@ -125,15 +126,17 @@ public class MatchPageFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_match_page, container, false);
-        textView = (TextView) view.findViewById(R.id.match_fragment_text);
-        genInfoHeader = (TextView) view.findViewById(R.id.generalInfoHeader);
-        bioHeader = (TextView) view.findViewById(R.id.bioHeader);
+        //textView = (TextView) view.findViewById(R.id.match_fragment_text);
+        //genInfoHeader = (TextView) view.findViewById(R.id.generalInfoHeader);
+        //bioHeader = (TextView) view.findViewById(R.id.bioHeader);
         bioText = (TextView) view.findViewById(R.id.bioText);
         interestsHeader = (TextView) view.findViewById(R.id.interestsHeader);
         interestsText = (TextView) view.findViewById(R.id.interestsText);
+        userInfoText = (TextView) view.findViewById(R.id.userInfoText);
 
         if ( matchedUserList.isEmpty() ) {
-            textView.setText( "No new matches. Try adding more interests!" );
+            //textView.setText( "No new matches. Try adding more interests!" );
+            userInfoText.setText( "No new matches. Try adding more interests!" );
         }
         else {
             currMatchID = matchedUserList.get( 0 );
@@ -149,7 +152,7 @@ public class MatchPageFragment extends Fragment {
 
                     String generalInfoHeader = "General Info";
 
-                    genInfoHeader.setText( generalInfoHeader );
+                    //genInfoHeader.setText( generalInfoHeader );
 
                     String firstName = (String) res.get( "firstName" );
                     String middleName = (String) res.get( "middleName" );
@@ -175,24 +178,56 @@ public class MatchPageFragment extends Fragment {
 
                     // TODO Maybe fetch and display profile pic here also
                     //userInfo += "General Info:\n\n";
-                    userInfo += paddSpace( "First Name:", "", 19 );
-                    userInfo += firstName + "\n\n";
-                    userInfo += paddSpace( "Middle Name:", "", 17 );
-                    userInfo += middleName + "\n\n";
-                    userInfo += paddSpace( "Last Name:", "", 18 );
-                    userInfo += lastName + "\n\n";
-                    userInfo += paddSpace( "Gender:", "", 19 );
-                    userInfo += gender + "\n\n";
-                    userInfo += paddSpace( "Birth Day:", "", 20 );
-                    userInfo += birth_date + "\n";
+                    //userInfo += paddSpace( "First Name:", "", 19 );
+                    //userInfo += firstName + "\n\n";
+                    //userInfo += paddSpace( "Middle Name:", "", 17 );
+                    //userInfo += middleName + "\n\n";
+                    //userInfo += paddSpace( "Last Name:", "", 18 );
+                    //userInfo += lastName + "\n\n";
+                    //userInfo += paddSpace( "Gender:", "", 19 );
+                    //userInfo += gender + "\n\n";
+                    //userInfo += paddSpace( "Birth Day:", "", 20 );
+                    //userInfo += birth_date + "\n";
+
                     //userInfo += paddSpace( "Bio:", "", 19 );
                     //userInfo += bio + "\n\n";
 
-                    textView.setText( userInfo );
+
+                    //userInfo += helper.getFullName( firstName, middleName, lastName );
+
+                    // Omitt middle name here
+                    //userInfo += helper.getFullName( firstName, "", lastName );
+                    //userInfo += "\t\t\t\t\t";
+
+                    String genderAbbrev = "";
+
+                    // Abbreviate gender
+                    // If non-binary, do not mention gender
+                    if ( gender.equals( "male" ) ) {
+                        genderAbbrev= "M";
+                    }
+                    else if ( gender.equals( "female" ) ) {
+                        genderAbbrev = "F";
+                    }
+
+                    int numSpaces = 30;
+
+                    userInfo += paddSpace( helper.getFullName( firstName, "", lastName ), genderAbbrev, numSpaces );
+
+                    //String format = "%s%30s";
+                    //userInfo += String.format( format, helper.getFullName( firstName, "", lastName ), genderAbbrev );
+
+                    // Omitt birthday here
+                    //userInfo += "\t\t\t\t\t";
+                    //userInfo += birth_date;
+
+                    //textView.setText( userInfo );
+
+                    userInfoText.setText( userInfo );
 
                     String bioHeaderStr = "Bio";
 
-                    bioHeader.setText( bioHeaderStr );
+                    //bioHeader.setText( bioHeaderStr );
 
                     bioText.setText( bio );
 
@@ -232,7 +267,8 @@ public class MatchPageFragment extends Fragment {
                                     }
                                     */
                                     int newLinePos = 22;
-                                    interests += "◇  ";
+                                    //interests += "◇  ";
+                                    interests += "    ";
                                     interests += addStrAtPos( subcategory, "\n     ", newLinePos );
                                     interests += "  -  ";
                                     interests += addStrAtPos( preference, "\n     ", newLinePos );
