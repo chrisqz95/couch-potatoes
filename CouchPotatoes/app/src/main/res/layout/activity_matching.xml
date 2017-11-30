@@ -46,31 +46,45 @@
             </android.support.design.widget.AppBarLayout>
 
             <!-- Source: https://www.tutorialspoint.com/android/android_loading_spinner.htm -->
-            <ProgressBar
-                android:id="@+id/progressBar"
-                style="@style/Widget.AppCompat.ProgressBar"
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:layout_centerHorizontal="true"
-                android:layout_gravity="center_vertical"
-                android:layout_marginTop="100dp"
-                android:translationZ="5dp" />
 
-            <ImageView
-                android:id="@+id/imageView2"
-                android:layout_width="match_parent"
-                android:layout_height="150dp"
-                android:layout_marginTop="20dp"
-                app:srcCompat="@drawable/profile" />
-
-            <com.example.potato.couchpotatoes.MatchViewPager
-                android:id="@+id/matching_viewpager"
+            <ScrollView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_gravity="center_vertical|center_horizontal"
-                android:background="@android:color/white"
-                app:layout_anchor="@id/toolbar"
-                app:layout_anchorGravity="bottom" />
+                android:fillViewport="true">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+
+                    <ProgressBar
+                        android:id="@+id/progressBar"
+                        style="@style/Widget.AppCompat.ProgressBar"
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:layout_centerHorizontal="true"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginTop="100dp"
+                        android:translationZ="5dp" />
+
+                    <ImageView
+                        android:id="@+id/imageView2"
+                        android:layout_width="match_parent"
+                        android:layout_height="150dp"
+                        android:layout_gravity="center"
+                        android:background="@color/colorPrimaryDark"
+                        app:srcCompat="@drawable/profile" />
+
+                    <com.example.potato.couchpotatoes.MatchViewPager
+                        android:id="@+id/matching_viewpager"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="center_vertical|center_horizontal"
+                        android:background="@android:color/white"
+                        app:layout_anchor="@id/toolbar"
+                        app:layout_anchorGravity="bottom" />
+                </LinearLayout>
+            </ScrollView>
 
         </LinearLayout>
 

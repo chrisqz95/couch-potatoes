@@ -1,5 +1,6 @@
 package com.example.potato.couchpotatoes;
 
+import android.graphics.Paint;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
@@ -20,6 +21,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.StorageReference;
 
+import org.w3c.dom.Text;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -35,6 +38,11 @@ public class MatchPageFragment extends Fragment {
 
     private String currMatchID;
     private TextView textView;
+    private TextView genInfoHeader;
+    private TextView bioHeader;
+    private TextView bioText;
+    private TextView interestsHeader;
+    private TextView interestsText;
 
     private ImageView imgView;
 
@@ -118,6 +126,11 @@ public class MatchPageFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_match_page, container, false);
         textView = (TextView) view.findViewById(R.id.match_fragment_text);
+        genInfoHeader = (TextView) view.findViewById(R.id.generalInfoHeader);
+        bioHeader = (TextView) view.findViewById(R.id.bioHeader);
+        bioText = (TextView) view.findViewById(R.id.bioText);
+        interestsHeader = (TextView) view.findViewById(R.id.interestsHeader);
+        interestsText = (TextView) view.findViewById(R.id.interestsText);
 
         if ( matchedUserList.isEmpty() ) {
             textView.setText( "No new matches. Try adding more interests!" );
@@ -133,6 +146,10 @@ public class MatchPageFragment extends Fragment {
                     for ( DataSnapshot children : dataSnapshot.getChildren() ) {
                         res.put( children.getKey(), children.getValue() );
                     }
+
+                    String generalInfoHeader = "General Info";
+
+                    genInfoHeader.setText( generalInfoHeader );
 
                     String firstName = (String) res.get( "firstName" );
                     String middleName = (String) res.get( "middleName" );
@@ -157,25 +174,35 @@ public class MatchPageFragment extends Fragment {
                     */
 
                     // TODO Maybe fetch and display profile pic here also
-                    userInfo += "General Info:\n\n";
+                    //userInfo += "General Info:\n\n";
                     userInfo += paddSpace( "First Name:", "", 19 );
                     userInfo += firstName + "\n\n";
-                    userInfo += paddSpace( "Middle Name:", "", 18 );
+                    userInfo += paddSpace( "Middle Name:", "", 17 );
                     userInfo += middleName + "\n\n";
                     userInfo += paddSpace( "Last Name:", "", 18 );
                     userInfo += lastName + "\n\n";
-                    userInfo += paddSpace( "Gender:", "", 18 );
+                    userInfo += paddSpace( "Gender:", "", 19 );
                     userInfo += gender + "\n\n";
                     userInfo += paddSpace( "Birth Day:", "", 20 );
-                    userInfo += birth_date + "\n\n";
-                    userInfo += paddSpace( "Bio:", "", 19 );
-                    userInfo += bio + "\n\n";
+                    userInfo += birth_date + "\n";
+                    //userInfo += paddSpace( "Bio:", "", 19 );
+                    //userInfo += bio + "\n\n";
 
                     textView.setText( userInfo );
 
-                    gUserInfo = userInfo;
+                    String bioHeaderStr = "Bio";
 
-                    gUserInfo += "\nInterests:";
+                    bioHeader.setText( bioHeaderStr );
+
+                    bioText.setText( bio );
+
+                    //gUserInfo = userInfo;
+
+                    //gUserInfo += "\nInterests:";
+
+                    String interestsHeaderStr = "Interests";
+
+                    interestsHeader.setText( interestsHeaderStr );
 
                     // Fetch and display User's Interests
                     helper.getDb().getReference( helper.getUserInterestPath() ).child( currMatchID ).addValueEventListener(new ValueEventListener() {
@@ -196,18 +223,28 @@ public class MatchPageFragment extends Fragment {
                                     //Log.d( "TEST", "Subcategory: " + subcategory );
                                     //Log.d( "TEST", "Preference: " + preference );
 
-                                    interests += "\t\t";
-                                    interests += subcategory;
-                                    interests += " ( ";
-                                    interests += preference;
-                                    interests += ")\n";
+                                    /*
+                                    if ( preference.equals( "like" ) || preference.equals( "like to try" ) ) {
+                                        interests += "◆  ";
+                                    }
+                                    else {
+                                        interests += "◇  ";
+                                    }
+                                    */
+                                    int newLinePos = 22;
+                                    interests += "◇  ";
+                                    interests += addStrAtPos( subcategory, "\n     ", newLinePos );
+                                    interests += "  -  ";
+                                    interests += addStrAtPos( preference, "\n     ", newLinePos );
+                                    interests += "\n";
                                 }
                                 interests += "\n";
                             }
 
-                            textView.setText( gUserInfo + "\n\n" + interests );
+                            //textView.setText( gUserInfo + "\n\n" + interests );
                             //textView.setText( userInfo );
                             //userInfo = "";
+                            interestsText.setText( interests );
                         }
 
                         @Override
@@ -267,5 +304,18 @@ public class MatchPageFragment extends Fragment {
 
     private String paddSpaceEndln( String title, String value, int desiredLength ) {
         return paddSpaceEnd( title, value, desiredLength ) + "\n";
+    }
+
+    private String addStrAtPos( String str, String addition, int position ) {
+        String ret = "";
+
+        for ( int i = 0; i < str.length(); i++ ) {
+            if ( i == position ) {
+                ret += addition;
+            }
+            ret += str.charAt( i );
+        }
+
+        return ret;
     }
 }
