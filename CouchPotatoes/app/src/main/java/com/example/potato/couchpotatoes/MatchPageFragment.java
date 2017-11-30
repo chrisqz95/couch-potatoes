@@ -10,11 +10,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.firebase.ui.storage.images.FirebaseImageLoader;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -31,6 +35,8 @@ public class MatchPageFragment extends Fragment {
 
     private String currMatchID;
     private TextView textView;
+
+    private ImageView imgView;
 
     /**
      * TODO: NOTE IF WE WANT TO PASS IN THE LIST DIRECTLY, WE NEED TO MAKE MATCHEDUSER EXTEND PARCELABLE
@@ -110,6 +116,20 @@ public class MatchPageFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_match_page, container, false);
         textView = (TextView) view.findViewById(R.id.match_fragment_text);
+
+        /*
+        imgView = (ImageView) getActivity().findViewById(R.id.imageView2);
+
+        if ( imgView != null ) {
+            StorageReference uriRef = helper.getStorage().getReferenceFromUrl("gs://couch-potatoes-47758.appspot.com/Default/ProfilePic/potato_1_profile_pic.png");
+
+            // Set ImageView to contain photo
+            Glide.with(this)
+                    .using(new FirebaseImageLoader())
+                    .load(uriRef)
+                    .into(imgView);
+        }
+        */
 
         if ( matchedUserList.isEmpty() ) {
             textView.setText( "No new matches. Try adding more interests!" );

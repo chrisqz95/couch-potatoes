@@ -10,27 +10,22 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
+
+import com.bumptech.glide.Glide;
+import com.firebase.ui.storage.images.FirebaseImageLoader;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.GenericTypeIndicator;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.StorageReference;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Iterator;
-import java.util.Map;
 // for the side bar activity
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
-import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 
@@ -61,6 +56,8 @@ public class MatchingActivity extends AppCompatActivity
 
     private LinearLayout likeAndDislikeLayout;
 
+    private ImageView imgView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -68,6 +65,8 @@ public class MatchingActivity extends AppCompatActivity
         helper = new DBHelper();
 
         final TabLayout tabLayout = (TabLayout) findViewById(R.id.matching_tabs);
+        imgView = (ImageView) findViewById(R.id.imageView2);
+        imgView.setVisibility(View.GONE);
         viewPager = (MatchViewPager) findViewById(R.id.matching_viewpager);
         viewPager.setVisibility(View.GONE);
         likeAndDislikeLayout = (LinearLayout) findViewById(R.id.likeAndDislikeLayout);
@@ -98,6 +97,38 @@ public class MatchingActivity extends AppCompatActivity
 
                 // If Date tab selected, have like button add to Date object on Firebase
                 if ( position == VIEW_PAGER_DATE_TAB_POSITION ) {
+                    // Try to fetch profile pic from Firebase and update ImageView
+                    // If profile pic is null, display default profile pic instead
+                    helper.getDb().getReference( helper.getUserPath() ).child( matchedDateList.get(0) ).child( "profile_pic" ).addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            String url = "";
+
+                            if ( dataSnapshot != null && dataSnapshot.getValue() != null ) {
+                                url = (String) dataSnapshot.getValue();
+                            }
+                            else {
+                                // Default Profile Pic
+                                url = "gs://couch-potatoes-47758.appspot.com/Default/ProfilePic/potato_1_profile_pic.png";
+                            }
+
+                                if (imgView != null) {
+                                    StorageReference uriRef = helper.getStorage().getReferenceFromUrl(url);
+
+                                    // Set ImageView to contain photo
+                                    Glide.with(getApplicationContext())
+                                            .using(new FirebaseImageLoader())
+                                            .load(uriRef)
+                                            .into(imgView);
+                                }
+                        }
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+                            Log.d( "TEST", databaseError.getMessage() );
+                        }
+                    });
+
                     likeButton.setOnClickListener(
                             new View.OnClickListener() {
                                 @Override
@@ -130,6 +161,38 @@ public class MatchingActivity extends AppCompatActivity
                 }
                 // If Friend tab selected, have like button add to Befriend object on Firebase
                 else if ( position == VIEW_PAGER_FRIEND_TAB_POSITION  ){
+                    // Try to fetch profile pic from Firebase and update ImageView
+                    // If profile pic is null, display default profile pic instead
+                    helper.getDb().getReference( helper.getUserPath() ).child( matchedFriendList.get(0) ).child( "profile_pic" ).addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            String url = "";
+
+                            if ( dataSnapshot != null && dataSnapshot.getValue() != null ) {
+                                url = (String) dataSnapshot.getValue();
+                            }
+                            else {
+                                // Default Profile Pic
+                                url = "gs://couch-potatoes-47758.appspot.com/Default/ProfilePic/potato_2_profile_pic.png";
+                            }
+
+                            if (imgView != null) {
+                                StorageReference uriRef = helper.getStorage().getReferenceFromUrl(url);
+
+                                // Set ImageView to contain photo
+                                Glide.with(getApplicationContext())
+                                        .using(new FirebaseImageLoader())
+                                        .load(uriRef)
+                                        .into(imgView);
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+                            Log.d( "TEST", databaseError.getMessage() );
+                        }
+                    });
+
                     likeButton.setOnClickListener(
                             new View.OnClickListener() {
                                 @Override
@@ -305,9 +368,43 @@ public class MatchingActivity extends AppCompatActivity
                 adapter.notifyDataSetChanged();
                 viewPager.setAdapter(adapter);
 
+                // NOTE: Temporary workaround for now: ( Want functionality before Layout tabs are pressed )
+                // Try to fetch profile pic from Firebase and update ImageView
+                // If profile pic is null, display default profile pic instead
+                helper.getDb().getReference( helper.getUserPath() ).child( matchedDateList.get(0) ).child( "profile_pic" ).addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        String url = "";
+
+                        if ( dataSnapshot != null && dataSnapshot.getValue() != null ) {
+                            url = (String) dataSnapshot.getValue();
+                        }
+                        else {
+                            // Default Profile Pic
+                            url = "gs://couch-potatoes-47758.appspot.com/Default/ProfilePic/potato_1_profile_pic.png";
+                        }
+
+                        if (imgView != null) {
+                            StorageReference uriRef = helper.getStorage().getReferenceFromUrl(url);
+
+                            // Set ImageView to contain photo
+                            Glide.with(getApplicationContext())
+                                    .using(new FirebaseImageLoader())
+                                    .load(uriRef)
+                                    .into(imgView);
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+                        Log.d( "TEST", databaseError.getMessage() );
+                    }
+                });
+
                 // Done fetching potent matches from Firebase
                 // Hide spinner and display Matching Activity Views
                 spinner.setVisibility(View.GONE);
+                imgView.setVisibility(View.VISIBLE);
                 viewPager.setVisibility(View.VISIBLE);
                 likeAndDislikeLayout.setVisibility(View.VISIBLE);
 
