@@ -112,7 +112,7 @@
                 android:clickable="true"
                 android:foregroundTint="@color/white"
                 android:scaleType="center"
-                android:src="@android:drawable/ic_menu_add"
+                android:src="@mipmap/ic_thumb_up_white_24dp"
                 app:backgroundTint="@color/success"
                 app:fabSize="normal" />
             <!--android:layout_margin="16dp"-->
@@ -124,7 +124,7 @@
                 android:layout_margin="16dp"
                 android:clickable="true"
                 android:scaleType="center"
-                android:src="@android:drawable/ic_menu_delete"
+                android:src="@mipmap/ic_thumb_down_white_24dp"
                 app:fabSize="normal" />
 
             <!--<android.support.design.widget.FloatingActionButton-->
