@@ -7,12 +7,26 @@
 
     <!--TODO: add the swiping stuff here-->
 
-    <TextView
-        android:id="@+id/match_fragment_text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical|center"
-        android:layout_marginTop="30dp"
-        android:gravity="center_vertical" />
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center_horizontal"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/match_fragment_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical|center"
+                android:layout_marginLeft="30dp"
+                android:layout_marginTop="30dp"
+                android:gravity="center_vertical" />
+        </LinearLayout>
+    </ScrollView>
 
 </LinearLayout>

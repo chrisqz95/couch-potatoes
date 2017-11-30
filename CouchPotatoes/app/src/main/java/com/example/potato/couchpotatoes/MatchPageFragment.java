@@ -38,6 +38,8 @@ public class MatchPageFragment extends Fragment {
 
     private ImageView imgView;
 
+    private String gUserInfo;
+
     /**
      * TODO: NOTE IF WE WANT TO PASS IN THE LIST DIRECTLY, WE NEED TO MAKE MATCHEDUSER EXTEND PARCELABLE
      * @param savedInstanceState
@@ -117,20 +119,6 @@ public class MatchPageFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_match_page, container, false);
         textView = (TextView) view.findViewById(R.id.match_fragment_text);
 
-        /*
-        imgView = (ImageView) getActivity().findViewById(R.id.imageView2);
-
-        if ( imgView != null ) {
-            StorageReference uriRef = helper.getStorage().getReferenceFromUrl("gs://couch-potatoes-47758.appspot.com/Default/ProfilePic/potato_1_profile_pic.png");
-
-            // Set ImageView to contain photo
-            Glide.with(this)
-                    .using(new FirebaseImageLoader())
-                    .load(uriRef)
-                    .into(imgView);
-        }
-        */
-
         if ( matchedUserList.isEmpty() ) {
             textView.setText( "No new matches. Try adding more interests!" );
         }
@@ -169,20 +157,64 @@ public class MatchPageFragment extends Fragment {
                     */
 
                     // TODO Maybe fetch and display profile pic here also
+                    userInfo += "General Info:\n\n";
                     userInfo += paddSpace( "First Name:", "", 19 );
-                    userInfo += firstName + "\n";
+                    userInfo += firstName + "\n\n";
                     userInfo += paddSpace( "Middle Name:", "", 18 );
-                    userInfo += middleName + "\n";
+                    userInfo += middleName + "\n\n";
                     userInfo += paddSpace( "Last Name:", "", 18 );
-                    userInfo += lastName + "\n";
+                    userInfo += lastName + "\n\n";
                     userInfo += paddSpace( "Gender:", "", 18 );
-                    userInfo += gender + "\n";
+                    userInfo += gender + "\n\n";
                     userInfo += paddSpace( "Birth Day:", "", 20 );
-                    userInfo += birth_date + "\n";
+                    userInfo += birth_date + "\n\n";
                     userInfo += paddSpace( "Bio:", "", 19 );
-                    userInfo += bio + "\n";
+                    userInfo += bio + "\n\n";
 
                     textView.setText( userInfo );
+
+                    gUserInfo = userInfo;
+
+                    gUserInfo += "\nInterests:";
+
+                    // Fetch and display User's Interests
+                    helper.getDb().getReference( helper.getUserInterestPath() ).child( currMatchID ).addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            String interests = "";
+
+                            for ( DataSnapshot child : dataSnapshot.getChildren() ) {
+                                String interest = child.getKey();
+                                interests += interest;
+                                interests += "\n\n";
+
+                                for ( DataSnapshot subchild : child.getChildren() ) {
+                                    String subcategory = subchild.getKey();
+                                    String preference = (String) subchild.getValue();
+
+                                    //Log.d( "TEST", "Interest: " + interest );
+                                    //Log.d( "TEST", "Subcategory: " + subcategory );
+                                    //Log.d( "TEST", "Preference: " + preference );
+
+                                    interests += "\t\t";
+                                    interests += subcategory;
+                                    interests += " ( ";
+                                    interests += preference;
+                                    interests += ")\n";
+                                }
+                                interests += "\n";
+                            }
+
+                            textView.setText( gUserInfo + "\n\n" + interests );
+                            //textView.setText( userInfo );
+                            //userInfo = "";
+                        }
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+                            Log.d( "TEST", databaseError.getMessage() );
+                        }
+                    });
                 }
 
                 @Override
