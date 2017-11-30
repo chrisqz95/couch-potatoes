@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import com.google.firebase.database.DataSnapshot;
@@ -138,21 +139,28 @@ public class MatchPageFragment extends Fragment {
 
                     // TODO Need a better way to format text
                     /*
-                    userInfo += "First Name:"; userInfo += getTabs( 5 ); userInfo += firstName; userInfo += "\n";
-                    userInfo += "Middle Name:"; userInfo += getTabs( 4 ); userInfo += middleName; userInfo += "\n";
-                    userInfo += "Last Name:"; userInfo += getTabs( 4 ); userInfo += lastName; userInfo += "\n";
-                    userInfo += "Gender:"; userInfo += getTabs( 7 ); userInfo += gender; userInfo += "\n";
-                    userInfo += "Birth Day:"; userInfo += getTabs( 10 ); userInfo += birth_date; userInfo += "\n";
-                    userInfo += "bio:"; userInfo += getTabs( 12 ); userInfo += bio; userInfo += "\n";
+                    String format = "%30s%30s\n";
+                    userInfo += String.format( format, "First Name:", firstName );
+                    userInfo += String.format( format, "Middle Name:", middleName );
+                    userInfo += String.format( format, "Last Name:", lastName );
+                    userInfo += String.format( format, "Gender:", gender );
+                    userInfo += String.format( format, "Birth Day:", birth_date );
+                    userInfo += String.format( format, "Bio:", bio );
                     */
 
                     // TODO Maybe fetch and display profile pic here also
-                    userInfo += "First Name:"; userInfo += firstName; userInfo += "\n";
-                    userInfo += "Middle Name:"; userInfo += middleName; userInfo += "\n";
-                    userInfo += "Last Name:"; userInfo += lastName; userInfo += "\n";
-                    userInfo += "Gender:"; userInfo += gender; userInfo += "\n";
-                    userInfo += "Birth Day:"; userInfo += birth_date; userInfo += "\n";
-                    userInfo += "bio:"; userInfo += bio; userInfo += "\n";
+                    userInfo += paddSpace( "First Name:", "", 19 );
+                    userInfo += firstName + "\n";
+                    userInfo += paddSpace( "Middle Name:", "", 18 );
+                    userInfo += middleName + "\n";
+                    userInfo += paddSpace( "Last Name:", "", 18 );
+                    userInfo += lastName + "\n";
+                    userInfo += paddSpace( "Gender:", "", 18 );
+                    userInfo += gender + "\n";
+                    userInfo += paddSpace( "Birth Day:", "", 20 );
+                    userInfo += birth_date + "\n";
+                    userInfo += paddSpace( "Bio:", "", 19 );
+                    userInfo += bio + "\n";
 
                     textView.setText( userInfo );
                 }
@@ -167,13 +175,45 @@ public class MatchPageFragment extends Fragment {
         return view;
     }
 
-    /*
-    private String getTabs( int numTabs ) {
+    private String paddSpace( String title, String value, int desiredLength ) {
         String str = "";
-        for ( int i = 0; i < numTabs; i++ ) {
+
+        str += title;
+
+        int numSpaces = desiredLength - title.length() - value.length();
+
+        for ( int i = 0; i < numSpaces; i++ ) {
             str += "\t";
         }
+
+        str += value;
+
         return str;
     }
-    */
+
+    private String paddSpaceln( String title, String value, int desiredLength ) {
+        return paddSpace( title, value + "\n", desiredLength );
+    }
+
+    private String paddSpaceEnd( String title, String value, int desiredLength ) {
+        String str = "";
+
+        str += title;
+
+        str += value;
+
+        int numSpaces = desiredLength - title.length() - value.length();
+
+        for ( int i = 0; i < numSpaces; i++ ) {
+            str += "\t";
+        }
+
+        str += "|";
+
+        return str;
+    }
+
+    private String paddSpaceEndln( String title, String value, int desiredLength ) {
+        return paddSpaceEnd( title, value, desiredLength ) + "\n";
+    }
 }

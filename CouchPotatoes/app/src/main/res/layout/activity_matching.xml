@@ -45,6 +45,7 @@
 
             </android.support.design.widget.AppBarLayout>
 
+            <!-- Source: https://www.tutorialspoint.com/android/android_loading_spinner.htm -->
             <ProgressBar
                 android:id="@+id/progressBar"
                 style="@style/Widget.AppCompat.ProgressBar"
