@@ -118,6 +118,11 @@
 
         </LinearLayout>
 
+        <com.mindorks.placeholderview.SwipePlaceHolderView
+            android:id="@+id/swipeView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+        </com.mindorks.placeholderview.SwipePlaceHolderView>
 
         <!--<android.support.design.widget.FloatingActionButton-->
                 <!--android:id="@+id/fab_unmatch"-->

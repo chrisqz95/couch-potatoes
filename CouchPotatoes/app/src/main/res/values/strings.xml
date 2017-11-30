@@ -16,6 +16,9 @@
     <string name="title_activity_login2">Sign in</string>
     <string name="title_activity_login">Sign in</string>
     <string name="title_activity_main">MainActivity</string>
+    <string name="dating_page">dating</string>
+    <string name="friends_page">friends</string>
+    <string name="close">Close</string>
 
     <!-- Strings used in Profile Activity -->
     <string name="title_activity_preferences">Preferences</string>
