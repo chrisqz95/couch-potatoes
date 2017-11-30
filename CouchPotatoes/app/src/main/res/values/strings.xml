@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">CouchPotatoes</string>
+    <string name="app_name">Couch Potatoes</string>
 
     <!-- Strings related to login -->
     <string name="prompt_email">Email</string>
@@ -7,15 +7,209 @@
     <string name="action_sign_in">Sign in or register</string>
     <string name="action_sign_in_short">Sign in</string>
     <string name="error_invalid_email">This email address is invalid</string>
-    <string name="error_invalid_password">This password is too short</string>
-    <string name="error_incorrect_password">This password is incorrect</string>
+    <string name="error_invalid_password">Password is too short, enter a minimum of 5 characters.</string>
+    <string name="error_incorrect_password">This password is incorrect.</string>
     <string name="error_field_required">This field is required</string>
     <string name="permission_rationale">"Contacts permissions are needed for providing email
         completions."
     </string>
     <string name="title_activity_login2">Sign in</string>
+    <string name="title_activity_login">Sign in</string>
     <string name="title_activity_main">MainActivity</string>
     <string name="dating_page">dating</string>
     <string name="friends_page">friends</string>
     <string name="close">Close</string>
+
+    <!-- Strings used in Profile Activity -->
+    <string name="title_activity_preferences">Preferences</string>
+
+    <!-- Strings related to Settings -->
+
+    <!-- Example General settings -->
+    <string name="pref_header_general">General</string>
+
+    <string name="pref_title_social_recommendations">Enable social recommendations</string>
+    <string name="pref_description_social_recommendations">Recommendations for people to contact
+        based on your message history
+    </string>
+
+    <string name="pref_title_display_name">Display name</string>
+    <string name="pref_default_display_name">John Smith</string>
+    <string name="user_bio_hint">Say something about yourself...</string>
+
+    <string name="pref_title_add_friends_to_messages">Add friends to messages</string>
+    <string-array name="pref_example_list_titles">
+        <item>Always</item>
+        <item>When possible</item>
+        <item>Never</item>
+    </string-array>
+    <string-array name="pref_example_list_values">
+        <item>1</item>
+        <item>0</item>
+        <item>-1</item>
+    </string-array>
+
+
+    <string name="pref_header_profile">Profile</string>
+    <string name="pref_header_settings">Settings</string>
+
+    <string-array name="gender_list">
+        <item>Male</item>
+        <item>Female</item>
+        <item>Non-binary</item>
+    </string-array>
+
+    <string-array name="movie_preferences">
+        <item>Action</item>
+        <item>Adventure</item>
+        <item>Animation</item>
+        <item>Biography</item>
+        <item>Comedy</item>
+        <item>Crime</item>
+        <item>Documentary</item>
+        <item>Drama</item>
+        <item>Family</item>
+        <item>Fantasy</item>
+        <item>Film-Noir</item>
+        <item>History</item>
+        <item>Horror</item>
+        <item>Music</item>
+        <item>Musical</item>
+        <item>Mystery</item>
+        <item>Romance</item>
+        <item>Sci-Fi</item>
+        <item>Sport</item>
+        <item>Thriller</item>
+        <item>War</item>
+        <item>Western</item>
+    </string-array>
+
+    <string-array name="sexual_preferences">
+        <item>Male</item>
+        <item>Female</item>
+        <item>Non-Binary</item>
+    </string-array>
+
+    <string name="pref_title_preferences">Preferences:</string>
+    <string name="pref_title_interests">Interests:</string>
+
+    <string-array name="empty_array"/>
+
+    <string-array name="multi_select_list_preference_default_value" />
+    <string name="submit">submit</string>
+
+    <string name="pref_title_TEMPORARY">John Doe</string>
+    <string name="pref_title_photos">Photos</string>
+    <string name="pref_title_sexuality">Sexual Preference</string>
+    <string name="pref_title_movies">Movies</string>
+    <string name="pref_title_music">Music</string>
+    <string name="pref_title_sports">Sports</string>
+    <string name="pref_title_tvshows">TV Shows</string>
+    <string name="pref_title_hobbies">Hobbies</string>
+    <string name="pref_title_foods">Foods</string>
+
+    <!-- Example settings for Notifications -->
+    <string name="pref_header_notifications">Notifications</string>
+
+    <string name="pref_title_new_message_notifications">New message notifications</string>
+
+    <string name="pref_title_ringtone">Ringtone</string>
+    <string name="pref_ringtone_silent">Silent</string>
+
+    <string name="pref_title_vibrate">Vibrate</string>
+
+
+
+	<string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <!-- Strings Used in Sign Up Activity -->
+    <string name="sign_up_email_string">Please Enter Your Email.</string>
+    <string name="sign_up_prompt_email">Email</string>
+    <string name="sign_up_password_string">Please Enter A Password.</string>
+    <string name="sign_up_prompt_password">Password</string>
+    <string name="sign_up_prompt_password_confirm">Password (Confirm)</string>
+
+    <string name="title_activity_sign_up">SignUpActivity</string>
+    <string name="section_format">Hello World from section: %1$d</string>
+
+    <string name="sign_up_dob">Date of Birth</string>
+    <string name="sign_up_first_name">First Name</string>
+    <string name="sign_up_middle_name">Middle Name</string>
+    <string name="sign_up_last_name">Last Name</string>
+    <string name="sign_up_gender_prompt">Gender</string>
+    <string name="sign_up_gender_preference_prompt">Interested In</string>
+    <string name="sign_up_male">Male</string>
+    <string name="sign_up_female">Female</string>
+    <string name="sign_up_other">Other</string>
+    <string-array name="gender_array">
+        <item>Male</item>
+        <item>Female</item>
+        <item>Other</item>
+    </string-array>
+    <string name="sign_up_location">Location</string>
+    <string-array name="location_array">
+        <item>UCSD</item>
+        <item>UCSD</item>
+        <item>UCSD</item>
+    </string-array>
+
+    <string name="sign_up_email_collision">Email already exists.</string>
+    <string name="sign_up_invalid_email">Please enter a valid email.</string>
+    <string name="sign_up_invalid_password">Invalid password.</string>
+    <string name="sign_up_non_matching_passwords">Passwords don\'t match.</string>
+    <string name="sign_up_missing_name">Please enter a name.</string>
+    <string name="sign_up_invalid_name">Please enter a valid name.</string>
+    <string name="sign_up_dob_prompt">You must be at least 18 years old to use this app.</string>
+    <string name="sign_up_missing_gender_preference">Please Select At Least One</string>
+
+
+    <string name="sign_up_abort_title">Exit Account Creation</string>
+    <!--
+    <string name="sign_up_abort_message">If you leave now, your account will not be eligible for matching.
+    You can login with your credentials and resume account creation via Edit Profile.</string>
+    -->
+    <string name="sign_up_abort_message">Do you want to exit account creation?</string>
+    <string name="sign_up_abort_toast_message">Account Creation Canceled.</string>
+    <string name="sign_up_success_toast_message">Account Created.</string>
+
+
+
+    <!--Strings related to sidebar navigation-->
+    <string name="sidebar_profile">View Profile</string>
+    <string name="sidebar_matches">Find Matches</string>
+    <string name="sidebar_chats">Show Chats</string>
+    <string name="sidebar_settings">Settings</string>
+    <string name="sidebar_aboutUs">About Us</string>
+    <string name="sidebar_logout">Log Out</string>
+
+    <string name="title_activity_chat_room">ChatRoomActivity</string>
+    <string name="title_activity_message">MessageActivity</string>
+    <string name="title_reset_password">ResetPassword</string>
+
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="title_activity_registration">RegistrationActivity</string>
+	
+    <string name="auth_failed">Authentication failed, check your email and password or sign up</string>
+    <string name="change_password">Change Password</string>
+    <string name="send_password_reset_email">Send Password reset email</string>
+    <string name="hint_email">Email</string>
+    <string name="hint_password">Password</string>
+    <string name="hint_name">Fullname</string>
+    <string name="btn_login">LOGIN</string>
+    <string name="btn_link_to_register">Not a member? Get registered now!</string>
+    <string name="btn_link_to_login">Already registered.</string>
+    <string name="btn_forgot_password">Forgot your password?</string>
+    <string name="btn_reset_password">Reset Password</string>
+    <string name="btn_back"><![CDATA[<< Back]]></string>
+    <string name="hint_new_email">New Email</string>
+    <string name="btn_change">Change</string>
+    <string name="btn_send">Send</string>
+    <string name="btn_remove">Remove</string>
+    <string name="btn_logout">Log Out</string>
+    <string name="lbl_forgot_password">Forgot password?</string>
+    <string name="forgot_password_msg">Enter in your registered Email to be sent password reset instructions.</string>
+    <string name="lbl_reset_password_success_generic">An email has been sent to the given email with further instructions.</string>
+    <string name="reset_password_success_msg_1">An email has been sent to </string>
+    <string name="reset_password_success_msg_2"> with further instructions.</string>
 </resources>

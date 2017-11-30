@@ -1,47 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
+<android.support.v4.widget.DrawerLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/cardview_light_background"
-    android:orientation="vertical"
-    tools:context=".MainActivity">
+    tools:context="com.example.potato.couchpotatoes.MainActivity">
 
-    <LinearLayout
+    <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
-        android:layout_height="65dp"
-        android:layout_gravity="bottom"
-        android:gravity="center"
-        android:orientation="horizontal">
+        android:layout_height="match_parent"
+        android:theme="@style/AppTheme.AppBarOverlay">
 
-        <Button
-            android:id="@+id/logout"
-            android:layout_width="85dp"
-            android:layout_height="45dp"
-            android:layout_marginRight="30dp"
-            android:text="logout" />
+        <android.support.v7.widget.Toolbar
+            android:layout_width="match_parent"
+            android:layout_height="?android:attr/actionBarSize"
+            android:background="@color/colorPrimary"
+            app:popupTheme="@style/AppTheme.PopupOverlay" />
 
-        <ImageButton
-            android:id="@+id/rejectBtn"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:background="@android:drawable/ic_delete" />
+        <TextView
+            android:id="@+id/userName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
 
-        <ImageButton
-            android:id="@+id/acceptBtn"
-            android:layout_width="45dp"
-            android:layout_height="45dp"
-            android:layout_marginLeft="30dp"
-            android:background="@android:drawable/ic_input_add" />
+    </android.support.design.widget.AppBarLayout>
 
-    </LinearLayout>
-
-    <com.mindorks.placeholderview.SwipePlaceHolderView
-        android:id="@+id/swipeView"
+    <include
+        layout="@layout/content_main"
+        android:layout_height="321dp"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        tools:layout_editor_absoluteY="247dp" />
 
-    </com.mindorks.placeholderview.SwipePlaceHolderView>
-</FrameLayout>
+    <!--Layout of the side bar menu-->
+    <!--<android.support.design.widget.NavigationView-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:layout_gravity="start"-->
+        <!--android:fitsSystemWindows="true"-->
+        <!--app:headerLayout="@layout/sidebar_header"-->
+        <!--app:menu="@layout/sidebar_drawer" />-->
+
+</android.support.v4.widget.DrawerLayout>

@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.example.potato.couchpotatoes.MatchingActivity">
+
+    <!--Options displayed in the sidebar menu-->
+
+    <group
+        android:id="@+id/nav_menu_top">
+        <item
+            android:id="@+id/nav_profile"
+            android:icon="@drawable/profile"
+            android:title="@string/sidebar_profile" />
+        <item
+            android:id="@+id/nav_matches"
+            android:icon="@drawable/heart"
+            android:title="@string/sidebar_matches" />
+        <item
+            android:id="@+id/nav_chats"
+            android:icon="@drawable/speech_bubble"
+            android:title="@string/sidebar_chats" />
+    </group>
+
+    <group
+        android:id="@+id/nav_menu_bottom">
+        <!-- Remove for now. Uncomment later if needed.
+        <item
+            android:id="@+id/nav_settings"
+            android:icon="@drawable/settings_1"
+            android:title="@string/sidebar_settings" />
+            -->
+        <item
+            android:id="@+id/nav_info"
+            android:icon="@drawable/info"
+            android:title="@string/sidebar_aboutUs" />
+        <item
+            android:id="@+id/nav_logout"
+            android:icon="@drawable/logout"
+            android:title="@string/sidebar_logout" />
+    </group>
+
+</menu>
