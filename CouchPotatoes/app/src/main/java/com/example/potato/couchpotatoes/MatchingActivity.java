@@ -136,7 +136,7 @@ public class MatchingActivity extends AppCompatActivity
                                     String currUserID = helper.getAuth().getUid();
                                     if ( !matchedDateList.isEmpty() ) {
                                         String potentMatchID = matchedDateList.get(0);
-                                        String timestamp = "0000-00-00 00:00:00";
+                                        String timestamp = helper.getNewTimestamp();
 
                                         helper.addToLike(currUserID, potentMatchID, timestamp);
                                         helper.addToDate( currUserID, potentMatchID, timestamp );
@@ -151,7 +151,7 @@ public class MatchingActivity extends AppCompatActivity
                                     String currUserID = helper.getAuth().getUid();
                                     if ( !matchedDateList.isEmpty() ) {
                                         String potentMatchID = matchedDateList.get(0);
-                                        String timestamp = "0000-00-00 00:00:00";
+                                        String timestamp = helper.getNewTimestamp();
 
                                         helper.addToDislike(currUserID, potentMatchID, timestamp);
                                     }
@@ -200,7 +200,7 @@ public class MatchingActivity extends AppCompatActivity
                                     String currUserID = helper.getAuth().getUid();
                                     if ( !matchedFriendList.isEmpty() ) {
                                         String potentMatchID = matchedFriendList.get(0);
-                                        String timestamp = "0000-00-00 00:00:00";
+                                        String timestamp = helper.getNewTimestamp();
 
                                         helper.addToLike(currUserID, potentMatchID, timestamp);
                                         helper.addToBefriend( currUserID, potentMatchID, timestamp );
@@ -215,7 +215,7 @@ public class MatchingActivity extends AppCompatActivity
                                     String currUserID = helper.getAuth().getUid();
                                     if ( !matchedFriendList.isEmpty() ) {
                                         String potentMatchID = matchedFriendList.get(0);
-                                        String timestamp = "0000-00-00 00:00:00";
+                                        String timestamp = helper.getNewTimestamp();
 
                                         helper.addToDislike(currUserID, potentMatchID, timestamp);
                                     }
@@ -418,7 +418,7 @@ public class MatchingActivity extends AppCompatActivity
                                 String currUserID = helper.getAuth().getUid();
                                 if ( !matchedDateList.isEmpty() ) {
                                     String potentMatchID = matchedDateList.get(0);
-                                    String timestamp = "0000-00-00 00:00:00";
+                                    String timestamp = helper.getNewTimestamp();
 
                                     helper.addToLike(currUserID, potentMatchID, timestamp);
                                     helper.addToDate( currUserID, potentMatchID, timestamp );
@@ -433,7 +433,7 @@ public class MatchingActivity extends AppCompatActivity
                                 String currUserID = helper.getAuth().getUid();
                                 if ( !matchedDateList.isEmpty() ) {
                                     String potentMatchID = matchedDateList.get(0);
-                                    String timestamp = "0000-00-00 00:00:00";
+                                    String timestamp = helper.getNewTimestamp();
 
                                     helper.addToDislike(currUserID, potentMatchID, timestamp);
                                 }
