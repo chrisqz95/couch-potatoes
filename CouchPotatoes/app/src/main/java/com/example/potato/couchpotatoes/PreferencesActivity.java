@@ -90,8 +90,10 @@ public class PreferencesActivity extends AppCompatActivity {
     private TextView interestsTitle;
     private LinearLayout prefHorizBtns;
     private Button bioSubmitBtn;
+    private Button bioSubmitCancelBtn;
     private String bioTextPrev;
     private LinearLayout profileLayout;
+    private LinearLayout bioBtnLayout;
 
     private String currUserID;
 
@@ -106,7 +108,9 @@ public class PreferencesActivity extends AppCompatActivity {
         prefHorizBtns = (LinearLayout) findViewById(R.id.preferencesHorizBtns);
         bioTitle = (TextView) findViewById(R.id.biography_title);
         userBio = (EditText) findViewById(R.id.user_bio);
+        bioBtnLayout = (LinearLayout) findViewById(R.id.bioBtnLayout);
         bioSubmitBtn = (Button) findViewById(R.id.profileBioSubmitBtn);
+        bioSubmitCancelBtn = (Button) findViewById(R.id.profileBioSubmitCancelBtn);
         interestsTitle = (TextView) findViewById(R.id.interests_title);
         imgView = (ImageView) findViewById(R.id.preferencesProfilePic);
         spinner = (ProgressBar)findViewById(R.id.preferencesSpinner);
@@ -115,7 +119,8 @@ public class PreferencesActivity extends AppCompatActivity {
         prefHorizBtns.setVisibility(View.GONE);
         bioTitle.setVisibility(View.GONE);
         userBio.setVisibility(View.GONE);
-        bioSubmitBtn.setVisibility(View.GONE);
+        //bioSubmitBtn.setVisibility(View.GONE);
+        bioBtnLayout.setVisibility(View.GONE);
         interestsTitle.setVisibility(View.GONE);
         imgView.setVisibility(View.GONE);
         spinner.setVisibility(View.VISIBLE);
@@ -160,7 +165,7 @@ public class PreferencesActivity extends AppCompatActivity {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
                 if ( hasFocus ) {
-                    bioSubmitBtn.setVisibility(View.VISIBLE);
+                    bioBtnLayout.setVisibility(View.VISIBLE);
                 }
             }
         });
@@ -169,9 +174,10 @@ public class PreferencesActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 //Log.d( "TEST", "SUBMIT CHANGES" );
-                // Hide submit button
-                if ( v.getVisibility() == View.VISIBLE ) {
-                    v.setVisibility(View.GONE);
+                // Hide bio buttons
+                // TODO MOVE TO new helper method
+                if ( bioBtnLayout.getVisibility() == View.VISIBLE ) {
+                    bioBtnLayout.setVisibility(View.GONE);
                 }
 
                 // Remove bio edit text focus
@@ -179,11 +185,34 @@ public class PreferencesActivity extends AppCompatActivity {
                 // TODO May want to find a better way of doing this later
                 profileLayout.requestFocus();
 
+                String bioChanges = userBio.getText().toString();
+                
+                // Save new bio state
+                bioTextPrev = bioChanges;
+
                 // Submit bio to Firebase
                 // TODO Add method to DBHelper to only change bio
-                String bioChanges = userBio.getText().toString();
                 helper.getDb().getReference( helper.getUserPath() ).child( currUserID ).child( "bio" ).setValue( bioChanges );
                 //Log.d( "TEST", bioChanges );
+            }
+        });
+
+        bioSubmitCancelBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Hide bio buttons
+                // TODO MOVE TO new helper method
+                if ( bioBtnLayout.getVisibility() == View.VISIBLE ) {
+                    bioBtnLayout.setVisibility(View.GONE);
+                }
+
+                // Remove bio edit text focus
+                // Workaround: Remove focus by requesting focus elsewhere
+                // TODO May want to find a better way of doing this later
+                profileLayout.requestFocus();
+
+                // Restore bio to previous state
+                userBio.setText( bioTextPrev );
             }
         });
 
@@ -381,6 +410,7 @@ public class PreferencesActivity extends AppCompatActivity {
                 String name = helper.getFullName( firstName, middleName, lastName );
                 userTitle.setText( name );
                 userBio.setText( bio );
+                bioTextPrev = bio;
             }
 
             @Override

@@ -96,13 +96,33 @@
                 android:maxLength="140"
                 android:singleLine="false" />
 
-            <Button
-                android:id="@+id/profileBioSubmitBtn"
-                android:layout_width="200dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
+            <LinearLayout
+                android:id="@+id/bioBtnLayout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:text="Save Changes" />
+                android:orientation="horizontal"
+                android:padding="10dp">
+
+                <Button
+                    android:id="@+id/profileBioSubmitBtn"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_weight="1"
+                    android:text="Save Changes" />
+
+                <Button
+                    android:id="@+id/profileBioSubmitCancelBtn"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_weight="1"
+                    android:text="Cancel" />
+            </LinearLayout>
 
             <TextView
                 android:id="@+id/interests_title"
