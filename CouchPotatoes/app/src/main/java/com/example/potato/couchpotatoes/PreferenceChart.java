@@ -41,7 +41,11 @@ public class PreferenceChart extends AppCompatActivity {
     private ArrayList<String> subcategoryList;
     private ArrayAdapter<String> subcategoryAdapter;
     private Button submitBtn;
+    private Button cancelBtn;
     private String currUserID;
+    private LinearLayout subcategoryBtnLayout;
+
+    private SparseBooleanArray prevGenderChecked;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,7 +53,13 @@ public class PreferenceChart extends AppCompatActivity {
         setContentView(R.layout.preference_chart);
 
         subcategoryLayout = (ListView) findViewById(R.id.chartArray);
-        submitBtn = (Button) findViewById(R.id.subcategorySubmitButton);
+        subcategoryBtnLayout = (LinearLayout) findViewById(R.id.subcategoryBtnLayout);
+        submitBtn = (Button) findViewById(R.id.subcategorySubmitBtn);
+        cancelBtn = (Button) findViewById(R.id.subcategoryCancelBtn);
+
+        subcategoryBtnLayout.setVisibility(View.GONE);
+
+        prevGenderChecked = new SparseBooleanArray();
 
         helper = new DBHelper();
 
@@ -63,13 +73,28 @@ public class PreferenceChart extends AppCompatActivity {
 
         interest = getIntent().getExtras().getString( "interest" );
 
+        for ( int i = 0; i < subcategoryList.size(); i++ ) {
+            prevGenderChecked.put( i, false );
+        }
+
         displaySubcategories();
         displayLikedSubcategories();
+
+        subcategoryLayout.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                if ( subcategoryBtnLayout.getVisibility() == View.GONE ) {
+                    subcategoryBtnLayout.setVisibility(View.VISIBLE);
+                }
+            }
+        });
 
         // Add click handler to submit changes to Firebase
         submitBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                subcategoryBtnLayout.setVisibility(View.GONE);
+
                 // Source: https://stackoverflow.com/questions/4831918/how-to-get-all-checked-items-from-a-listview
                 SparseBooleanArray genderChecked = subcategoryLayout.getCheckedItemPositions();
 
@@ -85,6 +110,20 @@ public class PreferenceChart extends AppCompatActivity {
                     else {
                         helper.removeFromUserInterest( currUserID, interest, subcategoryList.get( i ) );
                     }
+                }
+
+                // Record changes
+                prevGenderChecked = genderChecked;
+            }
+        });
+
+        cancelBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                subcategoryBtnLayout.setVisibility(View.GONE);
+
+                for ( int i = 0; i < subcategoryAdapter.getCount(); i++ ) {
+                    subcategoryLayout.setItemChecked( i, prevGenderChecked.get( i ) );
                 }
             }
         });
@@ -210,6 +249,7 @@ public class PreferenceChart extends AppCompatActivity {
                     String preference = (String) subcat.getValue();
 
                     subcategoryLayout.setItemChecked( subcategoryList.indexOf( subcategory ), true );
+                    prevGenderChecked.put( subcategoryList.indexOf( subcategory ), true );
                 }
             }
 
