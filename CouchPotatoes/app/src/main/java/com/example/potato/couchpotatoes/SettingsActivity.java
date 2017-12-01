@@ -32,6 +32,7 @@ public class SettingsActivity extends AppCompatActivity {
     private Button cancelBtn;
     private String currUserID;
     private LinearLayout settingsBtnLayout;
+    private SparseBooleanArray prevSexualPrefChecked;
 
     private String prevGender;
 
@@ -40,6 +41,12 @@ public class SettingsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_settings);
 
         helper = new DBHelper();
+
+        prevSexualPrefChecked = new SparseBooleanArray();
+
+        for ( int i = 0; i < genders.length; i++ ) {
+            prevSexualPrefChecked.put( i, false );
+        }
 
         settingsBtnLayout = (LinearLayout) findViewById(R.id.settingsBtnLayout);
         submitBtn = (Button) findViewById(R.id.settingsSubmitBtn);
@@ -61,6 +68,15 @@ public class SettingsActivity extends AppCompatActivity {
         displaySexualPreference();
 
         genderList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                if ( settingsBtnLayout.getVisibility() == View.GONE ) {
+                    settingsBtnLayout.setVisibility(View.VISIBLE);
+                }
+            }
+        });
+
+        sexualPreference.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 if ( settingsBtnLayout.getVisibility() == View.GONE ) {
@@ -100,6 +116,9 @@ public class SettingsActivity extends AppCompatActivity {
                     }
                 }
 
+                // Record changes
+                prevSexualPrefChecked = sexualPrefChecked;
+
                 // Submit partner preference changes to Firebase
                 // TODO add DBHelper method to update gender only and replace below
                 helper.getDb().getReference( helper.getPartnerPreferencePath() ).child( currUserID ).child( "gender" ).setValue( sexualPreferenceMap );
@@ -113,15 +132,17 @@ public class SettingsActivity extends AppCompatActivity {
             public void onClick(View v) {
                 settingsBtnLayout.setVisibility(View.GONE);
 
-                SparseBooleanArray genderChecked = genderList.getCheckedItemPositions();
-
                 for (int i = 0; i < genderList.getAdapter().getCount(); i++) {
-                    if (genderChecked.get(i)) {
-                        genderList.setItemChecked( Arrays.asList( genders ).indexOf( prevGender ), true );
+                    if (genderList.getItemAtPosition(i).equals( prevGender) ) {
+                        genderList.setItemChecked( i, true );
                     }
                     else {
-                        genderList.setItemChecked( Arrays.asList( genders ).indexOf( prevGender ), false );
+                        genderList.setItemChecked( i, false );
                     }
+                }
+
+                for (int i = 0; i < sexualPreference.getAdapter().getCount(); i++) {
+                    sexualPreference.setItemChecked( i, prevSexualPrefChecked.get( i ) );
                 }
             }
         });
@@ -138,6 +159,7 @@ public class SettingsActivity extends AppCompatActivity {
                     String genderPref = currGender.getKey();
                     //Log.d( "TEST", genderPref );
                     sexualPreference.setItemChecked( Arrays.asList( genders ).indexOf( genderPref ), true );
+                    prevSexualPrefChecked.put( Arrays.asList( genders).indexOf( genderPref ), true );
                 }
             }
 
