@@ -77,6 +77,9 @@ public class PreferencesActivity extends AppCompatActivity {
     private LinearLayout interestsLayout;
     private ListView interestListView;
     private ArrayAdapter<String> interestAdapter;
+    private TextView userTitle;
+
+    private String currUserID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,7 +87,12 @@ public class PreferencesActivity extends AppCompatActivity {
         setContentView(R.layout.activity_profile);
         SharedPreferences prefs = this.getSharedPreferences("com.example.potato.couchpotatoes", Context.MODE_PRIVATE);
 
+        userTitle = (TextView) findViewById(R.id.user_title);
+        userBio = (EditText) findViewById(R.id.user_bio);
+
         helper = new DBHelper();
+
+        currUserID = helper.getAuth().getUid();
 
         interestList = new ArrayList<>();
         interestAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, interestList );
@@ -104,6 +112,7 @@ public class PreferencesActivity extends AppCompatActivity {
         });
 
 
+        displayUserInfo();
         displayInterests();
 
         interestListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -261,6 +270,46 @@ public class PreferencesActivity extends AppCompatActivity {
                 }
 
                 interestAdapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.d( "TEST", databaseError.getMessage() );
+            }
+        });
+    }
+
+    private void displayUserInfo() {
+        helper.getDb().getReference( helper.getUserPath() ).child( currUserID ).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                String firstName = "";
+                String middleName = "";
+                String lastName = "";
+                String bio = "";
+
+                for ( DataSnapshot field : dataSnapshot.getChildren() ) {
+                    //Log.d( "TEST", field.toString() );
+                    switch ( field.getKey() ) {
+                        case "firstName":
+                            firstName = (String) field.getValue();
+                            break;
+                        case "middleName":
+                            middleName = (String) field.getValue();
+                            break;
+                        case "lastName":
+                            lastName = (String) field.getValue();
+                            break;
+                        case "bio":
+                            bio = (String) field.getValue();
+                            break;
+                        default:
+                            break;
+                    }
+                }
+                String name = helper.getFullName( firstName, middleName, lastName );
+                userTitle.setText( name );
+                userBio.setText( bio );
             }
 
             @Override
