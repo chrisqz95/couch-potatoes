@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
+import android.graphics.Picture;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
@@ -26,7 +27,9 @@ import android.preference.RingtonePreference;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.util.JsonWriter;
 import android.util.Log;
+import android.util.Pair;
 import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -39,9 +42,23 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.ValueEventListener;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * A {@link PreferenceActivity} that presents a set of application settings. On
@@ -59,6 +76,7 @@ public class PreferencesActivity extends AppCompatActivity {
     private static String[] sportsPrefList = new String[] {"The", "Thing", "Go", "Skrraaaa"};
 
     private Button settingsTab;
+    private Button photosTab;
     private Button movieTab;
     private Button sportsTab;
     private EditText userBio;
@@ -76,6 +94,15 @@ public class PreferencesActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(getApplicationContext(), SettingsActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        photosTab = (Button) findViewById(R.id.photosTab);
+        photosTab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getApplicationContext(), PictureGridActivity.class);
                 startActivity(intent);
             }
         });
@@ -107,6 +134,9 @@ public class PreferencesActivity extends AppCompatActivity {
 
         userBio = (EditText) findViewById(R.id.user_bio);
         userBio.setText(prefs.getString("user_bio", ""), TextView.BufferType.EDITABLE);
+
+        cachePhotoURIs();
+
     }
 
     @Override
@@ -169,5 +199,38 @@ public class PreferencesActivity extends AppCompatActivity {
 
         SharedPreferences prefs = this.getSharedPreferences("com.example.potato.couchpotatoes", Context.MODE_PRIVATE);
         prefs.edit().putString("user_bio", userBio.getText().toString()).apply();
+    }
+
+    private void cachePhotoURIs(){
+        final ArrayList<String> uriList = new ArrayList<String>();
+        final DBHelper dbHelper = new DBHelper();
+        dbHelper.fetchCurrentUser();
+
+        //final DatabaseReference listRef = dbHelper.getDb().getReference().child("User_Photo").child(dbHelper.getUser().getUid());
+        //final DatabaseReference imgRef = dbHelper.getDb().getReference().child("Photo");
+
+        //final DatabaseReference listRef = dbHelper.getDb().getReference().child("Photo");
+        final DatabaseReference listRef = dbHelper.getDb().getReference();
+
+        listRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+                for (DataSnapshot dataSnapshot : snapshot.child("User_Photo").child(dbHelper.getUser().getUid()).getChildren()) {
+                    try {
+                        uriList.add(snapshot.child("Photo").child(dataSnapshot.getKey()).child("uri").getValue().toString());
+                    } catch (NullPointerException e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                JSONArray jsArray = new JSONArray(uriList);
+                PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).edit().putString("PhotoList",jsArray.toString()).apply();
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                System.out.println("The read failed: " + databaseError.getMessage());
+            }
+        });
     }
 }

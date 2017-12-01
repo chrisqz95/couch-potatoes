@@ -115,7 +115,8 @@ public class MatchingActivity extends AppCompatActivity
         int id = item.getItemId();
 
 		if (id == R.id.nav_profile) {
-	        // TODO: go to profile activity
+            startActivity( new Intent( getApplicationContext(), PreferencesActivity.class ) );
+            finish();
 
         } else if (id == R.id.nav_matches) {
             // TODO: if not already in page, redirect page to MainActivity

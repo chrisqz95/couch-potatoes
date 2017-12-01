@@ -67,10 +67,19 @@
                 android:label="@string/title_reset_password"
                 android:theme="@style/AppTheme.NoActionBar"/>
         <activity
-                android:name=".MatchingActivity"
-                android:label="Couch Potatoes"
-                android:theme="@style/AppTheme.NoActionBar">
-
+            android:name=".MatchingActivity"
+            android:label="Couch Potatoes"
+            android:theme="@style/AppTheme.NoActionBar">
+        </activity>
+        <activity
+            android:name=".PictureGridActivity"
+            android:label="Couch Potatoes"
+            android:theme="@style/AppTheme.NoActionBar">
+        </activity>
+        <activity
+            android:name=".DetailsActivity"
+            android:label="Couch Potatoes"
+            android:theme="@style/AppTheme.NoActionBar">
         </activity>
     </application>
 
