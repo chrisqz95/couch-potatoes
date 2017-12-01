@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
@@ -41,11 +42,15 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.firebase.ui.storage.images.FirebaseImageLoader;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -78,6 +83,11 @@ public class PreferencesActivity extends AppCompatActivity {
     private ListView interestListView;
     private ArrayAdapter<String> interestAdapter;
     private TextView userTitle;
+    private ImageView imgView;
+    private ProgressBar spinner;
+    private TextView bioTitle;
+    private TextView interestsTitle;
+    private LinearLayout prefHorizBtns;
 
     private String currUserID;
 
@@ -88,7 +98,20 @@ public class PreferencesActivity extends AppCompatActivity {
         SharedPreferences prefs = this.getSharedPreferences("com.example.potato.couchpotatoes", Context.MODE_PRIVATE);
 
         userTitle = (TextView) findViewById(R.id.user_title);
+        prefHorizBtns = (LinearLayout) findViewById(R.id.preferencesHorizBtns);
+        bioTitle = (TextView) findViewById(R.id.biography_title);
         userBio = (EditText) findViewById(R.id.user_bio);
+        interestsTitle = (TextView) findViewById(R.id.interests_title);
+        imgView = (ImageView) findViewById(R.id.preferencesProfilePic);
+        spinner = (ProgressBar)findViewById(R.id.preferencesSpinner);
+
+        userTitle.setVisibility(View.GONE);
+        prefHorizBtns.setVisibility(View.GONE);
+        bioTitle.setVisibility(View.GONE);
+        userBio.setVisibility(View.GONE);
+        interestsTitle.setVisibility(View.GONE);
+        imgView.setVisibility(View.GONE);
+        spinner.setVisibility(View.VISIBLE);
 
         helper = new DBHelper();
 
@@ -112,6 +135,7 @@ public class PreferencesActivity extends AppCompatActivity {
         });
 
 
+        displayProfilePic();
         displayUserInfo();
         displayInterests();
 
@@ -270,6 +294,15 @@ public class PreferencesActivity extends AppCompatActivity {
                 }
 
                 interestAdapter.notifyDataSetChanged();
+
+                // Hide spinner and display page elements
+                userTitle.setVisibility(View.VISIBLE);
+                prefHorizBtns.setVisibility(View.VISIBLE);
+                bioTitle.setVisibility(View.VISIBLE);
+                userBio.setVisibility(View.VISIBLE);
+                interestsTitle.setVisibility(View.VISIBLE);
+                imgView.setVisibility(View.VISIBLE);
+                spinner.setVisibility(View.GONE);
             }
 
             @Override
@@ -315,6 +348,42 @@ public class PreferencesActivity extends AppCompatActivity {
             @Override
             public void onCancelled(DatabaseError databaseError) {
                 Log.d( "TEST", databaseError.getMessage() );
+            }
+        });
+    }
+
+    private void displayProfilePic() {
+        helper.getDb().getReference(helper.getUserPath()).child( currUserID ).child("profile_pic").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                String url = "";
+
+                if (dataSnapshot != null && dataSnapshot.getValue() != null) {
+                    url = (String) dataSnapshot.getValue();
+                    if (imgView != null) {
+                        StorageReference uriRef = helper.getStorage().getReferenceFromUrl(url);
+
+                        // Set ImageView to contain photo
+                        Glide.with(getApplicationContext())
+                                .using(new FirebaseImageLoader())
+                                .load(uriRef)
+                                .into(imgView);
+                    }
+                } else {
+                    // Default Profile Pic
+                    // TODO Add method to DBHelper to get this
+                    //url = "gs://couch-potatoes-47758.appspot.com/Default/ProfilePic/potato_1_profile_pic.png";
+                    String uri = "@drawable/profile";
+
+                    int imageResource = getResources().getIdentifier(uri, null, getPackageName());
+                    Drawable res = getResources().getDrawable(imageResource);
+                    imgView.setImageDrawable(res);
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.d("TEST", databaseError.getMessage());
             }
         });
     }

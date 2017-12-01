@@ -25,20 +25,29 @@
                 android:layout_weight="1"
                 android:fontFamily="@font/courgette"
                 android:paddingLeft="4dp"
-                android:text="Donald Trump, 70"
                 android:textColor="@color/common_google_signin_btn_text_dark_focused"
                 android:textSize="24dp" />
 
             <ImageView
-                android:id="@+id/imageView"
+                android:id="@+id/preferencesProfilePic"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="200dp"
                 android:layout_weight="1"
                 android:paddingBottom="8dp"
                 android:paddingTop="8dp"
-                app:srcCompat="@drawable/images" />
+                app:srcCompat="@drawable/profile" />
+
+            <ProgressBar
+                android:id="@+id/preferencesSpinner"
+                style="?android:attr/progressBarStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="100dp"
+                android:layout_weight="1" />
 
             <LinearLayout
+                android:id="@+id/preferencesHorizBtns"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
