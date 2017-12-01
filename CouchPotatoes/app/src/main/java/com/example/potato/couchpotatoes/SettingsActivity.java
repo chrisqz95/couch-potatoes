@@ -10,6 +10,11 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.ValueEventListener;
+
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -38,12 +43,13 @@ public class SettingsActivity extends AppCompatActivity {
         genderList.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
 
         sexualPreference = (ListView) findViewById(R.id.sexual_preference);
-        ArrayAdapter sexualPreferenceAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_multiple_choice, genders);
-        sexualPreference.setAdapter( sexualPreferenceAdapter );
+        sexualPreference.setAdapter( new ArrayAdapter<String>(this, android.R.layout.simple_list_item_multiple_choice, genders) );
         sexualPreference.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
-        sexualPreference.getChoiceMode();
 
         currUserID = helper.getAuth().getUid();
+
+        displayGender();
+        displaySexualPreference();
 
         // Add click handler to submit changes to Firebase
         submitBtn.setOnClickListener(new View.OnClickListener() {
@@ -82,7 +88,41 @@ public class SettingsActivity extends AppCompatActivity {
         });
     }
 
+    // Fetch preferences from Firebase
     private void displaySexualPreference() {
+        helper.getDb().getReference( helper.getPartnerPreferencePath() ).child( currUserID ).child( "gender" ).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                //Log.d( "TEST", dataSnapshot.toString() );
+                for ( DataSnapshot currGender : dataSnapshot.getChildren() ) {
+                    //Log.d( "TEST", currGender.toString() );
+                    String genderPref = currGender.getKey();
+                    //Log.d( "TEST", genderPref );
+                    sexualPreference.setItemChecked( Arrays.asList( genders ).indexOf( genderPref ), true );
+                }
+            }
 
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.d( "TEST", databaseError.getMessage() );
+            }
+        });
+    }
+
+    // Fetch gender from Firebase
+    private void displayGender() {
+        helper.getDb().getReference( helper.getUserPath() ).child( currUserID ).child( "gender" ).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                String gender = (String) dataSnapshot.getValue();
+
+                genderList.setItemChecked( Arrays.asList( genders ).indexOf( gender ), true );
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.d( "TEST", databaseError.getMessage() );
+            }
+        });
     }
 }
