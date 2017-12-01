@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 
 import com.google.firebase.database.DataSnapshot;
@@ -28,7 +29,11 @@ public class SettingsActivity extends AppCompatActivity {
     private ListView genderList;
     private ListView sexualPreference;
     private Button submitBtn;
+    private Button cancelBtn;
     private String currUserID;
+    private LinearLayout settingsBtnLayout;
+
+    private String prevGender;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -36,7 +41,11 @@ public class SettingsActivity extends AppCompatActivity {
 
         helper = new DBHelper();
 
+        settingsBtnLayout = (LinearLayout) findViewById(R.id.settingsBtnLayout);
         submitBtn = (Button) findViewById(R.id.settingsSubmitBtn);
+        cancelBtn = (Button) findViewById(R.id.settingsCancelBtn);
+
+        settingsBtnLayout.setVisibility(View.GONE);
 
         genderList = (ListView) findViewById(R.id.gender_list);
         genderList.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_multiple_choice, genders));
@@ -50,6 +59,15 @@ public class SettingsActivity extends AppCompatActivity {
 
         displayGender();
         displaySexualPreference();
+
+        genderList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                if ( settingsBtnLayout.getVisibility() == View.GONE ) {
+                    settingsBtnLayout.setVisibility(View.VISIBLE);
+                }
+            }
+        });
 
         // Add click handler to submit changes to Firebase
         submitBtn.setOnClickListener(new View.OnClickListener() {
@@ -68,6 +86,7 @@ public class SettingsActivity extends AppCompatActivity {
                         // Submit gender changes to Firebase
                         // TODO add DBHelper method to update gender only and replace below
                         helper.getDb().getReference( helper.getUserPath() ).child( currUserID ).child( "gender" ).setValue( genders[i] );
+                        prevGender = genders[i];
                     }
                 }
 
@@ -84,6 +103,26 @@ public class SettingsActivity extends AppCompatActivity {
                 // Submit partner preference changes to Firebase
                 // TODO add DBHelper method to update gender only and replace below
                 helper.getDb().getReference( helper.getPartnerPreferencePath() ).child( currUserID ).child( "gender" ).setValue( sexualPreferenceMap );
+
+                settingsBtnLayout.setVisibility(View.GONE);
+            }
+        });
+
+        cancelBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                settingsBtnLayout.setVisibility(View.GONE);
+
+                SparseBooleanArray genderChecked = genderList.getCheckedItemPositions();
+
+                for (int i = 0; i < genderList.getAdapter().getCount(); i++) {
+                    if (genderChecked.get(i)) {
+                        genderList.setItemChecked( Arrays.asList( genders ).indexOf( prevGender ), true );
+                    }
+                    else {
+                        genderList.setItemChecked( Arrays.asList( genders ).indexOf( prevGender ), false );
+                    }
+                }
             }
         });
     }
@@ -117,6 +156,7 @@ public class SettingsActivity extends AppCompatActivity {
                 String gender = (String) dataSnapshot.getValue();
 
                 genderList.setItemChecked( Arrays.asList( genders ).indexOf( gender ), true );
+                prevGender = gender;
             }
 
             @Override
