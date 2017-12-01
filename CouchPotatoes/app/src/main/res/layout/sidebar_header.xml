@@ -3,6 +3,7 @@
 <!--top header of the side navigation bar menu-->
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="@dimen/nav_header_height"
@@ -17,16 +18,23 @@
     tools:context="com.example.potato.couchpotatoes.MatchingActivity">
 
     <!--Circular image of the user's profile picture-->
-    <de.hdodenhof.circleimageview.CircleImageView
-        xmlns:app="http://schemas.android.com/apk/res-auto"
+    <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
         android:id="@+id/profile_image"
         android:layout_width="70sp"
         android:layout_height="70sp"
-        android:src="@drawable/cute_potato"
-        app:civ_border_width="1dp"
-        app:civ_border_color="#0f4bff" />
+        android:src="@mipmap/ic_launcher_round"
+        android:visibility="gone"
+        app:civ_border_color="#0f4bff"
+        app:civ_border_width="1dp" />
 
     <!--displays the user's name-->
+    <ImageView
+        android:id="@+id/sidebarProfilePic"
+        android:layout_width="75dp"
+        android:layout_height="75dp"
+        android:visibility="gone"
+        app:srcCompat="@drawable/profile" />
+
     <TextView
         android:id="@+id/sidebar_username"
         android:layout_width="match_parent"

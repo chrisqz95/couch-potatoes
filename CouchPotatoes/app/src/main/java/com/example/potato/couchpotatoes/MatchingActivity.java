@@ -11,6 +11,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 
 import com.bumptech.glide.Glide;
@@ -30,6 +31,8 @@ import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 
 public class MatchingActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -59,8 +62,14 @@ public class MatchingActivity extends AppCompatActivity
     private LinearLayout likeAndDislikeLayout;
 
     private ImageView imgView;
+    private CircleImageView circleProfilePic;
+    private ImageView profilePic;
 
     private int currTab = 0;
+
+    private String currUserID;
+
+    private View sideBarHeader;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,7 +77,10 @@ public class MatchingActivity extends AppCompatActivity
         setContentView(R.layout.activity_matching);
         helper = new DBHelper();
 
+        currUserID = helper.getAuth().getUid();
+
         final TabLayout tabLayout = (TabLayout) findViewById(R.id.matching_tabs);
+        //profilePic = (CircleImageView) findViewById(R.id.profile_image);
         imgView = (ImageView) findViewById(R.id.imageView2);
         imgView.setVisibility(View.GONE);
         viewPager = (MatchViewPager) findViewById(R.id.matching_viewpager);
@@ -313,6 +325,20 @@ public class MatchingActivity extends AppCompatActivity
         toolbar.setTitleTextColor(Color.WHITE);
         setSupportActionBar(toolbar);
 
+        /* NOT WORKING
+        final LayoutInflater factory = getLayoutInflater();
+
+        sideBarHeader = factory.inflate(R.layout.sidebar_header, null);
+
+        profilePic = sideBarHeader.findViewById(R.id.sidebarProfilePic);
+        circleProfilePic = (CircleImageView) sideBarHeader.findViewById(R.id.profile_image);
+
+        circleProfilePic.setVisibility(View.VISIBLE);
+        profilePic.setBackgroundColor( Color.WHITE );
+
+        //displayProfilePic();
+        */
+
         // enables toggle button on toolbar to open the sidebar
         mDrawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -525,6 +551,46 @@ public class MatchingActivity extends AppCompatActivity
             @Override
             public void onCancelled(DatabaseError databaseError) {
                 Log.d( "TEST", databaseError.getMessage() );
+            }
+        });
+    }
+
+    private void displayProfilePic() {
+        helper.getDb().getReference(helper.getUserPath()).child( currUserID ).child("profile_pic").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                String url = "";
+
+                if (dataSnapshot != null && dataSnapshot.getValue() != null) {
+                    url = (String) dataSnapshot.getValue();
+
+                    if (profilePic != null) {
+                        StorageReference uriRef = helper.getStorage().getReferenceFromUrl(url);
+
+                        // Set ImageView to contain photo
+                        Glide.with(sideBarHeader.getContext().getApplicationContext())
+                                .using(new FirebaseImageLoader())
+                                .load(uriRef)
+                                .into(profilePic);
+                    }
+                    else {
+                        Log.d( "TEST", "TARGET NULL" );
+                    }
+                } else {
+                    // Default Profile Pic
+                    // TODO Add method to DBHelper to get this
+                    //url = "gs://couch-potatoes-47758.appspot.com/Default/ProfilePic/potato_1_profile_pic.png";
+                    String uri = "@drawable/profile";
+
+                    int imageResource = getResources().getIdentifier(uri, null, getPackageName());
+                    Drawable res = getResources().getDrawable(imageResource);
+                    profilePic.setImageDrawable(res);
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.d("TEST", databaseError.getMessage());
             }
         });
     }
