@@ -1,22 +1,15 @@
 package com.example.potato.couchpotatoes;
 
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.View;
-import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
 
-import org.w3c.dom.Text;
-
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -53,8 +46,8 @@ public class MatchUserInfoActivity extends AppCompatActivity {
             currMatchID = "MATCH USER ID COULD NOT BE READ";
         }
 
-        //matchUserInfoGeneralHeader.setText( currMatchID );
-
+        // Fetch and display potential match's info
+        // TODO Create method to do this
         helper.getDb().getReference( helper.getUserPath() + currMatchID ).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -66,7 +59,6 @@ public class MatchUserInfoActivity extends AppCompatActivity {
 
                 String generalInfoHeader = "General Info";
 
-                //genInfoHeader.setText( generalInfoHeader );
                 matchUserInfoGeneralHeader.setText( generalInfoHeader );
 
                 String firstName = (String) res.get( "firstName" );
@@ -78,8 +70,6 @@ public class MatchUserInfoActivity extends AppCompatActivity {
                 String city = (String) res.get( "city" );
                 String state = (String) res.get( "state" );
                 String country = (String) res.get( "country" );
-
-                //MatchedUser match = new MatchedUser( currMatchID, firstName, middleName, lastName, birth_date, gender, "", "", "", bio, 0, 0, false, false );
 
                 String userInfo = "";
 
@@ -94,33 +84,11 @@ public class MatchUserInfoActivity extends AppCompatActivity {
                     userInfo += String.format( format, "Bio:", bio );
                     */
 
-                // TODO Maybe fetch and display profile pic here also
-                //userInfo += "General Info:\n\n";
-                //userInfo += paddSpace( "First Name:", "", 19 );
-                //userInfo += firstName + "\n\n";
-                //userInfo += paddSpace( "Middle Name:", "", 17 );
-                //userInfo += middleName + "\n\n";
-                //userInfo += paddSpace( "Last Name:", "", 18 );
-                //userInfo += lastName + "\n\n";
-                //userInfo += paddSpace( "Gender:", "", 19 );
-                //userInfo += gender + "\n\n";
-                //userInfo += paddSpace( "Birth Day:", "", 20 );
-                //userInfo += birth_date + "\n";
-
-                //userInfo += paddSpace( "Bio:", "", 19 );
-                //userInfo += bio + "\n\n";
-
-
-                //userInfo += helper.getFullName( firstName, middleName, lastName );
-
-                // Omitt middle name here
-                //userInfo += helper.getFullName( firstName, "", lastName );
-                //userInfo += "\t\t\t\t\t";
-
                 String genderAbbrev = "";
 
                 // Abbreviate gender
                 // If non-binary, do not mention gender
+                // TODO Create method to do this
                 if ( gender.equals( "male" ) ) {
                     genderAbbrev= "M";
                 }
@@ -128,9 +96,7 @@ public class MatchUserInfoActivity extends AppCompatActivity {
                     genderAbbrev = "F";
                 }
 
-                //int numSpaces = 30;
-
-                // Omitt middle name here
+                // Omitt middle name here - Personal preference - can change later
                 userInfo += paddSpaceln( "Name: ", helper.getFullName( firstName, "", lastName ), 30 );
                 userInfo += "\n";
                 userInfo += paddSpaceln( "Gender: ", genderAbbrev, 38 );
@@ -145,36 +111,20 @@ public class MatchUserInfoActivity extends AppCompatActivity {
                 userInfo += "\n";
                 userInfo += paddSpaceln( "Country: ", country, 36 );
 
-                //String format = "%s%30s";
-                //userInfo += String.format( format, helper.getFullName( firstName, "", lastName ), genderAbbrev );
-
-                // Omitt birthday here
-                //userInfo += "\t\t\t\t\t";
-                //userInfo += birth_date;
-
-                //textView.setText( userInfo );
-
                 matchUserInfoGeneralText.setText( userInfo );
 
                 String bioHeaderStr = "About Me";
 
-                //bioHeader.setText( bioHeaderStr );
-
                 matchUserInfoBioHeader.setText( bioHeaderStr );
 
-                //bioText.setText( bio );
-
                 matchUserInfoBioText.setText( bio );
-
-                //gUserInfo = userInfo;
-
-                //gUserInfo += "\nInterests:";
 
                 String interestsHeaderStr = "Interests";
 
                 matchUserInfoInterestHeader.setText( interestsHeaderStr );
 
                 // Fetch and display User's Interests
+                // TODO Create method to do this
                 helper.getDb().getReference( helper.getUserInterestPath() ).child( currMatchID ).addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
@@ -189,18 +139,7 @@ public class MatchUserInfoActivity extends AppCompatActivity {
                                 String subcategory = subchild.getKey();
                                 String preference = (String) subchild.getValue();
 
-                                //Log.d( "TEST", "Interest: " + interest );
-                                //Log.d( "TEST", "Subcategory: " + subcategory );
-                                //Log.d( "TEST", "Preference: " + preference );
 
-                                    /*
-                                    if ( preference.equals( "like" ) || preference.equals( "like to try" ) ) {
-                                        interests += "◆  ";
-                                    }
-                                    else {
-                                        interests += "◇  ";
-                                    }
-                                    */
                                 int newLinePos = 22;
                                 //interests += "◇  ";
                                 interests += "    ";
@@ -212,9 +151,6 @@ public class MatchUserInfoActivity extends AppCompatActivity {
                             interests += "\n";
                         }
 
-                        //textView.setText( gUserInfo + "\n\n" + interests );
-                        //textView.setText( userInfo );
-                        //userInfo = "";
                         matchUserInfoInterestText.setText( interests );
                     }
 

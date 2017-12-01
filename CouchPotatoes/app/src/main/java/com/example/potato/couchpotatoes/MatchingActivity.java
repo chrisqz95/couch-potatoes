@@ -58,8 +58,6 @@ public class MatchingActivity extends AppCompatActivity
 
     private ImageView imgView;
 
-    //private LinearLayout matchingUserInfoLayout;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -76,17 +74,6 @@ public class MatchingActivity extends AppCompatActivity
         spinner = (ProgressBar)findViewById(R.id.progressBar);
         spinner.setVisibility(View.VISIBLE);
 
-        /*
-        matchingUserInfoLayout = (LinearLayout) findViewById(R.id.matchingUserInfoLayout);
-
-        matchingUserInfoLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Log.d( "TEST", "CLICKED" );
-            }
-        });
-        */
-
         adapter = new MatchFragmentPagerAdapter(getSupportFragmentManager());
 
         // add fragments to the view pager
@@ -97,6 +84,7 @@ public class MatchingActivity extends AppCompatActivity
         viewPager.setAdapter(adapter);
 
         // Change behavior of like and dislike buttons based on currently selected tab
+        // TODO Create methods to handle behaviour below and reduce code redundancy
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -122,6 +110,7 @@ public class MatchingActivity extends AppCompatActivity
                                     url = (String) dataSnapshot.getValue();
                                 } else {
                                     // Default Profile Pic
+                                    // TODO Add method to DBHelper to get this
                                     url = "gs://couch-potatoes-47758.appspot.com/Default/ProfilePic/potato_1_profile_pic.png";
                                 }
 
@@ -198,6 +187,7 @@ public class MatchingActivity extends AppCompatActivity
                                     url = (String) dataSnapshot.getValue();
                                 } else {
                                     // Default Profile Pic
+                                    // TODO Add method to DBHelper to get this
                                     url = "gs://couch-potatoes-47758.appspot.com/Default/ProfilePic/potato_2_profile_pic.png";
                                 }
 
@@ -342,6 +332,7 @@ public class MatchingActivity extends AppCompatActivity
             startActivity( intent );
 
         }
+        // Remove for now. Uncomment later if needed.
         //else if (id == R.id.nav_settings) {
             //Intent intent = new Intent( getApplicationContext(), SettingsActivity.class );
             //startActivity( intent );
@@ -374,8 +365,6 @@ public class MatchingActivity extends AppCompatActivity
                     matchedFriendList.add( (String) potentDates.next().getValue() );
                 }
 
-                //Log.d( "TEST", matchedFriendList.toString() );
-
                 adapter.notifyDataSetChanged();
                 viewPager.setAdapter(adapter);
             }
@@ -400,14 +389,13 @@ public class MatchingActivity extends AppCompatActivity
                     matchedDateList.add( (String) potentDates.next().getValue() );
                 }
 
-                //Log.d( "TEST", matchedDateList.toString() );
-
                 adapter.notifyDataSetChanged();
                 viewPager.setAdapter(adapter);
 
                 // NOTE: Temporary workaround for now: ( Want functionality before Layout tabs are pressed )
                 // Try to fetch profile pic from Firebase and update ImageView
                 // If profile pic is null, display default profile pic instead
+                // TODO Create method to do this
                 if ( !matchedDateList.isEmpty() ) {
                     helper.getDb().getReference(helper.getUserPath()).child(matchedDateList.get(0)).child("profile_pic").addValueEventListener(new ValueEventListener() {
                         @Override
@@ -418,6 +406,7 @@ public class MatchingActivity extends AppCompatActivity
                                 url = (String) dataSnapshot.getValue();
                             } else {
                                 // Default Profile Pic
+                                // TODO Add method to DBHelper to get this
                                 url = "gs://couch-potatoes-47758.appspot.com/Default/ProfilePic/potato_1_profile_pic.png";
                             }
 
@@ -452,12 +441,14 @@ public class MatchingActivity extends AppCompatActivity
 
                 // Done fetching potent matches from Firebase
                 // Hide spinner and display Matching Activity Views
+                // TODO Create method to do this
                 spinner.setVisibility(View.GONE);
                 imgView.setVisibility(View.VISIBLE);
                 viewPager.setVisibility(View.VISIBLE);
                 likeAndDislikeLayout.setVisibility(View.VISIBLE);
 
                 // NOTE: Temporary workaround for now: Set default action button listeners ( before Layout tabs are pressed )
+                // TODO Create method to do this
                 FloatingActionButton likeButton = findViewById(R.id.fab_match);
                 FloatingActionButton dislikeButton = findViewById(R.id.fab_unmatch);
                 likeButton.setOnClickListener(
