@@ -258,6 +258,8 @@ public class MatchPageFragment extends Fragment {
 
                     //bioHeader.setText( bioHeaderStr );
 
+                    // TODO
+                    // Display substring of bio here and full bio in MatchUserInfoActivity
                     bioText.setText( bio );
 
                     //gUserInfo = userInfo;

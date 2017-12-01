@@ -24,6 +24,8 @@ public class MatchUserInfoActivity extends AppCompatActivity {
     private DBHelper helper;
     private TextView matchUserInfoGeneralHeader;
     private TextView matchUserInfoGeneralText;
+    private TextView matchUserInfoBioHeader;
+    private TextView matchUserInfoBioText;
     private TextView matchUserInfoInterestHeader;
     private TextView matchUserInfoInterestText;
     private String currMatchID;
@@ -39,6 +41,8 @@ public class MatchUserInfoActivity extends AppCompatActivity {
 
         matchUserInfoGeneralHeader = (TextView) findViewById(R.id.matchUserInfoGeneralHeader);
         matchUserInfoGeneralText = (TextView) findViewById(R.id.matchUserInfoGeneralText);
+        matchUserInfoBioHeader = (TextView) findViewById(R.id.matchUserInfoBioHeader);
+        matchUserInfoBioText = (TextView) findViewById(R.id.matchUserInfoBioText);
         matchUserInfoInterestHeader = (TextView) findViewById(R.id.matchUserInfoInterestHeader);
         matchUserInfoInterestText = (TextView) findViewById(R.id.matchUserInfoInterestText);
 
@@ -71,6 +75,9 @@ public class MatchUserInfoActivity extends AppCompatActivity {
                 String gender = (String) res.get( "gender" );
                 String birth_date = (String) res.get( "birth_date" );
                 String bio = (String) res.get( "bio" );
+                String city = (String) res.get( "city" );
+                String state = (String) res.get( "state" );
+                String country = (String) res.get( "country" );
 
                 //MatchedUser match = new MatchedUser( currMatchID, firstName, middleName, lastName, birth_date, gender, "", "", "", bio, 0, 0, false, false );
 
@@ -121,9 +128,22 @@ public class MatchUserInfoActivity extends AppCompatActivity {
                     genderAbbrev = "F";
                 }
 
-                int numSpaces = 30;
+                //int numSpaces = 30;
 
-                userInfo += paddSpace( helper.getFullName( firstName, "", lastName ), genderAbbrev, numSpaces );
+                // Omitt middle name here
+                userInfo += paddSpaceln( "Name: ", helper.getFullName( firstName, "", lastName ), 30 );
+                userInfo += "\n";
+                userInfo += paddSpaceln( "Gender: ", genderAbbrev, 38 );
+                userInfo += "\n";
+                // TODO
+                // Calculate and display age instead of birthday
+                userInfo += paddSpaceln( "Birthday: ", birth_date, 34 );
+                userInfo += "\n";
+                userInfo += paddSpaceln( "City: ", city, 38 );
+                userInfo += "\n";
+                userInfo += paddSpaceln( "State: ", state, 37 );
+                userInfo += "\n";
+                userInfo += paddSpaceln( "Country: ", country, 36 );
 
                 //String format = "%s%30s";
                 //userInfo += String.format( format, helper.getFullName( firstName, "", lastName ), genderAbbrev );
@@ -136,11 +156,15 @@ public class MatchUserInfoActivity extends AppCompatActivity {
 
                 matchUserInfoGeneralText.setText( userInfo );
 
-                String bioHeaderStr = "Bio";
+                String bioHeaderStr = "About Me";
 
                 //bioHeader.setText( bioHeaderStr );
 
+                matchUserInfoBioHeader.setText( bioHeaderStr );
+
                 //bioText.setText( bio );
+
+                matchUserInfoBioText.setText( bio );
 
                 //gUserInfo = userInfo;
 
