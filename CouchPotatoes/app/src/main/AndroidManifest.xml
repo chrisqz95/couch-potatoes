@@ -81,10 +81,6 @@
             android:label="Couch Potatoes"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".DetailsActivity"
-            android:label="Couch Potatoes"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity
             android:name=".PictureGridTabViewActivity"
             android:label="@string/title_activity_picture_grid_tab_view"
             android:theme="@style/AppTheme.NoActionBar" />

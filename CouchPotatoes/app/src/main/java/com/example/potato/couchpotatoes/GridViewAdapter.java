@@ -13,45 +13,34 @@ import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
-public class GridViewAdapter extends ArrayAdapter<ImageItem> {
+public class GridViewAdapter extends ArrayAdapter<String> {
 
     private Context context;
     private int layoutResourceId;
-    private ArrayList<ImageItem> data = new ArrayList<ImageItem>();
+    private ArrayList<String> urlList = new ArrayList<String>();
 
-    public GridViewAdapter(Context context, int layoutResourceId, ArrayList<ImageItem> data) {
-        super(context, layoutResourceId, data);
+    public GridViewAdapter(Context context, int layoutResourceId, ArrayList<String> urlList) {
+        super(context, layoutResourceId, urlList);
         this.layoutResourceId = layoutResourceId;
         this.context = context;
-        this.data = data;
+        this.urlList = urlList;
     }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         View row = convertView;
-        ViewHolder holder;
+        ImageView image;
 
         if (row == null) {
             LayoutInflater inflater = ((Activity) context).getLayoutInflater();
             row = inflater.inflate(layoutResourceId, parent, false);
-            holder = new ViewHolder();
-            holder.imageTitle = (TextView) row.findViewById(R.id.text);
-            holder.image = (ImageView) row.findViewById(R.id.image);
-            row.setTag(holder);
+            image = (ImageView) row.findViewById(R.id.image);
+            row.setTag(image);
         } else {
-            holder = (ViewHolder) row.getTag();
+            image = (ImageView) row.getTag();
         }
 
-
-        ImageItem item = data.get(position);
-        holder.imageTitle.setText(item.getTitle());
-        Picasso.with(context).load(item.getUri()).into(holder.image);
-        //holder.image.setImageBitmap(item.getImage());
+        Picasso.with(context).load(urlList.get(position)).into(image);
         return row;
-    }
-
-    static class ViewHolder {
-        TextView imageTitle;
-        ImageView image;
     }
 }

@@ -103,6 +103,10 @@ public class PreferencesActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(getApplicationContext(), PictureGridActivity.class);
+                DBHelper dbHelper = new DBHelper();
+                dbHelper.fetchCurrentUser();
+                intent.putExtra("uid", dbHelper.getUser().getUid());
+                intent.putExtra("isCurrentUser", true);
                 startActivity(intent);
             }
         });

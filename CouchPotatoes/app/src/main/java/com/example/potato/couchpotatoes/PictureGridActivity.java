@@ -1,20 +1,27 @@
 package com.example.potato.couchpotatoes;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.AlertDialogLayout;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.GridView;
+import android.widget.Toast;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.LruCache;
-import com.squareup.picasso.OkHttpDownloader;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
@@ -22,135 +29,98 @@ import org.json.JSONException;
 
 import java.util.ArrayList;
 
-public class PictureGridActivity extends AppCompatActivity  {
+public class PictureGridActivity extends AppCompatActivity {
     private GridView gridView;
     private GridViewAdapter gridAdapter;
+
+    //    private String uid;
+//    private boolean uploadButton;
+    private boolean isCurrentUser = false;
+    private ArrayList<String> urlList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_picture_grid);
 
-        gridView = (GridView) findViewById(R.id.gridView);
-        gridAdapter = new GridViewAdapter(this, R.layout.fragment_picture_grid_item, getData());
-        gridView.setAdapter(gridAdapter);
+        setContentView(R.layout.activity_picture_grid_loading);
+        Bundle extras = getIntent().getExtras();
+        loadData(extras.getString("uid"), extras.getBoolean("isCurrentUser"));
 
-        gridView.setOnItemClickListener(new OnItemClickListener() {
-            public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
-                ImageItem item = (ImageItem) parent.getItemAtPosition(position);
 
-                /*
-                // Convert image to byte array
-                ByteArrayOutputStream stream = new ByteArrayOutputStream();
-                item.getImage().compress(Bitmap.CompressFormat.PNG, 100, stream);
-                byte[] byteArray = stream.toByteArray();
-                */
-
-//                //Create intent
-//                Intent intent = new Intent(PictureGridActivity.this, DetailsActivity.class);
-//                intent.putExtra("title", item.getTitle());
-//                //intent.putExtra("image", byteArray);
-//                intent.putExtra("uri", item.getUri());
-//
-//                //Start details activity
-//                startActivity(intent);
-                Intent intent = new Intent(PictureGridActivity.this, PictureGridTabViewActivity.class);
-                intent.putExtra("itemCount", getStringData().size());
-                intent.putExtra("urlList", getStringData());
-                intent.putExtra("startingItem", position);
-                startActivity(intent);
-            }
-        });
-
-        Picasso picasso = new Picasso.Builder(getApplicationContext()).memoryCache(new LruCache(2400000)).build();
-        picasso.setIndicatorsEnabled(true);
-        Picasso.setSingletonInstance(picasso);
+//        Picasso picasso = new Picasso.Builder(getApplicationContext()).memoryCache(new LruCache(2400000)).build();
+//        picasso.setIndicatorsEnabled(true);
+//        Picasso.setSingletonInstance(picasso);
 
     }
 
-    /**
-     * Prepare some dummy data for gridview
-     */
-    private ArrayList<ImageItem> getData() {
-        final ArrayList<ImageItem> imageItems = new ArrayList<>();
-        JSONArray jsArray = null;
-        try {
-             jsArray = new JSONArray(PreferenceManager.getDefaultSharedPreferences(this).getString("PhotoList",""));
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-        if (jsArray != null) {
-            for (int x = 0; x < jsArray.length(); x++){
-                try {
-                    imageItems.add(new ImageItem(jsArray.getString(x), "potato"));
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-        return imageItems;
-    }
-
-    private ArrayList<String> getStringData(){
-        final ArrayList<String> urlList = new ArrayList<>();
-        JSONArray jsArray = null;
-        try {
-            jsArray = new JSONArray(PreferenceManager.getDefaultSharedPreferences(this).getString("PhotoList",""));
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-        if (jsArray != null) {
-            for (int x = 0; x < jsArray.length(); x++){
-                try {
-                    urlList.add(jsArray.getString(x));
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-        return urlList;
-    }
-
-
-
-    private void loadData() {
-        final ArrayList<ImageItem> imageItems = new ArrayList<>();
+    private void loadData(final String uid, final boolean isCurrentUser) {
         final DBHelper dbHelper = new DBHelper();
         dbHelper.fetchCurrentUser();
 
-        final DatabaseReference ref = dbHelper.getDb().getReference();
+        urlList = new ArrayList<>();
 
-        ref.addValueEventListener(new ValueEventListener() {
+        final DatabaseReference listRef = dbHelper.getDb().getReference();
+        listRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
-                for (DataSnapshot dataSnapshot : snapshot.child("User_Photo").child(dbHelper.getUser().getUid()).getChildren()) {
+                for (DataSnapshot dataSnapshot : snapshot.child("User_Photo").child(uid).getChildren()) {
                     try {
-                        imageItems.add(new ImageItem(snapshot.child("Photo").child(dataSnapshot.getKey()).child("uri").getValue().toString(), "potato"));
+                        urlList.add(snapshot.child("Photo").child(dataSnapshot.getKey()).child("uri").getValue().toString());
                     } catch (NullPointerException e) {
                         e.printStackTrace();
                     }
                 }
-
+                setContentView(R.layout.activity_picture_grid);
                 gridView = (GridView) findViewById(R.id.gridView);
-                gridAdapter = new GridViewAdapter(PictureGridActivity.this, R.layout.fragment_picture_grid_item, imageItems);
+                gridAdapter = new GridViewAdapter(PictureGridActivity.this, R.layout.fragment_picture_grid_item, urlList);
                 gridView.setAdapter(gridAdapter);
-
                 gridView.setOnItemClickListener(new OnItemClickListener() {
-                    public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
-                        ImageItem item = (ImageItem) parent.getItemAtPosition(position);
-
-                        //Create intent
-                        Intent intent = new Intent(PictureGridActivity.this, DetailsActivity.class);
-                        intent.putExtra("title", item.getTitle());
-                        //intent.putExtra("image", byteArray);
-                        intent.putExtra("uri", item.getUri());
-
-                        //Start details activity
+                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                        Intent intent = new Intent(PictureGridActivity.this, PictureGridTabViewActivity.class);
+                        intent.putExtra("itemCount", urlList.size());
+                        intent.putExtra("urlList", urlList);
+                        intent.putExtra("startingItem", position);
                         startActivity(intent);
                     }
                 });
+
+                FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+                if (isCurrentUser) {
+                    gridView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+
+                        @Override
+                        public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                            new AlertDialog.Builder(PictureGridActivity.this)
+                                    .setTitle("Are you sure you want to delete this image?")
+                                    .setIcon(android.R.drawable.ic_dialog_alert)
+                                    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int whichButton) {
+                                        }
+                                    })
+                                    .setNegativeButton(android.R.string.no, null).show();
+                            Toast.makeText(getApplicationContext(), "TEST", Toast.LENGTH_LONG).show();
+                            return true;
+                        }
+                    });
+
+                    fab.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            //startActivity(new Intent(PictureGridActivity.this, UploadImageFragment.class));
+                            Snackbar.make(view, "TODO: UploadImageFragment", Snackbar.LENGTH_LONG)
+                                    .setAction("Action", null).show();
+
+//                        FragmentManager fragmentManager = getSupportFragmentManager();
+//                        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+//
+//                        UploadImageFragment fragment = new UploadImageFragment();
+//                        fragmentTransaction.add(R.id.viewer, fragment);
+//                        fragmentTransaction.commit();
+                        }
+                    });
+                } else {
+                    fab.setVisibility(View.GONE);
+                }
             }
 
             @Override
