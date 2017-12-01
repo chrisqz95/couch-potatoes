@@ -208,4 +208,7 @@
     <string name="reset_password_success_msg_1">An email has been sent to </string>
     <string name="reset_password_success_msg_2"> with further instructions.</string>
     <string name="title_activity_match_user_info">User Info</string>
+    <string name="title_activity_about_us">About Us</string>
+
+    <string name="about_us">Brought to you by the Providers Of Technology And Talent Organization ( P.O.T.A.T.O. )</string>
 </resources>

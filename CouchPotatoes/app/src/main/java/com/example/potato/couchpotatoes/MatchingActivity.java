@@ -376,7 +376,8 @@ public class MatchingActivity extends AppCompatActivity
         //}
         else if (id == R.id.nav_info) {
             // TODO: go to Page with device information
-
+            Intent intent = new Intent( getApplicationContext(), AboutUsActivity.class );
+            startActivity( intent );
         } else if (id == R.id.nav_logout) {
             // logs out and redirects user to LoginActivity.xml
             helper.getAuth().signOut();
