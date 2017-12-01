@@ -1,0 +1,17 @@
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/constraintLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.example.potato.couchpotatoes.PictureGridTabViewActivity$InflatedImageFragment"
+    android:background="#000">
+
+    <ImageView
+        android:id="@+id/picture_grid_tab_view_fragment_image"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:scaleType="fitCenter" />
+
+</android.support.constraint.ConstraintLayout>

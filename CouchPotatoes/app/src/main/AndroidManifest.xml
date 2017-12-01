@@ -10,8 +10,12 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <!-- <uses-permission android:name="android.permission.CAMERA"/> -->
-    <uses-feature android:name="android.hardware.camera" android:required="true"/>
-    <uses-feature android:name="android.hardware.camera2" android:required="true"/>
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="true" />
+    <uses-feature
+        android:name="android.hardware.camera2"
+        android:required="true" />
 
     <application
         android:allowBackup="true"
@@ -26,6 +30,7 @@
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -35,52 +40,54 @@
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".PreferencesActivity"
-            android:label="@string/pref_header_profile">
-        </activity>
+            android:label="@string/pref_header_profile" />
         <activity
             android:name=".PreferenceChart"
-            android:label="@string/pref_header_profile"/>
+            android:label="@string/pref_header_profile" />
         <activity
             android:name=".SettingsActivity"
-            android:label="@string/pref_header_settings"/>
+            android:label="@string/pref_header_settings" />
+
         <meta-data
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />
+
         <activity
-                android:name=".ChatRoomActivity"
-                android:label="@string/title_activity_chat_room"
-                android:theme="@style/AppTheme.NoActionBar" />
+            android:name=".ChatRoomActivity"
+            android:label="@string/title_activity_chat_room"
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
-                android:name=".MessageActivity"
-                android:label="@string/title_activity_message"
-                android:theme="@style/AppTheme.NoActionBar" />
+            android:name=".MessageActivity"
+            android:label="@string/title_activity_message"
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".SignUpActivity"
             android:label="@string/title_activity_sign_up"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-                android:name=".RegistrationActivity"
-                android:label="@string/title_activity_registration"
-                android:theme="@style/AppTheme.NoActionBar"/>
+            android:name=".RegistrationActivity"
+            android:label="@string/title_activity_registration"
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
-                android:name=".ResetPasswordActivity"
-                android:label="@string/title_reset_password"
-                android:theme="@style/AppTheme.NoActionBar"/>
+            android:name=".ResetPasswordActivity"
+            android:label="@string/title_reset_password"
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".MatchingActivity"
             android:label="Couch Potatoes"
-            android:theme="@style/AppTheme.NoActionBar">
-        </activity>
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".PictureGridActivity"
             android:label="Couch Potatoes"
-            android:theme="@style/AppTheme.NoActionBar">
-        </activity>
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".DetailsActivity"
             android:label="Couch Potatoes"
-            android:theme="@style/AppTheme.NoActionBar">
-        </activity>
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".PictureGridTabViewActivity"
+            android:label="@string/title_activity_picture_grid_tab_view"
+            android:theme="@style/AppTheme.NoActionBar" />
     </application>
 
 </manifest>

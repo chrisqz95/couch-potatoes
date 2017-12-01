@@ -1,7 +1,6 @@
 package com.example.potato.couchpotatoes;
 
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
@@ -9,21 +8,18 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.GridView;
-import android.widget.Toast;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
+import com.squareup.picasso.LruCache;
+import com.squareup.picasso.OkHttpDownloader;
+import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
 import org.json.JSONException;
-import org.json.JSONObject;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.ArrayList;
 
 public class PictureGridActivity extends AppCompatActivity  {
@@ -34,8 +30,6 @@ public class PictureGridActivity extends AppCompatActivity  {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_picture_grid);
-
-        //();
 
         gridView = (GridView) findViewById(R.id.gridView);
         gridAdapter = new GridViewAdapter(this, R.layout.fragment_picture_grid_item, getData());
@@ -52,16 +46,26 @@ public class PictureGridActivity extends AppCompatActivity  {
                 byte[] byteArray = stream.toByteArray();
                 */
 
-                //Create intent
-                Intent intent = new Intent(PictureGridActivity.this, DetailsActivity.class);
-                intent.putExtra("title", item.getTitle());
-                //intent.putExtra("image", byteArray);
-                intent.putExtra("uri", item.getUri());
-
-                //Start details activity
+//                //Create intent
+//                Intent intent = new Intent(PictureGridActivity.this, DetailsActivity.class);
+//                intent.putExtra("title", item.getTitle());
+//                //intent.putExtra("image", byteArray);
+//                intent.putExtra("uri", item.getUri());
+//
+//                //Start details activity
+//                startActivity(intent);
+                Intent intent = new Intent(PictureGridActivity.this, PictureGridTabViewActivity.class);
+                intent.putExtra("itemCount", getStringData().size());
+                intent.putExtra("urlList", getStringData());
+                intent.putExtra("startingItem", position);
                 startActivity(intent);
             }
         });
+
+        Picasso picasso = new Picasso.Builder(getApplicationContext()).memoryCache(new LruCache(2400000)).build();
+        picasso.setIndicatorsEnabled(true);
+        Picasso.setSingletonInstance(picasso);
+
     }
 
     /**
@@ -86,6 +90,27 @@ public class PictureGridActivity extends AppCompatActivity  {
             }
         }
         return imageItems;
+    }
+
+    private ArrayList<String> getStringData(){
+        final ArrayList<String> urlList = new ArrayList<>();
+        JSONArray jsArray = null;
+        try {
+            jsArray = new JSONArray(PreferenceManager.getDefaultSharedPreferences(this).getString("PhotoList",""));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        if (jsArray != null) {
+            for (int x = 0; x < jsArray.length(); x++){
+                try {
+                    urlList.add(jsArray.getString(x));
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        return urlList;
     }
 
 
