@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
+import android.graphics.Color;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
@@ -32,13 +33,19 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.CheckedTextView;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -55,8 +62,11 @@ import java.util.List;
  * API Guide</a> for more information on developing a Settings UI.
  */
 public class PreferencesActivity extends AppCompatActivity {
+    private DBHelper helper;
     private static String[] moviePrefList = new String[] {"Action", "Adventure", "Animation", "Biography", "Comedy", "Crime", "Documentary", "Drama", "Family", "Fantasy", "Film-Noir", "History", "Horror", "Music", "Musical", "Mystery", "Romance", "Sci-Fi", "Sport", "Thriller", "War", "Western"};
     private static String[] sportsPrefList = new String[] {"The", "Thing", "Go", "Skrraaaa"};
+
+    private ArrayList<String> interestList;
 
     private Button settingsTab;
     private Button movieTab;
@@ -64,12 +74,25 @@ public class PreferencesActivity extends AppCompatActivity {
     private EditText userBio;
     private TextView moviesSelection;
     private TextView sportsSelection;
+    private LinearLayout interestsLayout;
+    private ListView interestListView;
+    private ArrayAdapter<String> interestAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
         SharedPreferences prefs = this.getSharedPreferences("com.example.potato.couchpotatoes", Context.MODE_PRIVATE);
+
+        helper = new DBHelper();
+
+        interestList = new ArrayList<>();
+        interestAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, interestList );
+
+        interestListView = (ListView) findViewById(R.id.interestListView);
+        interestListView.setAdapter( interestAdapter );
+
+        //interestsLayout = (LinearLayout) findViewById(R.id.interestsLayout);
 
         settingsTab = (Button) findViewById(R.id.settingsTab);
         settingsTab.setOnClickListener(new View.OnClickListener() {
@@ -80,6 +103,29 @@ public class PreferencesActivity extends AppCompatActivity {
             }
         });
 
+
+        displayInterests();
+
+        interestListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                //Log.d( "TEST", interestList.get( position ) + " CLICKED" );
+                Intent intent = new Intent(getApplicationContext(), PreferenceChart.class);
+                intent.putExtra( "interest", interestList.get( position ) );
+                startActivity(intent);
+            }
+        });
+
+        /*
+        TextView htext =new TextView(this);
+        htext.setText("Test");
+        //htext.setId(5);
+        htext.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+        interestsLayout.addView(htext);
+        */
+
+
+        /*
         movieTab = (Button) findViewById(R.id.moviePrefTab);
         movieTab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -107,7 +153,10 @@ public class PreferencesActivity extends AppCompatActivity {
 
         userBio = (EditText) findViewById(R.id.user_bio);
         userBio.setText(prefs.getString("user_bio", ""), TextView.BufferType.EDITABLE);
+        */
     }
+
+    /*
 
     @Override
     protected void onResume() {
@@ -169,5 +218,55 @@ public class PreferencesActivity extends AppCompatActivity {
 
         SharedPreferences prefs = this.getSharedPreferences("com.example.potato.couchpotatoes", Context.MODE_PRIVATE);
         prefs.edit().putString("user_bio", userBio.getText().toString()).apply();
+    }
+    */
+
+    private void displayInterests() {
+        helper.getDb().getReference( helper.getInterestPath() ).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                /*
+                TextView htext =new TextView(this);
+                htext.setText("Test");
+                //htext.setId(5);
+                htext.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+                interestsLayout.addView(htext);
+                */
+                //Log.d( "TEST", dataSnapshot.toString() );
+                for ( final DataSnapshot interest : dataSnapshot.getChildren() ) {
+                    //Log.d( "TEST", interest.toString() );
+                    String currInterest = (String) interest.getValue();
+                    interestList.add( currInterest );
+                    //Log.d( "TEST", currInterest );
+                    /*
+                    TextView newTextView = new TextView(getApplicationContext());
+                    newTextView.setText( currInterest );
+                    newTextView.setTextColor( Color.BLACK );
+                    newTextView.setTextSize( 18 );
+                    newTextView.setId( interestList.indexOf( currInterest ) );
+                    LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams( LinearLayout.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                    layoutParams.setMargins( 200, 100, 200, 0 );
+                    newTextView.setLayoutParams( layoutParams );
+                    newTextView.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            //Log.d( "TEST", interestList.get( v.getId() ) + " CLICKED" );
+                            Intent intent = new Intent(getApplicationContext(), PreferenceChart.class);
+                            intent.putExtra( "interest", interestList.get( v.getId() ) );
+                            startActivity(intent);
+                        }
+                    });
+                    interestsLayout.addView( newTextView );
+                    */
+                }
+
+                interestAdapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.d( "TEST", databaseError.getMessage() );
+            }
+        });
     }
 }

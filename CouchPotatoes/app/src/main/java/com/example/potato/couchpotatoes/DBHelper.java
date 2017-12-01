@@ -38,7 +38,7 @@ public class DBHelper {
     private final String userNotificationPath = "User_Notification/";
     private final String userPhotoPath = "User_Photo/";
     private final String photoPath = "Photo/";
-    private final String interestPath = "Category/";
+    private final String interestPath = "Interest/";
     private final String interestSubcategoryPath = "Interest_Subcategory/";
     private final String userInterestPath = "User_Interest/";
     private final String partnerPreferencePath = "Partner_Preference/";
