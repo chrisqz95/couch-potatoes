@@ -15,7 +15,7 @@
     </string>
     <string name="title_activity_login2">Sign in</string>
     <string name="title_activity_login">Sign in</string>
-    <string name="title_activity_main">MainActivity</string>
+    <string name="title_activity_main">Main Activity</string>
 
     <!-- Strings used in Profile Activity -->
     <string name="title_activity_preferences">Preferences</string>
@@ -126,7 +126,7 @@
     <string name="sign_up_prompt_password">Password</string>
     <string name="sign_up_prompt_password_confirm">Password (Confirm)</string>
 
-    <string name="title_activity_sign_up">SignUpActivity</string>
+    <string name="title_activity_sign_up">Signup Activity</string>
     <string name="section_format">Hello World from section: %1$d</string>
 
     <string name="sign_up_dob">Date of Birth</string>
@@ -178,12 +178,12 @@
     <string name="sidebar_aboutUs">About Us</string>
     <string name="sidebar_logout">Log Out</string>
 
-    <string name="title_activity_chat_room">ChatRoomActivity</string>
-    <string name="title_activity_message">MessageActivity</string>
+    <string name="title_activity_chat_room">Chat Room Activity</string>
+    <string name="title_activity_message">Message Activity</string>
     <string name="title_reset_password">ResetPassword</string>
 
     <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="title_activity_registration">RegistrationActivity</string>
+    <string name="title_activity_registration">Registration Activity</string>
 
     <string name="auth_failed">Authentication failed, check your email and password or sign up</string>
     <string name="change_password">Change Password</string>
@@ -207,5 +207,5 @@
     <string name="lbl_reset_password_success_generic">An email has been sent to the given email with further instructions.</string>
     <string name="reset_password_success_msg_1">An email has been sent to </string>
     <string name="reset_password_success_msg_2"> with further instructions.</string>
-    <string name="title_activity_match_user_info">MatchUserInfoActivity</string>
+    <string name="title_activity_match_user_info">User Info</string>
 </resources>

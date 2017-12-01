@@ -2,6 +2,7 @@ package com.example.potato.couchpotatoes;
 
 import java.util.ArrayList;
 import android.content.Intent;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -309,6 +310,7 @@ public class MatchingActivity extends AppCompatActivity
 
 		// places toolbar on top of the screen
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar.setTitleTextColor(Color.WHITE);
         setSupportActionBar(toolbar);
 
         // enables toggle button on toolbar to open the sidebar

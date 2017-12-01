@@ -74,7 +74,7 @@
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".MatchingActivity"
-            android:label="Couch Potatoes"
+            android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar"></activity>
         <activity
             android:name=".MatchUserInfoActivity"
