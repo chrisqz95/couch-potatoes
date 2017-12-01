@@ -57,9 +57,9 @@ public class MatchUserInfoActivity extends AppCompatActivity {
                     res.put( children.getKey(), children.getValue() );
                 }
 
-                String generalInfoHeader = "General Info";
+                //String generalInfoHeader = "General Info";
 
-                matchUserInfoGeneralHeader.setText( generalInfoHeader );
+                //matchUserInfoGeneralHeader.setText( generalInfoHeader );
 
                 String firstName = (String) res.get( "firstName" );
                 String middleName = (String) res.get( "middleName" );
@@ -97,8 +97,11 @@ public class MatchUserInfoActivity extends AppCompatActivity {
                 }
 
                 // Omitt middle name here - Personal preference - can change later
-                userInfo += paddSpaceln( "Name: ", helper.getFullName( firstName, "", lastName ), 30 );
-                userInfo += "\n";
+                String potentMatchName = helper.getFullName( firstName, "", lastName );
+                matchUserInfoGeneralHeader.setText( potentMatchName );
+
+                //userInfo += paddSpaceln( "Name: ", helper.getFullName( firstName, "", lastName ), 30 );
+                //userInfo += "\n";
                 userInfo += paddSpaceln( "Gender: ", genderAbbrev, 38 );
                 userInfo += "\n";
                 // TODO
@@ -109,7 +112,7 @@ public class MatchUserInfoActivity extends AppCompatActivity {
                 userInfo += "\n";
                 userInfo += paddSpaceln( "State: ", state, 37 );
                 userInfo += "\n";
-                userInfo += paddSpaceln( "Country: ", country, 36 );
+                userInfo += paddSpace( "Country: ", country, 36 );
 
                 matchUserInfoGeneralText.setText( userInfo );
 
@@ -119,7 +122,8 @@ public class MatchUserInfoActivity extends AppCompatActivity {
 
                 matchUserInfoBioText.setText( bio );
 
-                String interestsHeaderStr = "Interests";
+                //String interestsHeaderStr = "Interests";
+                String interestsHeaderStr = "My Interests";
 
                 matchUserInfoInterestHeader.setText( interestsHeaderStr );
 
