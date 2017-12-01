@@ -145,7 +145,7 @@ public class MatchingActivity extends AppCompatActivity
                             @Override
                             public void onClick(View v) {
                                 Log.d( "TEST", "IMG CLICKED" );
-                                //TODO
+                                //TODO Go to new activity to view potential match's photos
                                 //Intent intent = new Intent( getApplicationContext(), ( INSERT IMAGE GALLERY ACTIVITY CLASS ) );
                                 //intent.putExtra( "targetUserID", matchedDateList.get(0) );
                                 //startActivity( intent );
@@ -244,7 +244,7 @@ public class MatchingActivity extends AppCompatActivity
                             @Override
                             public void onClick(View v) {
                                 Log.d( "TEST", "IMG CLICKED" );
-                                //TODO
+                                //TODO Go to new activity to view potential match's photos
                                 //Intent intent = new Intent( getApplicationContext(), ( INSERT IMAGE GALLERY ACTIVITY CLASS ) );
                                 //intent.putExtra( "targetUserID", matchedFriendList.get(0) );
                                 //startActivity( intent );
@@ -475,7 +475,7 @@ public class MatchingActivity extends AppCompatActivity
                         @Override
                         public void onClick(View v) {
                             Log.d( "TEST", "IMG CLICKED" );
-                            //TODO
+                            //TODO Go to new activity to view potential match's photos
                             //Intent intent = new Intent( getApplicationContext(), ( INSERT IMAGE GALLERY ACTIVITY CLASS ) );
                             //intent.putExtra( "targetUserID", matchedDateList.get(0) );
                             //startActivity( intent );
