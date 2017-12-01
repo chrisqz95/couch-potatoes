@@ -22,6 +22,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -63,6 +64,7 @@ public class PreferenceChart extends AppCompatActivity {
         interest = getIntent().getExtras().getString( "interest" );
 
         displaySubcategories();
+        displayLikedSubcategories();
 
         // Add click handler to submit changes to Firebase
         submitBtn.setOnClickListener(new View.OnClickListener() {
@@ -189,6 +191,26 @@ public class PreferenceChart extends AppCompatActivity {
                }
 
                subcategoryAdapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.d( "TEST", databaseError.getMessage() );
+            }
+        });
+    }
+
+    private void displayLikedSubcategories() {
+        helper.getDb().getReference( helper.getUserInterestPath() ).child( currUserID ).child( interest ).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for ( DataSnapshot subcat : dataSnapshot.getChildren() ) {
+                    //Log.d( "TEST", subcat.toString() );
+                    String subcategory = subcat.getKey();
+                    String preference = (String) subcat.getValue();
+
+                    subcategoryLayout.setItemChecked( subcategoryList.indexOf( subcategory ), true );
+                }
             }
 
             @Override
