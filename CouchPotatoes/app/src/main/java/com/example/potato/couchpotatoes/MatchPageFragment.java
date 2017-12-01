@@ -34,6 +34,8 @@ import java.util.Map;
 public class MatchPageFragment extends Fragment {
     public static final String ARG_LIST = "ARG_LIST";
 
+    private final int BIO_SUBSTRING_LENGTH = 60;
+
     private ArrayList<String> matchedUserList;
     private FloatingActionButton matchButton;
     private FloatingActionButton unmatchButton;
@@ -260,7 +262,13 @@ public class MatchPageFragment extends Fragment {
 
                     // TODO
                     // Display substring of bio here and full bio in MatchUserInfoActivity
-                    bioText.setText( bio );
+                    if ( bio.length() <= BIO_SUBSTRING_LENGTH ) {
+                        bioText.setText( bio );
+                    }
+                    else {
+                        String bioSubString = bio.substring( 0, BIO_SUBSTRING_LENGTH ) + " ...";
+                        bioText.setText( bioSubString );
+                    }
 
                     //gUserInfo = userInfo;
 
