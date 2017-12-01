@@ -47,7 +47,7 @@
         android:layout_gravity="center"
         android:layout_margin="10dp"
         android:layout_weight="0.25"
-        android:text="Submit"
+        android:text="Save Changes"
         android:textSize="18sp" />
 
 </LinearLayout>
