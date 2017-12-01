@@ -16,7 +16,8 @@
         android:layout_margin="10dp"
         android:background="@drawable/matching_activity_text_bg"
         android:paddingBottom="10dp"
-        android:paddingLeft="10dp">
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp">
 
         <LinearLayout
             android:id="@+id/matchingUserInfoLayout"
@@ -68,8 +69,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:paddingLeft="10dp"
+                android:paddingRight="10dp"
                 android:paddingTop="10dp"
-                android:text="TextView"
+                android:text=""
                 android:textColor="@android:color/black"
                 android:textSize="24sp"
                 android:textStyle="bold" />
@@ -81,7 +83,7 @@
                 android:layout_marginLeft="30dp"
                 android:layout_marginRight="30dp"
                 android:layout_marginTop="30dp"
-                android:text="TextView"
+                android:text=""
                 android:textColor="@android:color/black"
                 android:textSize="18sp" />
 
@@ -91,7 +93,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="20dp"
                 android:layout_marginTop="30dp"
-                android:text="TextView"
+                android:text=""
                 android:textColor="@android:color/black"
                 android:textSize="18sp"
                 android:textStyle="bold" />
@@ -103,7 +105,7 @@
                 android:layout_marginLeft="30dp"
                 android:layout_marginRight="30dp"
                 android:layout_marginTop="15dp"
-                android:text="TextView"
+                android:text=""
                 android:textColor="@android:color/black"
                 android:textSize="18sp" />
         </LinearLayout>

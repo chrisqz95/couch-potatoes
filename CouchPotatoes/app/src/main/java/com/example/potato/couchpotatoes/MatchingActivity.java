@@ -2,6 +2,7 @@ package com.example.potato.couchpotatoes;
 
 import java.util.ArrayList;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
@@ -58,6 +59,8 @@ public class MatchingActivity extends AppCompatActivity
 
     private ImageView imgView;
 
+    private int currTab = 0;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -98,6 +101,8 @@ public class MatchingActivity extends AppCompatActivity
 
                 // If Date tab selected, have like button add to Date object on Firebase
                 if ( position == VIEW_PAGER_DATE_TAB_POSITION ) {
+                    currTab = VIEW_PAGER_DATE_TAB_POSITION;
+
                     // Try to fetch profile pic from Firebase and update ImageView
                     // If profile pic is null, display default profile pic instead
                     if ( !matchedDateList.isEmpty() ) {
@@ -108,20 +113,24 @@ public class MatchingActivity extends AppCompatActivity
 
                                 if (dataSnapshot != null && dataSnapshot.getValue() != null) {
                                     url = (String) dataSnapshot.getValue();
+                                    if (imgView != null) {
+                                        StorageReference uriRef = helper.getStorage().getReferenceFromUrl(url);
+
+                                        // Set ImageView to contain photo
+                                        Glide.with(getApplicationContext())
+                                                .using(new FirebaseImageLoader())
+                                                .load(uriRef)
+                                                .into(imgView);
+                                    }
                                 } else {
                                     // Default Profile Pic
                                     // TODO Add method to DBHelper to get this
-                                    url = "gs://couch-potatoes-47758.appspot.com/Default/ProfilePic/potato_1_profile_pic.png";
-                                }
+                                    // url = "gs://couch-potatoes-47758.appspot.com/Default/ProfilePic/potato_1_profile_pic.png";
+                                    String uri = "@drawable/profile";
 
-                                if (imgView != null) {
-                                    StorageReference uriRef = helper.getStorage().getReferenceFromUrl(url);
-
-                                    // Set ImageView to contain photo
-                                    Glide.with(getApplicationContext())
-                                            .using(new FirebaseImageLoader())
-                                            .load(uriRef)
-                                            .into(imgView);
+                                    int imageResource = getResources().getIdentifier(uri, null, getPackageName());
+                                    Drawable res = getResources().getDrawable(imageResource);
+                                    imgView.setImageDrawable(res);
                                 }
                             }
 
@@ -141,40 +150,46 @@ public class MatchingActivity extends AppCompatActivity
                                 //startActivity( intent );
                             }
                         });
+
+                        likeButton.setOnClickListener(
+                                new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        String currUserID = helper.getAuth().getUid();
+                                            String potentMatchID = matchedDateList.get(0);
+                                            String timestamp = helper.getNewTimestamp();
+
+                                            helper.addToLike(currUserID, potentMatchID, timestamp);
+                                            helper.addToDate( currUserID, potentMatchID, timestamp );
+                                    }
+                                }
+                        );
+                        dislikeButton.setOnClickListener(
+                                new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        String currUserID = helper.getAuth().getUid();
+                                            String potentMatchID = matchedDateList.get(0);
+                                            String timestamp = helper.getNewTimestamp();
+
+                                            helper.addToDislike(currUserID, potentMatchID, timestamp);
+                                    }
+                                }
+                        );
                     }
+                    else {
+                        // Default profile pic
+                        String uri = "@drawable/profile";
 
-                    likeButton.setOnClickListener(
-                            new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    String currUserID = helper.getAuth().getUid();
-                                    if ( !matchedDateList.isEmpty() ) {
-                                        String potentMatchID = matchedDateList.get(0);
-                                        String timestamp = helper.getNewTimestamp();
-
-                                        helper.addToLike(currUserID, potentMatchID, timestamp);
-                                        helper.addToDate( currUserID, potentMatchID, timestamp );
-                                    }
-                                }
-                            }
-                    );
-                    dislikeButton.setOnClickListener(
-                            new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    String currUserID = helper.getAuth().getUid();
-                                    if ( !matchedDateList.isEmpty() ) {
-                                        String potentMatchID = matchedDateList.get(0);
-                                        String timestamp = helper.getNewTimestamp();
-
-                                        helper.addToDislike(currUserID, potentMatchID, timestamp);
-                                    }
-                                }
-                            }
-                    );
+                        int imageResource = getResources().getIdentifier(uri, null, getPackageName());
+                        Drawable res = getResources().getDrawable(imageResource);
+                        imgView.setImageDrawable(res);
+                    }
                 }
                 // If Friend tab selected, have like button add to Befriend object on Firebase
                 else if ( position == VIEW_PAGER_FRIEND_TAB_POSITION  ){
+                    currTab = VIEW_PAGER_FRIEND_TAB_POSITION;
+
                     // Try to fetch profile pic from Firebase and update ImageView
                     // If profile pic is null, display default profile pic instead
                     if ( !matchedFriendList.isEmpty() ) {
@@ -185,12 +200,27 @@ public class MatchingActivity extends AppCompatActivity
 
                                 if (dataSnapshot != null && dataSnapshot.getValue() != null) {
                                     url = (String) dataSnapshot.getValue();
+                                    if (imgView != null) {
+                                        StorageReference uriRef = helper.getStorage().getReferenceFromUrl(url);
+
+                                        // Set ImageView to contain photo
+                                        Glide.with(getApplicationContext())
+                                                .using(new FirebaseImageLoader())
+                                                .load(uriRef)
+                                                .into(imgView);
+                                    }
                                 } else {
                                     // Default Profile Pic
                                     // TODO Add method to DBHelper to get this
-                                    url = "gs://couch-potatoes-47758.appspot.com/Default/ProfilePic/potato_2_profile_pic.png";
+                                    // url = "gs://couch-potatoes-47758.appspot.com/Default/ProfilePic/potato_2_profile_pic.png";
+                                    String uri = "@drawable/profile";
+
+                                    int imageResource = getResources().getIdentifier(uri, null, getPackageName());
+                                    Drawable res = getResources().getDrawable(imageResource);
+                                    imgView.setImageDrawable(res);
                                 }
 
+                                /*
                                 if (imgView != null) {
                                     StorageReference uriRef = helper.getStorage().getReferenceFromUrl(url);
 
@@ -200,6 +230,7 @@ public class MatchingActivity extends AppCompatActivity
                                             .load(uriRef)
                                             .into(imgView);
                                 }
+                                */
                             }
 
                             @Override
@@ -218,37 +249,41 @@ public class MatchingActivity extends AppCompatActivity
                                 //startActivity( intent );
                             }
                         });
+
+                        likeButton.setOnClickListener(
+                                new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        String currUserID = helper.getAuth().getUid();
+                                            String potentMatchID = matchedFriendList.get(0);
+                                            String timestamp = helper.getNewTimestamp();
+
+                                            helper.addToLike(currUserID, potentMatchID, timestamp);
+                                            helper.addToBefriend( currUserID, potentMatchID, timestamp );
+                                    }
+                                }
+                        );
+                        dislikeButton.setOnClickListener(
+                                new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        String currUserID = helper.getAuth().getUid();
+                                            String potentMatchID = matchedFriendList.get(0);
+                                            String timestamp = helper.getNewTimestamp();
+
+                                            helper.addToDislike(currUserID, potentMatchID, timestamp);
+                                    }
+                                }
+                        );
                     }
+                    else {
+                        // Default profile pic
+                        String uri = "@drawable/profile";
 
-                    likeButton.setOnClickListener(
-                            new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    String currUserID = helper.getAuth().getUid();
-                                    if ( !matchedFriendList.isEmpty() ) {
-                                        String potentMatchID = matchedFriendList.get(0);
-                                        String timestamp = helper.getNewTimestamp();
-
-                                        helper.addToLike(currUserID, potentMatchID, timestamp);
-                                        helper.addToBefriend( currUserID, potentMatchID, timestamp );
-                                    }
-                                }
-                            }
-                    );
-                    dislikeButton.setOnClickListener(
-                            new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    String currUserID = helper.getAuth().getUid();
-                                    if ( !matchedFriendList.isEmpty() ) {
-                                        String potentMatchID = matchedFriendList.get(0);
-                                        String timestamp = helper.getNewTimestamp();
-
-                                        helper.addToDislike(currUserID, potentMatchID, timestamp);
-                                    }
-                                }
-                            }
-                    );
+                        int imageResource = getResources().getIdentifier(uri, null, getPackageName());
+                        Drawable res = getResources().getDrawable(imageResource);
+                        imgView.setImageDrawable(res);
+                    }
                 }
             }
 
@@ -367,6 +402,7 @@ public class MatchingActivity extends AppCompatActivity
 
                 adapter.notifyDataSetChanged();
                 viewPager.setAdapter(adapter);
+                viewPager.setCurrentItem( currTab );
             }
 
             @Override
@@ -391,6 +427,7 @@ public class MatchingActivity extends AppCompatActivity
 
                 adapter.notifyDataSetChanged();
                 viewPager.setAdapter(adapter);
+                viewPager.setCurrentItem( currTab );
 
                 // NOTE: Temporary workaround for now: ( Want functionality before Layout tabs are pressed )
                 // Try to fetch profile pic from Firebase and update ImageView
@@ -404,20 +441,24 @@ public class MatchingActivity extends AppCompatActivity
 
                             if (dataSnapshot != null && dataSnapshot.getValue() != null) {
                                 url = (String) dataSnapshot.getValue();
+                                if (imgView != null) {
+                                    StorageReference uriRef = helper.getStorage().getReferenceFromUrl(url);
+
+                                    // Set ImageView to contain photo
+                                    Glide.with(getApplicationContext())
+                                            .using(new FirebaseImageLoader())
+                                            .load(uriRef)
+                                            .into(imgView);
+                                }
                             } else {
                                 // Default Profile Pic
                                 // TODO Add method to DBHelper to get this
-                                url = "gs://couch-potatoes-47758.appspot.com/Default/ProfilePic/potato_1_profile_pic.png";
-                            }
+                                //url = "gs://couch-potatoes-47758.appspot.com/Default/ProfilePic/potato_1_profile_pic.png";
+                                String uri = "@drawable/profile";
 
-                            if (imgView != null) {
-                                StorageReference uriRef = helper.getStorage().getReferenceFromUrl(url);
-
-                                // Set ImageView to contain photo
-                                Glide.with(getApplicationContext())
-                                        .using(new FirebaseImageLoader())
-                                        .load(uriRef)
-                                        .into(imgView);
+                                int imageResource = getResources().getIdentifier(uri, null, getPackageName());
+                                Drawable res = getResources().getDrawable(imageResource);
+                                imgView.setImageDrawable(res);
                             }
                         }
 
@@ -437,6 +478,36 @@ public class MatchingActivity extends AppCompatActivity
                             //startActivity( intent );
                         }
                     });
+
+                    // NOTE: Temporary workaround for now: Set default action button listeners ( before Layout tabs are pressed )
+                    // TODO Create method to do this
+                    FloatingActionButton likeButton = findViewById(R.id.fab_match);
+                    FloatingActionButton dislikeButton = findViewById(R.id.fab_unmatch);
+                    likeButton.setOnClickListener(
+                            new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    String currUserID = helper.getAuth().getUid();
+                                        String potentMatchID = matchedDateList.get(0);
+                                        String timestamp = helper.getNewTimestamp();
+
+                                        helper.addToLike(currUserID, potentMatchID, timestamp);
+                                        helper.addToDate( currUserID, potentMatchID, timestamp );
+                                }
+                            }
+                    );
+                    dislikeButton.setOnClickListener(
+                            new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    String currUserID = helper.getAuth().getUid();
+                                        String potentMatchID = matchedDateList.get(0);
+                                        String timestamp = helper.getNewTimestamp();
+
+                                        helper.addToDislike(currUserID, potentMatchID, timestamp);
+                                }
+                            }
+                    );
                 }
 
                 // Done fetching potent matches from Firebase
@@ -446,40 +517,6 @@ public class MatchingActivity extends AppCompatActivity
                 imgView.setVisibility(View.VISIBLE);
                 viewPager.setVisibility(View.VISIBLE);
                 likeAndDislikeLayout.setVisibility(View.VISIBLE);
-
-                // NOTE: Temporary workaround for now: Set default action button listeners ( before Layout tabs are pressed )
-                // TODO Create method to do this
-                FloatingActionButton likeButton = findViewById(R.id.fab_match);
-                FloatingActionButton dislikeButton = findViewById(R.id.fab_unmatch);
-                likeButton.setOnClickListener(
-                        new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                String currUserID = helper.getAuth().getUid();
-                                if ( !matchedDateList.isEmpty() ) {
-                                    String potentMatchID = matchedDateList.get(0);
-                                    String timestamp = helper.getNewTimestamp();
-
-                                    helper.addToLike(currUserID, potentMatchID, timestamp);
-                                    helper.addToDate( currUserID, potentMatchID, timestamp );
-                                }
-                            }
-                        }
-                );
-                dislikeButton.setOnClickListener(
-                        new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                String currUserID = helper.getAuth().getUid();
-                                if ( !matchedDateList.isEmpty() ) {
-                                    String potentMatchID = matchedDateList.get(0);
-                                    String timestamp = helper.getNewTimestamp();
-
-                                    helper.addToDislike(currUserID, potentMatchID, timestamp);
-                                }
-                            }
-                        }
-                );
             }
 
             @Override
