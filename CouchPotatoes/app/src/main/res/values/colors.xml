@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorSignUpError">#CC3030</color>
+    <color name="colorSignUpError">#cc3030</color>
 	
     <color name="bg_main">#f9f8f9</color>
     <color name="bg_select">#cfced0</color>
