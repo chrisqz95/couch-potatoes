@@ -21,6 +21,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -39,6 +40,7 @@ public class MessageActivity extends AppCompatActivity {
     Map<String, String> messageIDs = new HashMap<>();
     Map<String, String> messageSenders = new HashMap<>();
     Map<String, String> messageText = new HashMap<>();
+    ArrayList<String> messageTime = new ArrayList<>();
 
     final int MESSAGE_FETCH_LIMIT = 50;
 
@@ -74,8 +76,6 @@ public class MessageActivity extends AppCompatActivity {
         // Display the current user's display name
         userName = (TextView) findViewById(R.id.userName);
         userName.setText(companion);
-        //reference1 = new Firebase("https://androidchatapp-76776.firebaseio.com/messages/" + UserDetails.username + "_" + UserDetails.chatWith);
-        //reference2 = new Firebase("https://androidchatapp-76776.firebaseio.com/messages/" + UserDetails.chatWith + "_" + UserDetails.username);
 
         sendButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -118,13 +118,19 @@ public class MessageActivity extends AppCompatActivity {
                             String chatID = (String) dataSnapshot.child("chat_id").getValue();
                             String message = (String) dataSnapshot.child("text").getValue();
                             String timestamp = (String) dataSnapshot.child("timestamp").getValue();
+                            boolean gapMsg = false;
+
+                            //Compare the last msg timestamp with the cur one
+                            if (messageTime.size() >= 1) {
+                                gapMsg = isGapBetweenMsg(messageTime.get(messageTime.size() - 1), timestamp);
+                            }
 
 
                             if ( from.equals(displayName) ) {
-                                addMessageBox(message, 1);}
+                                addMessageBox(timestamp, 1, gapMsg);}
                             else {
                                 //String displayStr = displayName + ":\n";
-                                addMessageBox(message, 2);
+                                addMessageBox(timestamp, 2, gapMsg);
                             }
                             // Keep track of the messageID corresponding to the current message
                             messageIDs.put(message, dataSnapshot.getKey());
@@ -134,6 +140,9 @@ public class MessageActivity extends AppCompatActivity {
 
                             // Keep track of the text content of the current message
                             messageText.put(dataSnapshot.getKey(), message);
+
+                            //Keep track of the time of the current message
+                            messageTime.add(timestamp);
 
                             Log.d("TEST", message + " " + dataSnapshot.getKey());
                         }
@@ -153,26 +162,67 @@ public class MessageActivity extends AppCompatActivity {
         });
     }
 
+        //Determine if they are playing hard to get by checking the timestamp difference
+        public boolean isGapBetweenMsg(String lastMsg, String curMsg) {
+            int lastMsgDate = Integer.parseInt(
+                    (lastMsg.split("  ")[0].replaceAll("-", "")));
 
-        public void addMessageBox (String message,int type){
+            int curMsgDate = Integer.parseInt(
+                    (curMsg.split("  ")[0].replaceAll("-", "")));
+
+            int lastMsgTime = Integer.parseInt(
+                    (lastMsg.split("  ")[1].replaceAll(":", "")));
+
+            int curMsgTime = Integer.parseInt(
+                    (curMsg.split("  ")[1].replaceAll(":", "")));
+
+            //Longer than a day
+            if ((curMsgDate - lastMsgDate) >= 1) return true;
+
+            //Longer than 3 hours
+            return ((curMsgTime - lastMsgTime) >= 30000);
+
+
+        }
+
+
+        public void addMessageBox (String message,int type, boolean gapMsg){
             TextView textView = new TextView(MessageActivity.this);
-            textView.setText(message);;
-
-            textView.setTextSize(20);
-            //textView.setFont
 
             LinearLayout.LayoutParams lp2 = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
             lp2.weight = 1.0f;
 
-            if (type == 1) {
+            if (gapMsg) {
+                lp2.gravity = Gravity.CENTER_HORIZONTAL;
+                textView.setTextColor(Color.GRAY);
+                textView.setTextSize(18);
+                String[] time = message.split("  ")[1].split(":");
+                //Determine AM or PM
+                int hour = Integer.parseInt(time[0]);
+                String timeStr;
+                if (hour >= 12) {
+                    timeStr = (hour-12) + " : " + time[1] + " PM";
+                } else {
+                    timeStr = time[0] + " : " + time[1] + " AM";
+                }
+
+                textView.setText(timeStr);
+
+            }
+            else if (type == 1) {
+                textView.setText(message);
+                textView.setTextSize(20);
                 lp2.gravity = Gravity.RIGHT;
                 textView.setBackgroundResource(R.drawable.bubble_in);
                 textView.setTextColor(Color.WHITE);
             } else {
+                textView.setText(message);
+                textView.setTextSize(20);
                 lp2.gravity = Gravity.LEFT;
                 textView.setBackgroundResource(R.drawable.bubble_out);
                 textView.setTextColor(Color.BLACK);
             }
+
             textView.setLayoutParams(lp2);
             layout.addView(textView);
             scrollView.fullScroll(View.FOCUS_DOWN);
