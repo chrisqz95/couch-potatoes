@@ -32,6 +32,7 @@ public class ChatRoomActivity extends AppCompatActivity {
     private Map<String,String> chats = new HashMap<>();
     private String userID = helper.getAuth().getUid();
     private String displayName = helper.getAuthUserDisplayName();
+    private String userNames = ""; // The list of users in a chat exl. displayName
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,17 +70,18 @@ public class ChatRoomActivity extends AppCompatActivity {
                         public void onDataChange(DataSnapshot dataSnapshot) {
                             Iterator<DataSnapshot> users = dataSnapshot.getChildren().iterator();
 
-                            String userNames = "";
+                            userNames = "";
 
                             // Concatenate the names of all users that belong to the current chat, delimited by a comma.
                             while ( users.hasNext() ) {
+                                String currUser = (String) users.next().getValue();
+                                if (currUser.equals(displayName))
+                                    continue;
                                 if ( !userNames.equals( "" ) ) {
                                     userNames += ", ";
                                 }
-
-                                String currUser = (String) users.next().getValue();
-
                                 userNames += currUser;
+
                             }
 
                             // Keep track of the chatID corresponding to the list of user names
@@ -117,6 +119,7 @@ public class ChatRoomActivity extends AppCompatActivity {
                 // Create new Intent, keeping track of the selected chatID
                 Intent intent = new Intent( getApplicationContext(), MessageActivity.class );
                 intent.putExtra( "chatID", chatID );
+                intent.putExtra("otherUsers", String.valueOf(parent.getItemAtPosition(position)));
 
                 // Begin the messaging activity corresponding to the selected chat
                 startActivity( intent );

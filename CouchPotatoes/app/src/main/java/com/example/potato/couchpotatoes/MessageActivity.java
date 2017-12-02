@@ -21,6 +21,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -33,12 +34,13 @@ public class MessageActivity extends AppCompatActivity {
     ScrollView scrollView;
     DBHelper helper = new DBHelper();
     DatabaseReference reference1, reference2;
-    String userID, chatRoom, displayName, messageID, timestamp, message;
+    String userID, chatRoom, displayName, messageID, timestamp, message, companion;
     TextView userName;
 
     Map<String, String> messageIDs = new HashMap<>();
     Map<String, String> messageSenders = new HashMap<>();
     Map<String, String> messageText = new HashMap<>();
+    ArrayList<String> messageTime = new ArrayList<>();
 
     final int MESSAGE_FETCH_LIMIT = 50;
 
@@ -61,18 +63,19 @@ public class MessageActivity extends AppCompatActivity {
         // Get the current user's display name
         displayName = helper.getAuthUserDisplayName();
 
-        // Display the current user's display name
 
-        userName = (TextView) findViewById(R.id.userName);
-        userName.setText(displayName);
 
         // Get the current user's id
         userID = helper.getAuth().getUid();
 
         // Get the current chat room's id
         chatRoom = (String) getIntent().getExtras().get("chatID");
-        //reference1 = new Firebase("https://androidchatapp-76776.firebaseio.com/messages/" + UserDetails.username + "_" + UserDetails.chatWith);
-        //reference2 = new Firebase("https://androidchatapp-76776.firebaseio.com/messages/" + UserDetails.chatWith + "_" + UserDetails.username);
+        // Get the other person in the chat
+        companion = (String) getIntent().getExtras().get("otherUsers");
+
+        // Display the current user's display name
+        userName = (TextView) findViewById(R.id.userName);
+        userName.setText(companion);
 
         sendButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -92,51 +95,6 @@ public class MessageActivity extends AppCompatActivity {
                 }
             }
         });
-
-        /*reference1.addChildEventListener(new ChildEventListener() {
-            @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                String from = (String) dataSnapshot.child( "name" ).getValue();
-                String chatID = (String) dataSnapshot.child( "chat_id" ).getValue();
-                String message = (String) dataSnapshot.child( "text" ).getValue();
-                String timestamp = (String) dataSnapshot.child( "timestamp" ).getValue();
-
-                if (true) {
-                    addMessageBox("You:-\n" + message, 1);
-                } else {
-                    //addMessageBox(userDetails.chatWith + ":-\n" + message, 2);
-                }
-                // Keep track of the messageID corresponding to the current message
-                messageIDs.put( message, dataSnapshot.getKey() );
-
-                // Keep track of the sender of the current message
-                messageSenders.put( dataSnapshot.getKey(), from );
-
-                // Keep track of the text content of the current message
-                messageText.put( dataSnapshot.getKey(), message );
-            }
-
-            @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-
-            }
-
-            @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {
-
-            }
-
-            @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
-    }*/
 
         // Add an event handler to fetch and display all messages in the current chat
         helper.getDb().getReference(helper.getChatMessagePath() + chatRoom).limitToLast(MESSAGE_FETCH_LIMIT).addValueEventListener(new ValueEventListener() {
@@ -160,13 +118,22 @@ public class MessageActivity extends AppCompatActivity {
                             String chatID = (String) dataSnapshot.child("chat_id").getValue();
                             String message = (String) dataSnapshot.child("text").getValue();
                             String timestamp = (String) dataSnapshot.child("timestamp").getValue();
+                            boolean gapMsg = false;
 
+                            //Compare the last msg timestamp with the cur one
+                            if (messageTime.size() >= 1) {
+                                gapMsg = isGapBetweenMsg(messageTime.get(messageTime.size() - 1), timestamp);
+                            }
+
+                            if (gapMsg) {
+                                addMessageBox(timestamp, 1, gapMsg);
+                            }
 
                             if ( from.equals(displayName) ) {
-                                addMessageBox(message, 1);}
+                                addMessageBox(message, 1, false);}
                             else {
                                 //String displayStr = displayName + ":\n";
-                                addMessageBox(message, 2);
+                                addMessageBox(message, 2, false);
                             }
                             // Keep track of the messageID corresponding to the current message
                             messageIDs.put(message, dataSnapshot.getKey());
@@ -176,6 +143,9 @@ public class MessageActivity extends AppCompatActivity {
 
                             // Keep track of the text content of the current message
                             messageText.put(dataSnapshot.getKey(), message);
+
+                            //Keep track of the time of the current message
+                            messageTime.add(timestamp);
 
                             Log.d("TEST", message + " " + dataSnapshot.getKey());
                         }
@@ -195,26 +165,67 @@ public class MessageActivity extends AppCompatActivity {
         });
     }
 
+        //Determine if they are playing hard to get by checking the timestamp difference
+        public boolean isGapBetweenMsg(String lastMsg, String curMsg) {
+            int lastMsgDate = Integer.parseInt(
+                    (lastMsg.split("  ")[0].replaceAll("-", "")));
 
-        public void addMessageBox (String message,int type){
+            int curMsgDate = Integer.parseInt(
+                    (curMsg.split("  ")[0].replaceAll("-", "")));
+
+            int lastMsgTime = Integer.parseInt(
+                    (lastMsg.split("  ")[1].replaceAll(":", "")));
+
+            int curMsgTime = Integer.parseInt(
+                    (curMsg.split("  ")[1].replaceAll(":", "")));
+
+            //Longer than a day
+            if ((curMsgDate - lastMsgDate) >= 1) return true;
+
+            //Longer than 3 hours
+            return ((curMsgTime - lastMsgTime) >= 30000);
+
+
+        }
+
+
+        public void addMessageBox (String message,int type, boolean gapMsg){
             TextView textView = new TextView(MessageActivity.this);
-            textView.setText(message);
-
-            textView.setTextSize(20);
-            //textView.setFont
 
             LinearLayout.LayoutParams lp2 = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
             lp2.weight = 1.0f;
 
-            if (type == 1) {
+            if (gapMsg) {
+                lp2.gravity = Gravity.CENTER_HORIZONTAL;
+                textView.setTextColor(Color.GRAY);
+                textView.setTextSize(18);
+                String[] time = message.split("  ")[1].split(":");
+                //Determine AM or PM
+                int hour = Integer.parseInt(time[0]);
+                String timeStr;
+                if (hour >= 12) {
+                    timeStr = (hour-12) + " : " + time[1] + " PM";
+                } else {
+                    timeStr = time[0] + " : " + time[1] + " AM";
+                }
+
+                textView.setText(timeStr);
+
+            }
+            else if (type == 1) {
+                textView.setText(message);
+                textView.setTextSize(20);
                 lp2.gravity = Gravity.RIGHT;
                 textView.setBackgroundResource(R.drawable.bubble_in);
                 textView.setTextColor(Color.WHITE);
             } else {
+                textView.setText(message);
+                textView.setTextSize(20);
                 lp2.gravity = Gravity.LEFT;
                 textView.setBackgroundResource(R.drawable.bubble_out);
                 textView.setTextColor(Color.BLACK);
             }
+
             textView.setLayoutParams(lp2);
             layout.addView(textView);
             scrollView.fullScroll(View.FOCUS_DOWN);
