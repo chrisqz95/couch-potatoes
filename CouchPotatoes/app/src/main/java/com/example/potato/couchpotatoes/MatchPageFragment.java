@@ -1,5 +1,6 @@
 package com.example.potato.couchpotatoes;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
@@ -7,7 +8,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.google.firebase.database.DataSnapshot;
@@ -16,11 +18,12 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class MatchPageFragment extends Fragment {
     public static final String ARG_LIST = "ARG_LIST";
+
+    private final int BIO_SUBSTRING_LENGTH = 60;
 
     private ArrayList<String> matchedUserList;
     private FloatingActionButton matchButton;
@@ -28,7 +31,15 @@ public class MatchPageFragment extends Fragment {
     private DBHelper helper;
 
     private String currMatchID;
-    private TextView textView;
+    private TextView bioText;
+    private TextView interestsHeader;
+    private TextView interestsText;
+    private TextView userInfoText;
+    private LinearLayout matchingUserInfoLayout;
+
+    private ImageView imgView;
+
+    private String gUserInfo;
 
     /**
      * TODO: NOTE IF WE WANT TO PASS IN THE LIST DIRECTLY, WE NEED TO MAKE MATCHEDUSER EXTEND PARCELABLE
@@ -47,7 +58,7 @@ public class MatchPageFragment extends Fragment {
      * @param matchedUserList
      * @return
      */
-    public static MatchPageFragment newInstance(ArrayList<String> matchedUserList) {
+    public static MatchPageFragment newInstance(ArrayList<String> matchedUserList ) {
         Bundle args = new Bundle();
         args.putStringArrayList(ARG_LIST, matchedUserList);
         MatchPageFragment fragment = new MatchPageFragment();
@@ -69,18 +80,12 @@ public class MatchPageFragment extends Fragment {
         matchButton.setOnClickListener(onClickListener);
         unmatchButton.setOnClickListener(onClickListener);
     }
+
     private View.OnClickListener onClickListener = new View.OnClickListener() {
         @Override
         public void onClick(final View v) {
-            switch (v.getId()) {
-                case R.id.fab_match:
-                    //TODO
-                    break;
-
-                case R.id.fab_unmatch:
-                    //TODO
-                    break;
-            }
+            //Log.d( "TEST", "FRAGMENT CLICKED" );
+            // NOTE: MAY NOT NEED THIS
         }
     };
 
@@ -88,16 +93,30 @@ public class MatchPageFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_match_page, container, false);
-        textView = (TextView) view.findViewById(R.id.match_fragment_text);
-
-        //textView.setText("Name 0: " +  matchedUserList.get(0) + "\n kdjfkdjf\ndkjfkdjf\ndkjfkd\ndkjfd\nkdjfdf\ndfkjdkf\ndkjfd");
+        bioText = (TextView) view.findViewById(R.id.bioText);
+        interestsHeader = (TextView) view.findViewById(R.id.interestsHeader);
+        interestsText = (TextView) view.findViewById(R.id.interestsText);
+        userInfoText = (TextView) view.findViewById(R.id.userInfoText);
+        matchingUserInfoLayout = (LinearLayout) view.findViewById(R.id.matchingUserInfoLayout);
 
         if ( matchedUserList.isEmpty() ) {
-            textView.setText( "No new matches. Try adding more interests!" );
+            userInfoText.setText( "No new matches. Try adding more interests!" );
         }
         else {
             currMatchID = matchedUserList.get( 0 );
 
+            matchingUserInfoLayout.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    // Begin new activity to display more information about the potential match
+                    Intent intent = new Intent( getActivity().getApplicationContext(), MatchUserInfoActivity.class );
+                    intent.putExtra( "currMatchID", currMatchID );
+                    startActivity( intent );
+                }
+            });
+
+            // Fetch and display info about the potential match
+            // TODO Create method to do this
             helper.getDb().getReference( helper.getUserPath() + currMatchID ).addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
@@ -114,29 +133,90 @@ public class MatchPageFragment extends Fragment {
                     String birth_date = (String) res.get( "birth_date" );
                     String bio = (String) res.get( "bio" );
 
-                    //MatchedUser match = new MatchedUser( currMatchID, firstName, middleName, lastName, birth_date, gender, "", "", "", bio, 0, 0, false, false );
-
                     String userInfo = "";
 
                     // TODO Need a better way to format text
                     /*
-                    userInfo += "First Name:"; userInfo += getTabs( 5 ); userInfo += firstName; userInfo += "\n";
-                    userInfo += "Middle Name:"; userInfo += getTabs( 4 ); userInfo += middleName; userInfo += "\n";
-                    userInfo += "Last Name:"; userInfo += getTabs( 4 ); userInfo += lastName; userInfo += "\n";
-                    userInfo += "Gender:"; userInfo += getTabs( 7 ); userInfo += gender; userInfo += "\n";
-                    userInfo += "Birth Day:"; userInfo += getTabs( 10 ); userInfo += birth_date; userInfo += "\n";
-                    userInfo += "bio:"; userInfo += getTabs( 12 ); userInfo += bio; userInfo += "\n";
+                    String format = "%30s%30s\n";
+                    userInfo += String.format( format, "First Name:", firstName );
+                    userInfo += String.format( format, "Middle Name:", middleName );
+                    userInfo += String.format( format, "Last Name:", lastName );
+                    userInfo += String.format( format, "Gender:", gender );
+                    userInfo += String.format( format, "Birth Day:", birth_date );
+                    userInfo += String.format( format, "Bio:", bio );
                     */
 
-                    // TODO Maybe fetch and display profile pic here also
-                    userInfo += "First Name:"; userInfo += firstName; userInfo += "\n";
-                    userInfo += "Middle Name:"; userInfo += middleName; userInfo += "\n";
-                    userInfo += "Last Name:"; userInfo += lastName; userInfo += "\n";
-                    userInfo += "Gender:"; userInfo += gender; userInfo += "\n";
-                    userInfo += "Birth Day:"; userInfo += birth_date; userInfo += "\n";
-                    userInfo += "bio:"; userInfo += bio; userInfo += "\n";
+                    String genderAbbrev = "";
 
-                    textView.setText( userInfo );
+                    // Abbreviate gender
+                    // If non-binary, do not mention gender
+                    // TODO Create helper method to do this
+                    if ( gender.equals( "male" ) ) {
+                        genderAbbrev= "M";
+                    }
+                    else if ( gender.equals( "female" ) ) {
+                        genderAbbrev = "F";
+                    }
+
+                    // Get the potential match's full name
+                    // Omitt the middle name - Personal preference - Can change later
+                    String potentMatchName = helper.getFullName( firstName, "", lastName );
+
+                    // Display potential match's full name and gender on the same line
+                    int numSpaces = 30;
+                    userInfo += paddSpace( potentMatchName, genderAbbrev, numSpaces );
+
+                    userInfoText.setText( userInfo );
+
+                    // Display substring of bio here and full bio in MatchUserInfoActivity
+                    // TODO Create helper method to do this
+                    if ( bio.length() <= BIO_SUBSTRING_LENGTH ) {
+                        bioText.setText( bio );
+                    }
+                    else {
+                        String bioSubString = bio.substring( 0, BIO_SUBSTRING_LENGTH ) + " ...";
+                        bioText.setText( bioSubString );
+                    }
+
+                    String interestsHeaderStr = "Interests";
+
+                    interestsHeader.setText( interestsHeaderStr );
+
+                    // Fetch and display User's Interests
+                    // TODO Create method to do this
+                    helper.getDb().getReference( helper.getUserInterestPath() ).child( currMatchID ).addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            String interests = "";
+
+                            for ( DataSnapshot child : dataSnapshot.getChildren() ) {
+                                String interest = child.getKey();
+                                interests += interest;
+                                interests += "\n\n";
+
+                                for ( DataSnapshot subchild : child.getChildren() ) {
+                                    String subcategory = subchild.getKey();
+                                    String preference = (String) subchild.getValue();
+
+                                    int newLinePos = 22;
+                                    //interests += "◇  ";
+                                    interests += "    ";
+                                    interests += addStrAtPos( subcategory, "\n     ", newLinePos );
+                                    interests += "  -  ";
+                                    interests += addStrAtPos( preference, "\n     ", newLinePos );
+                                    interests += "\n";
+                                }
+                                interests += "\n";
+                            }
+
+                            interestsText.setText( interests );
+                        }
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+                            Log.d( "TEST", databaseError.getMessage() );
+                        }
+                    });
                 }
 
                 @Override
@@ -149,13 +229,59 @@ public class MatchPageFragment extends Fragment {
         return view;
     }
 
-    /*
-    private String getTabs( int numTabs ) {
+    //TODO MOVE THESE METHODS TO A NEW CLASS
+    private String paddSpace( String title, String value, int desiredLength ) {
         String str = "";
-        for ( int i = 0; i < numTabs; i++ ) {
+
+        str += title;
+
+        int numSpaces = desiredLength - title.length() - value.length();
+
+        for ( int i = 0; i < numSpaces; i++ ) {
             str += "\t";
         }
+
+        str += value;
+
         return str;
     }
-    */
+
+    private String paddSpaceln( String title, String value, int desiredLength ) {
+        return paddSpace( title, value + "\n", desiredLength );
+    }
+
+    private String paddSpaceEnd( String title, String value, int desiredLength ) {
+        String str = "";
+
+        str += title;
+
+        str += value;
+
+        int numSpaces = desiredLength - title.length() - value.length();
+
+        for ( int i = 0; i < numSpaces; i++ ) {
+            str += "\t";
+        }
+
+        str += "|";
+
+        return str;
+    }
+
+    private String paddSpaceEndln( String title, String value, int desiredLength ) {
+        return paddSpaceEnd( title, value, desiredLength ) + "\n";
+    }
+
+    private String addStrAtPos( String str, String addition, int position ) {
+        String ret = "";
+
+        for ( int i = 0; i < str.length(); i++ ) {
+            if ( i == position ) {
+                ret += addition;
+            }
+            ret += str.charAt( i );
+        }
+
+        return ret;
+    }
 }
