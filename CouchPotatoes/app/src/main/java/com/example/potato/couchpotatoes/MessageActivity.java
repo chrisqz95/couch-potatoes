@@ -125,12 +125,15 @@ public class MessageActivity extends AppCompatActivity {
                                 gapMsg = isGapBetweenMsg(messageTime.get(messageTime.size() - 1), timestamp);
                             }
 
+                            if (gapMsg) {
+                                addMessageBox(timestamp, 1, gapMsg);
+                            }
 
                             if ( from.equals(displayName) ) {
-                                addMessageBox(timestamp, 1, gapMsg);}
+                                addMessageBox(message, 1, false);}
                             else {
                                 //String displayStr = displayName + ":\n";
-                                addMessageBox(timestamp, 2, gapMsg);
+                                addMessageBox(message, 2, false);
                             }
                             // Keep track of the messageID corresponding to the current message
                             messageIDs.put(message, dataSnapshot.getKey());
