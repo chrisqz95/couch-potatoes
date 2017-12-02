@@ -63,8 +63,6 @@ public class MessageActivity extends AppCompatActivity {
         // Get the current user's display name
         displayName = helper.getAuthUserDisplayName();
 
-
-
         // Get the current user's id
         userID = helper.getAuth().getUid();
 
@@ -102,13 +100,9 @@ public class MessageActivity extends AppCompatActivity {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Iterator<DataSnapshot> messages = dataSnapshot.getChildren().iterator();
 
-                // Upon receiving new data, do not display previous messages more than once
-
                 // Fetch and display the messages
                 while (messages.hasNext()) {
                     String messageID = messages.next().getKey();
-
-                    //chatConversation.setText( "" );
 
                     // Fetch all information corresponding to the current message
                     helper.getDb().getReference(helper.getMessagePath() + messageID).addValueEventListener(new ValueEventListener() {
@@ -120,7 +114,7 @@ public class MessageActivity extends AppCompatActivity {
                             String timestamp = (String) dataSnapshot.child("timestamp").getValue();
                             boolean gapMsg = false;
 
-                            //Compare the last msg timestamp with the cur one
+                            //Compare the last msg timestamp with the cur one, add timestamp if theres a gap
                             if (messageTime.size() >= 1) {
                                 gapMsg = isGapBetweenMsg(messageTime.get(messageTime.size() - 1), timestamp);
                             }
@@ -135,6 +129,7 @@ public class MessageActivity extends AppCompatActivity {
                                 //String displayStr = displayName + ":\n";
                                 addMessageBox(message, 2, false);
                             }
+
                             // Keep track of the messageID corresponding to the current message
                             messageIDs.put(message, dataSnapshot.getKey());
 
@@ -211,8 +206,7 @@ public class MessageActivity extends AppCompatActivity {
 
                 textView.setText(timeStr);
 
-            }
-            else if (type == 1) {
+            } else if (type == 1) {
                 textView.setText(message);
                 textView.setTextSize(20);
                 lp2.gravity = Gravity.RIGHT;
