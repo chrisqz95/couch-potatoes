@@ -96,51 +96,6 @@ public class MessageActivity extends AppCompatActivity {
             }
         });
 
-        /*reference1.addChildEventListener(new ChildEventListener() {
-            @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                String from = (String) dataSnapshot.child( "name" ).getValue();
-                String chatID = (String) dataSnapshot.child( "chat_id" ).getValue();
-                String message = (String) dataSnapshot.child( "text" ).getValue();
-                String timestamp = (String) dataSnapshot.child( "timestamp" ).getValue();
-
-                if (true) {
-                    addMessageBox("You:-\n" + message, 1);
-                } else {
-                    //addMessageBox(userDetails.chatWith + ":-\n" + message, 2);
-                }
-                // Keep track of the messageID corresponding to the current message
-                messageIDs.put( message, dataSnapshot.getKey() );
-
-                // Keep track of the sender of the current message
-                messageSenders.put( dataSnapshot.getKey(), from );
-
-                // Keep track of the text content of the current message
-                messageText.put( dataSnapshot.getKey(), message );
-            }
-
-            @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-
-            }
-
-            @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {
-
-            }
-
-            @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
-    }*/
-
         // Add an event handler to fetch and display all messages in the current chat
         helper.getDb().getReference(helper.getChatMessagePath() + chatRoom).limitToLast(MESSAGE_FETCH_LIMIT).addValueEventListener(new ValueEventListener() {
             @Override
@@ -201,7 +156,7 @@ public class MessageActivity extends AppCompatActivity {
 
         public void addMessageBox (String message,int type){
             TextView textView = new TextView(MessageActivity.this);
-            textView.setText(message);
+            textView.setText(message);;
 
             textView.setTextSize(20);
             //textView.setFont
@@ -211,11 +166,11 @@ public class MessageActivity extends AppCompatActivity {
 
             if (type == 1) {
                 lp2.gravity = Gravity.RIGHT;
-                textView.setBackgroundResource(R.drawable.chat_bubble_in);
+                textView.setBackgroundResource(R.drawable.bubble_in);
                 textView.setTextColor(Color.WHITE);
             } else {
                 lp2.gravity = Gravity.LEFT;
-                textView.setBackgroundResource(R.drawable.chat_bubble_out);
+                textView.setBackgroundResource(R.drawable.bubble_out);
                 textView.setTextColor(Color.BLACK);
             }
             textView.setLayoutParams(lp2);
