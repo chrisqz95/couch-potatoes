@@ -276,7 +276,7 @@ public class MessageActivity extends AppCompatActivity {
             }
 
             Calendar c = Calendar.getInstance();
-            Date today = new Date();
+            //Date today = new Date();
             SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             String curDate = df.format(c.getTime()).split(" ")[0];
             //String curTime = df.format(c.getTime()).split(" ")[1];
@@ -284,13 +284,14 @@ public class MessageActivity extends AppCompatActivity {
             int intCurDate = Integer.parseInt(curDate.replaceAll("-", ""));
             //int intCurTime = Integer.parseInt(curTime.replaceAll(":", ""));
 
-            Log.d("DATE", today + "curr date");
-            Log.d("DATE", intCurMsgDate + "curr msg date");
 
+            Log.d("DATE", intCurMsgTime + ", cur msg time");
+            Log.d("DATE", intLastMsgTime + ", last msg time");
 
             if (intCurDate - intCurMsgDate < 1) {
-                if ((intCurMsgTime - intLastMsgTime) >= 30000) {
+                if (Math.abs(intCurMsgTime - intLastMsgTime) >= 30000) {
                     timeStr = hourStr;
+
                 }
                 //If the message has been longer than 1 day
             } else if ((intCurMsgDate - intLastMsgDate) >=1) {
