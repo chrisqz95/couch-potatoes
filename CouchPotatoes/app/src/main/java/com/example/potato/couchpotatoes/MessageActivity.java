@@ -424,6 +424,7 @@ public class MessageActivity extends AppCompatActivity {
             textView.setLayoutParams(lp2);
             layout.addView(textView);
             scrollView.fullScroll(View.FOCUS_DOWN);
+
         }
 }
 
