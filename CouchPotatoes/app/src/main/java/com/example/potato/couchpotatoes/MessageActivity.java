@@ -23,6 +23,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.Calendar;
 import java.util.Date;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -249,87 +250,95 @@ public class MessageActivity extends AppCompatActivity {
             String hourStr = "";
 
 
-                String lastMsgDate = lastMsg.split("  ")[0];
-                String curMsgDate = curMsg.split("  ")[0];
-                String lastMsgTime = lastMsg.split("  ")[1];
-                String curMsgTime = curMsg.split("  ")[1];
+            String lastMsgDate = lastMsg.split("  ")[0];
+            String curMsgDate = curMsg.split("  ")[0];
+            String lastMsgTime = lastMsg.split("  ")[1];
+            String curMsgTime = curMsg.split("  ")[1];
 
-                int intLastMsgDate = Integer.parseInt(lastMsgDate.replaceAll("-", ""));
-                int intCurMsgDate = Integer.parseInt(curMsgDate.replaceAll("-", ""));
-                int intLastMsgTime = Integer.parseInt(lastMsgTime.replaceAll(":", ""));
-                int intCurMsgTime = Integer.parseInt(curMsgTime.replaceAll(":", ""));
+            int intLastMsgDate = Integer.parseInt(lastMsgDate.replaceAll("-", ""));
+            int intCurMsgDate = Integer.parseInt(curMsgDate.replaceAll("-", ""));
+            int intLastMsgTime = Integer.parseInt(lastMsgTime.replaceAll(":", ""));
+            int intCurMsgTime = Integer.parseInt(curMsgTime.replaceAll(":", ""));
 
-                String[] date = curMsgDate.split("-");
-                String[] time = curMsgTime.split(":");
+            String[] date = curMsgDate.split("-");
+            String[] time = curMsgTime.split(":");
 
-                //Determine if its AM or PM
-                int hour = Integer.parseInt(time[0]);
-                if (hour >= 12) {
-                    hourStr = (hour - 12) + ":" + time[1] + " PM";
-                } else {
-                    hourStr = time[0] + ":" + time[1] + " AM";
-                }
+            //Determine if its AM or PM
+            int hour = Integer.parseInt(time[0]);
+            if (hour >= 12) {
+                hourStr = (hour - 12) + ":" + time[1] + " PM";
+            } else {
+                hourStr = time[0] + ":" + time[1] + " AM";
+            }
 
-                //If the message has been longer than 6 day
-                if ((intCurMsgDate - intLastMsgDate) >= 6) {
-                    String monthString;
-                    //Date[1] is the month
-                    switch (date[1]) {
-                        case "1":
-                            monthString = "Jan";
-                            break;
-                        case "2":
-                            monthString = "Feb";
-                            break;
-                        case "3":
-                            monthString = "Mar";
-                            break;
-                        case "4":
-                            monthString = "Apr";
-                            break;
-                        case "5":
-                            monthString = "May";
-                            break;
-                        case "6":
-                            monthString = "Jun";
-                            break;
-                        case "7":
-                            monthString = "Jul";
-                            break;
-                        case "8":
-                            monthString = "Aug";
-                            break;
-                        case "9":
-                            monthString = "Sep";
-                            break;
-                        case "10":
-                            monthString = "Oct";
-                            break;
-                        case "11":
-                            monthString = "Nov";
-                            break;
-                        case "12":
-                            monthString = "Dec";
-                            break;
-                        default:
-                            monthString = "Invalid month";
-                            break;
-                    }
+            Calendar c = Calendar.getInstance();
+            SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            String curDate = df.format(c.getTime()).split(" ")[0];
+            //String curTime = df.format(c.getTime()).split(" ")[1];
 
-                    //Remove the 0 in front of day 01, 02, etc.
-                    int day = Integer.parseInt(date[2]);
-                    timeStr = monthString + " " + day + ", " + hourStr;
+            int intCurDate = Integer.parseInt(curDate.replaceAll("-", ""));
+            //int intCurTime = Integer.parseInt(curTime.replaceAll(":", ""));
 
-
-                }
-                //If the message has been longer than 3 hours
-                else if ((intCurMsgTime - intLastMsgTime) >= 30000) {
+            if (intCurDate - intCurMsgDate < 1) {
+                if ((intCurMsgTime - intLastMsgTime) >= 30000) {
                     timeStr = hourStr;
                 }
+                //If the message has been longer than 1 day
+            } else if ((intCurMsgDate - intLastMsgDate) >=1) {
+                String monthString;
+                //Date[1] is the month
+                switch (date[1]) {
+                    case "1":
+                        monthString = "Jan";
+                        break;
+                    case "2":
+                        monthString = "Feb";
+                        break;
+                    case "3":
+                        monthString = "Mar";
+                        break;
+                    case "4":
+                        monthString = "Apr";
+                        break;
+                    case "5":
+                        monthString = "May";
+                        break;
+                    case "6":
+                        monthString = "Jun";
+                        break;
+                    case "7":
+                        monthString = "Jul";
+                        break;
+                    case "8":
+                        monthString = "Aug";
+                        break;
+                    case "9":
+                        monthString = "Sep";
+                        break;
+                    case "10":
+                        monthString = "Oct";
+                        break;
+                    case "11":
+                        monthString = "Nov";
+                        break;
+                    case "12":
+                        monthString = "Dec";
+                        break;
+                    default:
+                        monthString = "Invalid month";
+                        break;
+                }
+                //Remove the 0 in front of day 01, 02, etc.
+                int day = Integer.parseInt(date[2]);
+                timeStr = monthString + " " + day + ", " + hourStr;
 
-
+            }
+            //If the message has been longer than 3 hours
+            else if ((intCurMsgTime - intLastMsgTime) >= 30000) {
+                timeStr = hourStr;
+            }
             return timeStr;
-	}
+	    }
 
     // Displays overflow button on the toolbar
     // and handles opening up the menu
