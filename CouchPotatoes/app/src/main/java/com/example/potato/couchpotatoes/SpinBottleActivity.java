@@ -15,18 +15,24 @@ public class SpinBottleActivity extends AppCompatActivity {
     Button b_go;
     Random r;
     int angle;
+    Boolean nice = true;
+    ImageView iv_spinner;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_spin_bottle);
 
         r = new Random();
 
         iv_bottle = findViewById(R.id.iv_bottle);
-
+        iv_spinner = findViewById(R.id.iv_spinner);
         b_go = findViewById(R.id.b_go);
 
+        int nice =getIntent().getIntExtra("key", 0);
+        if(nice == 0){
+            iv_spinner.setImageResource(R.mipmap.spinner_naughty);
+        }
         b_go.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

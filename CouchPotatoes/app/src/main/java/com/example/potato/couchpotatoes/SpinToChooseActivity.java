@@ -17,22 +17,22 @@ public class SpinToChooseActivity  extends AppCompatActivity {
     ImageView ic_spinner;
     ImageView ic_potato;
     Random r;
-    boolean food = false;
     int degree = 0, degree_old = 0;
-
+    int food;
     // because there are 37 selectors 9.72 degrees each
     private static final float FACTOR = 30f;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_spin_to_choose);
 
         button = findViewById(R.id.button);
         ic_spinner = findViewById(R.id.ic_spinner);
-//        if(!food){
-//            ic_spinner.setImageResource(R.mipmap.spinner_activity);
-//        }
+        food = getIntent().getIntExtra("key", 0);
+        if(food == 0){
+            ic_spinner.setImageResource(R.mipmap.spinner_activity);
+        }
         ic_potato = findViewById(R.id.ic_potato);
         r = new Random();
 
@@ -67,8 +67,8 @@ public class SpinToChooseActivity  extends AppCompatActivity {
         });
     }
 
-    private void currentNumber(int degrees, boolean food){
-        if(food) {
+    private void currentNumber(int degrees, int food){
+        if(food == 1) {
             switch ((degrees / (360 / 6)) % 6) {
                 case 0:
                     ic_potato.setImageResource(R.drawable.potato_pizza);

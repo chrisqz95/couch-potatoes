@@ -188,7 +188,8 @@ public class ChatRoomActivity extends AppCompatActivity
         } else if (id == R.id.nav_settings) {
             // TODO: go to SettingsActivity
 
-        } else if (id == R.id.nav_info) {
+        }
+        else if (id == R.id.nav_info) {
             // TODO: go to Page with device information
 
         } else if (id == R.id.nav_logout) {
