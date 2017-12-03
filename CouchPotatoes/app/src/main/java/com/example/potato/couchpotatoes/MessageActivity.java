@@ -135,10 +135,10 @@ public class MessageActivity extends AppCompatActivity {
                             }
 
                             if ( from.equals(displayName) ) {
-                                addMessageBox(message, 1, false);}
+                                addMessageBox(timestamp, 1, false);}
                             else {
                                 //String displayStr = displayName + ":\n";
-                                addMessageBox(message, 2, false);
+                                addMessageBox(timestamp, 2, false);
                             }
 
                             // Keep track of the messageID corresponding to the current message
@@ -276,12 +276,17 @@ public class MessageActivity extends AppCompatActivity {
             }
 
             Calendar c = Calendar.getInstance();
+            Date today = new Date();
             SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             String curDate = df.format(c.getTime()).split(" ")[0];
             //String curTime = df.format(c.getTime()).split(" ")[1];
 
             int intCurDate = Integer.parseInt(curDate.replaceAll("-", ""));
             //int intCurTime = Integer.parseInt(curTime.replaceAll(":", ""));
+
+            Log.d("DATE", today + "curr date");
+            Log.d("DATE", intCurMsgDate + "curr msg date");
+
 
             if (intCurDate - intCurMsgDate < 1) {
                 if ((intCurMsgTime - intLastMsgTime) >= 30000) {
