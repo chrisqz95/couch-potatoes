@@ -112,15 +112,15 @@ public class MessageActivity extends AppCompatActivity {
                             String chatID = (String) dataSnapshot.child("chat_id").getValue();
                             String message = (String) dataSnapshot.child("text").getValue();
                             String timestamp = (String) dataSnapshot.child("timestamp").getValue();
-                            boolean gapMsg = false;
+                            String timeString = "";
 
                             //Compare the last msg timestamp with the cur one, add timestamp if theres a gap
                             if (messageTime.size() >= 1) {
-                                gapMsg = isGapBetweenMsg(messageTime.get(messageTime.size() - 1), timestamp);
+                                timeString = getTimeString(messageTime.get(messageTime.size() - 1), timestamp);
                             }
 
-                            if (gapMsg) {
-                                addMessageBox(timestamp, 1, gapMsg);
+                            if (!(timeString.equals(""))) {
+                                addMessageBox(timeString, 1, true);
                             }
 
                             if ( from.equals(displayName) ) {
@@ -161,48 +161,75 @@ public class MessageActivity extends AppCompatActivity {
     }
 
         //Determine if they are playing hard to get by checking the timestamp difference
-        public boolean isGapBetweenMsg(String lastMsg, String curMsg) {
-            int lastMsgDate = Integer.parseInt(
-                    (lastMsg.split("  ")[0].replaceAll("-", "")));
+        public String getTimeString(String lastMsg, String curMsg) {
+            String lastMsgDate = lastMsg.split("  ")[0];
+            String curMsgDate = curMsg.split("  ")[0];
+            String lastMsgTime = lastMsg.split("  ")[1];
+            String curMsgTime = curMsg.split("  ")[1];
 
-            int curMsgDate = Integer.parseInt(
-                    (curMsg.split("  ")[0].replaceAll("-", "")));
+            int intLastMsgDate = Integer.parseInt(lastMsgDate.replaceAll("-", ""));
+            int intCurMsgDate = Integer.parseInt(curMsgDate.replaceAll("-", ""));
+            int intLastMsgTime = Integer.parseInt(lastMsgTime.replaceAll(":", ""));
+            int intCurMsgTime= Integer.parseInt(curMsgTime.replaceAll(":", ""));
 
-            int lastMsgTime = Integer.parseInt(
-                    (lastMsg.split("  ")[1].replaceAll(":", "")));
+            String[] date = curMsgDate.split("-");
+            String[] time = curMsgTime.split(":");
 
-            int curMsgTime = Integer.parseInt(
-                    (curMsg.split("  ")[1].replaceAll(":", "")));
+            String timeStr = "";
+            String hourStr = "";
+            //Determine if its AM or PM
+            int hour = Integer.parseInt(time[0]);
+            if (hour >= 12) {
+                hourStr = (hour-12) + ":" + time[1] + " PM";
+            } else {
+                hourStr = time[0] + ":" + time[1] + " AM";
+            }
 
-            //Longer than a day
-            if ((curMsgDate - lastMsgDate) >= 1) return true;
+            //If the message has been longer than a day
+            if ((intCurMsgDate - intLastMsgDate) >= 1) {
+                String monthString;
+                //Date[1] is the month
+                switch (date[1]) {
+                    case "1": monthString = "Jan"; break;
+                    case "2": monthString = "Feb"; break;
+                    case "3": monthString = "Mar"; break;
+                    case "4": monthString = "Apr"; break;
+                    case "5": monthString = "May"; break;
+                    case "6": monthString = "Jun"; break;
+                    case "7": monthString = "Jul"; break;
+                    case "8": monthString = "Aug"; break;
+                    case "9": monthString = "Sep"; break;
+                    case "10": monthString = "Oct"; break;
+                    case "11": monthString = "Nov"; break;
+                    case "12": monthString = "Dec"; break;
+                    default: monthString = "Invalid month"; break;
+                }
 
-            //Longer than 3 hours
-            return ((curMsgTime - lastMsgTime) >= 30000);
+                //Remove the 0 in front of day 01, 02, etc.
+                int day = Integer.parseInt(date[2]);
+                timeStr = monthString + " " + day + ", " + hourStr;
+
+                //If the message has been longer than 3 hours
+            } else if ((intCurMsgTime - intLastMsgTime) >= 30000) {
+                timeStr = hourStr;
+            }
+
+            return timeStr;
+
         }
 
 
-        public void addMessageBox (String message,int type, boolean gapMsg){
+        public void addMessageBox (String message, int type, boolean isTimeString){
             TextView textView = new TextView(MessageActivity.this);
 
             LinearLayout.LayoutParams lp2 = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
             lp2.weight = 1.0f;
 
-            if (gapMsg) {
+            if (isTimeString) {
                 lp2.gravity = Gravity.CENTER_HORIZONTAL;
                 textView.setTextColor(Color.GRAY);
                 textView.setTextSize(14);
-                String[] time = message.split("  ")[1].split(":");
-                //Determine AM or PM
-                int hour = Integer.parseInt(time[0]);
-                String timeStr;
-                if (hour >= 12) {
-                    timeStr = (hour-12) + " : " + time[1] + " PM";
-                } else {
-                    timeStr = time[0] + " : " + time[1] + " AM";
-                }
-
-                textView.setText(timeStr);
+                textView.setText(message);
 
             } else if (type == 1) {
                 textView.setText(message);
