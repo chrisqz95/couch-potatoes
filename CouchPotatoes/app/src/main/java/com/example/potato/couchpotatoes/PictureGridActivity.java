@@ -147,6 +147,7 @@ public class PictureGridActivity extends AppCompatActivity {
                 } else {
                     fab.setVisibility(View.GONE);
                 }
+                ref.removeEventListener(this);
             }
 
             @Override
