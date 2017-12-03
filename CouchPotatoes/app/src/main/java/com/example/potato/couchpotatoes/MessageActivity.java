@@ -7,8 +7,11 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -25,7 +28,9 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 
-
+import java.util.Calendar;
+import java.util.Date;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -42,9 +47,9 @@ public class MessageActivity extends AppCompatActivity {
     String userID, chatRoom, displayName, messageID, timestamp, message, companion;
     TextView userName;
 
-    Map<String, String> messageIDs = new HashMap<>();
-    Map<String, String> messageSenders = new HashMap<>();
-    Map<String, String> messageText = new HashMap<>();
+  //Map<String, String> messageIDs = new HashMap<>();
+  //Map<String, String> messageSenders = new HashMap<>();
+  //Map<String, String> messageText = new HashMap<>();
     ArrayList<String> messageTime = new ArrayList<>();
 
     Button alertdfragbutton;
@@ -58,6 +63,14 @@ public class MessageActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
 
+
+
+
+
+        // places toolbar into the screen
+        Toolbar toolbar = (Toolbar) findViewById(R.id.chat_toolbar);
+        setSupportActionBar(toolbar);
+
         layout = (LinearLayout) findViewById(R.id.layout1);
         layout_2 = (RelativeLayout) findViewById(R.id.layout2);
         sendButton = (ImageView) findViewById(R.id.sendButton);
@@ -70,8 +83,6 @@ public class MessageActivity extends AppCompatActivity {
 
         // Get the current user's display name
         displayName = helper.getAuthUserDisplayName();
-
-
 
         // Get the current user's id
         userID = helper.getAuth().getUid();
@@ -106,35 +117,41 @@ public class MessageActivity extends AppCompatActivity {
 
         // Add an event handler to fetch and display all messages in the current chat
         helper.getDb().getReference(helper.getChatMessagePath() + chatRoom).limitToLast(MESSAGE_FETCH_LIMIT).addValueEventListener(new ValueEventListener() {
+
+
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+
                 Iterator<DataSnapshot> messages = dataSnapshot.getChildren().iterator();
 
-                // Upon receiving new data, do not display previous messages more than once
+
 
                 // Fetch and display the messages
                 while (messages.hasNext()) {
                     String messageID = messages.next().getKey();
 
-                    //chatConversation.setText( "" );
-
                     // Fetch all information corresponding to the current message
                     helper.getDb().getReference(helper.getMessagePath() + messageID).addValueEventListener(new ValueEventListener() {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
+
+                            if (dataSnapshot.exists()) {
+
                             String from = (String) dataSnapshot.child("name").getValue();
                             String chatID = (String) dataSnapshot.child("chat_id").getValue();
                             String message = (String) dataSnapshot.child("text").getValue();
                             String timestamp = (String) dataSnapshot.child("timestamp").getValue();
-                            boolean gapMsg = false;
+                            String timeString = "";
 
-                            //Compare the last msg timestamp with the cur one
+                            //Compare the last msg timestamp with the cur one, add timestamp if theres a gap
                             if (messageTime.size() >= 1) {
-                                gapMsg = isGapBetweenMsg(messageTime.get(messageTime.size() - 1), timestamp);
+                                timeString = getTimeString(messageTime.get(messageTime.size() - 1), timestamp);
+                            } else {
+                                timeString = getTimeString(timestamp);
                             }
 
-                            if (gapMsg) {
-                                addMessageBox(timestamp, 1, gapMsg);
+                            if (!(timeString.equals(""))) {
+                                addMessageBox(timeString, 1, true);
                             }
 
                             if ( from.equals(displayName) ) {
@@ -143,20 +160,21 @@ public class MessageActivity extends AppCompatActivity {
                                 //String displayStr = displayName + ":\n";
                                 addMessageBox(message, 2, false);
                             }
+
                             // Keep track of the messageID corresponding to the current message
-                            messageIDs.put(message, dataSnapshot.getKey());
+                            //messageIDs.put(message, dataSnapshot.getKey());
 
                             // Keep track of the sender of the current message
-                            messageSenders.put(dataSnapshot.getKey(), from);
+                            //messageSenders.put(dataSnapshot.getKey(), from);
 
                             // Keep track of the text content of the current message
-                            messageText.put(dataSnapshot.getKey(), message);
+                            //messageText.put(dataSnapshot.getKey(), message);
 
                             //Keep track of the time of the current message
                             messageTime.add(timestamp);
 
                             Log.d("TEST", message + " " + dataSnapshot.getKey());
-                        }
+                        } }
 
                         @Override
                         public void onCancelled(DatabaseError databaseError) {
@@ -211,55 +229,232 @@ public class MessageActivity extends AppCompatActivity {
 //        builder.create().show();
 
     }
+        /*
+         * Description: Edge case: This executes for the very first time a message is sent. Date
+         * should always be displayed for first message
+         */
+        public String getTimeString(String curMsg) {
+            String timeStr = "";
+            String hourStr = "";
+            String curMsgDate = curMsg.split("  ")[0];
+            String curMsgTime = curMsg.split("  ")[1];
 
-        //Determine if they are playing hard to get by checking the timestamp difference
-        public boolean isGapBetweenMsg(String lastMsg, String curMsg) {
-            int lastMsgDate = Integer.parseInt(
-                    (lastMsg.split("  ")[0].replaceAll("-", "")));
+            int intCurMsgDate = Integer.parseInt(curMsgDate.replaceAll("-", ""));
+            int intCurMsgTime = Integer.parseInt(curMsgTime.replaceAll(":", ""));
 
-            int curMsgDate = Integer.parseInt(
-                    (curMsg.split("  ")[0].replaceAll("-", "")));
+            String[] date = curMsgDate.split("-");
+            String[] time = curMsgTime.split(":");
 
-            int lastMsgTime = Integer.parseInt(
-                    (lastMsg.split("  ")[1].replaceAll(":", "")));
+            //Determine if its AM or PM
+            int hour = Integer.parseInt(time[0]);
+            if (hour >= 12) {
+                hourStr = (hour - 12) + ":" + time[1] + " PM";
+            } else {
+                hourStr = time[0] + ":" + time[1] + " AM";
+            }
 
-            int curMsgTime = Integer.parseInt(
-                    (curMsg.split("  ")[1].replaceAll(":", "")));
+            //If the message has been longer than 6 day
 
-            //Longer than a day
-            if ((curMsgDate - lastMsgDate) >= 1) return true;
+            String monthString;
+                //Date[1] is the month
+            switch (date[1]) {
+                    case "1":
+                        monthString = "Jan";
+                        break;
+                    case "2":
+                        monthString = "Feb";
+                        break;
+                    case "3":
+                        monthString = "Mar";
+                        break;
+                    case "4":
+                        monthString = "Apr";
+                        break;
+                    case "5":
+                        monthString = "May";
+                        break;
+                    case "6":
+                        monthString = "Jun";
+                        break;
+                    case "7":
+                        monthString = "Jul";
+                        break;
+                    case "8":
+                        monthString = "Aug";
+                        break;
+                    case "9":
+                        monthString = "Sep";
+                        break;
+                    case "10":
+                        monthString = "Oct";
+                        break;
+                    case "11":
+                        monthString = "Nov";
+                        break;
+                    case "12":
+                        monthString = "Dec";
+                        break;
+                    default:
+                        monthString = "Invalid month";
+                        break;
+            }
 
-            //Longer than 3 hours
-            return ((curMsgTime - lastMsgTime) >= 30000);
+                //Remove the 0 in front of day 01, 02, etc.
+            int day = Integer.parseInt(date[2]);
+            timeStr = monthString + " " + day + ", " + hourStr;
 
-
+            return timeStr;
         }
 
+        //Determine if they are playing hard to get by checking the timestamp difference
+        public String getTimeString(String lastMsg, String curMsg) {
 
-        public void addMessageBox (String message,int type, boolean gapMsg){
+            String timeStr = "";
+            String hourStr = "";
+
+
+            String lastMsgDate = lastMsg.split("  ")[0];
+
+            Log.d("MESSAGE", curMsg + ", current msg");
+
+            String curMsgDate = curMsg.split("  ")[0];
+            String lastMsgTime = lastMsg.split("  ")[1];
+            String curMsgTime = curMsg.split("  ")[1];
+
+            int intLastMsgDate = Integer.parseInt(lastMsgDate.replaceAll("-", ""));
+            int intCurMsgDate = Integer.parseInt(curMsgDate.replaceAll("-", ""));
+            int intLastMsgTime = Integer.parseInt(lastMsgTime.replaceAll(":", ""));
+            int intCurMsgTime = Integer.parseInt(curMsgTime.replaceAll(":", ""));
+
+            String[] date = curMsgDate.split("-");
+            String[] time = curMsgTime.split(":");
+
+            //Determine if its AM or PM
+            int hour = Integer.parseInt(time[0]);
+            if (hour >= 12) {
+                hourStr = (hour - 12) + ":" + time[1] + " PM";
+            } else {
+                hourStr = time[0] + ":" + time[1] + " AM";
+            }
+
+            Calendar c = Calendar.getInstance();
+            //Date today = new Date();
+            SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            String curDate = df.format(c.getTime()).split(" ")[0];
+            //String curTime = df.format(c.getTime()).split(" ")[1];
+
+            int intCurDate = Integer.parseInt(curDate.replaceAll("-", ""));
+            //int intCurTime = Integer.parseInt(curTime.replaceAll(":", ""));
+
+            if (intCurDate - intCurMsgDate < 1) {
+                if (Math.abs(intCurMsgTime - intLastMsgTime) >= 30000) {
+                    timeStr = hourStr;
+
+                }
+                //If the message has been longer than 1 day
+            } else if ((intCurMsgDate - intLastMsgDate) >=1) {
+                String monthString;
+                //Date[1] is the month
+                switch (date[1]) {
+                    case "1":
+                        monthString = "Jan";
+                        break;
+                    case "2":
+                        monthString = "Feb";
+                        break;
+                    case "3":
+                        monthString = "Mar";
+                        break;
+                    case "4":
+                        monthString = "Apr";
+                        break;
+                    case "5":
+                        monthString = "May";
+                        break;
+                    case "6":
+                        monthString = "Jun";
+                        break;
+                    case "7":
+                        monthString = "Jul";
+                        break;
+                    case "8":
+                        monthString = "Aug";
+                        break;
+                    case "9":
+                        monthString = "Sep";
+                        break;
+                    case "10":
+                        monthString = "Oct";
+                        break;
+                    case "11":
+                        monthString = "Nov";
+                        break;
+                    case "12":
+                        monthString = "Dec";
+                        break;
+                    default:
+                        monthString = "Invalid month";
+                        break;
+                }
+                //Remove the 0 in front of day 01, 02, etc.
+                int day = Integer.parseInt(date[2]);
+                timeStr = monthString + " " + day + ", " + hourStr;
+
+            }
+            //If the message has been longer than 3 hours
+            else if ((intCurMsgTime - intLastMsgTime) >= 30000) {
+                timeStr = hourStr;
+            }
+            return timeStr;
+	    }
+
+    // Displays overflow button on the toolbar
+    // and handles opening up the menu
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.chat_main, menu);
+        return true;
+    }
+
+    // Handles action in clicking on an item in the options menu
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        if (id == R.id.menu_potato_questions) {
+            // TODO: do something
+            return true;
+        } else if (id == R.id.menu_spin_wheel) {
+            // TODO: do something
+            return true;
+        } else if (id == R.id.menu_start_date) {
+            // TODO: do something
+            return true;
+        } else if (id == R.id.menu_end_date) {
+            // TODO: do something
+            return true;
+        }
+
+		return super.onOptionsItemSelected(item);
+    }
+
+        public void addMessageBox (String message, int type, boolean isTimeString){
             TextView textView = new TextView(MessageActivity.this);
 
             LinearLayout.LayoutParams lp2 = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
             lp2.weight = 1.0f;
 
-            if (gapMsg) {
+            if (isTimeString) {
                 lp2.gravity = Gravity.CENTER_HORIZONTAL;
                 textView.setTextColor(Color.GRAY);
-                textView.setTextSize(18);
-                String[] time = message.split("  ")[1].split(":");
-                //Determine AM or PM
-                int hour = Integer.parseInt(time[0]);
-                String timeStr;
-                if (hour >= 12) {
-                    timeStr = (hour-12) + " : " + time[1] + " PM";
-                } else {
-                    timeStr = time[0] + " : " + time[1] + " AM";
-                }
+                textView.setTextSize(14);
+                textView.setText(message);
 
-                textView.setText(timeStr);
-
-            }
-            else if (type == 1) {
+            } else if (type == 1) {
                 textView.setText(message);
                 textView.setTextSize(20);
                 lp2.gravity = Gravity.RIGHT;
@@ -276,6 +471,7 @@ public class MessageActivity extends AppCompatActivity {
             textView.setLayoutParams(lp2);
             layout.addView(textView);
             scrollView.fullScroll(View.FOCUS_DOWN);
+
         }
 }
 
