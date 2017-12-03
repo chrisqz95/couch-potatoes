@@ -20,7 +20,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 
-
+import java.util.Date;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -185,8 +186,8 @@ public class MessageActivity extends AppCompatActivity {
                 hourStr = time[0] + ":" + time[1] + " AM";
             }
 
-            //If the message has been longer than a day
-            if ((intCurMsgDate - intLastMsgDate) >= 1) {
+            //If the message has been longer than 6 day
+            if ((intCurMsgDate - intLastMsgDate) >= 6) {
                 String monthString;
                 //Date[1] is the month
                 switch (date[1]) {
@@ -209,8 +210,15 @@ public class MessageActivity extends AppCompatActivity {
                 int day = Integer.parseInt(date[2]);
                 timeStr = monthString + " " + day + ", " + hourStr;
 
-                //If the message has been longer than 3 hours
-            } else if ((intCurMsgTime - intLastMsgTime) >= 30000) {
+
+            } else if ((intCurMsgDate - intLastMsgDate) >= 1){
+                Date now = new Date();
+                SimpleDateFormat simpleDateformat = new SimpleDateFormat("E"); // the day of the week abbreviated
+                String dayOfWeek = simpleDateformat.format(now);
+                timeStr = dayOfWeek + " " + hourStr;
+            }
+            //If the message has been longer than 3 hours
+            else if ((intCurMsgTime - intLastMsgTime) >= 30000) {
                 timeStr = hourStr;
             }
 
