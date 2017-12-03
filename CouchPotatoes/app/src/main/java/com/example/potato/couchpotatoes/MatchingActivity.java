@@ -17,7 +17,9 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.GestureDetector;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 
 import com.bumptech.glide.Glide;
@@ -51,6 +53,7 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import de.hdodenhof.circleimageview.CircleImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 
 public class MatchingActivity extends AppCompatActivity
@@ -75,6 +78,8 @@ public class MatchingActivity extends AppCompatActivity
 
     private MatchFragmentPagerAdapter adapter;
     private MatchViewPager viewPager;
+    private MatchPageFragment datingPage;
+    private MatchPageFragment friendPage;
 
     private ProgressBar spinner;
 
@@ -119,8 +124,10 @@ public class MatchingActivity extends AppCompatActivity
         adapter = new MatchFragmentPagerAdapter(getSupportFragmentManager());
 
         // add fragments to the view pager
-        adapter.addFragment(MatchPageFragment.newInstance(matchedDateList), tabTitles[0]);
-        adapter.addFragment(MatchPageFragment.newInstance(matchedFriendList), tabTitles[1]);
+        datingPage = MatchPageFragment.newInstance(matchedDateList);
+        friendPage = MatchPageFragment.newInstance(matchedFriendList);
+        adapter.addFragment(datingPage, tabTitles[0]);
+        adapter.addFragment(friendPage, tabTitles[1]);
 
         // line of code below causes app to crash; commenting out for app functionality -Mervin
         viewPager.setAdapter(adapter);
@@ -176,6 +183,29 @@ public class MatchingActivity extends AppCompatActivity
                             @Override
                             public void onCancelled(DatabaseError databaseError) {
                                 Log.d("TEST", databaseError.getMessage());
+                            }
+                        });
+
+                        imgView.setOnTouchListener(new OnSwipeTouchListener(MatchingActivity.this) {
+                            @Override
+                            public void onSwipeLeft() {
+                                String currUserID = helper.getAuth().getUid();
+                                String potentMatchID = matchedDateList.get(0);
+                                String timestamp = helper.getNewTimestamp();
+
+                                Toast.makeText(MatchingActivity.this, "Disliked!", Toast.LENGTH_SHORT).show();
+                                helper.addToDislike(currUserID, potentMatchID, timestamp);
+                            }
+
+                            @Override
+                            public void onSwipeRight() {
+                                String currUserID = helper.getAuth().getUid();
+                                String potentMatchID = matchedDateList.get(0);
+                                String timestamp = helper.getNewTimestamp();
+
+                                Toast.makeText(MatchingActivity.this, "Liked!", Toast.LENGTH_SHORT).show();
+                                helper.addToLike(currUserID, potentMatchID, timestamp);
+                                helper.addToDate( currUserID, potentMatchID, timestamp );
                             }
                         });
 
@@ -275,6 +305,29 @@ public class MatchingActivity extends AppCompatActivity
                             @Override
                             public void onCancelled(DatabaseError databaseError) {
                                 Log.d("TEST", databaseError.getMessage());
+                            }
+                        });
+
+                        imgView.setOnTouchListener(new OnSwipeTouchListener(MatchingActivity.this) {
+                            @Override
+                            public void onSwipeLeft() {
+                                String currUserID = helper.getAuth().getUid();
+                                String potentMatchID = matchedDateList.get(0);
+                                String timestamp = helper.getNewTimestamp();
+
+                                Toast.makeText(MatchingActivity.this, "Disliked!", Toast.LENGTH_SHORT).show();
+                                helper.addToDislike(currUserID, potentMatchID, timestamp);
+                            }
+
+                            @Override
+                            public void onSwipeRight() {
+                                String currUserID = helper.getAuth().getUid();
+                                String potentMatchID = matchedDateList.get(0);
+                                String timestamp = helper.getNewTimestamp();
+
+                                Toast.makeText(MatchingActivity.this, "Liked!", Toast.LENGTH_SHORT).show();
+                                helper.addToLike(currUserID, potentMatchID, timestamp);
+                                helper.addToBefriend( currUserID, potentMatchID, timestamp );
                             }
                         });
 
@@ -390,37 +443,26 @@ public class MatchingActivity extends AppCompatActivity
         sidebarUserName.setText( displayName );
         sidebarUserEmail.setText( displayEmail );
 
-        // Set up how many cards are displayed as a stack
-        mSwipeView = (SwipePlaceHolderView) findViewById(R.id.swipeView);
-        mContext = getApplicationContext();
-        mSwipeView.getBuilder().setDisplayViewCount(3).setSwipeDecor(new SwipeDecor()
-                .setPaddingTop(20).setRelativeScale(0.01f));
-
-        // Adds fake users for testing purposes
-        User user_test1 = new MatchedUser(null, "Bob", null, "Smith",
-                null, null, "Los Angleles", null, null, null,
-                0, 0, false, false);
-        User user_test2 = new MatchedUser(null, "Gary", null, "Gillespie",
-                null, null, "La Jolla", null, null, null,
-                0, 0, false, false);
-        mSwipeView.addView(new UserCard(mContext, user_test1, mSwipeView));
-        mSwipeView.addView(new UserCard(mContext, user_test2, mSwipeView));
-
-        acceptBtn = (FloatingActionButton) findViewById(R.id.fab_match);
-        rejectBtn = (FloatingActionButton) findViewById(R.id.fab_unmatch);
-
-        // Simulate a swipe right or left by pressing the bottom buttons
-        acceptBtn.setOnClickListener(new View.OnClickListener() {
+        imgView.setOnTouchListener(new OnSwipeTouchListener(MatchingActivity.this) {
             @Override
-            public void onClick(View view) {
-                mSwipeView.doSwipe(true);
+            public void onSwipeLeft() {
+                String currUserID = helper.getAuth().getUid();
+                String potentMatchID = matchedDateList.get(0);
+                String timestamp = helper.getNewTimestamp();
+
+                Toast.makeText(MatchingActivity.this, "Disliked!", Toast.LENGTH_SHORT).show();
+                helper.addToDislike(currUserID, potentMatchID, timestamp);
             }
-        });
 
-        rejectBtn.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
-                mSwipeView.doSwipe(false);
+            public void onSwipeRight() {
+                String currUserID = helper.getAuth().getUid();
+                String potentMatchID = matchedDateList.get(0);
+                String timestamp = helper.getNewTimestamp();
+
+                Toast.makeText(MatchingActivity.this, "Liked!", Toast.LENGTH_SHORT).show();
+                helper.addToLike(currUserID, potentMatchID, timestamp);
+                helper.addToDate( currUserID, potentMatchID, timestamp );
             }
         });
     }
@@ -697,112 +739,6 @@ public class MatchingActivity extends AppCompatActivity
             locationTxt.setText(mUser.getCity());
 
             return builder.create();
-        }
-    }
-
-    /**
-     * Grabs a user's info and displays it in a swipe-able card.
-     *
-     * Source: https://blog.mindorks.com/android-tinder-swipe-view-example-3eca9b0d4794
-     */
-    @Layout(R.layout.card_view)
-    public class UserCard {
-        @com.mindorks.placeholderview.annotations.View(R.id.profileImageView)
-        private ImageView profileImageView;
-
-        @com.mindorks.placeholderview.annotations.View(R.id.nameAgeTxt)
-        private TextView nameAgeTxt;
-
-        @com.mindorks.placeholderview.annotations.View(R.id.locationNameTxt)
-        private TextView locationNameTxt;
-
-        private User mUser;
-        private Context mContext;
-        private SwipePlaceHolderView mSwipeView;
-        private String image;
-
-        /**
-         * Create a card which displays a user's info.
-         *
-         * @param context - current activity
-         * @param user - the user to display info for
-         * @param swipeView - space used to detect a swipe
-         */
-        public UserCard(Context context, User user, SwipePlaceHolderView swipeView) {
-            mContext = context;
-            mUser = user;
-            mSwipeView = swipeView;
-        }
-
-        /**
-         * When the card is clicked, open a page displaying more user info.
-         */
-        @Click(R.id.cardText)
-        private void onClick() {
-            UserInfoDialogFragment userFrag = UserInfoDialogFragment.newInstance(mUser);
-            userFrag.show(getFragmentManager(), "info");
-        }
-
-        /**
-         * Populate the image and text fields of the card.
-         */
-        @Resolve
-        private void onResolved() {
-            // Loads the profile image
-            image = "http://www.aft.com/components/com_easyblog/themes/wireframe/images/placeholder-image.png";
-            Glide.with(mContext).load(image).into(profileImageView);
-            nameAgeTxt.setText(mUser.getFirstName());
-            locationNameTxt.setText(mUser.getCity());
-
-            /**
-             * When the profile image is clicked, open the user gallery activity
-             */
-            profileImageView.setOnClickListener(new View.OnClickListener() {
-                public void onClick(View view) {
-                    startActivity(new Intent(MatchingActivity.this, UserGalleryActivity.class));
-                }
-            });
-        }
-
-        /**
-         * When the card is swiped left, log the event
-         */
-        @SwipeOut
-        private void onSwipedOut() {
-            Log.d("EVENT", "onSwipedOut");
-            mSwipeView.addView(this);
-        }
-
-        /**
-         * When the card is released but wasn't swiped, reset to its original position
-         */
-        @SwipeCancelState
-        private void onSwipeCancelState() {
-            Log.d("EVENT", "onSwipeCancelState");
-        }
-
-        /**
-         * When the card is swiped right, log the event
-         */
-        @SwipeIn
-        private void onSwipeIn() {
-            Log.d("EVENT", "onSwipedIn");
-        }
-
-        /**
-         * Detects when the card is moved enough to the right to count as an accept
-         */
-        @SwipeInState
-        private void onSwipeInState() {
-            Log.d("EVENT", "onSwipeInState");
-        }
-
-        /**
-         * Detects when the card is moved enough to the left to count as a reject
-         */
-        @SwipeOutState
-        private void onSwipeOutState() {
-            Log.d("EVENT", "onSwipeOutState");
         }
     }
 }
