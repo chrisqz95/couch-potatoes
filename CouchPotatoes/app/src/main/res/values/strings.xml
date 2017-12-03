@@ -79,7 +79,7 @@
     <string name="sidebar_aboutUs">About Us</string>
     <string name="sidebar_logout">Log Out</string>
 
-    <string name="title_activity_chat_room">ChatRoomActivity</string>
+    <string name="title_activity_chat_room">Messenger</string>
     <string name="title_activity_message">MessageActivity</string>
     <string name="title_reset_password">ResetPassword</string>
 
