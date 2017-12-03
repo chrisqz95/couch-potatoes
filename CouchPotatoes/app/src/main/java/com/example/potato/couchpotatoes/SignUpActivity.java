@@ -1,6 +1,5 @@
 package com.example.potato.couchpotatoes;
 
-import android.app.ActionBar;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.content.DialogInterface;
@@ -24,6 +23,7 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -33,6 +33,8 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
 import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 import com.google.firebase.auth.FirebaseAuthWeakPasswordException;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.Calendar;
 
@@ -140,11 +142,11 @@ public class SignUpActivity extends AppCompatActivity {
                                         Toast.makeText(SignUpActivity.this,
                                                 getString(R.string.sign_up_abort_toast_message),
                                                 Toast.LENGTH_SHORT).show();
+                                        startActivity(new Intent(getApplicationContext(), LoginActivity.class));
+                                        finish();
                                     }
                                 }
                             });
-                            startActivity(new Intent(getApplicationContext(), LoginActivity.class));
-                            finish();
                         }})
                     .setNegativeButton(android.R.string.no, null).show();
         }
@@ -176,8 +178,6 @@ public class SignUpActivity extends AppCompatActivity {
             final EditText mPasswordConfirmText = rootView.findViewById(R.id.fragment_sign_up_password_confirm_text);
 
             Button mEmailPasswordNextButton = rootView.findViewById(R.id.fragment_sign_up_email_password_next_button);
-
-            mEmailText.clearFocus();
 
             mEmailPasswordNextButton.setOnClickListener(new View.OnClickListener() {
                 /**
@@ -271,8 +271,10 @@ public class SignUpActivity extends AppCompatActivity {
             final EditText mLastNameText = rootView.findViewById(R.id.fragment_sign_up_info_form_last_name_text);
             final TextView mDateText = rootView.findViewById(R.id.fragment_sign_up_info_form_date_text);
             final Button mDatePickerButton = rootView.findViewById(R.id.fragment_sign_up_info_form_date_picker_button);
+            final Spinner mGenderSpinner = rootView.findViewById(R.id.fragment_sign_up_info_form_gender_spinner);
             final CheckBox mGenderPreferenceCheckBoxMale = rootView.findViewById(R.id.fragment_sign_up_info_form_gender_preference_male_checkbox);
             final CheckBox mGenderPreferenceCheckBoxFemale = rootView.findViewById(R.id.fragment_sign_up_info_form_gender_preference_female_checkbox);
+            final CheckBox mGenderPreferenceCheckBoxNonbinary = rootView.findViewById(R.id.fragment_sign_up_info_form_gender_preference_nonbinary_checkbox);
             final CheckBox mGenderPreferenceCheckBoxOther = rootView.findViewById(R.id.fragment_sign_up_info_form_gender_preference_other_checkbox);
             Button mSignUpButton = rootView.findViewById(R.id.fragment_sign_up_info_form_sign_up_button);
 
@@ -344,21 +346,50 @@ public class SignUpActivity extends AppCompatActivity {
                     }
 
                     // Check if user selected at least one gender
-                    if (!mGenderPreferenceCheckBoxMale.isChecked() && !mGenderPreferenceCheckBoxFemale.isChecked() && !mGenderPreferenceCheckBoxOther.isChecked()){
+                    if (!mGenderPreferenceCheckBoxMale.isChecked() && !mGenderPreferenceCheckBoxFemale.isChecked() &&
+                            !mGenderPreferenceCheckBoxOther.isChecked() && !mGenderPreferenceCheckBoxNonbinary.isChecked()){
                         errorFlag = true;
                         mGenderPreferenceCheckBoxMale.setTextColor((getResources().getColor(R.color.colorSignUpError)));
                         mGenderPreferenceCheckBoxFemale.setTextColor((getResources().getColor(R.color.colorSignUpError)));
                         mGenderPreferenceCheckBoxOther.setTextColor((getResources().getColor(R.color.colorSignUpError)));
+                        mGenderPreferenceCheckBoxNonbinary.setTextColor((getResources().getColor(R.color.colorSignUpError)));
                     } else {
                         mGenderPreferenceCheckBoxMale.setTextColor(getResources().getColor(R.color.common_google_signin_btn_text_light));
                         mGenderPreferenceCheckBoxFemale.setTextColor(getResources().getColor(R.color.common_google_signin_btn_text_light));
                         mGenderPreferenceCheckBoxOther.setTextColor(getResources().getColor(R.color.common_google_signin_btn_text_light));
+                        mGenderPreferenceCheckBoxNonbinary.setTextColor(getResources().getColor(R.color.common_google_signin_btn_text_light));
                     }
 
                     if (!errorFlag){
                         // Enter information into FireBase
-                        // TODO: Update FireBase
+                        dbHelper.fetchCurrentUser();
+                        DatabaseReference ref = dbHelper.getDb().getReference().child(getString(R.string.sign_up_firebase_user)).child(dbHelper.getUser().getUid());
 
+                        // Account
+                        ref.child(getString(R.string.sign_up_firebase_email)).setValue(tempEmail);
+                        ref.child(getString(R.string.sign_up_firebase_suspended)).setValue(R.string.sign_up_firebase_false);
+                        ref.child(getString(R.string.sign_up_firebase_locked)).setValue(R.string.sign_up_firebase_false);
+
+                        // Name
+                        ref.child(getString(R.string.sign_up_firebase_firstname)).setValue(tempFirstName);
+                        ref.child(getString(R.string.sign_up_firebase_middlename)).setValue(tempMiddleName);
+                        ref.child(getString(R.string.sign_up_firebase_lastname)).setValue(tempLastName);
+
+                        // Personal Info
+                        ref.child(getString(R.string.sign_up_firebase_bio)).setValue(getString(R.string.sign_up_firebase_empty));
+                        String tempDoB = "" + tempDoBYear + "-" + (tempDoBMonth < 10 ? "0" + tempDoBMonth : tempDoBMonth)
+                                + "-" + (tempDoBDay < 10 ? "0" + tempDoBDay : tempDoBDay);
+                        ref.child(getString(R.string.sign_up_firebase_dob)).setValue(tempDoB);
+                        ref.child(getString(R.string.sign_up_firebase_gender)).setValue(mGenderSpinner.getSelectedItem().toString());
+
+                        // Location
+                        // TODO: Resolve undefined variables
+                        ref.child(getString(R.string.sign_up_firebase_city)).setValue(getString(R.string.sign_up_firebase_empty));
+                        ref.child(getString(R.string.sign_up_firebase_country)).setValue(getString(R.string.sign_up_firebase_empty));
+                        ref.child(getString(R.string.sign_up_firebase_latitude)).setValue(getString(R.string.sign_up_firebase_empty));
+                        ref.child(getString(R.string.sign_up_firebase_longitude)).setValue(getString(R.string.sign_up_firebase_empty));
+                        ref.child(getString(R.string.sign_up_firebase_state)).setValue(getString(R.string.sign_up_firebase_empty));
+                        
                         // Start LoginActivity and end SignUpActivity
                         Toast.makeText(getActivity(), getString(R.string.sign_up_success_toast_message), Toast.LENGTH_SHORT).show();
                         startActivity(new Intent(getContext(), LoginActivity.class));

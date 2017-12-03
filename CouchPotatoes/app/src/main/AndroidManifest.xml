@@ -76,6 +76,14 @@
             android:label="@string/title_activity_registration"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
+            android:name=".PictureGridActivity"
+            android:label="Couch Potatoes"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".PictureGridTabViewActivity"
+            android:label="@string/title_activity_picture_grid_tab_view"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
             android:name=".ResetPasswordActivity"
             android:label="@string/title_reset_password"
             android:theme="@style/AppTheme.NoActionBar" />

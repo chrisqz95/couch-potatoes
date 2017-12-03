@@ -138,6 +138,11 @@
                     android:layout_height="wrap_content"
                     android:text="@string/sign_up_female" />
                 <CheckBox
+                    android:id="@+id/fragment_sign_up_info_form_gender_preference_nonbinary_checkbox"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/sign_up_nonbinary" />
+                <CheckBox
                     android:id="@+id/fragment_sign_up_info_form_gender_preference_other_checkbox"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
