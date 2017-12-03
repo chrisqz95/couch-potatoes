@@ -11,6 +11,7 @@ import android.os.Environment;
 import android.os.StrictMode;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
@@ -54,13 +55,13 @@ import static android.app.Activity.RESULT_OK;
 public class UploadImageFragment extends Fragment implements View.OnClickListener {
     private static final int PICK_FROM_CAMERA = 1;
     private static final int PICK_FROM_FILE = 2;
-    private static int CAN_WRITE_TO_EXTERNAL_STORAGE = PackageManager.PERMISSION_DENIED;
+    private static int CAN_WRITE_TO_EXTERNAL_STORAGE = 0;
 
     private DBHelper helper;
 
     private View view;
     private ImageView mImageView;
-    private Button btnUploadImage;
+    private FloatingActionButton btnUploadImage;
 
     private DialogInterface.OnClickListener dialogClickListener;
     private AlertDialog.Builder builder;
@@ -83,7 +84,7 @@ public class UploadImageFragment extends Fragment implements View.OnClickListene
         StrictMode.setVmPolicy(builder2.build());
 
         view = inflater.inflate(R.layout.fragment_upload_image, container, false);
-        btnUploadImage = (Button) view.findViewById(R.id.btnUploadImage);
+        btnUploadImage = (FloatingActionButton) view.findViewById(R.id.btnUploadImage);
         btnUploadImage.setOnClickListener(this);
         //mImageView = (ImageView) view.findViewById( R.id.testUploadImageView );
 
