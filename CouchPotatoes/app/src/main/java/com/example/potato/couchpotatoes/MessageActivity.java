@@ -55,6 +55,10 @@ public class MessageActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
 
+
+
+
+
         // places toolbar into the screen
         Toolbar toolbar = (Toolbar) findViewById(R.id.chat_toolbar);
         setSupportActionBar(toolbar);
@@ -105,9 +109,14 @@ public class MessageActivity extends AppCompatActivity {
 
         // Add an event handler to fetch and display all messages in the current chat
         helper.getDb().getReference(helper.getChatMessagePath() + chatRoom).limitToLast(MESSAGE_FETCH_LIMIT).addValueEventListener(new ValueEventListener() {
+
+
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+
                 Iterator<DataSnapshot> messages = dataSnapshot.getChildren().iterator();
+
+
 
                 // Fetch and display the messages
                 while (messages.hasNext()) {
@@ -117,6 +126,9 @@ public class MessageActivity extends AppCompatActivity {
                     helper.getDb().getReference(helper.getMessagePath() + messageID).addValueEventListener(new ValueEventListener() {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
+
+                            if (dataSnapshot.exists()) {
+
                             String from = (String) dataSnapshot.child("name").getValue();
                             String chatID = (String) dataSnapshot.child("chat_id").getValue();
                             String message = (String) dataSnapshot.child("text").getValue();
@@ -135,10 +147,10 @@ public class MessageActivity extends AppCompatActivity {
                             }
 
                             if ( from.equals(displayName) ) {
-                                addMessageBox(timestamp, 1, false);}
+                                addMessageBox(message, 1, false);}
                             else {
                                 //String displayStr = displayName + ":\n";
-                                addMessageBox(timestamp, 2, false);
+                                addMessageBox(message, 2, false);
                             }
 
                             // Keep track of the messageID corresponding to the current message
@@ -154,7 +166,7 @@ public class MessageActivity extends AppCompatActivity {
                             messageTime.add(timestamp);
 
                             Log.d("TEST", message + " " + dataSnapshot.getKey());
-                        }
+                        } }
 
                         @Override
                         public void onCancelled(DatabaseError databaseError) {
@@ -255,6 +267,9 @@ public class MessageActivity extends AppCompatActivity {
 
 
             String lastMsgDate = lastMsg.split("  ")[0];
+
+            Log.d("MESSAGE", curMsg + ", current msg");
+
             String curMsgDate = curMsg.split("  ")[0];
             String lastMsgTime = lastMsg.split("  ")[1];
             String curMsgTime = curMsg.split("  ")[1];
@@ -283,10 +298,6 @@ public class MessageActivity extends AppCompatActivity {
 
             int intCurDate = Integer.parseInt(curDate.replaceAll("-", ""));
             //int intCurTime = Integer.parseInt(curTime.replaceAll(":", ""));
-
-
-            Log.d("DATE", intCurMsgTime + ", cur msg time");
-            Log.d("DATE", intLastMsgTime + ", last msg time");
 
             if (intCurDate - intCurMsgDate < 1) {
                 if (Math.abs(intCurMsgTime - intLastMsgTime) >= 30000) {
