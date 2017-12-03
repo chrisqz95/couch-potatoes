@@ -1,12 +1,17 @@
 package com.example.potato.couchpotatoes;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -41,6 +46,9 @@ public class MessageActivity extends AppCompatActivity {
     Map<String, String> messageSenders = new HashMap<>();
     Map<String, String> messageText = new HashMap<>();
     ArrayList<String> messageTime = new ArrayList<>();
+
+    Button alertdfragbutton;
+    FragmentManager fm = getSupportFragmentManager();
 
     final int MESSAGE_FETCH_LIMIT = 50;
 
@@ -163,6 +171,45 @@ public class MessageActivity extends AppCompatActivity {
                 Log.d("TEST", databaseError.toString());
             }
         });
+
+        //DIALOG FOR SPINNER
+//        String spinners[] = {"Nice","Naught","Food", "Activity"};
+//        AlertDialog.Builder builder = new AlertDialog.Builder(MessageActivity.this);
+//        builder.setIcon(R.mipmap.empty_wheel)
+//                .setTitle("Choose Your Spinner!")
+//                .setItems(spinners, new DialogInterface.OnClickListener() {
+//                    public void onClick(DialogInterface dialog, int which) {
+//                        Intent intent;
+//                        switch (which) {
+//                            case 0:
+//                                startActivity(new Intent(MessageActivity.this, SpinBottleActivity.class));
+//                                //break;
+//                            case 1:
+//                                startActivity(new Intent(MessageActivity.this, SpinBottleActivity.class));
+//                                //break;
+//                            case 2:
+//                                startActivity(new Intent(MessageActivity.this, SpinToChooseActivity.class));
+//                                //break;
+//                            case 3:
+//                                startActivity(new Intent(MessageActivity.this, SpinToChooseActivity.class));
+//                                //break;
+//
+//                        }
+//                    }
+//                })
+//                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+//                    public void onClick(DialogInterface dialog, int which) {
+//                        // Do something else
+//                    }
+//                })
+//
+//                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+//                    public void onClick(DialogInterface dialog,	int which) {
+//                        // Do something else
+//                    }
+//                });
+//        builder.create().show();
+
     }
 
         //Determine if they are playing hard to get by checking the timestamp difference

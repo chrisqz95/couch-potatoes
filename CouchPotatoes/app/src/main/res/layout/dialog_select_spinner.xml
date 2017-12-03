@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <TextView
+        android:id="@+id/title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="36dp"
+        android:textSize="20dp"
+        android:text="Select a Spinner!" />
+
+    <ImageView
+        android:id="@+id/spinner"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:layout_below="@+id/title"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp"
+        app:srcCompat="@mipmap/empty_wheel" />
+
+    <Button
+        android:id="@+id/date_nice"
+        android:layout_width="300dp"
+        android:layout_height="50dp"
+        android:layout_below="@+id/spinner"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="10dp"
+        android:text="Button" />
+
+    <Button
+        android:id="@+id/date_naughty"
+        android:layout_width="300dp"
+        android:layout_height="50dp"
+        android:layout_alignStart="@+id/date_nice"
+        android:layout_below="@+id/date_nice"
+        android:layout_marginBottom="10dp"
+        android:text="Button" />
+
+    <Button
+        android:id="@+id/date_activity"
+        android:layout_width="300dp"
+        android:layout_height="50dp"
+        android:layout_above="@+id/date_food"
+        android:layout_alignStart="@+id/date_nice"
+        android:layout_marginBottom="10dp"
+        android:text="Button" />
+
+    <Button
+        android:id="@+id/date_food"
+        android:layout_width="300dp"
+        android:layout_height="50dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignStart="@+id/date_activity"
+        android:layout_marginBottom="35dp"
+        android:text="Button" />
+</RelativeLayout>

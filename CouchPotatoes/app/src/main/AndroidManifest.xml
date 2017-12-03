@@ -91,6 +91,14 @@
             android:name=".AboutUsActivity"
             android:label="@string/title_activity_about_us"
             android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".SpinBottleActivity"
+            android:label="SpinBottle"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".SpinToChooseActivity"
+            android:label="SpinToChoose"
+            android:theme="@style/AppTheme.NoActionBar" />
     </application>
 
 </manifest>
