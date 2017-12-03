@@ -169,6 +169,10 @@ public class MessageActivity extends AppCompatActivity {
             }
         });
     }
+        /*
+         * Description: Edge case: This executes for the very first time a message is sent. Date
+         * should always be displayed for first message
+         */
         public String getTimeString(String curMsg) {
             String timeStr = "";
             String hourStr = "";
