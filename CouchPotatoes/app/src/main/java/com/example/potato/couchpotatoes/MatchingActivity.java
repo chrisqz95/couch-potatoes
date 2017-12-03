@@ -377,6 +377,8 @@ public class MatchingActivity extends AppCompatActivity
         navView = (NavigationView) findViewById(R.id.match_nav_view);
         navView.setNavigationItemSelectedListener(this);
 
+        
+
         sidebarUserName = (android.widget.TextView) navView.getHeaderView(0)
                 .findViewById(R.id.sidebar_username);
         sidebarUserEmail = (android.widget.TextView) navView.getHeaderView(0)
