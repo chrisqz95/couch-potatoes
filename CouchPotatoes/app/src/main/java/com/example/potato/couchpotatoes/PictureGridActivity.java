@@ -1,11 +1,13 @@
 package com.example.potato.couchpotatoes;
 
 import android.app.AlertDialog;
+import android.app.Fragment;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
+import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentManager;
@@ -93,7 +95,7 @@ public class PictureGridActivity extends AppCompatActivity {
                     }
                 });
 
-                FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+                ConstraintLayout fab = findViewById(R.id.btnUploadImage);
                 if (isCurrentUser) {
                     gridView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
 
@@ -116,7 +118,10 @@ public class PictureGridActivity extends AppCompatActivity {
                                                             .addOnCompleteListener(new OnCompleteListener<Void>() {
                                                                 @Override
                                                                 public void onComplete(@NonNull Task<Void> task) {
-                                                                    loadData(uid, isCurrentUser);
+                                                                    urlList.remove(position);
+                                                                    hashList.remove(position);
+                                                                    gridAdapter.notifyDataSetChanged();
+                                                                    gridView.invalidateViews();
                                                                 }
                                                             });
                                                 }
@@ -132,9 +137,32 @@ public class PictureGridActivity extends AppCompatActivity {
                     fab.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
+                            ref.addValueEventListener(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(DataSnapshot snapshot) {
+                                    urlList.clear();
+                                    hashList.clear();
+                                    for (DataSnapshot dataSnapshot : snapshot.child("User_Photo").child(uid).getChildren()) {
+                                        try {
+                                            urlList.add(snapshot.child("Photo").child(dataSnapshot.getKey()).child("uri").getValue().toString());
+                                            hashList.add(dataSnapshot.getKey().toString());
+                                        } catch (NullPointerException e) {
+                                            e.printStackTrace();
+                                        }
+                                    }
+                                    gridAdapter.notifyDataSetChanged();
+                                    gridView.invalidateViews();
+                                    ref.removeEventListener(this);
+                                }
+
+                                @Override
+                                public void onCancelled(DatabaseError databaseError) {
+                                    ref.removeEventListener(this);
+                                }
+                            });
                             //startActivity(new Intent(PictureGridActivity.this, UploadImageFragment.class));
-                            Snackbar.make(view, "TODO: UploadImageFragment", Snackbar.LENGTH_LONG)
-                                    .setAction("Action", null).show();
+//                            Snackbar.make(view, "TODO: UploadImageFragment", Snackbar.LENGTH_LONG)
+//                                    .setAction("Action", null).show();
 
 //                        FragmentManager fragmentManager = getSupportFragmentManager();
 //                        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
@@ -153,6 +181,7 @@ public class PictureGridActivity extends AppCompatActivity {
             @Override
             public void onCancelled(DatabaseError databaseError) {
                 System.out.println("The read failed: " + databaseError.getMessage());
+                ref.removeEventListener(this);
             }
         });
     }

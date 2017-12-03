@@ -19,21 +19,23 @@
         android:focusable="true"
         android:clickable="true"/>
 
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignEnd="@+id/gridView"
-        android:layout_alignParentBottom="true"
-        android:layout_gravity="end|bottom"
-        android:layout_marginBottom="15dp"
-        android:layout_marginEnd="15dp"
-        android:visibility="gone"
-        app:srcCompat="@android:drawable/ic_input_add" />
+    <!--<android.support.design.widget.FloatingActionButton-->
+        <!--android:id="@+id/fab"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_alignEnd="@+id/gridView"-->
+        <!--android:layout_alignParentBottom="true"-->
+        <!--android:layout_gravity="end|bottom"-->
+        <!--android:layout_marginBottom="15dp"-->
+        <!--android:layout_marginEnd="15dp"-->
+        <!--android:visibility="gone"-->
+        <!--app:srcCompat="@android:drawable/ic_input_add" />-->
 
     <fragment
         android:id="@+id/btnUploadImage"
         android:name="com.example.potato.couchpotatoes.UploadImageFragment"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         tools:layout="@layout/fragment_upload_image" />
