@@ -9,6 +9,8 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.graphics.Picture;
+import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
@@ -28,6 +30,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.JsonWriter;
+import android.transition.Transition;
 import android.util.Log;
 import android.util.Pair;
 import android.util.SparseBooleanArray;
@@ -35,12 +38,15 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.CheckedTextView;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -56,6 +62,13 @@ import org.json.JSONObject;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import com.bumptech.glide.Glide;
+import com.firebase.ui.storage.images.FirebaseImageLoader;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.StorageReference;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -72,8 +85,11 @@ import java.util.Map;
  * API Guide</a> for more information on developing a Settings UI.
  */
 public class PreferencesActivity extends AppCompatActivity {
+    private DBHelper helper;
     private static String[] moviePrefList = new String[] {"Action", "Adventure", "Animation", "Biography", "Comedy", "Crime", "Documentary", "Drama", "Family", "Fantasy", "Film-Noir", "History", "Horror", "Music", "Musical", "Mystery", "Romance", "Sci-Fi", "Sport", "Thriller", "War", "Western"};
     private static String[] sportsPrefList = new String[] {"The", "Thing", "Go", "Skrraaaa"};
+
+    private ArrayList<String> interestList;
 
     private Button settingsTab;
     private Button photosTab;
@@ -82,12 +98,62 @@ public class PreferencesActivity extends AppCompatActivity {
     private EditText userBio;
     private TextView moviesSelection;
     private TextView sportsSelection;
+    private LinearLayout interestsLayout;
+    private ListView interestListView;
+    private ArrayAdapter<String> interestAdapter;
+    private TextView userTitle;
+    private ImageView imgView;
+    private ProgressBar spinner;
+    private TextView bioTitle;
+    private TextView interestsTitle;
+    private LinearLayout prefHorizBtns;
+    private Button bioSubmitBtn;
+    private Button bioSubmitCancelBtn;
+    private String bioTextPrev;
+    private LinearLayout profileLayout;
+    private LinearLayout bioBtnLayout;
+
+    private String currUserID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
         SharedPreferences prefs = this.getSharedPreferences("com.example.potato.couchpotatoes", Context.MODE_PRIVATE);
+
+        profileLayout = (LinearLayout) findViewById(R.id.profileLayout);
+        userTitle = (TextView) findViewById(R.id.user_title);
+        prefHorizBtns = (LinearLayout) findViewById(R.id.preferencesHorizBtns);
+        bioTitle = (TextView) findViewById(R.id.biography_title);
+        userBio = (EditText) findViewById(R.id.user_bio);
+        bioBtnLayout = (LinearLayout) findViewById(R.id.bioBtnLayout);
+        bioSubmitBtn = (Button) findViewById(R.id.profileBioSubmitBtn);
+        bioSubmitCancelBtn = (Button) findViewById(R.id.profileBioSubmitCancelBtn);
+        interestsTitle = (TextView) findViewById(R.id.interests_title);
+        imgView = (ImageView) findViewById(R.id.preferencesProfilePic);
+        spinner = (ProgressBar)findViewById(R.id.preferencesSpinner);
+
+        userTitle.setVisibility(View.GONE);
+        prefHorizBtns.setVisibility(View.GONE);
+        bioTitle.setVisibility(View.GONE);
+        userBio.setVisibility(View.GONE);
+        //bioSubmitBtn.setVisibility(View.GONE);
+        bioBtnLayout.setVisibility(View.GONE);
+        interestsTitle.setVisibility(View.GONE);
+        imgView.setVisibility(View.GONE);
+        spinner.setVisibility(View.VISIBLE);
+
+        helper = new DBHelper();
+
+        currUserID = helper.getAuth().getUid();
+
+        interestList = new ArrayList<>();
+        interestAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, interestList );
+
+        interestListView = (ListView) findViewById(R.id.interestListView);
+        interestListView.setAdapter( interestAdapter );
+
+        //interestsLayout = (LinearLayout) findViewById(R.id.interestsLayout);
 
         settingsTab = (Button) findViewById(R.id.settingsTab);
         settingsTab.setOnClickListener(new View.OnClickListener() {
@@ -111,6 +177,85 @@ public class PreferencesActivity extends AppCompatActivity {
             }
         });
 
+        displayProfilePic();
+        displayUserInfo();
+        displayInterests();
+
+        interestListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                //Log.d( "TEST", interestList.get( position ) + " CLICKED" );
+                Intent intent = new Intent(getApplicationContext(), PreferenceChart.class);
+                intent.putExtra( "interest", interestList.get( position ) );
+                startActivity(intent);
+            }
+        });
+
+        userBio.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if ( hasFocus ) {
+                    bioBtnLayout.setVisibility(View.VISIBLE);
+                }
+            }
+        });
+
+        bioSubmitBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //Log.d( "TEST", "SUBMIT CHANGES" );
+                // Hide bio buttons
+                // TODO MOVE TO new helper method
+                if ( bioBtnLayout.getVisibility() == View.VISIBLE ) {
+                    bioBtnLayout.setVisibility(View.GONE);
+                }
+
+                // Remove bio edit text focus
+                // Workaround: Remove focus by requesting focus elsewhere
+                // TODO May want to find a better way of doing this later
+                profileLayout.requestFocus();
+
+                String bioChanges = userBio.getText().toString();
+                
+                // Save new bio state
+                bioTextPrev = bioChanges;
+
+                // Submit bio to Firebase
+                // TODO Add method to DBHelper to only change bio
+                helper.getDb().getReference( helper.getUserPath() ).child( currUserID ).child( "bio" ).setValue( bioChanges );
+                //Log.d( "TEST", bioChanges );
+            }
+        });
+
+        bioSubmitCancelBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Hide bio buttons
+                // TODO MOVE TO new helper method
+                if ( bioBtnLayout.getVisibility() == View.VISIBLE ) {
+                    bioBtnLayout.setVisibility(View.GONE);
+                }
+
+                // Remove bio edit text focus
+                // Workaround: Remove focus by requesting focus elsewhere
+                // TODO May want to find a better way of doing this later
+                profileLayout.requestFocus();
+
+                // Restore bio to previous state
+                userBio.setText( bioTextPrev );
+            }
+        });
+
+        /*
+        TextView htext =new TextView(this);
+        htext.setText("Test");
+        //htext.setId(5);
+        htext.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+        interestsLayout.addView(htext);
+        */
+
+
+        /*
         movieTab = (Button) findViewById(R.id.moviePrefTab);
         movieTab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -138,10 +283,12 @@ public class PreferencesActivity extends AppCompatActivity {
 
         userBio = (EditText) findViewById(R.id.user_bio);
         userBio.setText(prefs.getString("user_bio", ""), TextView.BufferType.EDITABLE);
-
         cachePhotoURIs();
-
+        */
+     
     }
+
+    /*
 
     @Override
     protected void onResume() {
@@ -229,11 +376,141 @@ public class PreferencesActivity extends AppCompatActivity {
 
                 JSONArray jsArray = new JSONArray(uriList);
                 PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).edit().putString("PhotoList",jsArray.toString()).apply();
+    */
+  
+
+    private void displayInterests() {
+        helper.getDb().getReference( helper.getInterestPath() ).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                /*
+                TextView htext =new TextView(this);
+                htext.setText("Test");
+                //htext.setId(5);
+                htext.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+                interestsLayout.addView(htext);
+                */
+                //Log.d( "TEST", dataSnapshot.toString() );
+                for ( final DataSnapshot interest : dataSnapshot.getChildren() ) {
+                    //Log.d( "TEST", interest.toString() );
+                    String currInterest = (String) interest.getValue();
+                    interestList.add( currInterest );
+                    //Log.d( "TEST", currInterest );
+                    /*
+                    TextView newTextView = new TextView(getApplicationContext());
+                    newTextView.setText( currInterest );
+                    newTextView.setTextColor( Color.BLACK );
+                    newTextView.setTextSize( 18 );
+                    newTextView.setId( interestList.indexOf( currInterest ) );
+                    LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams( LinearLayout.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                    layoutParams.setMargins( 200, 100, 200, 0 );
+                    newTextView.setLayoutParams( layoutParams );
+                    newTextView.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            //Log.d( "TEST", interestList.get( v.getId() ) + " CLICKED" );
+                            Intent intent = new Intent(getApplicationContext(), PreferenceChart.class);
+                            intent.putExtra( "interest", interestList.get( v.getId() ) );
+                            startActivity(intent);
+                        }
+                    });
+                    interestsLayout.addView( newTextView );
+                    */
+                }
+
+                interestAdapter.notifyDataSetChanged();
+
+                // Hide spinner and display page elements
+                userTitle.setVisibility(View.VISIBLE);
+                prefHorizBtns.setVisibility(View.VISIBLE);
+                bioTitle.setVisibility(View.VISIBLE);
+                userBio.setVisibility(View.VISIBLE);
+                interestsTitle.setVisibility(View.VISIBLE);
+                imgView.setVisibility(View.VISIBLE);
+                spinner.setVisibility(View.GONE);
             }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-                System.out.println("The read failed: " + databaseError.getMessage());
+                Log.d( "TEST", databaseError.getMessage() );
+            }
+        });
+    }
+
+    private void displayUserInfo() {
+        helper.getDb().getReference( helper.getUserPath() ).child( currUserID ).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                String firstName = "";
+                String middleName = "";
+                String lastName = "";
+                String bio = "";
+
+                for ( DataSnapshot field : dataSnapshot.getChildren() ) {
+                    //Log.d( "TEST", field.toString() );
+                    switch ( field.getKey() ) {
+                        case "firstName":
+                            firstName = (String) field.getValue();
+                            break;
+                        case "middleName":
+                            middleName = (String) field.getValue();
+                            break;
+                        case "lastName":
+                            lastName = (String) field.getValue();
+                            break;
+                        case "bio":
+                            bio = (String) field.getValue();
+                            break;
+                        default:
+                            break;
+                    }
+                }
+                String name = helper.getFullName( firstName, middleName, lastName );
+                userTitle.setText( name );
+                userBio.setText( bio );
+                bioTextPrev = bio;
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.d( "TEST", databaseError.getMessage() );
+            }
+        });
+    }
+
+    private void displayProfilePic() {
+        helper.getDb().getReference(helper.getUserPath()).child( currUserID ).child("profile_pic").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                String url = "";
+
+                if (dataSnapshot != null && dataSnapshot.getValue() != null) {
+                    url = (String) dataSnapshot.getValue();
+                    if (imgView != null) {
+                        StorageReference uriRef = helper.getStorage().getReferenceFromUrl(url);
+
+                        // Set ImageView to contain photo
+                        Glide.with(getApplicationContext())
+                                .using(new FirebaseImageLoader())
+                                .load(uriRef)
+                                .into(imgView);
+                    }
+                } else {
+                    // Default Profile Pic
+                    // TODO Add method to DBHelper to get this
+                    //url = "gs://couch-potatoes-47758.appspot.com/Default/ProfilePic/potato_1_profile_pic.png";
+                    String uri = "@drawable/profile";
+
+                    int imageResource = getResources().getIdentifier(uri, null, getPackageName());
+                    Drawable res = getResources().getDrawable(imageResource);
+                    imgView.setImageDrawable(res);
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                //System.out.println("The read failed: " + databaseError.getMessage());
+                Log.d("TEST", databaseError.getMessage());
             }
         });
     }

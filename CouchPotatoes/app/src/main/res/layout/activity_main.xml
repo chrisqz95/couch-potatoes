@@ -23,12 +23,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
 
-        <Button
-            android:id="@+id/logout"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/btn_logout" />
-
     </android.support.design.widget.AppBarLayout>
 
     <include
@@ -36,7 +30,6 @@
         android:layout_height="321dp"
         android:layout_width="match_parent"
         tools:layout_editor_absoluteY="247dp" />
-
 
     <!--Layout of the side bar menu-->
     <!--<android.support.design.widget.NavigationView-->

@@ -38,7 +38,7 @@ public class DBHelper {
     private final String userNotificationPath = "User_Notification/";
     private final String userPhotoPath = "User_Photo/";
     private final String photoPath = "Photo/";
-    private final String interestPath = "Category/";
+    private final String interestPath = "Interest/";
     private final String interestSubcategoryPath = "Interest_Subcategory/";
     private final String userInterestPath = "User_Interest/";
     private final String partnerPreferencePath = "Partner_Preference/";
@@ -55,6 +55,8 @@ public class DBHelper {
     private final String chatUserPath = "Chat_User/";
     private final String chatMessagePath = "Chat_Message/";
     private final String messagePath = "Message/";
+    private final String potentDatePath = "User_Potential_Date/";
+    private final String potentFriendPath = "User_Potential_Friend/";
 
     public DBHelper() {
         auth = FirebaseAuth.getInstance();
@@ -306,12 +308,14 @@ public class DBHelper {
 
     public boolean addToBefriend( String actorUserID, String receiverUserID, String timestamp ) {
         db.getReference( getBefriendPath() ).child( actorUserID ).child( receiverUserID ).child( "timestamp" ).setValue( timestamp );
+        db.getReference( getBefriendPath() ).child( actorUserID ).child( receiverUserID ).child( "chatCreated" ).setValue( false );
 
         return checkExists( getBefriendPath() + actorUserID + "/" + receiverUserID );
     }
 
     public boolean addToDate( String actorUserID, String receiverUserID, String timestamp ) {
         db.getReference( getDatePath() ).child( actorUserID ).child( receiverUserID ).child( "timestamp" ).setValue( timestamp );
+        db.getReference( getDatePath() ).child( actorUserID ).child( receiverUserID ).child( "chatCreated" ).setValue( false );
 
         return checkExists( getDatePath() + actorUserID + "/" + receiverUserID );
     }
@@ -735,5 +739,13 @@ public class DBHelper {
 
     public void setStorage(FirebaseStorage storage) {
         this.storage = storage;
+    }
+
+    public String getPotentDatePath() {
+        return potentDatePath;
+    }
+
+    public String getPotentFriendPath() {
+        return potentFriendPath;
     }
 }

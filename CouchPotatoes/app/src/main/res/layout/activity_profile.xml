@@ -3,41 +3,55 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:padding="10dp">
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_weight="1">
 
         <LinearLayout
-            android:id="@+id/lmao"
+            android:id="@+id/profileLayout"
+            android:focusable="true"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:descendantFocusability="beforeDescendants"
+            android:focusableInTouchMode="true"
             android:orientation="vertical">
 
             <TextView
                 android:id="@+id/user_title"
                 android:layout_width="match_parent"
-                android:layout_height="32dp"
+                android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:fontFamily="@font/courgette"
                 android:paddingLeft="4dp"
-                android:text="Donald Trump, 70"
                 android:textColor="@color/common_google_signin_btn_text_dark_focused"
                 android:textSize="24dp" />
 
             <ImageView
-                android:id="@+id/imageView"
+                android:id="@+id/preferencesProfilePic"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="200dp"
                 android:layout_weight="1"
                 android:paddingBottom="8dp"
                 android:paddingTop="8dp"
-                app:srcCompat="@drawable/images" />
+                app:srcCompat="@drawable/profile" />
+
+            <ProgressBar
+                android:id="@+id/preferencesSpinner"
+                style="?android:attr/progressBarStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="100dp"
+                android:layout_weight="1" />
 
             <LinearLayout
+                android:id="@+id/preferencesHorizBtns"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:orientation="horizontal">
 
@@ -62,7 +76,7 @@
             <TextView
                 android:id="@+id/biography_title"
                 android:layout_width="match_parent"
-                android:layout_height="32dp"
+                android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:fontFamily="@font/courgette"
                 android:paddingLeft="4dp"
@@ -73,7 +87,7 @@
             <EditText
                 android:id="@+id/user_bio"
                 android:layout_width="match_parent"
-                android:layout_height="138dp"
+                android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:backgroundTint="@android:color/transparent"
                 android:fontFamily="@font/acme"
@@ -81,6 +95,34 @@
                 android:hint="@string/user_bio_hint"
                 android:maxLength="140"
                 android:singleLine="false" />
+
+            <LinearLayout
+                android:id="@+id/bioBtnLayout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:orientation="horizontal"
+                android:padding="10dp">
+
+                <Button
+                    android:id="@+id/profileBioSubmitBtn"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_weight="1"
+                    android:text="Save Changes" />
+
+                <Button
+                    android:id="@+id/profileBioSubmitCancelBtn"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_weight="1"
+                    android:text="Cancel" />
+            </LinearLayout>
 
             <TextView
                 android:id="@+id/interests_title"
@@ -93,46 +135,15 @@
                 android:textColor="@color/common_google_signin_btn_text_dark_focused"
                 android:textSize="24dp" />
 
-            <Button
-                android:id="@+id/moviePrefTab"
-                style="@style/Widget.AppCompat.Button.Borderless"
+            <ListView
+                android:id="@+id/interestListView"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:drawableRight="@drawable/arrow"
-                android:gravity="bottom|left"
-                android:text="@string/pref_title_movies" />
+                android:layout_height="483dp"
+                android:layout_weight="1">
 
-            <TextView
-                android:id="@+id/movies_selection"
-                android:layout_width="match_parent"
-                android:layout_height="48dp"
-                android:layout_weight="1"
-                android:fontFamily="@font/acme"
-                android:paddingLeft="8dp"
-                android:text="TextView" />
-
-            <Button
-                android:id="@+id/sportsPrefTab"
-                style="@style/Widget.AppCompat.Button.Borderless"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:drawableRight="@drawable/arrow"
-                android:gravity="bottom|left"
-                android:text="@string/pref_title_sports" />
-
-            <TextView
-                android:id="@+id/sports_selection"
-                android:layout_width="match_parent"
-                android:layout_height="48dp"
-                android:layout_weight="1"
-                android:fontFamily="@font/acme"
-                android:paddingLeft="8dp"
-                android:text="TextView" />
+            </ListView>
 
         </LinearLayout>
-
     </ScrollView>
 
 </LinearLayout>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorSignUpError">#CC3030</color>
+    <color name="colorSignUpError">#cc3030</color>
 	
     <color name="bg_main">#f9f8f9</color>
     <color name="bg_select">#cfced0</color>
@@ -40,4 +40,6 @@
 
     <color name="success">#14CC80</color>
     <color name="reject">#ff6861</color>
+    <color name="dark_grey">#494f56</color>
+    <color name="dark_blue">#32496a</color>
 </resources>
