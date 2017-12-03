@@ -11,8 +11,8 @@
     <group
         android:id="@+id/nav_menu_top">
         <item
-            android:id="@+id/potato"
-            android:icon="@drawable/profile"
+            android:id="@+id/nav_profile"
+            android:icon="@drawable/potato"
             android:title="@string/sidebar_profile" />
         <item
             android:id="@+id/nav_matches"
