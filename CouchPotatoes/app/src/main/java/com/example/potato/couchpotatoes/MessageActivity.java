@@ -37,9 +37,9 @@ public class MessageActivity extends AppCompatActivity {
     String userID, chatRoom, displayName, messageID, timestamp, message, companion;
     TextView userName;
 
-    Map<String, String> messageIDs = new HashMap<>();
-    Map<String, String> messageSenders = new HashMap<>();
-    Map<String, String> messageText = new HashMap<>();
+  //Map<String, String> messageIDs = new HashMap<>();
+  //Map<String, String> messageSenders = new HashMap<>();
+  //Map<String, String> messageText = new HashMap<>();
     ArrayList<String> messageTime = new ArrayList<>();
 
     final int MESSAGE_FETCH_LIMIT = 50;
@@ -131,13 +131,13 @@ public class MessageActivity extends AppCompatActivity {
                             }
 
                             // Keep track of the messageID corresponding to the current message
-                            messageIDs.put(message, dataSnapshot.getKey());
+                            //messageIDs.put(message, dataSnapshot.getKey());
 
                             // Keep track of the sender of the current message
-                            messageSenders.put(dataSnapshot.getKey(), from);
+                            //messageSenders.put(dataSnapshot.getKey(), from);
 
                             // Keep track of the text content of the current message
-                            messageText.put(dataSnapshot.getKey(), message);
+                            //messageText.put(dataSnapshot.getKey(), message);
 
                             //Keep track of the time of the current message
                             messageTime.add(timestamp);
@@ -179,8 +179,6 @@ public class MessageActivity extends AppCompatActivity {
 
             //Longer than 3 hours
             return ((curMsgTime - lastMsgTime) >= 30000);
-
-
         }
 
 
@@ -193,7 +191,7 @@ public class MessageActivity extends AppCompatActivity {
             if (gapMsg) {
                 lp2.gravity = Gravity.CENTER_HORIZONTAL;
                 textView.setTextColor(Color.GRAY);
-                textView.setTextSize(18);
+                textView.setTextSize(14);
                 String[] time = message.split("  ")[1].split(":");
                 //Determine AM or PM
                 int hour = Integer.parseInt(time[0]);
