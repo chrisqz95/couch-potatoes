@@ -374,7 +374,7 @@ public class MatchingActivity extends AppCompatActivity
         toggle.syncState();
 
         // set up side navigation bar layout
-        navView = (NavigationView) findViewById(R.id.nav_view);
+        navView = (NavigationView) findViewById(R.id.match_nav_view);
         navView.setNavigationItemSelectedListener(this);
 
         sidebarUserName = (android.widget.TextView) navView.getHeaderView(0)
@@ -472,6 +472,7 @@ public class MatchingActivity extends AppCompatActivity
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
+
         return true;
     }
 
