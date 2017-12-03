@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/gender_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="0.25"
+        android:fontFamily="@font/courgette"
+        android:paddingLeft="4dp"
+        android:text="Gender"
+        android:textColor="@color/common_google_signin_btn_text_dark_focused"
+        android:textSize="24dp" />
+
+    <ListView
+        android:id="@+id/gender_list"
+        android:layout_width="match_parent"
+        android:layout_height="7dp"
+        android:layout_weight="1"
+        android:entries="@array/gender_list" />
+
+    <TextView
+        android:id="@+id/sexual_preference_title"
+        android:layout_width="match_parent"
+        android:layout_height="11dp"
+        android:layout_weight=".25"
+        android:fontFamily="@font/courgette"
+        android:paddingLeft="4dp"
+        android:text="Sexual Preference"
+        android:textColor="@color/common_google_signin_btn_text_dark_focused"
+        android:textSize="24dp" />
+
+    <ListView
+        android:id="@+id/sexual_preference"
+        android:layout_width="match_parent"
+        android:layout_height="8dp"
+        android:layout_weight="1" />
+
+    <LinearLayout
+        android:id="@+id/settingsBtnLayout"
+        android:layout_width="match_parent"
+        android:layout_height="14dp"
+        android:layout_weight="0.25"
+        android:orientation="horizontal"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp">
+
+        <Button
+            android:id="@+id/settingsSubmitBtn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_weight="1"
+            android:text="Save Changes" />
+
+        <Button
+            android:id="@+id/settingsCancelBtn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_weight="1"
+            android:text="Cancel" />
+    </LinearLayout>
+
+</LinearLayout>
