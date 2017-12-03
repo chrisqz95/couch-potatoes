@@ -160,7 +160,7 @@ public class ChatRoomActivity extends AppCompatActivity
     // Handles pressing back button in bottom navigation bar when sidebar is on the screen
     @Override
     public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.chatroom_drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
