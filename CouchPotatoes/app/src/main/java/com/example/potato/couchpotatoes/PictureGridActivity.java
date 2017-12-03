@@ -116,7 +116,10 @@ public class PictureGridActivity extends AppCompatActivity {
                                                             .addOnCompleteListener(new OnCompleteListener<Void>() {
                                                                 @Override
                                                                 public void onComplete(@NonNull Task<Void> task) {
-                                                                    loadData(uid, isCurrentUser);
+                                                                    //loadData(uid, isCurrentUser);
+                                                                    Intent intent = getIntent();
+                                                                    finish();
+                                                                    startActivity( intent );
                                                                 }
                                                             });
                                                 }

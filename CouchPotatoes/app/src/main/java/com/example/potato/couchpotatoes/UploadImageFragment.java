@@ -253,10 +253,20 @@ public class UploadImageFragment extends Fragment implements View.OnClickListene
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                 Log.d( "TEST", "File upload success" );
 
+                DialogInterface.OnClickListener onOkRestartActivity = new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Intent intent = new Intent(getActivity(), PictureGridActivity.class );
+                        intent.putExtra( "uid", userID );
+                        intent.putExtra( "isCurrentUser", true );
+                        startActivity( intent );
+                    }
+                };
+
                 // Notify User of successful upload
                 AlertDialog.Builder builderUploadSuccess = new AlertDialog.Builder(view.getContext());
                 builderUploadSuccess.setMessage( "Upload successful!" )
-                        .setPositiveButton("Ok", null )
+                        .setPositiveButton("Ok", onOkRestartActivity )
                         .show();
 
                 // Get photo uri from Firebase Storage
