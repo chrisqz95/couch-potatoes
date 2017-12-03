@@ -54,7 +54,7 @@ public class ChatRoomActivity extends AppCompatActivity
         // places toolbar into the screen
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        
+
         // Display the user's display name
        // userName = (TextView) findViewById(R.id.userName);
         //userName.setText( displayName );
