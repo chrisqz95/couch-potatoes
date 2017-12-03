@@ -1,7 +1,12 @@
 package com.example.potato.couchpotatoes;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -10,6 +15,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -41,6 +47,7 @@ public class MessageActivity extends AppCompatActivity {
     DatabaseReference reference1, reference2;
     String userID, chatRoom, displayName, messageID, timestamp, message, companion;
     TextView userName;
+    Button b_select_spinner;
 
   //Map<String, String> messageIDs = new HashMap<>();
   //Map<String, String> messageSenders = new HashMap<>();
@@ -55,14 +62,11 @@ public class MessageActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
 
-
-
-
-
         // places toolbar into the screen
         Toolbar toolbar = (Toolbar) findViewById(R.id.chat_toolbar);
         setSupportActionBar(toolbar);
 
+        b_select_spinner = (Button) findViewById(R.id.b_select_spinner);
         layout = (LinearLayout) findViewById(R.id.layout1);
         layout_2 = (RelativeLayout) findViewById(R.id.layout2);
         sendButton = (ImageView) findViewById(R.id.sendButton);
@@ -179,6 +183,60 @@ public class MessageActivity extends AppCompatActivity {
             @Override
             public void onCancelled(DatabaseError databaseError) {
                 Log.d("TEST", databaseError.toString());
+            }
+        });
+
+
+        // OnClick to get to spinners
+        b_select_spinner.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //DIALOG FOR SPINNER
+                String spinners[] = {"Spin the Bottle: Nice","Spin the Bottle: Naughty","Spin the Bottle: Food", "Spin the Bottle: Activity"};
+                AlertDialog.Builder builder = new AlertDialog.Builder(MessageActivity.this);
+                builder.setIcon(R.mipmap.empty_wheel)
+                        .setTitle("Choose Your Spinner!")
+                        .setItems(spinners, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                Intent intent;
+                                switch (which) {
+                                    case 0:
+                                        intent = new Intent(((Dialog) dialog).getContext(), SpinBottleActivity.class);
+                                        intent.putExtra("key", 1);
+                                        startActivity(intent);
+                                        break;
+                                    case 1:
+                                        System.out.println(LoginActivity.class);
+                                        intent = new Intent(((Dialog) dialog).getContext(), SpinBottleActivity.class);
+                                        intent.putExtra("key", 0);
+                                        startActivity(intent);
+                                        break;
+                                    case 2:
+                                        intent = new Intent(((Dialog) dialog).getContext(), SpinToChooseActivity.class);
+                                        intent.putExtra("key", 1);
+                                        startActivity(intent);
+                                        break;
+                                    case 3:
+                                        intent = new Intent(((Dialog) dialog).getContext(), SpinToChooseActivity.class);
+                                        intent.putExtra("key", 0);
+                                        startActivity(intent);
+                                        break;
+
+                                }
+                            }
+                        })
+                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                // Do something else
+                            }
+                        })
+
+                        .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog,	int which) {
+                                // Do something else
+                            }
+                        });
+                builder.create().show();
             }
         });
     }
@@ -360,40 +418,6 @@ public class MessageActivity extends AppCompatActivity {
             }
             return timeStr;
 	    }
-
-    // Displays overflow button on the toolbar
-    // and handles opening up the menu
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.chat_main, menu);
-        return true;
-    }
-
-    // Handles action in clicking on an item in the options menu
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        if (id == R.id.menu_potato_questions) {
-            // TODO: do something
-            return true;
-        } else if (id == R.id.menu_spin_wheel) {
-            // TODO: do something
-            return true;
-        } else if (id == R.id.menu_start_date) {
-            // TODO: do something
-            return true;
-        } else if (id == R.id.menu_end_date) {
-            // TODO: do something
-            return true;
-        }
-
-		return super.onOptionsItemSelected(item);
-    }
 
         public void addMessageBox (String message, int type, boolean isTimeString){
             TextView textView = new TextView(MessageActivity.this);

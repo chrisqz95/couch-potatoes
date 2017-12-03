@@ -23,13 +23,20 @@
             app:popupTheme="@style/AppTheme.PopupOverlay">
 
             <TextView
-                android:layout_width="match_parent"
+                android:layout_width="300dp"
                 android:layout_height="wrap_content"
                 android:textSize="20dp"
                 android:textColor="#FFFFFF"
                 android:textAlignment="center"
                 android:id="@+id/userName"
                 android:visibility="visible"
+                />
+
+            <Button
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:id="@+id/b_select_spinner"
+                android:background="@mipmap/empty_wheel"
                 />
         </android.support.v7.widget.Toolbar>
 
@@ -64,4 +71,5 @@
         android:layout_height="wrap_content"
         android:gravity="bottom"
         android:layout_marginTop="5dp"/>
+
 </LinearLayout>
