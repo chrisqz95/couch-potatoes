@@ -1,0 +1,759 @@
+[33mcommit 848e4e884dbb211fac23f7e9fe13f29ec6b89a38[m[33m ([m[1;36mHEAD -> [m[1;32mfeature/picture-grid[m[33m, [m[1;31morigin/feature/picture-grid[m[33m)[m
+Author: Andrew Huang <anh162@ucsd.edu>
+Date:   Fri Dec 1 00:39:28 2017 -0800
+
+    Tabbed Picture View
+
+[33mcommit f9450b003609942ca7b72526935c2903789b1523[m
+Author: Andrew Huang <anh162@ucsd.edu>
+Date:   Thu Nov 30 21:52:41 2017 -0800
+
+    Working Picture Grid from Firebase
+
+[33mcommit c53cb04a0d72e08b75282fff59d49c74b24b539c[m
+Merge: d640b68 b78f7ed
+Author: Andrew Huang <anh162@ucsd.edu>
+Date:   Tue Nov 28 20:52:33 2017 -0800
+
+    Merge branch 'feature/sign-up-activity' into feature/picture-grid
+
+[33mcommit b78f7edb8b85e2a7f908e116b1d4bfcf89087165[m[33m ([m[1;31morigin/feature/sign-up-activity[m[33m, [m[1;32mfeature/sign-up-activity[m[33m)[m
+Author: Andrew Huang <anh162@ucsd.edu>
+Date:   Tue Nov 28 20:33:05 2017 -0800
+
+    Added Firebase fields
+
+[33mcommit d640b68a3b274319388a8f28058d3722f0289b79[m[33m ([m[1;31morigin/feature/preferences-activity[m[33m, [m[1;32mfeature/preferences-activity[m[33m)[m
+Merge: f552a68 91e8167
+Author: Cristian Recinos <cristianrecinos@Cristians-MacBook-Pro.local>
+Date:   Mon Nov 27 20:08:30 2017 -0800
+
+    Ameno. Merged. I think.
+
+[33mcommit f552a68d345856094c0b62c3445f13b4e392cfd7[m
+Author: Cristian Recinos <cristianrecinos@Cristians-MacBook-Pro.local>
+Date:   Mon Nov 27 19:32:15 2017 -0800
+
+    I am slow but accurate. Cristian is so slow god damn it
+
+[33mcommit 91e816763efac6002238323cf0cbc199d234c8ca[m[33m ([m[1;31morigin/feature/chat_and_message_new[m[33m)[m
+Author: garyzhao63 <garyzhao63@gmail.com>
+Date:   Sun Nov 26 22:55:26 2017 -0800
+
+    Merged chat with master
+
+[33mcommit ca8a808f750ed3d60bd1dda2f0149ee744a2d9d2[m
+Author: Mervin Ng <m6ng@ucsd.edu>
+Date:   Sun Nov 26 20:05:57 2017 -0800
+
+    Added 'matches' button in sidebar navigation
+
+[33mcommit 1adc0ede3bdee69eb3671e2c285385216e2d519e[m
+Merge: b406784 13530ed
+Author: Kawaamai <0110amai@gmail.com>
+Date:   Sun Nov 26 13:34:59 2017 -0800
+
+    Merge pull request #7 from chrisqz95/feature/sidebar_activity
+    
+    Feature/sidebar activity
+
+[33mcommit 13530ed3476b3dfeed260597e49424e3c3671b11[m[33m ([m[1;31morigin/feature/sidebar_activity[m[33m)[m
+Author: Alan Mai <0110amai@gmail.com>
+Date:   Sun Nov 26 13:30:53 2017 -0800
+
+    changed Button to FloatingActionButton
+
+[33mcommit 99ca06be9c85ad4b22b4bb2269d58db17f641383[m
+Author: Mervin Ng <m6ng@ucsd.edu>
+Date:   Sun Nov 26 03:20:43 2017 -0800
+
+    commented viewPager line that crashes app; took out unused java/xml files
+
+[33mcommit b8b8e7422be09aa1014c3453736844896d6cb95e[m
+Author: Mervin Ng <m6ng@ucsd.edu>
+Date:   Sun Nov 26 03:08:46 2017 -0800
+
+    deleted unnecessary merge file
+
+[33mcommit 859cdcbf3fe82fb3438971c53f9538df6f2b2faa[m
+Author: Mervin Ng <m6ng@ucsd.edu>
+Date:   Sun Nov 26 02:54:59 2017 -0800
+
+    user name & email displayed in sidebar
+
+[33mcommit ce2ff11813ee08383a56b35e4064d7c300bb8474[m
+Author: Mervin Ng <m6ng@ucsd.edu>
+Date:   Sun Nov 26 02:45:23 2017 -0800
+
+    Added in the sidebar navigation; commented out viewpager line that caused app to crash
+
+[33mcommit 44fc80196734aaa2e9f96eeb71c647f800ad9064[m
+Merge: f8c1990 b406784
+Author: Mervin Ng <m6ng@ucsd.edu>
+Date:   Sun Nov 26 01:38:34 2017 -0800
+
+    (merge prep) added in Matching activity stuff from master
+
+[33mcommit f8c19902507ac1cd46db137a1cf595b46999afd7[m
+Author: Mervin Ng <m6ng@ucsd.edu>
+Date:   Sat Nov 25 20:41:10 2017 -0800
+
+    Added png photo for sidebar header
+
+[33mcommit b406784b5c0ff1f9aea9073dd57081674cefbef0[m
+Author: Alan Mai <0110amai@gmail.com>
+Date:   Sat Nov 25 18:53:52 2017 -0800
+
+    added Matching activity stuff + tabs
+
+[33mcommit ef2d30a4dede40239e09dc8f717c5ab65a174da5[m
+Author: Mervin Ng <m6ng@ucsd.edu>
+Date:   Sat Nov 25 18:42:07 2017 -0800
+
+    fixed small bug in selecting sidebar item
+
+[33mcommit 181b54e1fa2a92040656b3fb18099d9b1feeb21a[m
+Author: Mervin Ng <m6ng@ucsd.edu>
+Date:   Sat Nov 25 18:28:59 2017 -0800
+
+    repositioned screen buttons & sidebar menu items; added display of user's name & email on sidebar
+
+[33mcommit 65f729663983b7ef7eda5d211560614073049424[m
+Merge: b81fbb9 9a27fb4
+Author: Mervin Ng <m6ng@ucsd.edu>
+Date:   Sat Nov 25 16:01:57 2017 -0800
+
+    fixed compile error w/ build.gradle
+
+[33mcommit b81fbb9b5ca45d89d2e486e3211eaebbb509fc0c[m
+Merge: cbeb65e 8131bc5
+Author: Mervin Ng <m6ng@ucsd.edu>
+Date:   Sat Nov 25 11:41:40 2017 -0800
+
+    preparing to merge with master
+
+[33mcommit 9a27fb424dadab1151e92006040661c48cda83dd[m
+Merge: cbeb65e 8131bc5
+Author: Mervin Ng <m6ng@ucsd.edu>
+Date:   Sat Nov 25 11:41:40 2017 -0800
+
+    merged with master
+
+[33mcommit 8131bc544493655c65e1b0dac9ed476e13f5c5ca[m
+Author: Kawaamai <0110amai@gmail.com>
+Date:   Sat Nov 25 01:33:14 2017 -0800
+
+    Update activity_login.xml
+    
+    added back in shadows
+
+[33mcommit cbeb65ea6a36be47245aacf6af51ae60e51d28b5[m
+Author: Mervin Ng <m6ng@ucsd.edu>
+Date:   Sat Nov 25 01:11:22 2017 -0800
+
+    took out unneeded item in sidebar
+
+[33mcommit bc19bf85f6a20f8de848ea79bba375a5ebdc83f7[m
+Author: Anthony <Admin@Admin.local>
+Date:   Fri Nov 24 18:07:10 2017 -0800
+
+    Fixed compile error
+
+[33mcommit 41d149dc68c3ea5e85eb81f311326ba1b9410901[m
+Merge: b326954 838fd9f
+Author: Kawaamai <0110amai@gmail.com>
+Date:   Fri Nov 24 18:01:40 2017 -0800
+
+    Merge pull request #6 from chrisqz95/feature/file_upload_fragment
+    
+    Feature/file upload fragment
+
+[33mcommit 838fd9fd94c3d16ee4a08307f5edb537df727ba7[m
+Author: Anthony <Admin@Admin.local>
+Date:   Fri Nov 24 17:55:02 2017 -0800
+
+    Ready to be merged with master
+
+[33mcommit ad92961aca2f94cb590a2342c4b5bf272d48eeb9[m
+Author: Anthony <Admin@Admin.local>
+Date:   Fri Nov 24 17:45:52 2017 -0800
+
+    Moved all file upload code into a new Fragment "UploadImageFragment.java"
+
+[33mcommit 79a5ccc4e6d3a39f3a0e90f4b3b18864114e59cf[m
+Author: Anthony <Admin@Admin.local>
+Date:   Fri Nov 24 17:44:48 2017 -0800
+
+    Moved all file upload code into a new Fragment "UploadImageFragment.java"
+
+[33mcommit 7a50ca3b5087325349b0bc9ffc5b5baa4f126d2e[m
+Author: Anthony <Admin@Admin.local>
+Date:   Fri Nov 24 12:47:11 2017 -0800
+
+    Cleaned up code. Added comments
+
+[33mcommit 014d66cb598384fffed3f8bc85d82a939d9a366e[m
+Author: Anthony <Admin@Admin.local>
+Date:   Fri Nov 24 12:39:08 2017 -0800
+
+    Added comments
+
+[33mcommit b633d285c6d158b63c2548588d9f24cc5e0b33a9[m
+Author: Anthony <Admin@Admin.local>
+Date:   Fri Nov 24 11:50:45 2017 -0800
+
+    Can now take and upload photos from camera
+
+[33mcommit 8aafb24e3c4d8e3f18e928e1f1618ffe9c64da25[m
+Author: Anthony <Admin@Admin.local>
+Date:   Fri Nov 24 01:32:21 2017 -0800
+
+    Can now upload photos to Firebase
+
+[33mcommit f2dd756c8d0f53b26b23ee75aabc02bc704a248e[m
+Author: Anthony <Admin@Admin.local>
+Date:   Fri Nov 24 00:36:02 2017 -0800
+
+    Can now upload photos to Firebase
+
+[33mcommit b9c887d9841bc2b0270b96faa2fdcab747c5b857[m
+Author: Mervin Ng <m6ng@ucsd.edu>
+Date:   Thu Nov 23 23:52:32 2017 -0800
+
+    minor change; no effect on functionality
+
+[33mcommit 082baf2bad00ee113ecfb3ae53daeaefc0a9a44b[m
+Author: Anthony <Admin@Admin.local>
+Date:   Thu Nov 23 20:22:51 2017 -0800
+
+    Added file upload dependency
+
+[33mcommit 917fd06eee0d747b1f5da1316d6c6d604f06bb42[m
+Merge: b326954 de41e81
+Author: Anthony <Admin@Admin.local>
+Date:   Thu Nov 23 20:21:02 2017 -0800
+
+    Merge branch 'feature/sign-up-activity' of https://github.com/chrisqz95/couch-potatoes into feature/file_upload
+
+[33mcommit 4082d78cfdca2b6083672c494f310bae95a7795e[m
+Author: Mervin Ng <m6ng@ucsd.edu>
+Date:   Thu Nov 23 00:28:10 2017 -0800
+
+    toolbar does not overlap with main content anymore; solution: changed FrameLayout to LinearLayout
+
+[33mcommit 85f1b0cf54535f7033088583e3ac36120b9a0f60[m
+Author: Mervin Ng <m6ng@ucsd.edu>
+Date:   Wed Nov 22 18:53:32 2017 -0800
+
+    added comments & unnecessary sidebar code; problem from last commit still exists
+
+[33mcommit f9cb8259818493913d2710376f7aaffcf9444046[m
+Author: Mervin Ng <m6ng@ucsd.edu>
+Date:   Wed Nov 22 18:45:57 2017 -0800
+
+    added toolbar with sidebar toggle button; but it blocks buttons of date/friend tabs
+
+[33mcommit df4ef5bb1b4f27c3118fedbf2fd6284b7f6480e2[m
+Author: Mervin Ng <m6ng@ucsd.edu>
+Date:   Wed Nov 22 17:09:07 2017 -0800
+
+    user can slide sidebar out from left side; will add in toggle button on top left
+
+[33mcommit 5bd3937a700a60e4d1da026d83fae336cec6d799[m
+Author: Mervin Ng <m6ng@ucsd.edu>
+Date:   Sun Nov 19 23:20:24 2017 -0800
+
+    added icon images in drawable
+
+[33mcommit 379bad30e5aabd33da080090fd2330b55763843a[m
+Author: Casey Schneider <clschnei@ucsd.edu>
+Date:   Sun Nov 19 19:36:25 2017 -0800
+
+    Added documentation and refined a bit
+
+[33mcommit de41e81e9e5b8864e4049a901aa88058bd175918[m
+Author: Andrew Huang <anh162@ucsd.edu>
+Date:   Sun Nov 19 00:13:28 2017 -0800
+
+    Finished Sign up - Temp variables to hold user info
+
+[33mcommit b699ca7845e23ae72f4c24ab1b2b7fbe7dc3e760[m
+Author: Andrew Huang <anh162@ucsd.edu>
+Date:   Sat Nov 18 19:57:03 2017 -0800
+
+    Connected to FireBase - Activity transitions need work
+
+[33mcommit 934f8917eacf6a7a4ef7b3b85036dcc53f5559e3[m
+Author: Casey Schneider <clschnei@ucsd.edu>
+Date:   Sat Nov 18 17:24:20 2017 -0800
+
+    Added top navigation bar, resized user card, added user activity when user card is clicked
+
+[33mcommit b32695427c89da09da7556eaa0ebec8040d26112[m
+Author: Kawaamai <0110amai@gmail.com>
+Date:   Sat Nov 18 16:34:17 2017 -0800
+
+    Delete TestFragment.java
+
+[33mcommit ff463fcaa200cc65b19a4cefb531a5aefa1102b6[m
+Author: Andrew Huang <anh162@ucsd.edu>
+Date:   Sat Nov 18 15:34:54 2017 -0800
+
+    Fixed merge
+
+[33mcommit 1f3774277f3bbc29ed6711802d81f172628c2edf[m
+Merge: 87fbf46 e12a226
+Author: Andrew Huang <anh162@ucsd.edu>
+Date:   Sat Nov 18 15:18:07 2017 -0800
+
+    Merged with Master - Login Activity Finished
+
+[33mcommit 87fbf46fbfe562c7672189b3fb9a7e15123e2f1f[m
+Author: Andrew Huang <anh162@ucsd.edu>
+Date:   Sat Nov 18 15:10:22 2017 -0800
+
+    Fixed strings
+
+[33mcommit e12a226ae8e6d1c0ab3718b847acaed0d1705854[m
+Merge: 7bf6cb0 178d93c
+Author: Kawaamai <0110amai@gmail.com>
+Date:   Sat Nov 18 14:43:48 2017 -0800
+
+    Merge pull request #5 from chrisqz95/feature/chat_and_messaging
+    
+    Feature/chat and messaging
+
+[33mcommit 178d93c419b85c53f63769f3fd21a29472fe2886[m
+Author: Alan Mai <0110amai@gmail.com>
+Date:   Sat Nov 18 14:33:27 2017 -0800
+
+    updated Login added reset password screen+logic
+
+[33mcommit 4c82d9074f51134364f692e3d6725309dd518095[m
+Merge: b877edc 5a3d1a9
+Author: Andrew Huang <anh162@ucsd.edu>
+Date:   Sat Nov 18 13:13:22 2017 -0800
+
+    Merged with Chat-Messaging
+
+[33mcommit e01021a5b365e234f249ecf2a43a170cdf7c061f[m
+Author: Cristian Recinos <cristianrecinos@Cristians-MacBook-Pro.local>
+Date:   Sat Nov 18 13:06:46 2017 -0800
+
+    Preferences
+
+[33mcommit b877edcf157860977b21aaa2a24ff56338463196[m
+Author: Andrew Huang <anh162@ucsd.edu>
+Date:   Sun Nov 12 22:52:04 2017 -0800
+
+    Added base sign up activity, does not connect to FireBase currently
+
+[33mcommit 230d2595c0a8c43ab0f99b172bd37daecd0d2fb6[m
+Author: Alan Mai <0110amai@gmail.com>
+Date:   Sun Nov 12 13:54:55 2017 -0800
+
+    small update to Current user and made some fields private
+
+[33mcommit 4ae37d36be128fe198ac3464c593c58bd1988e2c[m
+Author: Casey Schneider <clschnei@ucsd.edu>
+Date:   Sat Nov 11 22:58:09 2017 -0800
+
+    Finished prototype of homepage with swipeable cards
+
+[33mcommit 5a3d1a9b7f4cb981a64cad7d83612474ccf24dd4[m[33m ([m[1;32mfeature/chat_and_messaging[m[33m)[m
+Author: Anthony <Admin@Admin.local>
+Date:   Sat Nov 11 20:50:33 2017 -0800
+
+    Removed commented code. Completed Registration Activity
+
+[33mcommit 70e00836a505abf8e1b3faa712924795f6a8bd8a[m
+Author: Anthony <Admin@Admin.local>
+Date:   Sat Nov 11 20:47:36 2017 -0800
+
+    Added comments and improved readability of Chat and Messaging activities
+
+[33mcommit a1df873668c4b29a41be95f6d7e5e8fe1028b9c4[m
+Author: Anthony <Admin@Admin.local>
+Date:   Sat Nov 11 20:07:08 2017 -0800
+
+    Added comments and improved readability of Login, Main, and Registration activities
+
+[33mcommit b4425a44db3428f2c49ebb12110148531295e5ac[m
+Author: Anthony <Admin@Admin.local>
+Date:   Sat Nov 11 16:54:18 2017 -0800
+
+    Temporarily corrected edit message bug
+
+[33mcommit 5e90302c100fe1b96522589c2ec7f96a95fcb727[m
+Author: Anthony <Admin@Admin.local>
+Date:   Sat Nov 11 16:36:15 2017 -0800
+
+    A chat is created for every newly registered user containing only the newly registered user
+
+[33mcommit cabf09d02c5dd2ef25f25d407b8522c8cdc86309[m
+Author: Anthony <Admin@Admin.local>
+Date:   Sat Nov 11 16:06:31 2017 -0800
+
+    Added account RegisrationActivity to app
+
+[33mcommit 37249a854dc46a8fd37af20111a3a62d10ee9e3c[m
+Author: Anthony <Admin@Admin.local>
+Date:   Sat Nov 11 12:59:07 2017 -0800
+
+    Prevent EditText field from autofocusing
+
+[33mcommit 57c2cbc542a90191369083c74f30dcb16f305f50[m
+Author: Anthony <Admin@Admin.local>
+Date:   Sat Nov 11 11:12:02 2017 -0800
+
+    Improved edit message prompt
+
+[33mcommit d12a131b62b503b5ec4d18f1cd3496e69693ea74[m
+Author: Anthony <Admin@Admin.local>
+Date:   Sat Nov 11 11:05:26 2017 -0800
+
+    Corrected typo in MainActivity.class
+
+[33mcommit 5be1aa60c157c9e4b8cc5eed6128399c8fbc5348[m
+Author: Anthony <Admin@Admin.local>
+Date:   Sat Nov 11 10:42:58 2017 -0800
+
+    Added helper methods to DBHelper fetching and updating authentication profile info
+
+[33mcommit 2e4acaca1a0d29208db85818d4a16cbc8e97a79a[m
+Author: Anthony <Admin@Admin.local>
+Date:   Sat Nov 11 09:48:17 2017 -0800
+
+    Users can now only edit their own messages. Code works but is lacking comments and a bit messy. Will fix soon.
+
+[33mcommit c9927d146699c9ca4174f3c7e67d58edbb6e533e[m
+Author: Anthony <Admin@Admin.local>
+Date:   Sat Nov 11 02:43:42 2017 -0800
+
+    MessageActivity now displays messages in a ListView. Messages can be edited or deleted
+
+[33mcommit e21f621df23aaa5e58a9ebb4b355f7b624dcbc9b[m
+Author: Anthony <Admin@Admin.local>
+Date:   Sat Nov 11 01:20:09 2017 -0800
+
+    MessageActivity now fetches last 15 messages
+
+[33mcommit 48ca546aa0af64439a1c85357312ac80bfa33a4f[m
+Author: Anthony <Admin@Admin.local>
+Date:   Sat Nov 11 01:04:37 2017 -0800
+
+    ChactActivity now displays user names instead of userIDs. Had to alter "ChatUser" object in Firebase database and DBHelper to get this to work.
+
+[33mcommit 0ff4ed3b22f9059487d81d2b41c119ade1015162[m
+Author: Anthony <Admin@Admin.local>
+Date:   Fri Nov 10 23:04:39 2017 -0800
+
+    All activities now display user's name
+
+[33mcommit a452f08dc837c30ab8279500fe909b0bec674ebf[m
+Author: Anthony <Admin@Admin.local>
+Date:   Fri Nov 10 22:36:56 2017 -0800
+
+    Removed floating action buttons from Views
+
+[33mcommit db523ea1ea203de320c7b68007c9fe54d4f9b711[m
+Author: Anthony <Admin@Admin.local>
+Date:   Fri Nov 10 22:28:55 2017 -0800
+
+    Updated and commented ChatRoomActivity
+
+[33mcommit 6e10594a8377c170c73cf7dc57b7f77194c714b4[m
+Author: Anthony <Admin@Admin.local>
+Date:   Fri Nov 10 22:21:35 2017 -0800
+
+    Refactored helper method
+
+[33mcommit 7e132c0ef714731b3cb820d9d997fd96b5eca756[m
+Author: Anthony <Admin@Admin.local>
+Date:   Fri Nov 10 22:16:02 2017 -0800
+
+    Added comments to DBHelper.getFullName()
+
+[33mcommit 82b1881daa9f999143838fb2378c97588408d238[m
+Author: Anthony <Admin@Admin.local>
+Date:   Fri Nov 10 22:13:12 2017 -0800
+
+    Added helper method to DBHelper
+
+[33mcommit b7f235e31efbd31eb8b1c54eb08c9dec512450fb[m
+Author: Anthony <Admin@Admin.local>
+Date:   Fri Nov 10 22:12:22 2017 -0800
+
+    Added helper method to DBHelper
+
+[33mcommit aa68494cfee82011d5933ccc78cca7a0c9606893[m
+Author: Anthony <Admin@Admin.local>
+Date:   Fri Nov 10 22:01:45 2017 -0800
+
+    MessageActivity now displays timestamp along with message
+
+[33mcommit 709c07d423fd2ee35670ae86ad259ed2b3ee7cc0[m
+Author: Anthony <Admin@Admin.local>
+Date:   Fri Nov 10 21:50:15 2017 -0800
+
+    Added comments to Activity files. Modified "Message" on Firebase to include a "name" key and value
+
+[33mcommit 0bcc312bd62fdd7cc613a919e55dc395c8affaaf[m
+Author: Anthony <Admin@Admin.local>
+Date:   Fri Nov 10 21:18:58 2017 -0800
+
+    Messages now display sender's name instead of id
+
+[33mcommit f4090d530af57fcbe85c4ee9c4307b3dd616bd95[m
+Author: Anthony <Admin@Admin.local>
+Date:   Fri Nov 10 20:11:24 2017 -0800
+
+    Login, Main, ChatRoom, and Message Activities tested and working fine.
+
+[33mcommit 19d8e9c935f7d246a3015e7313bc4fea9acd4547[m
+Author: Anthony <Admin@Admin.local>
+Date:   Fri Nov 10 19:15:08 2017 -0800
+
+    Increased text font size in messages
+
+[33mcommit d997c67aa9f0b87135e7cc4c36fe62177fdc6205[m
+Author: Anthony <Admin@Admin.local>
+Date:   Fri Nov 10 19:08:58 2017 -0800
+
+    Added Chat and Messaging Activities
+
+[33mcommit 27d0510bbe4ea61945356433de1627282ade53df[m
+Merge: a393eec 7bf6cb0
+Author: Casey Schneider <clschnei@ucsd.edu>
+Date:   Fri Nov 10 13:36:55 2017 -0800
+
+    Merge branch 'master' of https://github.com/chrisqz95/couch-potatoes into feature/homepage-activity
+
+[33mcommit a393eec024457aae7f27db74fdd9e8054c8d137b[m
+Author: Casey Schneider <clschnei@ucsd.edu>
+Date:   Fri Nov 10 12:55:57 2017 -0800
+
+    Fixed missing google-services.json
+
+[33mcommit 7bf6cb0f4e5f8ef61967c4754fa62724c62e793d[m[33m ([m[1;32mmaster[m[33m)[m
+Author: Anthony <Admin@Admin.local>
+Date:   Fri Nov 10 12:41:03 2017 -0800
+
+    Added google-services.json file to project
+
+[33mcommit 87fbd27ba91a096a208a40001dc28cad8a6b34d5[m
+Author: Kawaamai <0110amai@gmail.com>
+Date:   Fri Nov 10 02:12:21 2017 -0800
+
+    Update StringValidator.java
+
+[33mcommit 0cc8a52cac52d551e2cb0571cce9d097c4b91e28[m
+Merge: 2e8469f e4c1745
+Author: Kawaamai <0110amai@gmail.com>
+Date:   Thu Nov 9 21:11:03 2017 -0800
+
+    Merge pull request #4 from chrisqz95/feature/database-api
+    
+    Feature/database api
+
+[33mcommit e4c174554dde2050440535a1b6bbfa82c7a5059e[m
+Merge: d1d2d89 d722eaf
+Author: Kawaamai <0110amai@gmail.com>
+Date:   Thu Nov 9 17:36:31 2017 -0800
+
+    Merge pull request #3 from chrisqz95/feature/string-validator
+    
+    feature/database-api
+
+[33mcommit d1d2d89d85f488aa5b5767a6a830b661d3c2aa7f[m
+Author: Chris Z <chrisqz95@gmail.com>
+Date:   Thu Nov 9 17:36:06 2017 -0800
+
+    Removed idea
+
+[33mcommit da8319be6f7db10328d177c37590a4ed57f26c5d[m
+Author: Chris Z <chrisqz95@gmail.com>
+Date:   Thu Nov 9 17:35:10 2017 -0800
+
+    Removed idea
+
+[33mcommit d722eaf745291d4dd3cd71b265cef01335847af7[m
+Author: Alan Mai <0110amai@gmail.com>
+Date:   Thu Nov 9 15:43:36 2017 -0800
+
+    moved static regex strings to be members of the method that uses them
+
+[33mcommit e515a6efe09dc630502a463f137009872a0b130a[m
+Author: Anthony <Admin@Admin.local>
+Date:   Thu Nov 9 12:56:11 2017 -0800
+
+    Added helper methods to DBHelper for readability and ease of use
+
+[33mcommit 49014a96ee643a08ea70913ce163c44f71726069[m
+Author: Anthony <Admin@Admin.local>
+Date:   Thu Nov 9 12:01:31 2017 -0800
+
+    Added helper methods to DBHelper for readability and ease of use
+
+[33mcommit abfd0556b2bd304bd166a99f4112c192e6777ee2[m
+Author: Anthony <Admin@Admin.local>
+Date:   Thu Nov 9 11:57:18 2017 -0800
+
+    Added helper methods to DBHelper for readability and ease of use
+
+[33mcommit e43b7e6d75f763dffc9d7b3f84ff1362fc304c9c[m
+Author: Anthony <Admin@Admin.local>
+Date:   Thu Nov 9 11:46:56 2017 -0800
+
+    Added isUserLoggedIn() method to DBHelper
+
+[33mcommit 3cb8a25aa9050a428a5641e437e076e2f9b31c7c[m
+Author: Alan Mai <0110amai@gmail.com>
+Date:   Thu Nov 9 11:38:18 2017 -0800
+
+    removed extra kt files
+
+[33mcommit f7101da90df332fccaac44fb8f0fbc36d389ece8[m
+Author: Anthony <Admin@Admin.local>
+Date:   Thu Nov 9 11:35:10 2017 -0800
+
+    LoginActivity now logs user into Firebase. Added MainActivity for testing.
+
+[33mcommit 6fe021aec2a398a2afe0e2dac6999671b3a740c3[m
+Author: Alan Mai <0110amai@gmail.com>
+Date:   Wed Nov 8 19:34:39 2017 -0800
+
+    added StringValidator, untested
+
+[33mcommit 308e67bb4bd06b0f7e174870c2849efa593502ae[m
+Author: Anthony <Admin@Admin.local>
+Date:   Wed Nov 8 17:22:22 2017 -0800
+
+    Added comments to DBHelper
+
+[33mcommit a334c77d64a6aeec9e41f1672a212672f31cecef[m
+Author: Anthony <Admin@Admin.local>
+Date:   Wed Nov 8 15:41:18 2017 -0800
+
+    DBHelper can now add or remove data from Login_Record on Firebase
+
+[33mcommit 7f0b68384a0d2976c8329d0b2d415c768895aa9d[m
+Author: Anthony <Admin@Admin.local>
+Date:   Wed Nov 8 15:36:17 2017 -0800
+
+    DBHelper can now add or remove data from User_Chat, Chat_User, Chat_Message, User_Match, and Message on Firebase
+
+[33mcommit d7573d4bfd6995ac2f987f202c044cb9dcc034c7[m
+Author: Anthony <Admin@Admin.local>
+Date:   Wed Nov 8 15:19:25 2017 -0800
+
+    DBHelper can now add or remove data from Like, Dislike, Block, Report, Befriend, Date, Blocked_User, and Reported_User on Firebase
+
+[33mcommit aa006df20a8e3cbe5d09cb6d89db48360295faf0[m
+Author: Anthony <Admin@Admin.local>
+Date:   Wed Nov 8 14:49:55 2017 -0800
+
+    DBHelper can now add, remove, or update data from Partner_Preference on Firebase
+
+[33mcommit 94e94790df2588cdc77b77f5bc54553103fb2b19[m
+Author: Anthony <Admin@Admin.local>
+Date:   Tue Nov 7 20:56:30 2017 -0800
+
+    DBHelper can now add or remove data from User_Interest on Firebase
+
+[33mcommit faed5a98eb53032c4743145afbeb346a7ada624d[m
+Author: Anthony <Admin@Admin.local>
+Date:   Tue Nov 7 20:53:37 2017 -0800
+
+    DBHelper can now add or remove data from Interest_Subcategory on Firebase
+
+[33mcommit 022bc214e5f94b6c79a2f53403a3895d590bcc73[m
+Author: Anthony <Admin@Admin.local>
+Date:   Tue Nov 7 20:49:26 2017 -0800
+
+    DBHelper can now add or remove from Interest on Firebase
+
+[33mcommit 26dd61b5baa8ffaad2340d71d66fb906927fe674[m
+Author: Anthony <Admin@Admin.local>
+Date:   Tue Nov 7 20:42:15 2017 -0800
+
+    DBHelper can now add, update, or delete data from Photo on Firebase
+
+[33mcommit c6127fa30282bebadfa9983857b7e8253197c5bf[m
+Author: Anthony <Admin@Admin.local>
+Date:   Tue Nov 7 20:28:45 2017 -0800
+
+    DBHelper can now add or remove data from User_Photo on Firebase
+
+[33mcommit afc4e1fb627016a6e3d1f7852f2f64ea9ff46998[m
+Author: Anthony <Admin@Admin.local>
+Date:   Tue Nov 7 20:22:55 2017 -0800
+
+    DBHelper can now add or remove data from User_Notification on Firebase
+
+[33mcommit 7076e36cc79591f19441259133e1cbbce3bfaed0[m
+Author: Anthony <Admin@Admin.local>
+Date:   Tue Nov 7 20:10:42 2017 -0800
+
+    DBHelper can now add to or remove from Locked_user and Suspended_User on Firebase
+
+[33mcommit 0b93546d4daca7420588e8ac12fe56aa416838b1[m
+Merge: 44cf226 d11f50d
+Author: Anthony <Admin@Admin.local>
+Date:   Tue Nov 7 19:27:26 2017 -0800
+
+    Merged test with features/database-api
+
+[33mcommit d11f50da027925d616e2328b813a9b1ca43029e2[m
+Author: Anthony <Admin@Admin.local>
+Date:   Tue Nov 7 11:41:57 2017 -0800
+
+    Added method to DBHelper to getNewChildKey. DBHelper can now add or remove users from a user's contact list
+
+[33mcommit 3105246aa4feb3efad2285dc3266b03ff6d9d58a[m
+Author: Anthony <Admin@Admin.local>
+Date:   Tue Nov 7 10:45:17 2017 -0800
+
+    Updated User class and DBHelper to allow adding, removing, and updating a user to the database
+
+[33mcommit 265a75f2a9570b2b1e63d91d428a592c58306e42[m
+Author: Chris Z <chrisqz95@gmail.com>
+Date:   Sun Nov 5 20:01:47 2017 -0800
+
+    Worked on LoginActivity and DBHelper
+
+[33mcommit 77d6535a08c42cf41079b460180de97e7f7443c3[m
+Author: Chris Z <chrisqz95@gmail.com>
+Date:   Sun Nov 5 15:49:08 2017 -0800
+
+    init
+
+[33mcommit 2e8469f4345cf36fb994a216bd2d4db34424fec0[m
+Author: Mervin Ng <m6ng@ucsd.edu>
+Date:   Sun Nov 5 14:56:05 2017 -0800
+
+    Stuff
+
+[33mcommit 44cf226c3570c147170ee48e1c4e5c5cdcbe49f3[m
+Author: Chris Z <chrisqz95@gmail.com>
+Date:   Sun Nov 5 13:27:31 2017 -0800
+
+    Started project
+
+[33mcommit cdc6ef8581e1843acb6f1037eb3cce986b7e302d[m
+Author: Alan Mai <0110amai@gmail.com>
+Date:   Tue Oct 24 20:40:56 2017 -0700
+
+    added vim backups to .gitignore
+
+[33mcommit d8ce642f046cea154af8a62e482cf6e08279735f[m
+Author: Chris Z <chrisqz95@gmail.com>
+Date:   Tue Oct 24 20:24:52 2017 -0700
+
+    Test commit
+
+[33mcommit 7117f64fd03a6402bd11a5747473ef2e3be845f4[m
+Author: chrisqz95 <chrisqz95@gmail.com>
+Date:   Tue Oct 24 20:11:49 2017 -0700
+
+    Initial commit
