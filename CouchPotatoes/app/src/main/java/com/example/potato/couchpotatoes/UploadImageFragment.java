@@ -259,6 +259,7 @@ public class UploadImageFragment extends Fragment implements View.OnClickListene
                         Intent intent = new Intent(getActivity(), PictureGridActivity.class );
                         intent.putExtra( "uid", userID );
                         intent.putExtra( "isCurrentUser", true );
+                        getActivity().finish();
                         startActivity( intent );
                     }
                 };
