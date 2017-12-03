@@ -79,7 +79,7 @@ public class MatchingActivity extends AppCompatActivity
         toggle.syncState();
 
         // set up side navigation bar layout
-        navView = (NavigationView) findViewById(R.id.nav_view);
+        navView = (NavigationView) findViewById(R.id.match_nav_view);
         navView.setNavigationItemSelectedListener(this);
 
         sidebarUserName = (android.widget.TextView) navView.getHeaderView(0)

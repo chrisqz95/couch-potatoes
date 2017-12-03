@@ -1,18 +1,31 @@
 package com.example.potato.couchpotatoes;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.design.widget.NavigationView;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
@@ -21,6 +34,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -42,11 +57,20 @@ public class MessageActivity extends AppCompatActivity {
 
     final int MESSAGE_FETCH_LIMIT = 50;
 
+    // For the side navigation bar and its listed items
+    private DrawerLayout mDrawer;
+    private NavigationView navView;
+    private ListView listView;
+    private ArrayAdapter<String> listAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
+
+        // places toolbar into the screen
+        Toolbar toolbar = (Toolbar) findViewById(R.id.chat_toolbar);
+        setSupportActionBar(toolbar);
 
         layout = (LinearLayout) findViewById(R.id.layout1);
         layout_2 = (RelativeLayout) findViewById(R.id.layout2);
@@ -61,8 +85,6 @@ public class MessageActivity extends AppCompatActivity {
         // Get the current user's display name
         displayName = helper.getAuthUserDisplayName();
 
-
-
         // Get the current user's id
         userID = helper.getAuth().getUid();
 
@@ -76,6 +98,8 @@ public class MessageActivity extends AppCompatActivity {
         userName.setText(companion);
         //reference1 = new Firebase("https://androidchatapp-76776.firebaseio.com/messages/" + UserDetails.username + "_" + UserDetails.chatWith);
         //reference2 = new Firebase("https://androidchatapp-76776.firebaseio.com/messages/" + UserDetails.chatWith + "_" + UserDetails.username);
+
+
 
         sendButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -196,32 +220,63 @@ public class MessageActivity extends AppCompatActivity {
                 Log.d("TEST", databaseError.toString());
             }
         });
+
     }
 
 
-        public void addMessageBox (String message,int type){
-            TextView textView = new TextView(MessageActivity.this);
-            textView.setText(message);
+    public void addMessageBox (String message,int type){
+        TextView textView = new TextView(MessageActivity.this);
+        textView.setText(message);
 
-            textView.setTextSize(20);
-            //textView.setFont
+        textView.setTextSize(20);
+        //textView.setFont
 
-            LinearLayout.LayoutParams lp2 = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-            lp2.weight = 1.0f;
+        LinearLayout.LayoutParams lp2 = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        lp2.weight = 1.0f;
 
-            if (type == 1) {
-                lp2.gravity = Gravity.RIGHT;
-                textView.setBackgroundResource(R.drawable.chat_bubble_in);
-                textView.setTextColor(Color.WHITE);
-            } else {
-                lp2.gravity = Gravity.LEFT;
-                textView.setBackgroundResource(R.drawable.chat_bubble_out);
-                textView.setTextColor(Color.BLACK);
-            }
-            textView.setLayoutParams(lp2);
-            layout.addView(textView);
-            scrollView.fullScroll(View.FOCUS_DOWN);
+        if (type == 1) {
+            lp2.gravity = Gravity.RIGHT;
+            textView.setBackgroundResource(R.drawable.chat_bubble_in);
+            textView.setTextColor(Color.WHITE);
+        } else {
+            lp2.gravity = Gravity.LEFT;
+            textView.setBackgroundResource(R.drawable.chat_bubble_out);
+            textView.setTextColor(Color.BLACK);
         }
+        textView.setLayoutParams(lp2);
+        layout.addView(textView);
+        scrollView.fullScroll(View.FOCUS_DOWN);
+    }
+
+    // Handles opening up the options menu
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.chat_main, menu);
+        return true;
+    }
+
+    // Handles action in clicking on
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.menu_potato_questions) {
+            return true;
+        } else if (id == R.id.menu_spin_wheel) {
+            return true;
+        } else if (id == R.id.menu_start_date) {
+            return true;
+        } else if (id == R.id.menu_end_date) {
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
 }
 
 
