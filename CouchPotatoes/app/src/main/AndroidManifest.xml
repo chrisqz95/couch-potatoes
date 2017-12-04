@@ -18,17 +18,22 @@
         android:name="android.hardware.camera2"
         android:required="true" />
 
+    <!--android:icon="@mipmap/ic_launcher"-->
     <application
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@drawable/couch_potatoes_logo"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
+        android:theme="@style/AppTheme"
+        android:largeHeap="true">
+
+        <!--android:theme="@style/AppTheme.NoActionBar">-->
         <activity
             android:name=".LoginActivity"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar">
+            <!--android:windowSoftInputMode="adjustResize">-->
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -76,6 +81,14 @@
             android:label="@string/title_activity_registration"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
+            android:name=".PictureGridActivity"
+            android:label="Couch Potatoes"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".PictureGridTabViewActivity"
+            android:label="@string/title_activity_picture_grid_tab_view"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
             android:name=".ResetPasswordActivity"
             android:label="@string/title_reset_password"
             android:theme="@style/AppTheme.NoActionBar" />
@@ -90,6 +103,14 @@
         <activity
             android:name=".AboutUsActivity"
             android:label="@string/title_activity_about_us"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".SpinBottleActivity"
+            android:label="SpinBottle"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".SpinToChooseActivity"
+            android:label="SpinToChoose"
             android:theme="@style/AppTheme.NoActionBar" />
     </application>
 

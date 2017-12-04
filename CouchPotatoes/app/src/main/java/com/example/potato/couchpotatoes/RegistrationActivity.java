@@ -83,7 +83,7 @@ public class RegistrationActivity extends AppCompatActivity {
                 boolean suspended = false;
 
                 // Create new user object
-                user = new CurrentUser(
+                user = CurrentUser.getInstance(
                     email, userID, firstName, middleName, lastName, birthDate, gender, city, state, country, bio,
                     latitude, longitude, locked, suspended );
 

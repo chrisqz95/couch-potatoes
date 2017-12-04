@@ -4,6 +4,8 @@
                                                  xmlns:tools="http://schemas.android.com/tools"
                                                  android:layout_width="match_parent"
                                                  android:layout_height="match_parent"
+                                                 android:padding="10dp"
+                                                 android:background="@color/white"
                                                  android:fitsSystemWindows="true"
                                                  tools:context="com.example.potato.couchpotatoes.LoginActivity">
 
@@ -11,18 +13,16 @@
             android:id="@+id/login_form"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
-            android:background="@color/white"
             android:gravity="center"
             android:orientation="vertical"
             android:padding="@dimen/activity_horizontal_margin">
-
 
         <ImageView
                 android:layout_width="@dimen/logo_w_h"
                 android:layout_height="@dimen/logo_w_h"
                 android:layout_gravity="center_horizontal"
-                android:layout_marginBottom="30dp"
-                android:src="@mipmap/ic_launcher" />
+                android:layout_marginBottom="20dp"
+                android:src="@drawable/couch_potatoes_logo" />
 
         <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
@@ -35,6 +35,7 @@
                     android:layout_marginBottom="10dp"
                     android:hint="@string/hint_email"
                     android:inputType="textEmailAddress"
+                    android:padding="10dp"
                     android:textColor="@color/primaryTextColor"
                     android:textColorHint="@color/hint"
                     android:maxLines="1"/>
@@ -46,13 +47,14 @@
 
             <EditText
                     android:id="@+id/password"
-                    android:layout_width="fill_parent"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="10dp"
                     android:hint="@string/hint_password"
                     android:inputType="textPassword"
+                    android:padding="10dp"
                     android:textColor="@color/primaryTextColor"
-                    android:textColorHint="@color/hint" />
+                    android:textColorHint="@color/hint"/>
         </android.support.design.widget.TextInputLayout>
 
         <!-- Login Button -->
@@ -62,41 +64,46 @@
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dip"
-                android:background="@color/colorPrimary"
+                android:background="@drawable/round_shape_btn"
                 android:text="@string/btn_login"
                 android:textColor="@android:color/white"
+                android:foreground="?android:attr/selectableItemBackground"
                 android:textSize="14sp"
                 android:elevation="2dp"/>
 
+
         <Button
                 android:id="@+id/btn_reset_password"
-                android:layout_width="fill_parent"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:paddingTop="10dp"
                 android:layout_marginTop="20dip"
                 android:background="@null"
                 android:text="@string/btn_forgot_password"
                 android:textAllCaps="false"
-                android:textColor="@color/colorAccent" />
+                android:minHeight="0dp"
+                android:textColor="@color/primaryColor"
+                android:fontFamily="sans-serif"/>
 
-        <!-- Link to Login Screen -->
 
         <Button
                 android:id="@+id/btn_signup"
-                android:layout_width="fill_parent"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dip"
                 android:background="@null"
                 android:text="@string/btn_link_to_register"
                 android:textAllCaps="false"
-                android:textColor="@color/colorAccent"
-                android:textSize="15sp" />
+                android:textColor="@color/primaryColor"
+                android:textSize="15sp"
+                android:fontFamily="sans-serif"/>
     </LinearLayout>
 
     <ProgressBar
             android:id="@+id/login_progressbar"
             android:layout_width="30dp"
             android:layout_height="30dp"
-            android:layout_gravity="center|top"
+            android:layout_gravity="center"
             android:layout_marginBottom="20dp"
             android:visibility="gone" />
 

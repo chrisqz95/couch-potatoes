@@ -435,8 +435,11 @@ public class MatchingActivity extends AppCompatActivity
         toggle.syncState();
 
         // set up side navigation bar layout
-        navView = (NavigationView) findViewById(R.id.nav_view);
+        navView = (NavigationView) findViewById(R.id.match_nav_view);
         navView.setNavigationItemSelectedListener(this);
+
+        // Want to display icons in original color scheme
+        navView.setItemIconTintList(null);
 
         sidebarUserName = (android.widget.TextView) navView.getHeaderView(0)
                 .findViewById(R.id.sidebar_username);
@@ -481,11 +484,11 @@ public class MatchingActivity extends AppCompatActivity
             startActivity( intent );
 
         }
-        // Remove for now. Uncomment later if needed.
-        //else if (id == R.id.nav_settings) {
+        else if (id == R.id.nav_settings) {
+		    // TODO
             //Intent intent = new Intent( getApplicationContext(), SettingsActivity.class );
             //startActivity( intent );
-        //}
+        }
         else if (id == R.id.nav_info) {
             // TODO: go to Page with device information
             Intent intent = new Intent( getApplicationContext(), AboutUsActivity.class );
@@ -499,6 +502,7 @@ public class MatchingActivity extends AppCompatActivity
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
+
         return true;
     }
 
