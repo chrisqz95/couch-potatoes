@@ -19,13 +19,18 @@ import android.os.Bundle;
 import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 import android.preference.RingtonePreference;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
@@ -84,7 +89,8 @@ import java.util.Map;
  * href="http://developer.android.com/guide/topics/ui/settings.html">Settings
  * API Guide</a> for more information on developing a Settings UI.
  */
-public class PreferencesActivity extends AppCompatActivity {
+public class PreferencesActivity extends AppCompatActivity
+        implements NavigationView.OnNavigationItemSelectedListener {
     private DBHelper helper;
     private static String[] moviePrefList = new String[] {"Action", "Adventure", "Animation", "Biography", "Comedy", "Crime", "Documentary", "Drama", "Family", "Fantasy", "Film-Noir", "History", "Horror", "Music", "Musical", "Mystery", "Romance", "Sci-Fi", "Sport", "Thriller", "War", "Western"};
     private static String[] sportsPrefList = new String[] {"The", "Thing", "Go", "Skrraaaa"};
@@ -114,6 +120,12 @@ public class PreferencesActivity extends AppCompatActivity {
     private LinearLayout bioBtnLayout;
 
     private String currUserID;
+
+    // For the side navigation bar
+    private DrawerLayout mDrawer;
+    private NavigationView navView;
+    private android.widget.TextView sidebarUserName;
+    private android.widget.TextView sidebarUserEmail;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -154,6 +166,26 @@ public class PreferencesActivity extends AppCompatActivity {
         interestListView.setAdapter( interestAdapter );
 
         //interestsLayout = (LinearLayout) findViewById(R.id.interestsLayout);
+
+        // places toolbar on top of the screen
+        Toolbar toolbar = (Toolbar) findViewById(R.id.profile_toolbar);
+        toolbar.setTitleTextColor(Color.WHITE);
+        setSupportActionBar(toolbar);
+
+        // enables toggle button on toolbar to open the sidebar
+        mDrawer = (DrawerLayout) findViewById(R.id.profile_drawer_layout);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                this, mDrawer, toolbar, R.string.navigation_drawer_open,
+                R.string.navigation_drawer_close);
+        mDrawer.addDrawerListener(toggle);
+        toggle.syncState();
+
+        // set up side navigation bar layout
+        navView = (NavigationView) findViewById(R.id.profile_nav_view);
+        navView.setNavigationItemSelectedListener(this);
+
+        // Want to display icons in original color scheme
+        navView.setItemIconTintList(null);
 
         settingsTab = (Button) findViewById(R.id.settingsTab);
         settingsTab.setOnClickListener(new View.OnClickListener() {
@@ -513,5 +545,44 @@ public class PreferencesActivity extends AppCompatActivity {
                 Log.d("TEST", databaseError.getMessage());
             }
         });
+    }
+
+    // Handles action in the sidebar menu
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+        int id = item.getItemId();
+
+        if (id == R.id.nav_profile) {
+            // user is already on the page; do nothing
+        } else if (id == R.id.nav_matches) {
+            // redirect user to the "Find Matches" screen
+            finish();
+
+        } else if (id == R.id.nav_chats) {
+            // redirects user to ChatRoomActivity.xml
+            Intent intent = new Intent( getApplicationContext(), ChatRoomActivity.class );
+            startActivity( intent );
+            finish();
+        }
+        else if (id == R.id.nav_settings) {
+            // TODO: go to the settings page
+            //Intent intent = new Intent( getApplicationContext(), SettingsActivity.class );
+            //startActivity( intent );
+        }
+        else if (id == R.id.nav_info) {
+            // TODO: go to the "about us" page
+            Intent intent = new Intent( getApplicationContext(), AboutUsActivity.class );
+            startActivity( intent );
+        } else if (id == R.id.nav_logout) {
+            // logs out and redirects user to LoginActivity.xml
+            helper.getAuth().signOut();
+            startActivity( new Intent( getApplicationContext(), LoginActivity.class ) );
+            finish();
+        }
+
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.profile_drawer_layout);
+        drawer.closeDrawer(GravityCompat.START);
+
+        return true;
     }
 }

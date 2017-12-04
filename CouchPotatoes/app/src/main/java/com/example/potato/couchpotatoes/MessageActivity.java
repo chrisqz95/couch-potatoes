@@ -66,6 +66,11 @@ public class MessageActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.chat_toolbar);
         setSupportActionBar(toolbar);
 
+        // adds up navigation to the toolbar on top
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        // Activity title will not show in the toolbar
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+
         b_select_spinner = (Button) findViewById(R.id.b_select_spinner);
         layout = (LinearLayout) findViewById(R.id.layout1);
         layout_2 = (RelativeLayout) findViewById(R.id.layout2);

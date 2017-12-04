@@ -46,7 +46,8 @@
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".PreferencesActivity"
-            android:label="@string/pref_header_profile" />
+            android:label="@string/pref_header_profile"
+            android:theme="@style/AppTheme.NoActionBar"/>
         <activity
             android:name=".UserGalleryActivity">
             <meta-data
@@ -71,7 +72,12 @@
         <activity
             android:name=".MessageActivity"
             android:label="@string/title_activity_message"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar">
+            <!--Parent activity of the chat-->
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".ChatRoomActivity"/>
+        </activity>
         <activity
             android:name=".SignUpActivity"
             android:label="@string/title_activity_sign_up"
@@ -103,7 +109,12 @@
         <activity
             android:name=".AboutUsActivity"
             android:label="@string/title_activity_about_us"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar">
+            <!--Parent activity of the chat-->
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".MainActivity"/>
+        </activity>
         <activity
             android:name=".SpinBottleActivity"
             android:label="SpinBottle"

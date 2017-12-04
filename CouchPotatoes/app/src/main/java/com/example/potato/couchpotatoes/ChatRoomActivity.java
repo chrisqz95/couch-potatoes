@@ -266,6 +266,7 @@ public class ChatRoomActivity extends AppCompatActivity
         if (id == R.id.nav_profile) {
             Intent intent = new Intent( getApplicationContext(), PreferencesActivity.class );
             startActivity( intent );
+            finish();
 
         } else if (id == R.id.nav_matches) {
             Intent intent = new Intent( getApplicationContext(), MainActivity.class );
@@ -273,14 +274,10 @@ public class ChatRoomActivity extends AppCompatActivity
             finish();
 
         } else if (id == R.id.nav_chats) {
-            // redirects user to ChatRoomActivity.xml
-
-            /*Intent intent = new Intent( getApplicationContext(), ChatRoomActivity.class );
-            startActivity( intent );
-            finish();*/
+            // user is already at the Chats page; do nothing
 
         } else if (id == R.id.nav_settings) {
-            // TODO: go to SettingsActivity
+            // TODO: go to the settings page
 
         }
         else if (id == R.id.nav_info) {
