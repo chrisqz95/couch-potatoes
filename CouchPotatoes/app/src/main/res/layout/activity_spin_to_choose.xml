@@ -6,24 +6,24 @@ android:layout_width="match_parent"
 android:layout_height="match_parent"
 tools:context="com.example.potato.couchpotatoes.SpinToChooseActivity">
 
-<ImageView
-    android:id="@+id/ic_spinner"
-    android:layout_width="300dp"
-    android:layout_height="300dp"
-    android:layout_above="@+id/button"
-    android:layout_centerHorizontal="true"
-    android:layout_marginBottom="10dp"
-    android:scaleType="centerInside"
-    app:srcCompat="@mipmap/spinner_food" />
+    <ImageView
+        android:id="@+id/ic_spinner"
+        android:layout_width="350dp"
+        android:layout_height="350dp"
+        android:layout_above="@+id/button"
+        android:layout_centerHorizontal="true"
+        android:scaleType="centerInside"
+        app:srcCompat="@mipmap/spinner_food" />
 
-<ImageView
-    android:id="@+id/ic_potato"
-    android:layout_width="100dp"
-    android:layout_height="100dp"
-    android:layout_alignParentTop="true"
-    android:layout_centerHorizontal="true"
-    android:layout_marginTop="12dp"
-    app:srcCompat="@drawable/potato_spin" />
+    <ImageView
+        android:id="@+id/ic_potato"
+        android:layout_width="125dp"
+        android:layout_height="125dp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:layout_marginTop="12dp"
+        app:srcCompat="@drawable/potato_spin" />
 
 <Button
     android:id="@+id/button"
@@ -34,13 +34,13 @@ tools:context="com.example.potato.couchpotatoes.SpinToChooseActivity">
     android:layout_marginBottom="10dp"
     android:text="SPIN" />
 
-<ImageView
-    android:id="@+id/pointer"
-    android:layout_width="30dp"
-    android:layout_height="30dp"
-    android:layout_below="@+id/ic_potato"
-    android:layout_centerHorizontal="true"
-    android:layout_marginTop="14dp"
-    app:srcCompat="@drawable/pointer" />
+    <ImageView
+        android:id="@+id/pointer"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_below="@+id/ic_potato"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="11dp"
+        app:srcCompat="@drawable/pointer" />
 
 </RelativeLayout>

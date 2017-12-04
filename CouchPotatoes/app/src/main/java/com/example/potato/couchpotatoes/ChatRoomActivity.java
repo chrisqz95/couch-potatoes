@@ -149,6 +149,7 @@ public class ChatRoomActivity extends AppCompatActivity
                 Intent intent = new Intent( getApplicationContext(), MessageActivity.class );
                 intent.putExtra( "chatID", chatID );
                 intent.putExtra("otherUsers", String.valueOf(parent.getItemAtPosition(position)));
+                intent.putExtra( "message", "1" );
 
                 // Begin the messaging activity corresponding to the selected chat
                 startActivity( intent );
