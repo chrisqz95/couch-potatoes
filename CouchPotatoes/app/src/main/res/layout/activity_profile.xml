@@ -44,7 +44,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:fontFamily="@font/courgette"
+                    android:textStyle="bold"
+                    android:textAlignment="center"
                     android:paddingLeft="4dp"
                     android:textColor="@color/common_google_signin_btn_text_dark_focused"
                     android:textSize="24dp" />
@@ -81,7 +82,7 @@
                         android:layout_width="118dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="Settings" />
+                        android:text="@string/settings" />
 
                     <Button
                         android:id="@+id/photosTab"
@@ -89,17 +90,19 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="Edit Photos" />
+                        android:text="@string/edit_photos" />
                 </LinearLayout>
 
+                <!--Heading Title of Biography-->
                 <TextView
                     android:id="@+id/biography_title"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:fontFamily="@font/courgette"
+                    android:textStyle="bold"
+                    android:textAlignment="center"
                     android:paddingLeft="4dp"
-                    android:text="Biography"
+                    android:text="@string/biography"
                     android:textColor="@color/common_google_signin_btn_text_dark_focused"
                     android:textSize="24dp" />
 
@@ -108,7 +111,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:backgroundTint="@android:color/transparent"
+                    android:backgroundTint="@android:color/darker_gray"
                     android:fontFamily="@font/acme"
                     android:gravity="top"
                     android:hint="@string/user_bio_hint"
@@ -131,7 +134,7 @@
                         android:layout_marginLeft="10dp"
                         android:layout_marginRight="10dp"
                         android:layout_weight="1"
-                        android:text="Save Changes" />
+                        android:text="@string/save_changes" />
 
                     <Button
                         android:id="@+id/profileBioSubmitCancelBtn"
@@ -140,17 +143,19 @@
                         android:layout_marginLeft="10dp"
                         android:layout_marginRight="10dp"
                         android:layout_weight="1"
-                        android:text="Cancel" />
+                        android:text="@string/cancel" />
                 </LinearLayout>
 
+                <!--Heading Title of Interests-->
                 <TextView
                     android:id="@+id/interests_title"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:fontFamily="@font/courgette"
+                    android:textStyle="bold"
+                    android:textAlignment="center"
                     android:paddingLeft="4dp"
-                    android:text="Interests"
+                    android:text="@string/interests"
                     android:textColor="@color/common_google_signin_btn_text_dark_focused"
                     android:textSize="24dp" />
 
