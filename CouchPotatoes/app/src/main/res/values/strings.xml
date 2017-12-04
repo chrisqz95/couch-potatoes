@@ -240,4 +240,10 @@
     <string name="title_activity_about_us">About Us</string>
 
     <string name="about_us">Brought to you by the Providers Of Technology And Talent Organization ( P.O.T.A.T.O. )</string>
+    <string name="interests">Interests</string>
+    <string name="cancel">Cancel</string>
+    <string name="save_changes">Save Changes</string>
+    <string name="biography">Biography</string>
+    <string name="edit_photos">Edit Photos</string>
+    <string name="settings">Settings</string>
 </resources>
