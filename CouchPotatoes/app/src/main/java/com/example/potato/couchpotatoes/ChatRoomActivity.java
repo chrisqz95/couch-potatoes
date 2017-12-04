@@ -181,6 +181,11 @@ public class ChatRoomActivity extends AppCompatActivity
                 // Make sure not to display already existing chatIDs more than once
                 listItems.clear();
 
+                // No chats exist. Display message to user.
+                if ( !elems.hasNext() ) {
+
+                }
+
                 // Get the next chat
                 while ( elems.hasNext() ) {
                     String chatID = elems.next().getKey();
@@ -196,6 +201,7 @@ public class ChatRoomActivity extends AppCompatActivity
                             // Concatenate the names of all users that belong to the current chat, delimited by a comma.
                             while ( users.hasNext() ) {
                                 String currUser = (String) users.next().getValue();
+                                // Do not display own name if other users exist in chat
                                 if (currUser.equals(displayName))
                                     continue;
                                 if ( !userNames.equals( "" ) ) {
@@ -203,6 +209,14 @@ public class ChatRoomActivity extends AppCompatActivity
                                 }
                                 userNames += currUser;
 
+                            }
+
+                            // Display app name if only the current user is present in the chat
+                                // NOTE: If another a user removes themselves from a chat with a different user,
+                                //         the other user's chat will now display the app name. This may result
+                            //             in duplicate chats with the same name.
+                            if ( userNames.equals( "" ) ) {
+                                    userNames += "Couch Potatoes";
                             }
 
                             // Keep track of the chatID corresponding to the list of user names

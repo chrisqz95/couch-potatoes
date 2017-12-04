@@ -119,15 +119,16 @@ public class RegistrationActivity extends AppCompatActivity {
                                             helper.fetchCurrentUser();
 
                                             // Add the new user to a new chat containing only the new user
-                                            String newChatID = helper.getNewChildKey( helper.getChatUserPath() );
-                                            String userID = helper.getAuth().getUid();
-                                            String displayName = helper.getAuthUserDisplayName();
-                                            //String displayName = helper.getAuth().getCurrentUser().getDisplayName();
-
-                                            Log.d( "TEST", "DISPLAY NAME: " + displayName );
-
-                                            helper.addToChatUser( newChatID, userID, displayName );
-                                            helper.addToUserChat( userID, newChatID );
+                                            // REMOVE FOR NOW - ONLY USED FOR TESTING
+//                                            String newChatID = helper.getNewChildKey( helper.getChatUserPath() );
+//                                            String userID = helper.getAuth().getUid();
+//                                            String displayName = helper.getAuthUserDisplayName();
+//                                            //String displayName = helper.getAuth().getCurrentUser().getDisplayName();
+//
+//                                            Log.d( "TEST", "DISPLAY NAME: " + displayName );
+//
+//                                            helper.addToChatUser( newChatID, userID, displayName );
+//                                            helper.addToUserChat( userID, newChatID );
 
                                             // Registration complete. Redirect the new user the the main activity.
                                             startActivity( new Intent( getApplicationContext(), MainActivity.class ) );
