@@ -33,7 +33,7 @@
             android:title="@string/sidebar_settings" />
         <item
             android:id="@+id/nav_info"
-            android:icon="@drawable/info"
+            android:icon="@drawable/potato_about"
             android:title="@string/sidebar_aboutUs" />
         <item
             android:id="@+id/nav_logout"
