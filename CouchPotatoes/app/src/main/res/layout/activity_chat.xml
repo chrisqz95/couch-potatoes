@@ -54,8 +54,7 @@
         <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
             android:id="@+id/layout2"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom">
+            android:layout_height="wrap_content">
 
             <LinearLayout
                 android:id="@+id/layout1"
