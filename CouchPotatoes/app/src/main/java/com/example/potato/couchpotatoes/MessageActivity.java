@@ -231,14 +231,16 @@ public class MessageActivity extends AppCompatActivity {
                                         intent.putExtra("key", 1);
                                         intent.putExtra( "chatID", chatRoom );
                                         intent.putExtra("otherUsers", companion);
+                                        finish();
                                         startActivity(intent);
                                         break;
                                     case 1:
-                                        System.out.println(LoginActivity.class);
+                                        //System.out.println(LoginActivity.class);
                                         intent = new Intent(((Dialog) dialog).getContext(), SpinBottleActivity.class);
                                         intent.putExtra("key", 0);
                                         intent.putExtra( "chatID", chatRoom );
                                         intent.putExtra("otherUsers", companion);
+                                        finish();
                                         startActivity(intent);
                                         break;
                                     case 2:
@@ -246,6 +248,7 @@ public class MessageActivity extends AppCompatActivity {
                                         intent.putExtra("key", 1);
                                         intent.putExtra( "chatID", chatRoom );
                                         intent.putExtra("otherUsers", companion);
+                                        finish();
                                         startActivity(intent);
                                         break;
                                     case 3:
@@ -253,6 +256,7 @@ public class MessageActivity extends AppCompatActivity {
                                         intent.putExtra("key", 0);
                                         intent.putExtra( "chatID", chatRoom );
                                         intent.putExtra("otherUsers", companion);
+                                        finish();
                                         startActivity(intent);
                                         break;
 

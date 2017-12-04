@@ -58,6 +58,7 @@ public class SpinBottleActivity extends AppCompatActivity {
                         intent.putExtra("message", message);
                         intent.putExtra( "chatID", getIntent().getStringExtra("chatID") );
                         intent.putExtra("otherUsers", getIntent().getStringExtra("otherUsers"));
+                        finish();
                         startActivity(intent);
                     }
 
@@ -74,32 +75,32 @@ public class SpinBottleActivity extends AppCompatActivity {
     private String currentNumber(int degrees, int nice){
         if(nice == 1) {
             switch ((degrees / (360 / 6)) % 6) {
-                case 0:
-                    return "COUCHPOTATOES SUGGESTION:\n*** SAY GOODBYE WITH A HUG ;) ***";
-                case 1:
-                    return "COUCHPOTATOES SUGGESTION:\n*** SAY GOODBYE WITH A HANDSHAKE ;) ***";
-                case 2:
-                    return "COUCHPOTATOES SUGGESTION:\n*** SAY GOODBYE WITH A KISS ON THE CHEEK ;) ***";
-                case 3:
-                    return "COUCHPOTATOES SUGGESTION:\n*** SAY GOODBYE WITH A PECK ON THE LIPS ;) ***";
-                case 4:
-                    return "COUCHPOTATOES SUGGESTION:\n*** SAY GOODBYE WITH A WAVE ;) ***";
                 case 5:
+                    return "COUCHPOTATOES SUGGESTION:\n*** SAY GOODBYE WITH A HUG ;) ***";
+                case 4:
+                    return "COUCHPOTATOES SUGGESTION:\n*** SAY GOODBYE WITH A HANDSHAKE ;) ***";
+                case 3:
+                    return "COUCHPOTATOES SUGGESTION:\n*** SAY GOODBYE WITH A KISS ON THE CHEEK ;) ***";
+                case 2:
+                    return "COUCHPOTATOES SUGGESTION:\n*** SAY GOODBYE WITH A PECK ON THE LIPS ;) ***";
+                case 1:
+                    return "COUCHPOTATOES SUGGESTION:\n*** SAY GOODBYE WITH A WAVE ;) ***";
+                case 0:
                     return "COUCHPOTATOES SUGGESTION:\n*** SAY GOODBYE WITH A HIGH FIVE ;) ***";
             }
         } else {
             switch((degrees / (360 / 6)) % 6) {
-                case 0:
-                    return "COUCHPOTATOES SUGGESTION:\n*** SAY GOODBYE WITH A MAKEOUT SESSION ;) ***";
-                case 1:
-                    return "COUCHPOTATOES SUGGESTION:\n*** SAY GOODBYE WITH AN ADVANCED HUG ;) ***";
-                case 2:
-                    return "COUCHPOTATOES SUGGESTION:\n*** SAY GOODBYE WITH SOME SEXUAL ACTIVITIES ;) ***";
-                case 3:
-                    return "COUCHPOTATOES SUGGESTION:\n*** SAY GOODBYE WITH A FRENCH KISS ;) ***";
-                case 4:
-                    return "COUCHPOTATOES SUGGESTION:\n*** GO HOME ***";
                 case 5:
+                    return "COUCHPOTATOES SUGGESTION:\n*** SAY GOODBYE WITH A MAKEOUT SESSION ;) ***";
+                case 4:
+                    return "COUCHPOTATOES SUGGESTION:\n*** SAY GOODBYE WITH AN ADVANCED HUG ;) ***";
+                case 3:
+                    return "COUCHPOTATOES SUGGESTION:\n*** SAY GOODBYE WITH SOME SEXUAL ACTIVITIES ;) ***";
+                case 2:
+                    return "COUCHPOTATOES SUGGESTION:\n*** SAY GOODBYE WITH A FRENCH KISS ;) ***";
+                case 1:
+                    return "COUCHPOTATOES SUGGESTION:\n*** GO HOME ***";
+                case 0:
                     return "COUCHPOTATOES SUGGESTION:\n*** SAY GOODBYE WITH A SLAP ON THE BUTT ***";
             }
         }
