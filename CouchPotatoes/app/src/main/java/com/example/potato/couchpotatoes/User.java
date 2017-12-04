@@ -1,12 +1,15 @@
 package com.example.potato.couchpotatoes;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import java.io.Serializable;
 
 /**
  * Created by chris on 11/5/17.
  */
 
-public abstract class User implements Serializable {
+public abstract class User implements Parcelable {
     private String email;
     private String uid;
     private String firstName;
@@ -163,5 +166,83 @@ public abstract class User implements Serializable {
 
     public void setSuspended(boolean suspended) {
         this.suspended = suspended;
+    }
+
+
+    protected User(Parcel in) {
+        this.email = in.readString();
+        this.uid = in.readString();
+        this.firstName = in.readString();
+        this.middleName = in.readString();
+        this.lastName = in.readString();
+        this.dob = in.readString();
+        this.gender = in.readString();
+        this.city = in.readString();
+        this.state = in.readString();
+        this.country = in.readString();
+        this.bio = in.readString();
+        this.latitude = in.readDouble();
+        this.longitude = in.readDouble();
+        boolean[] isLockedOrSuspended = new boolean[2];
+        in.readBooleanArray( isLockedOrSuspended );
+        this.locked = isLockedOrSuspended[0];
+        this.suspended = isLockedOrSuspended[1];
+
+        // read the data from the Parcel object and write them into CurrentUser's member fields
+//        this.setEmail( in.readString() );
+//        this.setUid( in.readString() );
+//        this.setFirstName( in.readString() );
+//        this.setMiddleName( in.readString() );
+//        this.setLastName( in.readString() );
+//        this.setDob( in.readString() );
+//        this.setGender( in.readString() );
+//        this.setCity( in.readString() );
+//        this.setState( in.readString() );
+//        this.setCountry( in.readString() );
+//        this.setBio( in.readString() );
+//        this.setLatitude( in.readDouble() );
+//        this.setLongitude( in.readDouble() );
+//        boolean[] isLockedOrSuspended = new boolean[2];
+//        in.readBooleanArray( isLockedOrSuspended );
+//        this.setLocked( isLockedOrSuspended[0] );
+//        this.setSuspended( isLockedOrSuspended[1] );
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(this.getEmail());
+        dest.writeString(this.getUid());
+        dest.writeString(this.getFirstName());
+        dest.writeString(this.getMiddleName());
+        dest.writeString(this.getLastName());
+        dest.writeString(this.getDob());
+        dest.writeString(this.getGender());
+        dest.writeString(this.getCity());
+        dest.writeString(this.getState());
+        dest.writeString(this.getCountry());
+        dest.writeString(this.getBio());
+        dest.writeDouble(this.getLatitude());
+        dest.writeDouble(this.getLongitude());
+        boolean[] isLockedOrSuspended = new boolean[] {
+                this.isLocked(), this.isSuspended() };
+        dest.writeBooleanArray( isLockedOrSuspended );
+
+//        dest.writeString(this.getEmail());
+//        dest.writeString(this.getUid());
+//        dest.writeString(this.getEmail());
+//        dest.writeString(this.getFirstName());
+//        dest.writeString(this.getMiddleName());
+//        dest.writeString(this.getLastName());
+//        dest.writeString(this.getDob());
+//        dest.writeString(this.getGender());
+//        dest.writeString(this.getCity());
+//        dest.writeString(this.getState());
+//        dest.writeString(this.getCountry());
+//        dest.writeString(this.getBio());
+//        dest.writeDouble(this.getLatitude());
+//        dest.writeDouble(this.getLongitude());
+//        boolean[] isLockedOrSuspended = new boolean[] {
+//                this.isLocked(), this.isSuspended() };
+//        dest.writeBooleanArray( isLockedOrSuspended );
     }
 }

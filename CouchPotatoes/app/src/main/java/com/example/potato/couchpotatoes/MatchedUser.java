@@ -39,4 +39,8 @@ public class MatchedUser extends User {
 
     @Override
     public void setEmail(String email) { }
+
+    public int describeContents() {
+        return 0;
+    }
 }

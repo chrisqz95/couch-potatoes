@@ -38,21 +38,33 @@ public class MainActivity extends AppCompatActivity {
         helper = new DBHelper();
 
         userName = (android.widget.TextView) findViewById(R.id.userName);
-        logout = (android.widget.Button) findViewById(R.id.logout);
+        logout = (android.widget.Button)  findViewById(R.id.logout);
         chat = (android.widget.Button) findViewById(R.id.viewChats);
 
         // Display user's name if logged in
         if ( helper.isUserLoggedIn() ) {
 
             // TODO: complete code in the method attemptPullUserInfo()
-            // TODO: DELETE CODE BELOW once above todo is completed
-            // goes to MatchingActivity.class
-            startActivity(new Intent(getApplicationContext(), MatchingActivity.class));
+
+            // fake initialized variables for testing
+            String testString = "Hello this message is from Main";
+            int testInt = 27;
+            CurrentUser user_test2 = new CurrentUser("user@test.com", "10101", "Mervin",
+                    "", "Ng", "03/27/1997", "Male", "Chicago",
+                    "Illinois", "USA", "Seize the day!", 0, 0,
+                    false, false);
+
+            // passes data from MainActivity to a dummy activity 'DummyActivity'
+            Intent mIntent = new Intent(getApplicationContext(), DummyActivity.class);
+            mIntent.putExtra("testString1", testString);
+            mIntent.putExtra("testInt1", testInt);
+            mIntent.putExtra("testCurrentUser", (Parcelable) user_test2);
+            startActivity(mIntent);
             finish();
 
             // User is logged in, load up the user object with all the logged user's info!
             // This will also render MatchActivity.class upon success
-            attemptPullUserInfo();
+            //attemptPullUserInfo();
 
         }
         // Else, redirect user to login page
@@ -127,9 +139,8 @@ public class MainActivity extends AppCompatActivity {
      * object, it will be passed into a bundle so we can pass that object into MatchingActivity
      */
     private void attemptPullUserInfo() {
-        if (mPullTask == null) {
-            return;
-        }
+//        if( mPullTask == null )
+//            return;
 
         // TODO if there is any logic that needs to go before starting the task is put here
         // ^comment: this logic work could possibly be done through onPreExecute on the AsyncTask
@@ -137,7 +148,7 @@ public class MainActivity extends AppCompatActivity {
         // TODO: retrieve the correct authorized user object or the correct info to fill in a user object
         // fake user being passed down to Matching Activity
         // (for testing purposes only)
-        CurrentUser user_test1 = new CurrentUser(null, null, "Robin",
+        CurrentUser user_test1 = new CurrentUser("user@test.com", null, "Robin",
                 "McLaurin", "Williams", null, null, "Chicago",
                 "Illinois", "USA", "Seize the day!", 0, 0,
                 false, false);
@@ -145,7 +156,6 @@ public class MainActivity extends AppCompatActivity {
         // while system loads up the user object and pass it to MatchingActivity,
         // system shall display a progress bar on screen
         showProgress(true);
-
 
         mPullTask = new PullUserInfoTask(user_test1);
         // TODO:  we can pass in anything into the method below and will appear in doInBackground.
@@ -169,48 +179,37 @@ public class MainActivity extends AppCompatActivity {
 
         // alternatively, we can pass in information during execute in which we will get the info here
         @Override
-        protected Boolean doInBackground(Void... params) {
+        protected Boolean doInBackground(Void...params) {
 
             // TODO: implement myParcelable class that extends the "Parcelable" interface
             // How to send user object to another activity via the Parcelable interface
             // https://stackoverflow.com/questions/2139134/how-to-send-an-object-from-one-android-activity-to-another-using-intents
             // MyParcelable mParcelableUser;
 
-            // unrenders the progress bar screen
             showProgress(false);
+
+            String testString = "This is a test string.";
+
+            Intent mIntent = new Intent(getApplicationContext(), DummyActivity.class);
+            mIntent.putExtra("TestString", testString); // stores String object in the Intent object
+            mIntent.putExtra("UserObject", (Parcelable) mUser); // stores User object in the Intent object
+            startActivity(mIntent);
+            finish();
 
             // TODO: on success, insert user object into a bundle and put it inside the intent!
             // We will need to change User object to implement Parcelable so that we can pass both Current user and
             // MatchedUser to different activites/fragments
-            Intent mIntent = new Intent(getApplicationContext(), MatchingActivity.class);
-            //mIntent.putExtra("UserObject", mUser); // stores User object in the Intent object
-            startActivity(mIntent);
-            finish();
+//            Intent mIntent = new Intent(getApplicationContext(), DummyActivity.class);
+//            mIntent.putExtra("TestString", testString); // stores String object in the Intent object
+//            mIntent.putExtra("UserObject", (Parcelable) mUser); // stores User object in the Intent object
+//            startActivity(mIntent);
+//            finish();
 
             // TODO:  to retrieve it later, use the line below!
             //CurrentUser user = getIntent().getParcelableExtra("UserObject");
 
             return false;
         }
-
-
-
-
     }
-
-//  TODO: implement Parcelable class for passing User Object into Intent object for Matching Activity
-//    protected class MyParcelable extends Parcelable {
-//
-//        @Override
-//        public int describeContents() {
-//            return 0;
-//        }
-//
-//        @Override
-//        public void writeToParcel(Parcel dest, int flags) {
-//
-//        }
-//    }
-
 }
 

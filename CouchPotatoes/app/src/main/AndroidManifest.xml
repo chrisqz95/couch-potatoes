@@ -9,8 +9,12 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <!-- <uses-permission android:name="android.permission.CAMERA"/> -->
-    <uses-feature android:name="android.hardware.camera" android:required="true"/>
-    <uses-feature android:name="android.hardware.camera2" android:required="true"/>
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="true" />
+    <uses-feature
+        android:name="android.hardware.camera2"
+        android:required="true" />
 
     <application
         android:allowBackup="true"
@@ -30,34 +34,41 @@
             </intent-filter>
         </activity>
         <activity
-                android:name=".MainActivity"
-                android:label="@string/title_activity_main"
-                android:theme="@style/AppTheme.NoActionBar" />
+            android:name=".MainActivity"
+            android:label="@string/title_activity_main"
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
-                android:name=".ChatRoomActivity"
-                android:label="@string/title_activity_chat_room"
-                android:theme="@style/AppTheme.NoActionBar" />
+            android:name=".ChatRoomActivity"
+            android:label="@string/title_activity_chat_room"
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
-                android:name=".MessageActivity"
-                android:label="@string/title_activity_message"
-                android:theme="@style/AppTheme.NoActionBar" />
+            android:name=".MessageActivity"
+            android:label="@string/title_activity_message"
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".SignUpActivity"
             android:label="@string/title_activity_sign_up"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-                android:name=".RegistrationActivity"
-                android:label="@string/title_activity_registration"
-                android:theme="@style/AppTheme.NoActionBar"/>
+            android:name=".RegistrationActivity"
+            android:label="@string/title_activity_registration"
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
-                android:name=".ResetPasswordActivity"
-                android:label="@string/title_reset_password"
-                android:theme="@style/AppTheme.NoActionBar"/>
+            android:name=".ResetPasswordActivity"
+            android:label="@string/title_reset_password"
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
-                android:name=".MatchingActivity"
-                android:label="Couch Potatoes"
-                android:theme="@style/AppTheme.NoActionBar">
-
+            android:name=".MatchingActivity"
+            android:label="Couch Potatoes"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
+        <activity
+            android:name=".DummyActivity"
+            android:label="@string/title_activity_dummy"
+            android:parentActivityName=".ChatRoomActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.potato.couchpotatoes.ChatRoomActivity" />
         </activity>
     </application>
 
