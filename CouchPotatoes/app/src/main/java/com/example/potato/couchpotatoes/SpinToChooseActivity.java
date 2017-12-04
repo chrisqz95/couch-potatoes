@@ -1,5 +1,7 @@
 package com.example.potato.couchpotatoes;
 
+import android.app.Dialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -53,7 +55,13 @@ public class SpinToChooseActivity  extends AppCompatActivity {
 
                     @Override
                     public void onAnimationEnd(Animation animation) {
-                        currentNumber(360 - (degree % 360), food);
+                        String message = currentNumber(360 - (degree % 360), food);
+                        // return to main screen
+                        Intent intent = new Intent(getApplicationContext(), MessageActivity.class);
+                        intent.putExtra("message", message);
+                        intent.putExtra( "chatID", getIntent().getStringExtra("chatID") );
+                        intent.putExtra("otherUsers", getIntent().getStringExtra("otherUsers"));
+                        startActivity(intent);
                     }
 
                     @Override
@@ -67,49 +75,50 @@ public class SpinToChooseActivity  extends AppCompatActivity {
         });
     }
 
-    private void currentNumber(int degrees, int food){
+    private String currentNumber(int degrees, int food){
         if(food == 1) {
             switch ((degrees / (360 / 6)) % 6) {
                 case 0:
                     ic_potato.setImageResource(R.drawable.potato_pizza);
-                    break;
+                    return "COUCHPOTATOES SUGGESTION:\n*** PIZZA FOR DINNER ***";
                 case 1:
                     ic_potato.setImageResource(R.drawable.potato_hamburger);
-                    break;
+                    return "COUCHPOTATOES SUGGESTION:\n*** BURGERS FOR DINNER ***";
                 case 2:
                     ic_potato.setImageResource(R.drawable.potato_italian);
-                    break;
+                    return "COUCHPOTATOES SUGGESTION:\n*** ITALIAN FOOD FOR DINNER ***";
                 case 3:
                     ic_potato.setImageResource(R.drawable.potato_mexican);
-                    break;
+                    return "COUCHPOTATOES SUGGESTION:\n*** MEXICAN FOOD FOR DINNER ***";
                 case 4:
                     ic_potato.setImageResource(R.drawable.potato_japanese);
-                    break;
+                    return "COUCHPOTATOES SUGGESTION:\n*** JAPANESE FOOD FOR DINNER ***";
                 case 5:
                     ic_potato.setImageResource(R.drawable.potato_chinese);
-                    break;
+                    return "COUCHPOTATOES SUGGESTION:\n*** CHINESE FOOD FOR DINNER ***";
             }
         } else {
-            switch((degrees/(360/6))%6) {
+            switch((degrees / (360 / 6)) % 6) {
                 case 0:
                     ic_potato.setImageResource(R.drawable.potato_beach);
-                    break;
+                    return "COUCHPOTATOES SUGGESTION:\n*** GO TO THE BEACH ***";
                 case 1:
                     ic_potato.setImageResource(R.drawable.potato_movie);
-                    break;
+                    return "COUCHPOTATOES SUGGESTION:\n*** GO TO A MOVIE ***";
                 case 2:
                     ic_potato.setImageResource(R.drawable.potato_videogames);
-                    break;
+                    return "COUCHPOTATOES SUGGESTION:\n*** PLAY VIDEOGAMES ***";
                 case 3:
                     ic_potato.setImageResource(R.drawable.potato_coffee);
-                    break;
+                    return "COUCHPOTATOES SUGGESTION:\n*** GO GET COFFEE ***";
                 case 4:
                     ic_potato.setImageResource(R.drawable.potato_hike);
-                    break;
+                    return "COUCHPOTATOES SUGGESTION:\n*** GO ON A HIKE ***";
                 case 5:
                     ic_potato.setImageResource(R.drawable.potato_walk);
-                    break;
+                    return "COUCHPOTATOES SUGGESTION:\n*** GO FOR A WALK ***";
             }
         }
+        return "";
     }
 }
