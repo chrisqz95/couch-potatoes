@@ -108,6 +108,7 @@ public class MatchPageFragment extends Fragment {
         else {
             currMatchID = matchedUserList.get( 0 );
 
+            // Creates a gesture listener for the user text
             matchingUserInfoLayout.setOnTouchListener(new OnSwipeTouchListener(getActivity()) {
                 @Override
                 public void onClick() {
@@ -117,11 +118,17 @@ public class MatchPageFragment extends Fragment {
                     startActivity( intent );
                 }
 
+                /**
+                 * Swipe left to dislike the user
+                 */
                 @Override
                 public void onSwipeLeft() {
                     Toast.makeText(getActivity(), "Disliked!", Toast.LENGTH_SHORT).show();
                 }
 
+                /**
+                 * Swipe right to like the user
+                 */
                 @Override
                 public void onSwipeRight() {
                     Toast.makeText(getActivity(), "Liked!", Toast.LENGTH_SHORT).show();

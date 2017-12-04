@@ -19,14 +19,23 @@ public class OnSwipeTouchListener implements View.OnTouchListener {
         gestureDetector = new GestureDetector(context, new GestureListener());
     }
 
+    /**
+     * Handles the swipe left gesture
+     */
     public void onSwipeLeft() {
 
     }
 
+    /**
+     * Handles the swipe right gesture
+     */
     public void onSwipeRight() {
 
     }
 
+    /**
+     * Handles the click gesture
+     */
     public void onClick() {
 
     }
@@ -45,20 +54,38 @@ public class OnSwipeTouchListener implements View.OnTouchListener {
             return true;
         }
 
+        /**
+         * When the view or layout is clicked
+         *
+         * @param e
+         * @return
+         */
         @Override
         public boolean onSingleTapUp(MotionEvent e) {
             onClick();
             return super.onSingleTapUp(e);
         }
 
+        /**
+         * Determines if a swipe passes the threshold
+         *
+         * @param e1
+         * @param e2
+         * @param velocityX
+         * @param velocityY
+         * @return
+         */
         @Override
         public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
             float distanceX = e2.getX() - e1.getX();
             float distanceY = e2.getY() - e1.getY();
             if (Math.abs(distanceX) > Math.abs(distanceY) && Math.abs(distanceX) > SWIPE_DISTANCE_THRESHOLD && Math.abs(velocityX) > SWIPE_VELOCITY_THRESHOLD) {
+                // Swipe right
                 if (distanceX > 0) {
                     onSwipeRight();
                 }
+
+                // Swipe left
                 else {
                     onSwipeLeft();
                 }
