@@ -1,19 +1,26 @@
 package com.example.potato.couchpotatoes;
 
+import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.Drawable;
+import android.media.Image;
+import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.animation.GlideAnimation;
+import com.bumptech.glide.request.target.SimpleTarget;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.*;
 import com.google.firebase.database.*;
 import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Queue;
+import java.util.*;
 
 /**
  * Created by chris on 11/5/17.
@@ -21,6 +28,7 @@ import java.util.Queue;
 
 public class DBHelper {
 
+    public enum MATCH_TYPE { DATE, FRIEND };
 
     private FirebaseAuth auth;
     private FirebaseDatabase db;
@@ -210,6 +218,170 @@ public class DBHelper {
     /* Database CRUD methods */
 
     /* TODO ADD Read methods */
+
+    /**
+     * TODO clean up the code by putting stuff inside methods
+     * @param context for glide
+     * @return
+     */
+//    public ArrayList<MatchedUser> fetchPotentialDates(final Context context, boolean date) {
+      public void fetchPotentialMatches(final Context context, MATCH_TYPE matchType,
+                                      @NonNull final SimpleCallback<ArrayList<MatchedUser>> finishedCallback) {
+        // number of matches to fetch
+        final int numFetched = 5;
+        // array of matched users to be returned
+        final ArrayList<MatchedUser> matchedUsers = new ArrayList<>();
+        // array of uids
+        final ArrayList<String> matchedUserIds = new ArrayList<>();
+        String path;
+        if (matchType == MATCH_TYPE.DATE) {
+            path = getPotentDatePath();
+        } else {
+            path = getPotentFriendPath();
+        }
+
+        getDb().getReference(path + getAuth().getUid()).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Iterator<DataSnapshot> potentMatchItr = dataSnapshot.getChildren().iterator();
+
+                // get next 10 uids of potential date matches
+                for (int i = 0; i < numFetched; i++) {
+                    if (!potentMatchItr.hasNext()) {
+                        Log.d("MATCHED FETCH", "Ran out of dates to fetch. Looking to fetch 10, fetched " + i+1);
+                        break;
+                    }
+                    matchedUserIds.add((String) potentMatchItr.next().getValue());
+                }
+
+                // loop through the uids and pull their profile pictures and information
+                if (!matchedUserIds.isEmpty()) {
+//                    for (String uid : matchedUserIds) {
+                    for (int i = 0; i < matchedUserIds.size(); i++) {
+                        final int idx = i; // b/c it wants final stuff
+                        final String uid = matchedUserIds.get(idx);
+                        // create a new matched User profile
+
+                        // get matched user's profile pics
+                        getDb().getReference(getUserPath()).child(uid).child("profile_pic")
+                                .addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                String url = "";
+
+                                if (dataSnapshot != null && dataSnapshot.getValue() != null) {
+                                    // Load Profile Pic
+                                    url = (String) dataSnapshot.getValue();
+                                    StorageReference uriRef = getStorage().getReferenceFromUrl(url);
+                                    Glide.with(context)
+                                            .load(uriRef)
+                                            .asBitmap()
+                                            .into(new SimpleTarget<Bitmap>() {
+                                                @Override
+                                                public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
+//                                                    imageView.setImageBitmap(resource);
+//                                                    matchedUserProfilePics.add(resource);
+                                                    matchedUsers.get(idx).setProfilePic(resource);
+                                                }
+                                            });
+
+                                } else {
+                                    // Default Profile Pic
+
+                                    String uri = "@drawable/profile";
+                                    Bitmap bm = BitmapFactory.decodeResource(context.getResources(), R.drawable.profile);
+//                                    matchedUserProfilePics.add(bm);
+                                    matchedUsers.get(idx).setProfilePic(bm);
+
+//                                    int imageResource = getResources().getIdentifier(uri, null, getPackageName());
+//                                    Drawable res = getResources().getDrawable(imageResource);
+
+                                }
+                            }
+
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
+                                Log.d("MATCHED FETCH", databaseError.getMessage());
+                            }
+
+                        });
+
+                        // get matched user info
+                        getDb().getReference(getUserPath() + uid).
+                                addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                Map<String, Object> res = new HashMap<>();
+
+                                for (DataSnapshot children : dataSnapshot.getChildren()) {
+                                    res.put(children.getKey(), children.getValue());
+                                }
+
+
+                                // TODO make this a little bit easier
+                                matchedUsers.get(idx).setFirstName((String) res.get( "firstName" ));
+                                matchedUsers.get(idx).setMiddleName((String) res.get( "middleName" ));
+                                matchedUsers.get(idx).setLastName((String) res.get( "lastName" ));
+                                matchedUsers.get(idx).setGender((String) res.get( "gender" ));
+                                matchedUsers.get(idx).setDob((String) res.get( "birth_date" ));
+                                matchedUsers.get(idx).setBio((String) res.get( "bio" ));
+
+                                // get each individual interests and add them the list of interests
+                                getDb().getReference(getUserInterestPath()).child(uid)
+                                        .addValueEventListener(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(DataSnapshot dataSnapshot) {
+
+                                        // loop through every interest
+                                        for (DataSnapshot child : dataSnapshot.getChildren()) {
+                                            String interest = child.getKey();
+                                            Interest curInterest = new Interest(interest);
+
+                                            // loop through the things the user likes in that interst
+                                            for (DataSnapshot subchild : child.getChildren()) {
+                                                String subcategory = subchild.getKey();
+                                                String preference = (String) subchild.getValue();
+
+                                                if (preference.equalsIgnoreCase("like")) {
+                                                    curInterest.addInterestCategory(subcategory);
+                                                }
+                                            }
+
+                                            matchedUsers.get(idx).addInterest(curInterest);
+
+                                        }
+
+                                    }
+
+                                    @Override
+                                    public void onCancelled(DatabaseError databaseError) {
+                                        Log.d("MATCH FETCH", databaseError.getMessage());
+                                    }
+                                }); // done getting interests
+
+                            }
+
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
+                                Log.d("MATCH FETCH", databaseError.getMessage());
+                            }
+                        }); // done getting matched user infos
+                    }
+
+                } else { // done building matches
+                    Log.d("MATCHED FETCH", "Empty matches");
+                }
+
+                // return the list of matched users in a callback
+                finishedCallback.callback(matchedUsers);
+            } // end of method onDataChanged()
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.d("MATCH FETCH", databaseError.getMessage());
+            }
+        });
+    }
 
     /* Methods to add data to Firebase */
 
@@ -595,7 +767,6 @@ public class DBHelper {
     public boolean checkExists( String path ) {
         return ( db.getReference( path ).getKey() != null );
     }
-
     /* Getters */
 
     public String getNewChildKey( String path ) {

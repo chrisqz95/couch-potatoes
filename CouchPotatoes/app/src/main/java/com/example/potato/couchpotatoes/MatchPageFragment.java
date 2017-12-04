@@ -16,6 +16,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -26,6 +27,7 @@ public class MatchPageFragment extends Fragment {
     private final int BIO_SUBSTRING_LENGTH = 60;
 
     private ArrayList<String> matchedUserList;
+    private ArrayDeque<MatchedUser> matchedUserQueue;
     private FloatingActionButton matchButton;
     private FloatingActionButton unmatchButton;
     private DBHelper helper;
@@ -43,28 +45,28 @@ public class MatchPageFragment extends Fragment {
 
     /**
      * TODO: NOTE IF WE WANT TO PASS IN THE LIST DIRECTLY, WE NEED TO MAKE MATCHEDUSER EXTEND PARCELABLE
-     * @param savedInstanceState
+     * @param matchedUserQueue
      */
-//    public static MatchPageFragment newInstance(List<MatchedUser> matchedUserList) {
-//        Bundle args = new Bundle();
-//        args.putParcelableArrayList(ARG_LIST, matchedUserList);
-//        MatchPageFragment fragment = new MatchPageFragment();
-//        fragment.setArguments(args);
-//        return fragment;
-//    }
-
-    /**
-     * give it a list of the strings of the matched users
-     * @param matchedUserList
-     * @return
-     */
-    public static MatchPageFragment newInstance(ArrayList<String> matchedUserList ) {
+    public static MatchPageFragment newInstance(ArrayDeque<MatchedUser> matchedUserQueue) {
         Bundle args = new Bundle();
-        args.putStringArrayList(ARG_LIST, matchedUserList);
+        args.putParcelableArrayList(ARG_LIST, new ArrayList<>(matchedUserQueue));
         MatchPageFragment fragment = new MatchPageFragment();
         fragment.setArguments(args);
         return fragment;
     }
+
+//    /**
+//     * give it a list of the strings of the matched users
+//     * @param matchedUserList
+//     * @return
+//     */
+//    public static MatchPageFragment newInstance(ArrayList<String> matchedUserList ) {
+//        Bundle args = new Bundle();
+//        args.putStringArrayList(ARG_LIST, matchedUserList);
+//        MatchPageFragment fragment = new MatchPageFragment();
+//        fragment.setArguments(args);
+//        return fragment;
+//    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -72,7 +74,8 @@ public class MatchPageFragment extends Fragment {
 
         helper = new DBHelper();
 
-        matchedUserList = getArguments().getStringArrayList(ARG_LIST);
+//        matchedUserList = getArguments().getStringArrayList(ARG_LIST);
+        matchedUserQueue = new ArrayDeque<>(getArguments().<MatchedUser>getParcelableArrayList(ARG_LIST));
 
         matchButton = (FloatingActionButton) getActivity().findViewById(R.id.fab_match);
         unmatchButton = (FloatingActionButton) getActivity().findViewById(R.id.fab_unmatch);

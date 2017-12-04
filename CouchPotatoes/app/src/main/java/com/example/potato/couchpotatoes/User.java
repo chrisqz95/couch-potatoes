@@ -1,12 +1,13 @@
 package com.example.potato.couchpotatoes;
 
-import java.io.Serializable;
+import android.os.Parcel;
+import android.os.Parcelable;
 
 /**
  * Created by chris on 11/5/17.
  */
 
-public abstract class User implements Serializable {
+public abstract class User {
     private String email;
     private String uid;
     private String firstName;
@@ -43,6 +44,48 @@ public abstract class User implements Serializable {
         this.longitude = longitude;
         this.locked = locked;
         this.suspended = suspended;
+    }
+
+    // this stays here in case we want to make current user in the future. makes it easier
+    protected User(Parcel in) {
+        this.email = in.readString();
+        this.uid = in.readString();
+        this.firstName = in.readString();
+        this.middleName = in.readString();
+        this.lastName = in.readString();
+        this.dob = in.readString();
+        this.gender = in.readString();
+        this.city = in.readString();
+        this.state = in.readString();
+        this.country = in.readString();
+        this.bio = in.readString();
+        this.latitude = in.readDouble();
+        this.longitude = in.readDouble();
+        boolean[] isLockedOrSuspended = new boolean[2];
+        in.readBooleanArray( isLockedOrSuspended );
+        this.locked = isLockedOrSuspended[0];
+        this.suspended = isLockedOrSuspended[1];
+    }
+
+    // this stays here in case we want to make current user in the future. makes it easier.
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(this.getEmail());
+        dest.writeString(this.getUid());
+        dest.writeString(this.getFirstName());
+        dest.writeString(this.getMiddleName());
+        dest.writeString(this.getLastName());
+        dest.writeString(this.getDob());
+        dest.writeString(this.getGender());
+        dest.writeString(this.getCity());
+        dest.writeString(this.getState());
+        dest.writeString(this.getCountry());
+        dest.writeString(this.getBio());
+        dest.writeDouble(this.getLatitude());
+        dest.writeDouble(this.getLongitude());
+        boolean[] isLockedOrSuspended = new boolean[] {
+                this.isLocked(), this.isSuspended() };
+        dest.writeBooleanArray( isLockedOrSuspended );
+
     }
 
     public String getEmail() {
