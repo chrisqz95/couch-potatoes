@@ -1,11 +1,15 @@
 package com.example.potato.couchpotatoes;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 
 import android.widget.*;
@@ -15,7 +19,6 @@ import com.google.android.gms.tasks.Task;
 public class ResetPasswordActivity extends AppCompatActivity {
 
     private EditText inputEmail;
-    private Button btnBack;
     private ProgressBar progressBar;
     private ResetPasswordTask mResetTask = null;
 
@@ -30,31 +33,21 @@ public class ResetPasswordActivity extends AppCompatActivity {
 
         inputEmail = (EditText) findViewById(R.id.reset_email);
         progressBar = (ProgressBar) findViewById(R.id.reset_progressBar);
-        btnBack = (Button) findViewById(R.id.btn_reset_back);
         Button btnReset = (Button) findViewById(R.id.btn_reset_password);
 
-        btnBack.setOnClickListener(onClickListener);
-        btnReset.setOnClickListener(onClickListener);
+        btnReset.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                attemptResetPassword();
+            }
+        });
     }
 
-    private View.OnClickListener onClickListener = new View.OnClickListener() {
-        @Override
-        public void onClick(final View v) {
-            switch (v.getId()) {
-                case R.id.btn_reset_back:
-                    startActivity(new Intent(getApplicationContext(), LoginActivity.class));
-                    finish();
-                    break;
-
-                case R.id.btn_reset_password:
-                    attemptResetPassword();
-                    break;
-            }
-        }
-    };
-
+    /**
+     * Overrides the back button from ending the activity.
+     */
     public void onBackPressed(){
-        startActivity(new Intent(getApplicationContext(), LoginActivity.class));
+        startActivity(new Intent(ResetPasswordActivity.this, LoginActivity.class));
         finish();
     }
 
@@ -62,6 +55,8 @@ public class ResetPasswordActivity extends AppCompatActivity {
         if (mResetTask != null) {
             return;
         }
+
+        Log.d("PASS RESET", "attempting to reset password.");
 
         // Reset errors.
         inputEmail.setError(null);
@@ -104,27 +99,35 @@ public class ResetPasswordActivity extends AppCompatActivity {
 
         ResetPasswordTask(String email) {
             mEmail = email;
+            Log.d("PASS RESET", "Constructed ResetPasswordTask with " + mEmail);
         }
 
         @Override
         protected Boolean doInBackground(Void... params) {
             // Attempt to send the reset link with the passed email
+
             final boolean[] success = {false}; // TODO check if this is correct
             dbHelper.getAuth().sendPasswordResetEmail(mEmail)
                     .addOnCompleteListener(new OnCompleteListener<Void>() {
                         @Override
                         public void onComplete(@NonNull Task<Void> task) {
+                            Log.d("PASS RESET", "Completed Reset Firebase side task with " + task.isSuccessful());
+
                             if (task.isSuccessful()) {
-                                setContentView(R.layout.activity_reset_password_success);
+                                AlertDialog.Builder builder = new AlertDialog.Builder(ResetPasswordActivity.this);
+                                builder.setTitle("Password Reset Email Sent");
+                                builder.setMessage(getText(R.string.reset_password_success_msg_1)
+                                                + " " + mEmail + " "
+                                                + getText(R.string.reset_password_success_msg_2));
+                                builder.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                startActivity(new Intent(getApplicationContext(), LoginActivity.class));
+                                                finish();
+                                            }
+                                        });
+                                builder.show();
+                                progressBar.setVisibility(View.GONE);
 
-                                TextView displayResetSuccess = (TextView) findViewById(R.id.lbl_reset_password_success);
-
-                                btnBack = (Button) findViewById(R.id.btn_reset_back);
-                                btnBack.setOnClickListener(onClickListener);
-
-                                displayResetSuccess.setText(getString(R.string.reset_password_success_msg_1)
-                                        + " " + mEmail + " "
-                                        + getString(R.string.reset_password_success_msg_2));
 //                                Toast.makeText(ResetPasswordActivity.this,
 //                                        "We have sent you instructions to reset your password!",
 //                                        Toast.LENGTH_SHORT).show();

@@ -17,7 +17,9 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.GestureDetector;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 
 import com.bumptech.glide.Glide;
@@ -51,6 +53,7 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import de.hdodenhof.circleimageview.CircleImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 
 public class MatchingActivity extends AppCompatActivity
@@ -75,10 +78,14 @@ public class MatchingActivity extends AppCompatActivity
 
     private MatchFragmentPagerAdapter adapter;
     private MatchViewPager viewPager;
+    private MatchPageFragment datingPage;
+    private MatchPageFragment friendPage;
 
     private ProgressBar spinner;
 
     private LinearLayout likeAndDislikeLayout;
+    private FloatingActionButton likeButton;
+    private FloatingActionButton dislikeButton;
 
     private ImageView imgView;
     private CircleImageView circleProfilePic;
@@ -90,13 +97,6 @@ public class MatchingActivity extends AppCompatActivity
 
     private View sideBarHeader;
 
-    private FloatingActionButton acceptBtn;
-    private FloatingActionButton rejectBtn;
-
-    // For the user cards
-    private SwipePlaceHolderView mSwipeView;
-    private Context mContext;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -107,8 +107,11 @@ public class MatchingActivity extends AppCompatActivity
 
         final TabLayout tabLayout = (TabLayout) findViewById(R.id.matching_tabs);
         //profilePic = (CircleImageView) findViewById(R.id.profile_image);
+        likeButton = (FloatingActionButton) findViewById(R.id.fab_match);
+        dislikeButton = (FloatingActionButton) findViewById(R.id.fab_unmatch);
         imgView = (ImageView) findViewById(R.id.imageView2);
         imgView.setVisibility(View.GONE);
+
         viewPager = (MatchViewPager) findViewById(R.id.matching_viewpager);
         viewPager.setVisibility(View.GONE);
         likeAndDislikeLayout = (LinearLayout) findViewById(R.id.likeAndDislikeLayout);
@@ -119,8 +122,10 @@ public class MatchingActivity extends AppCompatActivity
         adapter = new MatchFragmentPagerAdapter(getSupportFragmentManager());
 
         // add fragments to the view pager
-        adapter.addFragment(MatchPageFragment.newInstance(matchedDateList), tabTitles[0]);
-        adapter.addFragment(MatchPageFragment.newInstance(matchedFriendList), tabTitles[1]);
+        datingPage = MatchPageFragment.newInstance(matchedDateList, true);
+        friendPage = MatchPageFragment.newInstance(matchedFriendList, false);
+        adapter.addFragment(datingPage, tabTitles[0]);
+        adapter.addFragment(friendPage, tabTitles[1]);
 
         // line of code below causes app to crash; commenting out for app functionality -Mervin
         viewPager.setAdapter(adapter);
@@ -135,9 +140,6 @@ public class MatchingActivity extends AppCompatActivity
 
             @Override
             public void onPageSelected(int position) {
-                FloatingActionButton likeButton = findViewById(R.id.fab_match);
-                FloatingActionButton dislikeButton = findViewById(R.id.fab_unmatch);
-
                 // If Date tab selected, have like button add to Date object on Firebase
                 if ( position == VIEW_PAGER_DATE_TAB_POSITION ) {
                     currTab = VIEW_PAGER_DATE_TAB_POSITION;
@@ -179,6 +181,38 @@ public class MatchingActivity extends AppCompatActivity
                             }
                         });
 
+                        // Creates a gesture listener for the user image
+                        imgView.setOnTouchListener(new OnSwipeTouchListener(MatchingActivity.this) {
+                            /**
+                             * When the picture is swiped left, dislike the user
+                             */
+                            @Override
+                            public void onSwipeLeft() {
+                                String currUserID = helper.getAuth().getUid();
+                                String potentMatchID = matchedDateList.get(0);
+                                String timestamp = helper.getNewTimestamp();
+                                showProgressBar();
+
+                                Toast.makeText(MatchingActivity.this, "Disliked!", Toast.LENGTH_SHORT).show();
+                                helper.addToDislike(currUserID, potentMatchID, timestamp);
+                            }
+
+                            /**
+                             * When the picture is swiped right, like the user
+                             */
+                            @Override
+                            public void onSwipeRight() {
+                                String currUserID = helper.getAuth().getUid();
+                                String potentMatchID = matchedDateList.get(0);
+                                String timestamp = helper.getNewTimestamp();
+                                showProgressBar();
+
+                                Toast.makeText(MatchingActivity.this, "Liked!", Toast.LENGTH_SHORT).show();
+                                helper.addToLike(currUserID, potentMatchID, timestamp);
+                                helper.addToDate( currUserID, potentMatchID, timestamp );
+                            }
+                        });
+
                         imgView.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
@@ -190,31 +224,32 @@ public class MatchingActivity extends AppCompatActivity
                             }
                         });
 
-                        likeButton.setOnClickListener(
-                                new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View v) {
-                                        String currUserID = helper.getAuth().getUid();
-                                            String potentMatchID = matchedDateList.get(0);
-                                            String timestamp = helper.getNewTimestamp();
+                        likeButton.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                String currUserID = helper.getAuth().getUid();
+                                String potentMatchID = matchedDateList.get(0);
+                                String timestamp = helper.getNewTimestamp();
+                                showProgressBar();
 
-                                            helper.addToLike(currUserID, potentMatchID, timestamp);
-                                            helper.addToDate( currUserID, potentMatchID, timestamp );
-                                    }
-                                }
-                        );
-                        dislikeButton.setOnClickListener(
-                                new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View v) {
-                                        String currUserID = helper.getAuth().getUid();
-                                            String potentMatchID = matchedDateList.get(0);
-                                            String timestamp = helper.getNewTimestamp();
+                                Toast.makeText(MatchingActivity.this, "Liked!", Toast.LENGTH_SHORT).show();
+                                helper.addToLike(currUserID, potentMatchID, timestamp);
+                                helper.addToDate(currUserID, potentMatchID, timestamp);
+                            }
+                        });
 
-                                            helper.addToDislike(currUserID, potentMatchID, timestamp);
-                                    }
-                                }
-                        );
+                        dislikeButton.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                String currUserID = helper.getAuth().getUid();
+                                String potentMatchID = matchedDateList.get(0);
+                                String timestamp = helper.getNewTimestamp();
+                                showProgressBar();
+
+                                Toast.makeText(MatchingActivity.this, "Disliked!", Toast.LENGTH_SHORT).show();
+                                helper.addToDislike(currUserID, potentMatchID, timestamp);
+                            }
+                        });
                     }
                     else {
                         // Default profile pic
@@ -278,6 +313,31 @@ public class MatchingActivity extends AppCompatActivity
                             }
                         });
 
+                        imgView.setOnTouchListener(new OnSwipeTouchListener(MatchingActivity.this) {
+                            @Override
+                            public void onSwipeLeft() {
+                                String currUserID = helper.getAuth().getUid();
+                                String potentMatchID = matchedFriendList.get(0);
+                                String timestamp = helper.getNewTimestamp();
+                                showProgressBar();
+
+                                Toast.makeText(MatchingActivity.this, "Disliked!", Toast.LENGTH_SHORT).show();
+                                helper.addToDislike(currUserID, potentMatchID, timestamp);
+                            }
+
+                            @Override
+                            public void onSwipeRight() {
+                                String currUserID = helper.getAuth().getUid();
+                                String potentMatchID = matchedFriendList.get(0);
+                                String timestamp = helper.getNewTimestamp();
+                                showProgressBar();
+
+                                Toast.makeText(MatchingActivity.this, "Liked!", Toast.LENGTH_SHORT).show();
+                                helper.addToLike(currUserID, potentMatchID, timestamp);
+                                helper.addToBefriend( currUserID, potentMatchID, timestamp );
+                            }
+                        });
+
                         imgView.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
@@ -289,31 +349,32 @@ public class MatchingActivity extends AppCompatActivity
                             }
                         });
 
-                        likeButton.setOnClickListener(
-                                new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View v) {
-                                        String currUserID = helper.getAuth().getUid();
-                                            String potentMatchID = matchedFriendList.get(0);
-                                            String timestamp = helper.getNewTimestamp();
+                        likeButton.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                String currUserID = helper.getAuth().getUid();
+                                String potentMatchID = matchedFriendList.get(0);
+                                String timestamp = helper.getNewTimestamp();
+                                showProgressBar();
 
-                                            helper.addToLike(currUserID, potentMatchID, timestamp);
-                                            helper.addToBefriend( currUserID, potentMatchID, timestamp );
-                                    }
-                                }
-                        );
-                        dislikeButton.setOnClickListener(
-                                new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View v) {
-                                        String currUserID = helper.getAuth().getUid();
-                                            String potentMatchID = matchedFriendList.get(0);
-                                            String timestamp = helper.getNewTimestamp();
+                                Toast.makeText(MatchingActivity.this, "Liked!", Toast.LENGTH_SHORT).show();
+                                helper.addToLike(currUserID, potentMatchID, timestamp);
+                                helper.addToBefriend( currUserID, potentMatchID, timestamp );
+                            }
+                        });
 
-                                            helper.addToDislike(currUserID, potentMatchID, timestamp);
-                                    }
-                                }
-                        );
+                        dislikeButton.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                String currUserID = helper.getAuth().getUid();
+                                String potentMatchID = matchedFriendList.get(0);
+                                String timestamp = helper.getNewTimestamp();
+                                showProgressBar();
+
+                                Toast.makeText(MatchingActivity.this, "Disliked!", Toast.LENGTH_SHORT).show();
+                                helper.addToDislike(currUserID, potentMatchID, timestamp);
+                            }
+                        });
                     }
                     else {
                         // Default profile pic
@@ -377,6 +438,9 @@ public class MatchingActivity extends AppCompatActivity
         navView = (NavigationView) findViewById(R.id.match_nav_view);
         navView.setNavigationItemSelectedListener(this);
 
+        // Want to display icons in original color scheme
+        navView.setItemIconTintList(null);
+
         sidebarUserName = (android.widget.TextView) navView.getHeaderView(0)
                 .findViewById(R.id.sidebar_username);
         sidebarUserEmail = (android.widget.TextView) navView.getHeaderView(0)
@@ -389,40 +453,6 @@ public class MatchingActivity extends AppCompatActivity
         // displays user's name and email on the sidebar header
         sidebarUserName.setText( displayName );
         sidebarUserEmail.setText( displayEmail );
-
-        // Set up how many cards are displayed as a stack
-        mSwipeView = (SwipePlaceHolderView) findViewById(R.id.swipeView);
-        mContext = getApplicationContext();
-        mSwipeView.getBuilder().setDisplayViewCount(3).setSwipeDecor(new SwipeDecor()
-                .setPaddingTop(20).setRelativeScale(0.01f));
-
-        // Adds fake users for testing purposes
-        User user_test1 = new MatchedUser(null, "Bob", null, "Smith",
-                null, null, "Los Angleles", null, null, null,
-                0, 0, false, false);
-        User user_test2 = new MatchedUser(null, "Gary", null, "Gillespie",
-                null, null, "La Jolla", null, null, null,
-                0, 0, false, false);
-        mSwipeView.addView(new UserCard(mContext, user_test1, mSwipeView));
-        mSwipeView.addView(new UserCard(mContext, user_test2, mSwipeView));
-
-        acceptBtn = (FloatingActionButton) findViewById(R.id.fab_match);
-        rejectBtn = (FloatingActionButton) findViewById(R.id.fab_unmatch);
-
-        // Simulate a swipe right or left by pressing the bottom buttons
-        acceptBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mSwipeView.doSwipe(true);
-            }
-        });
-
-        rejectBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mSwipeView.doSwipe(false);
-            }
-        });
     }
 
     // Handles pressing back button in bottom navigation bar when sidebar is on the screen
@@ -455,11 +485,11 @@ public class MatchingActivity extends AppCompatActivity
             startActivity( intent );
 
         }
-        // Remove for now. Uncomment later if needed.
-        //else if (id == R.id.nav_settings) {
+        else if (id == R.id.nav_settings) {
+		    // TODO
             //Intent intent = new Intent( getApplicationContext(), SettingsActivity.class );
             //startActivity( intent );
-        //}
+        }
         else if (id == R.id.nav_info) {
             // TODO: go to Page with device information
             Intent intent = new Intent( getApplicationContext(), AboutUsActivity.class );
@@ -493,6 +523,9 @@ public class MatchingActivity extends AppCompatActivity
                 adapter.notifyDataSetChanged();
                 viewPager.setAdapter(adapter);
                 viewPager.setCurrentItem( currTab );
+
+                // Hides the progress bar
+                hideProgressBar();
             }
 
             @Override
@@ -569,44 +602,64 @@ public class MatchingActivity extends AppCompatActivity
                         }
                     });
 
+                    imgView.setOnTouchListener(new OnSwipeTouchListener(MatchingActivity.this) {
+                        @Override
+                        public void onSwipeLeft() {
+                            String currUserID = helper.getAuth().getUid();
+                            String potentMatchID = matchedDateList.get(0);
+                            String timestamp = helper.getNewTimestamp();
+                            showProgressBar();
+
+                            Toast.makeText(MatchingActivity.this, "Disliked!", Toast.LENGTH_SHORT).show();
+                            helper.addToDislike(currUserID, potentMatchID, timestamp);
+                        }
+
+                        @Override
+                        public void onSwipeRight() {
+                            String currUserID = helper.getAuth().getUid();
+                            String potentMatchID = matchedDateList.get(0);
+                            String timestamp = helper.getNewTimestamp();
+                            showProgressBar();
+
+                            Toast.makeText(MatchingActivity.this, "Liked!", Toast.LENGTH_SHORT).show();
+                            helper.addToLike(currUserID, potentMatchID, timestamp);
+                            helper.addToDate( currUserID, potentMatchID, timestamp );
+                        }
+                    });
+
                     // NOTE: Temporary workaround for now: Set default action button listeners ( before Layout tabs are pressed )
                     // TODO Create method to do this
-                    FloatingActionButton likeButton = findViewById(R.id.fab_match);
-                    FloatingActionButton dislikeButton = findViewById(R.id.fab_unmatch);
-                    likeButton.setOnClickListener(
-                            new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    String currUserID = helper.getAuth().getUid();
-                                        String potentMatchID = matchedDateList.get(0);
-                                        String timestamp = helper.getNewTimestamp();
+                    likeButton.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            String currUserID = helper.getAuth().getUid();
+                            String potentMatchID = matchedDateList.get(0);
+                            String timestamp = helper.getNewTimestamp();
+                            showProgressBar();
 
-                                        helper.addToLike(currUserID, potentMatchID, timestamp);
-                                        helper.addToDate( currUserID, potentMatchID, timestamp );
-                                }
-                            }
-                    );
-                    dislikeButton.setOnClickListener(
-                            new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    String currUserID = helper.getAuth().getUid();
-                                        String potentMatchID = matchedDateList.get(0);
-                                        String timestamp = helper.getNewTimestamp();
+                            Toast.makeText(MatchingActivity.this, "Liked!", Toast.LENGTH_SHORT).show();
+                            helper.addToLike(currUserID, potentMatchID, timestamp);
+                            helper.addToDate(currUserID, potentMatchID, timestamp);
+                        }
+                    });
 
-                                        helper.addToDislike(currUserID, potentMatchID, timestamp);
-                                }
-                            }
-                    );
+                    dislikeButton.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            String currUserID = helper.getAuth().getUid();
+                            String potentMatchID = matchedDateList.get(0);
+                            String timestamp = helper.getNewTimestamp();
+                            showProgressBar();
+
+                            Toast.makeText(MatchingActivity.this, "Disliked!", Toast.LENGTH_SHORT).show();
+                            helper.addToDislike(currUserID, potentMatchID, timestamp);
+                        }
+                    });
                 }
 
                 // Done fetching potent matches from Firebase
                 // Hide spinner and display Matching Activity Views
-                // TODO Create method to do this
-                spinner.setVisibility(View.GONE);
-                imgView.setVisibility(View.VISIBLE);
-                viewPager.setVisibility(View.VISIBLE);
-                likeAndDislikeLayout.setVisibility(View.VISIBLE);
+                hideProgressBar();
             }
 
             @Override
@@ -655,7 +708,27 @@ public class MatchingActivity extends AppCompatActivity
             }
         });
     }
-    
+
+    /**
+     * Displays the progress bar while hiding everything else
+     */
+    private void showProgressBar() {
+        spinner.setVisibility(View.VISIBLE);
+        imgView.setVisibility(View.GONE);
+        viewPager.setVisibility(View.GONE);
+        likeAndDislikeLayout.setVisibility(View.GONE);
+    }
+
+    /**
+     * Hides the progress bar while making everything else visible
+     */
+    private void hideProgressBar() {
+        spinner.setVisibility(View.GONE);
+        imgView.setVisibility(View.VISIBLE);
+        viewPager.setVisibility(View.VISIBLE);
+        likeAndDislikeLayout.setVisibility(View.VISIBLE);
+    }
+
     /**
      * Creates a dialog containing the info of a user and the similar interests they share.
      */
@@ -699,112 +772,6 @@ public class MatchingActivity extends AppCompatActivity
             locationTxt.setText(mUser.getCity());
 
             return builder.create();
-        }
-    }
-
-    /**
-     * Grabs a user's info and displays it in a swipe-able card.
-     *
-     * Source: https://blog.mindorks.com/android-tinder-swipe-view-example-3eca9b0d4794
-     */
-    @Layout(R.layout.card_view)
-    public class UserCard {
-        @com.mindorks.placeholderview.annotations.View(R.id.profileImageView)
-        private ImageView profileImageView;
-
-        @com.mindorks.placeholderview.annotations.View(R.id.nameAgeTxt)
-        private TextView nameAgeTxt;
-
-        @com.mindorks.placeholderview.annotations.View(R.id.locationNameTxt)
-        private TextView locationNameTxt;
-
-        private User mUser;
-        private Context mContext;
-        private SwipePlaceHolderView mSwipeView;
-        private String image;
-
-        /**
-         * Create a card which displays a user's info.
-         *
-         * @param context - current activity
-         * @param user - the user to display info for
-         * @param swipeView - space used to detect a swipe
-         */
-        public UserCard(Context context, User user, SwipePlaceHolderView swipeView) {
-            mContext = context;
-            mUser = user;
-            mSwipeView = swipeView;
-        }
-
-        /**
-         * When the card is clicked, open a page displaying more user info.
-         */
-        @Click(R.id.cardText)
-        private void onClick() {
-            UserInfoDialogFragment userFrag = UserInfoDialogFragment.newInstance(mUser);
-            userFrag.show(getFragmentManager(), "info");
-        }
-
-        /**
-         * Populate the image and text fields of the card.
-         */
-        @Resolve
-        private void onResolved() {
-            // Loads the profile image
-            image = "http://www.aft.com/components/com_easyblog/themes/wireframe/images/placeholder-image.png";
-            Glide.with(mContext).load(image).into(profileImageView);
-            nameAgeTxt.setText(mUser.getFirstName());
-            locationNameTxt.setText(mUser.getCity());
-
-            /**
-             * When the profile image is clicked, open the user gallery activity
-             */
-            profileImageView.setOnClickListener(new View.OnClickListener() {
-                public void onClick(View view) {
-                    startActivity(new Intent(MatchingActivity.this, UserGalleryActivity.class));
-                }
-            });
-        }
-
-        /**
-         * When the card is swiped left, log the event
-         */
-        @SwipeOut
-        private void onSwipedOut() {
-            Log.d("EVENT", "onSwipedOut");
-            mSwipeView.addView(this);
-        }
-
-        /**
-         * When the card is released but wasn't swiped, reset to its original position
-         */
-        @SwipeCancelState
-        private void onSwipeCancelState() {
-            Log.d("EVENT", "onSwipeCancelState");
-        }
-
-        /**
-         * When the card is swiped right, log the event
-         */
-        @SwipeIn
-        private void onSwipeIn() {
-            Log.d("EVENT", "onSwipedIn");
-        }
-
-        /**
-         * Detects when the card is moved enough to the right to count as an accept
-         */
-        @SwipeInState
-        private void onSwipeInState() {
-            Log.d("EVENT", "onSwipeInState");
-        }
-
-        /**
-         * Detects when the card is moved enough to the left to count as a reject
-         */
-        @SwipeOutState
-        private void onSwipeOutState() {
-            Log.d("EVENT", "onSwipeOutState");
         }
     }
 }

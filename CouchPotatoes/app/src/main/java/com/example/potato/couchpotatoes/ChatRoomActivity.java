@@ -83,6 +83,9 @@ public class ChatRoomActivity extends AppCompatActivity
         navView = (NavigationView) findViewById(R.id.chatroom_nav_view);
         navView.setNavigationItemSelectedListener(this);
 
+        // Want to display icons in original color scheme
+        navView.setItemIconTintList(null);
+
         // Use a ListView to display the list of chats
         listView = (ListView) findViewById(R.id.chatList);
         listAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, listItems);
@@ -235,6 +238,7 @@ public class ChatRoomActivity extends AppCompatActivity
                 Intent intent = new Intent( getApplicationContext(), MessageActivity.class );
                 intent.putExtra( "chatID", chatID );
                 intent.putExtra("otherUsers", String.valueOf(parent.getItemAtPosition(position)));
+                intent.putExtra( "message", "1" );
 
                 // Begin the messaging activity corresponding to the selected chat
                 startActivity( intent );
@@ -270,10 +274,10 @@ public class ChatRoomActivity extends AppCompatActivity
 
         } else if (id == R.id.nav_chats) {
             // redirects user to ChatRoomActivity.xml
+
             /*Intent intent = new Intent( getApplicationContext(), ChatRoomActivity.class );
             startActivity( intent );
             finish();*/
-
 
         } else if (id == R.id.nav_settings) {
             // TODO: go to SettingsActivity
@@ -282,6 +286,7 @@ public class ChatRoomActivity extends AppCompatActivity
         else if (id == R.id.nav_info) {
             Intent intent = new Intent( getApplicationContext(), AboutUsActivity.class );
             startActivity( intent );
+
 
         } else if (id == R.id.nav_logout) {
             // logs out and redirects user to LoginActivity.xml
