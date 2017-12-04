@@ -53,7 +53,7 @@
                 <ImageView
                     android:id="@+id/preferencesProfilePic"
                     android:layout_width="match_parent"
-                    android:layout_height="200dp"
+                    android:layout_height="225dp"
                     android:layout_weight="1"
                     android:paddingBottom="8dp"
                     android:paddingTop="8dp"
