@@ -391,38 +391,38 @@ public class MatchingActivity extends AppCompatActivity
         sidebarUserEmail.setText( displayEmail );
 
         // Set up how many cards are displayed as a stack
-        mSwipeView = (SwipePlaceHolderView) findViewById(R.id.swipeView);
-        mContext = getApplicationContext();
-        mSwipeView.getBuilder().setDisplayViewCount(3).setSwipeDecor(new SwipeDecor()
-                .setPaddingTop(20).setRelativeScale(0.01f));
-
-        // Adds fake users for testing purposes
-        User user_test1 = new MatchedUser(null, "Bob", null, "Smith",
-                null, null, "Los Angleles", null, null, null,
-                0, 0, false, false);
-        User user_test2 = new MatchedUser(null, "Gary", null, "Gillespie",
-                null, null, "La Jolla", null, null, null,
-                0, 0, false, false);
-        mSwipeView.addView(new UserCard(mContext, user_test1, mSwipeView));
-        mSwipeView.addView(new UserCard(mContext, user_test2, mSwipeView));
-
-        acceptBtn = (FloatingActionButton) findViewById(R.id.fab_match);
-        rejectBtn = (FloatingActionButton) findViewById(R.id.fab_unmatch);
+//        mSwipeView = (SwipePlaceHolderView) findViewById(R.id.swipeView);
+//        mContext = getApplicationContext();
+//        mSwipeView.getBuilder().setDisplayViewCount(3).setSwipeDecor(new SwipeDecor()
+//                .setPaddingTop(20).setRelativeScale(0.01f));
+//
+//        // Adds fake users for testing purposes
+//        User user_test1 = new MatchedUser(null, "Bob", null, "Smith",
+//                null, null, "Los Angleles", null, null, null,
+//                0, 0, false, false);
+//        User user_test2 = new MatchedUser(null, "Gary", null, "Gillespie",
+//                null, null, "La Jolla", null, null, null,
+//                0, 0, false, false);
+//        mSwipeView.addView(new UserCard(mContext, user_test1, mSwipeView));
+//        mSwipeView.addView(new UserCard(mContext, user_test2, mSwipeView));
+//
+//        acceptBtn = (FloatingActionButton) findViewById(R.id.fab_match);
+//        rejectBtn = (FloatingActionButton) findViewById(R.id.fab_unmatch);
 
         // Simulate a swipe right or left by pressing the bottom buttons
-        acceptBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mSwipeView.doSwipe(true);
-            }
-        });
-
-        rejectBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mSwipeView.doSwipe(false);
-            }
-        });
+//        acceptBtn.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                mSwipeView.doSwipe(true);
+//            }
+//        });
+//
+//        rejectBtn.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                mSwipeView.doSwipe(false);
+//            }
+//        });
     }
 
     // Handles pressing back button in bottom navigation bar when sidebar is on the screen
@@ -580,6 +580,8 @@ public class MatchingActivity extends AppCompatActivity
                                         String potentMatchID = matchedDateList.get(0);
                                         String timestamp = helper.getNewTimestamp();
 
+                                        Log.d( "TEST", "BUTTON CLICKED" );
+
                                         helper.addToLike(currUserID, potentMatchID, timestamp);
                                         helper.addToDate( currUserID, potentMatchID, timestamp );
                                 }
@@ -592,6 +594,8 @@ public class MatchingActivity extends AppCompatActivity
                                     String currUserID = helper.getAuth().getUid();
                                         String potentMatchID = matchedDateList.get(0);
                                         String timestamp = helper.getNewTimestamp();
+
+                                        Log.d( "TEST", "BUTTON CLICKED" );
 
                                         helper.addToDislike(currUserID, potentMatchID, timestamp);
                                 }
