@@ -1,6 +1,7 @@
 package com.example.potato.couchpotatoes;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
@@ -54,6 +55,7 @@ public class ChatRoomActivity extends AppCompatActivity
         // places toolbar into the screen
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        toolbar.setTitleTextColor(Color.WHITE);
 
         // Display the user's display name
        // userName = (TextView) findViewById(R.id.userName);
@@ -174,23 +176,28 @@ public class ChatRoomActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_profile) {
-            // TODO: go to profile activity
+            Intent intent = new Intent( getApplicationContext(), PreferencesActivity.class );
+            startActivity( intent );
 
         } else if (id == R.id.nav_matches) {
-            // TODO: if not already in page, redirect page to MainActivity
+            Intent intent = new Intent( getApplicationContext(), MainActivity.class );
+            startActivity( intent );
             finish();
 
         } else if (id == R.id.nav_chats) {
             // redirects user to ChatRoomActivity.xml
-            Intent intent = new Intent( getApplicationContext(), ChatRoomActivity.class );
+            /*Intent intent = new Intent( getApplicationContext(), ChatRoomActivity.class );
             startActivity( intent );
+            finish();*/
+
 
         } else if (id == R.id.nav_settings) {
             // TODO: go to SettingsActivity
 
         }
         else if (id == R.id.nav_info) {
-            // TODO: go to Page with device information
+            Intent intent = new Intent( getApplicationContext(), AboutUsActivity.class );
+            startActivity( intent );
 
         } else if (id == R.id.nav_logout) {
             // logs out and redirects user to LoginActivity.xml

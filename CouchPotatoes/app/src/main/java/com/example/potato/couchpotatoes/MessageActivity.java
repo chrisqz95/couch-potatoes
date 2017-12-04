@@ -157,6 +157,8 @@ public class MessageActivity extends AppCompatActivity {
                                 addMessageBox(message, 2, false);
                             }
 
+
+
                             // Keep track of the messageID corresponding to the current message
                             //messageIDs.put(message, dataSnapshot.getKey());
 
