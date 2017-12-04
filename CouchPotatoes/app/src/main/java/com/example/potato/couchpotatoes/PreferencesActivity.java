@@ -187,6 +187,16 @@ public class PreferencesActivity extends AppCompatActivity
         // Want to display icons in original color scheme
         navView.setItemIconTintList(null);
 
+        // initialize textViews on the sidebar header
+        sidebarUserName = (android.widget.TextView) navView.getHeaderView(0)
+                .findViewById(R.id.sidebar_username);
+        sidebarUserEmail = (android.widget.TextView) navView.getHeaderView(0)
+                .findViewById(R.id.sidebar_user_email);
+
+        // displays user's name and email on the sidebar header
+        sidebarUserName.setText( helper.getAuthUserDisplayName() );
+        sidebarUserEmail.setText( helper.getUser().getEmail() );
+
         settingsTab = (Button) findViewById(R.id.settingsTab);
         settingsTab.setOnClickListener(new View.OnClickListener() {
             @Override

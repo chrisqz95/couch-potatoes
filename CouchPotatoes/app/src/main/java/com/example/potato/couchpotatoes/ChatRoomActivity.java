@@ -64,14 +64,8 @@ public class ChatRoomActivity extends AppCompatActivity
         setSupportActionBar(toolbar);
         toolbar.setTitleTextColor(Color.WHITE);
 
-        // Display the user's display name
-       // userName = (TextView) findViewById(R.id.userName);
-        //userName.setText( displayName );
-
-
         // enables toggle button on toolbar to open the sidebar
         mDrawer = (DrawerLayout) findViewById(R.id.chatroom_drawer_layout);
-
         // adds the toggle button
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, mDrawer, toolbar, R.string.navigation_drawer_open,
@@ -85,6 +79,15 @@ public class ChatRoomActivity extends AppCompatActivity
 
         // Want to display icons in original color scheme
         navView.setItemIconTintList(null);
+
+        // initialize textViews on the sidebar header
+        sidebarUserName = (android.widget.TextView) navView.getHeaderView(0)
+                .findViewById(R.id.sidebar_username);
+        sidebarUserEmail = (android.widget.TextView) navView.getHeaderView(0)
+                .findViewById(R.id.sidebar_user_email);
+        // displays user's name and email on the sidebar header
+        sidebarUserName.setText( displayName );
+        sidebarUserEmail.setText( helper.getUser().getEmail() );
 
         // Use a ListView to display the list of chats
         listView = (ListView) findViewById(R.id.chatList);
