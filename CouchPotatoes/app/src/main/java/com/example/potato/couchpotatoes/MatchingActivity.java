@@ -107,8 +107,11 @@ public class MatchingActivity extends AppCompatActivity
 
         final TabLayout tabLayout = (TabLayout) findViewById(R.id.matching_tabs);
         //profilePic = (CircleImageView) findViewById(R.id.profile_image);
+        likeButton = (FloatingActionButton) findViewById(R.id.fab_match);
+        dislikeButton = (FloatingActionButton) findViewById(R.id.fab_unmatch);
         imgView = (ImageView) findViewById(R.id.imageView2);
         imgView.setVisibility(View.GONE);
+
         viewPager = (MatchViewPager) findViewById(R.id.matching_viewpager);
         viewPager.setVisibility(View.GONE);
         likeAndDislikeLayout = (LinearLayout) findViewById(R.id.likeAndDislikeLayout);
@@ -116,14 +119,11 @@ public class MatchingActivity extends AppCompatActivity
         spinner = (ProgressBar)findViewById(R.id.progressBar);
         spinner.setVisibility(View.VISIBLE);
 
-        likeButton = (FloatingActionButton) findViewById(R.id.fab_match);
-        dislikeButton = (FloatingActionButton) findViewById(R.id.fab_unmatch);
-
         adapter = new MatchFragmentPagerAdapter(getSupportFragmentManager());
 
         // add fragments to the view pager
-        datingPage = MatchPageFragment.newInstance(matchedDateList);
-        friendPage = MatchPageFragment.newInstance(matchedFriendList);
+        datingPage = MatchPageFragment.newInstance(matchedDateList, true);
+        friendPage = MatchPageFragment.newInstance(matchedFriendList, false);
         adapter.addFragment(datingPage, tabTitles[0]);
         adapter.addFragment(friendPage, tabTitles[1]);
 
@@ -654,7 +654,6 @@ public class MatchingActivity extends AppCompatActivity
 
                 // Done fetching potent matches from Firebase
                 // Hide spinner and display Matching Activity Views
-                // TODO Create method to do this
                 hideProgressBar();
             }
 
@@ -705,6 +704,9 @@ public class MatchingActivity extends AppCompatActivity
         });
     }
 
+    /**
+     * Displays the progress bar while hiding everything else
+     */
     private void showProgressBar() {
         spinner.setVisibility(View.VISIBLE);
         imgView.setVisibility(View.GONE);
@@ -712,6 +714,9 @@ public class MatchingActivity extends AppCompatActivity
         likeAndDislikeLayout.setVisibility(View.GONE);
     }
 
+    /**
+     * Hides the progress bar while making everything else visible
+     */
     private void hideProgressBar() {
         spinner.setVisibility(View.GONE);
         imgView.setVisibility(View.VISIBLE);

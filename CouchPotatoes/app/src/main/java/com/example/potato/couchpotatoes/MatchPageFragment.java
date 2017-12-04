@@ -32,6 +32,7 @@ public class MatchPageFragment extends Fragment {
     private FloatingActionButton matchButton;
     private FloatingActionButton unmatchButton;
     private DBHelper helper;
+    private boolean isDating;
 
     private String currMatchID;
     private TextView bioText;
@@ -61,9 +62,10 @@ public class MatchPageFragment extends Fragment {
      * @param matchedUserList
      * @return
      */
-    public static MatchPageFragment newInstance(ArrayList<String> matchedUserList ) {
+    public static MatchPageFragment newInstance(ArrayList<String> matchedUserList, boolean isDating) {
         Bundle args = new Bundle();
         args.putStringArrayList(ARG_LIST, matchedUserList);
+        args.putBoolean("Is_Dating", isDating);
         MatchPageFragment fragment = new MatchPageFragment();
         fragment.setArguments(args);
         return fragment;
@@ -76,6 +78,7 @@ public class MatchPageFragment extends Fragment {
         helper = new DBHelper();
 
         matchedUserList = getArguments().getStringArrayList(ARG_LIST);
+        isDating = getArguments().getBoolean("Is_Dating");
 
         matchButton = (FloatingActionButton) getActivity().findViewById(R.id.fab_match);
         unmatchButton = (FloatingActionButton) getActivity().findViewById(R.id.fab_unmatch);
@@ -123,7 +126,12 @@ public class MatchPageFragment extends Fragment {
                  */
                 @Override
                 public void onSwipeLeft() {
+                    String currUserID = helper.getAuth().getUid();
+                    String potentMatchID = matchedUserList.get(0);
+                    String timestamp = helper.getNewTimestamp();
+
                     Toast.makeText(getActivity(), "Disliked!", Toast.LENGTH_SHORT).show();
+                    helper.addToDislike(currUserID, potentMatchID, timestamp);
                 }
 
                 /**
@@ -131,7 +139,16 @@ public class MatchPageFragment extends Fragment {
                  */
                 @Override
                 public void onSwipeRight() {
+                    String currUserID = helper.getAuth().getUid();
+                    String potentMatchID = matchedUserList.get(0);
+                    String timestamp = helper.getNewTimestamp();
+
                     Toast.makeText(getActivity(), "Liked!", Toast.LENGTH_SHORT).show();
+                    helper.addToLike(currUserID, potentMatchID, timestamp);
+                    if (isDating)
+                        helper.addToDate( currUserID, potentMatchID, timestamp );
+                    else
+                        helper.addToBefriend(currUserID, potentMatchID, timestamp);
                 }
             });
 
