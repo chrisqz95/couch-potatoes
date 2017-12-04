@@ -231,6 +231,7 @@ public class MessageActivity extends AppCompatActivity {
                                         intent.putExtra("key", 1);
                                         intent.putExtra( "chatID", chatRoom );
                                         intent.putExtra("otherUsers", companion);
+                                        finish();
                                         startActivity(intent);
                                         break;
                                     case 1:
@@ -239,6 +240,7 @@ public class MessageActivity extends AppCompatActivity {
                                         intent.putExtra("key", 0);
                                         intent.putExtra( "chatID", chatRoom );
                                         intent.putExtra("otherUsers", companion);
+                                        finish();
                                         startActivity(intent);
                                         break;
                                     case 2:
@@ -246,6 +248,7 @@ public class MessageActivity extends AppCompatActivity {
                                         intent.putExtra("key", 1);
                                         intent.putExtra( "chatID", chatRoom );
                                         intent.putExtra("otherUsers", companion);
+                                        finish();
                                         startActivity(intent);
                                         break;
                                     case 3:
@@ -253,6 +256,7 @@ public class MessageActivity extends AppCompatActivity {
                                         intent.putExtra("key", 0);
                                         intent.putExtra( "chatID", chatRoom );
                                         intent.putExtra("otherUsers", companion);
+                                        finish();
                                         startActivity(intent);
                                         break;
 

@@ -61,6 +61,7 @@ public class SpinToChooseActivity  extends AppCompatActivity {
                         intent.putExtra("message", message);
                         intent.putExtra( "chatID", getIntent().getStringExtra("chatID") );
                         intent.putExtra("otherUsers", getIntent().getStringExtra("otherUsers"));
+                        finish();
                         startActivity(intent);
                     }
 
