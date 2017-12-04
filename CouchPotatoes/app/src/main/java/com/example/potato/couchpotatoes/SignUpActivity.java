@@ -63,7 +63,7 @@ public class SignUpActivity extends AppCompatActivity {
      */
     private static int minAge = 18;
 
-    private static CurrentUser currentUser = new CurrentUser();
+    //private static CurrentUser currentUser = new CurrentUser();
     private static DBHelper dbHelper;
     private static Calendar calendar;
     private static String tempEmail;
