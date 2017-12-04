@@ -92,6 +92,25 @@ public class MessageActivity extends AppCompatActivity {
         userName = (TextView) findViewById(R.id.userName);
         userName.setText(companion);
 
+        // Check if a spinner sent a message
+        String spinner_message = getIntent().getStringExtra("message");
+        if(!(spinner_message.equals("1"))){
+            messageID = helper.getNewChildKey(helper.getChatMessagePath() + chatRoom);
+            timestamp = helper.getNewTimestamp();
+            message = spinner_message;
+
+            // Clear the message text field on submitting a message
+            messageArea.setText("");
+
+            // Add the message to the chat.
+            // Message data will be sent to the Firebase Database accordingly.
+            if (!(message.equals(""))) {
+                helper.addToChatMessage(chatRoom, messageID);
+                helper.addToMessage(messageID, userID, displayName, chatRoom, timestamp, message);
+            }
+        }
+
+        // Send button for messages
         sendButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -203,22 +222,30 @@ public class MessageActivity extends AppCompatActivity {
                                     case 0:
                                         intent = new Intent(((Dialog) dialog).getContext(), SpinBottleActivity.class);
                                         intent.putExtra("key", 1);
+                                        intent.putExtra( "chatID", chatRoom );
+                                        intent.putExtra("otherUsers", companion);
                                         startActivity(intent);
                                         break;
                                     case 1:
                                         System.out.println(LoginActivity.class);
                                         intent = new Intent(((Dialog) dialog).getContext(), SpinBottleActivity.class);
                                         intent.putExtra("key", 0);
+                                        intent.putExtra( "chatID", chatRoom );
+                                        intent.putExtra("otherUsers", companion);
                                         startActivity(intent);
                                         break;
                                     case 2:
                                         intent = new Intent(((Dialog) dialog).getContext(), SpinToChooseActivity.class);
                                         intent.putExtra("key", 1);
+                                        intent.putExtra( "chatID", chatRoom );
+                                        intent.putExtra("otherUsers", companion);
                                         startActivity(intent);
                                         break;
                                     case 3:
                                         intent = new Intent(((Dialog) dialog).getContext(), SpinToChooseActivity.class);
                                         intent.putExtra("key", 0);
+                                        intent.putExtra( "chatID", chatRoom );
+                                        intent.putExtra("otherUsers", companion);
                                         startActivity(intent);
                                         break;
 
