@@ -74,6 +74,9 @@ public class ChatRoomActivity extends AppCompatActivity
         navView = (NavigationView) findViewById(R.id.chatroom_nav_view);
         navView.setNavigationItemSelectedListener(this);
 
+        // Want to display icons in original color scheme
+        navView.setItemIconTintList(null);
+
         // Use a ListView to display the list of chats
         listView = (ListView) findViewById(R.id.chatList);
         listAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, listItems);
@@ -174,7 +177,8 @@ public class ChatRoomActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_profile) {
-            // TODO: go to profile activity
+            Intent intent = new Intent( getApplicationContext(), PreferencesActivity.class );
+            startActivity( intent );
 
         } else if (id == R.id.nav_matches) {
             // TODO: if not already in page, redirect page to MainActivity
@@ -182,16 +186,16 @@ public class ChatRoomActivity extends AppCompatActivity
 
         } else if (id == R.id.nav_chats) {
             // redirects user to ChatRoomActivity.xml
-            Intent intent = new Intent( getApplicationContext(), ChatRoomActivity.class );
-            startActivity( intent );
-
+            //Intent intent = new Intent( getApplicationContext(), ChatRoomActivity.class );
+            //startActivity( intent );
         } else if (id == R.id.nav_settings) {
             // TODO: go to SettingsActivity
 
         }
         else if (id == R.id.nav_info) {
             // TODO: go to Page with device information
-
+            Intent intent = new Intent( getApplicationContext(), AboutUsActivity.class );
+            startActivity( intent );
         } else if (id == R.id.nav_logout) {
             // logs out and redirects user to LoginActivity.xml
             helper.getAuth().signOut();
