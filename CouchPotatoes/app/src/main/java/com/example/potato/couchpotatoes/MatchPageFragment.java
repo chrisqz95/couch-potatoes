@@ -5,12 +5,15 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.util.Log;
+import android.view.GestureDetector;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -29,6 +32,7 @@ public class MatchPageFragment extends Fragment {
     private FloatingActionButton matchButton;
     private FloatingActionButton unmatchButton;
     private DBHelper helper;
+    private boolean isDating;
 
     private String currMatchID;
     private TextView bioText;
@@ -58,9 +62,10 @@ public class MatchPageFragment extends Fragment {
      * @param matchedUserList
      * @return
      */
-    public static MatchPageFragment newInstance(ArrayList<String> matchedUserList ) {
+    public static MatchPageFragment newInstance(ArrayList<String> matchedUserList, boolean isDating) {
         Bundle args = new Bundle();
         args.putStringArrayList(ARG_LIST, matchedUserList);
+        args.putBoolean("Is_Dating", isDating);
         MatchPageFragment fragment = new MatchPageFragment();
         fragment.setArguments(args);
         return fragment;
@@ -73,6 +78,7 @@ public class MatchPageFragment extends Fragment {
         helper = new DBHelper();
 
         matchedUserList = getArguments().getStringArrayList(ARG_LIST);
+        isDating = getArguments().getBoolean("Is_Dating");
 
         matchButton = (FloatingActionButton) getActivity().findViewById(R.id.fab_match);
         unmatchButton = (FloatingActionButton) getActivity().findViewById(R.id.fab_unmatch);
@@ -105,13 +111,44 @@ public class MatchPageFragment extends Fragment {
         else {
             currMatchID = matchedUserList.get( 0 );
 
-            matchingUserInfoLayout.setOnClickListener(new View.OnClickListener() {
+            // Creates a gesture listener for the user text
+            matchingUserInfoLayout.setOnTouchListener(new OnSwipeTouchListener(getActivity()) {
                 @Override
-                public void onClick(View v) {
+                public void onClick() {
                     // Begin new activity to display more information about the potential match
                     Intent intent = new Intent( getActivity().getApplicationContext(), MatchUserInfoActivity.class );
                     intent.putExtra( "currMatchID", currMatchID );
                     startActivity( intent );
+                }
+
+                /**
+                 * Swipe left to dislike the user
+                 */
+                @Override
+                public void onSwipeLeft() {
+                    String currUserID = helper.getAuth().getUid();
+                    String potentMatchID = matchedUserList.get(0);
+                    String timestamp = helper.getNewTimestamp();
+
+                    Toast.makeText(getActivity(), "Disliked!", Toast.LENGTH_SHORT).show();
+                    helper.addToDislike(currUserID, potentMatchID, timestamp);
+                }
+
+                /**
+                 * Swipe right to like the user
+                 */
+                @Override
+                public void onSwipeRight() {
+                    String currUserID = helper.getAuth().getUid();
+                    String potentMatchID = matchedUserList.get(0);
+                    String timestamp = helper.getNewTimestamp();
+
+                    Toast.makeText(getActivity(), "Liked!", Toast.LENGTH_SHORT).show();
+                    helper.addToLike(currUserID, potentMatchID, timestamp);
+                    if (isDating)
+                        helper.addToDate( currUserID, potentMatchID, timestamp );
+                    else
+                        helper.addToBefriend(currUserID, potentMatchID, timestamp);
                 }
             });
 
