@@ -29,6 +29,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.DateFormat;
+import java.text.ParseException;
 import java.util.Calendar;
 import java.util.Date;
 import java.text.SimpleDateFormat;
@@ -378,12 +380,14 @@ public class MessageActivity extends AppCompatActivity {
             String[] date = curMsgDate.split("-");
             String[] time = curMsgTime.split(":");
 
-            //Determine if its AM or PM
-            int hour = Integer.parseInt(time[0]);
-            if (hour >= 12) {
-                hourStr = (hour - 12) + ":" + time[1] + " PM";
-            } else {
-                hourStr = time[0] + ":" + time[1] + " AM";
+            //Convert 24 Hour format to AM/PM
+            String dateStr = curMsgTime;
+            DateFormat readFormat = new SimpleDateFormat( "HH:mm:ss");
+            DateFormat writeFormat = new SimpleDateFormat( "hh:mm a");
+            try {
+                hourStr = writeFormat.format(readFormat.parse(dateStr));
+            } catch (ParseException e) {
+                e.printStackTrace();
             }
 
             Calendar c = Calendar.getInstance();
