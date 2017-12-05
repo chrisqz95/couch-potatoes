@@ -106,7 +106,7 @@ public class MatchPageFragment extends Fragment {
         matchingUserInfoLayout = (LinearLayout) view.findViewById(R.id.matchingUserInfoLayout);
 
         if ( matchedUserList.isEmpty() ) {
-            userInfoText.setText( "No new matches. Try adding more interests!" );
+            userInfoText.setText( "No new matches? Make sure to fill out your account settings or try adding more interests." );
         }
         else {
             currMatchID = matchedUserList.get( 0 );
