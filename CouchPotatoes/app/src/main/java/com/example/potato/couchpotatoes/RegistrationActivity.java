@@ -76,7 +76,7 @@ public class RegistrationActivity extends AppCompatActivity {
                 String state = "";
                 String country = "";
                 String bio = "";
-                String displayName = helper.getFullName( firstName, middleName, lastName );
+                final String displayName = helper.getFullName( firstName, middleName, lastName );
                 Double latitude = 0.0;
                 Double longitude = 0.0;
                 boolean locked = false;
@@ -119,16 +119,28 @@ public class RegistrationActivity extends AppCompatActivity {
                                             helper.fetchCurrentUser();
 
                                             // Add the new user to a new chat containing only the new user
-                                            // REMOVE FOR NOW - ONLY USED FOR TESTING
-//                                            String newChatID = helper.getNewChildKey( helper.getChatUserPath() );
-//                                            String userID = helper.getAuth().getUid();
-//                                            String displayName = helper.getAuthUserDisplayName();
-//                                            //String displayName = helper.getAuth().getCurrentUser().getDisplayName();
-//
-//                                            Log.d( "TEST", "DISPLAY NAME: " + displayName );
-//
-//                                            helper.addToChatUser( newChatID, userID, displayName );
-//                                            helper.addToUserChat( userID, newChatID );
+                                            String chatID = helper.getNewChildKey( helper.getChatUserPath() );
+                                            String userID = helper.getAuth().getUid();
+                                            String displayName = helper.getAuthUserDisplayName();
+                                            //String displayName = helper.getAuth().getCurrentUser().getDisplayName();
+
+                                            Log.d( "TEST", "DISPLAY NAME: " + displayName );
+
+                                            helper.addToChatUser( chatID, userID, displayName );
+                                            helper.addToUserChat( userID, chatID );
+
+                                              String messageOneID = helper.getNewChildKey(helper.getMessagePath());
+                                              String timestampOne = helper.getNewTimestamp();
+                                              String messageOne = "COUCH POTATOES:\nWelcome to Couch Potatoes!"
+                                                             + "\nEnjoy meeting new people with similar interests!";
+
+                                              helper.addToMessage( messageOneID, userID, "COUCH POTATOES", chatID, timestampOne, messageOne );
+
+                                              String messageTwoID = helper.getNewChildKey(helper.getMessagePath());
+                                              String timestampTwo = helper.getNewTimestamp();
+                                              String messageTwo = "COUCH POTATOES:\nThis chat is your space. Feel free to experiment with the chat here.";
+
+                                              helper.addToMessage( messageTwoID, userID, "COUCH POTATOES", chatID, timestampTwo, messageTwo );
 
                                             // Registration complete. Redirect the new user the the main activity.
                                             startActivity( new Intent( getApplicationContext(), MainActivity.class ) );

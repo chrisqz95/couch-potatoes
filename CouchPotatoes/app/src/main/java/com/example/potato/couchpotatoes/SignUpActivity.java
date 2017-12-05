@@ -14,6 +14,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -37,6 +38,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.Calendar;
+import java.util.HashMap;
+import java.util.Map;
 
 public class SignUpActivity extends AppCompatActivity {
 
@@ -365,30 +368,117 @@ public class SignUpActivity extends AppCompatActivity {
                         dbHelper.fetchCurrentUser();
                         DatabaseReference ref = dbHelper.getDb().getReference().child(getString(R.string.sign_up_firebase_user)).child(dbHelper.getUser().getUid());
 
+                        DatabaseReference partnerPref = dbHelper.getDb().getReference(dbHelper.getPartnerPreferencePath() ).child( dbHelper.getUser().getUid()).child( "gender" );
+
+                        Map<String,Object> prefs = new HashMap<>();
+
+                        if ( mGenderPreferenceCheckBoxFemale.isChecked() ) {
+                            prefs.put( "female", true );
+                            //partnerPref.child( "female" ).setValue( true );
+                        }
+
+                        if ( mGenderPreferenceCheckBoxMale.isChecked() ) {
+                            prefs.put( "male", true );
+                            //partnerPref.child( "male" ).setValue( true );
+                        }
+
+                        if ( mGenderPreferenceCheckBoxNonbinary.isChecked() ) {
+                            prefs.put( "non-binary", true );
+                            //partnerPref.child( "non-binary" ).setValue( true );
+                        }
+
+                        Map<String,Object> additions = new HashMap<>();
+
                         // Account
-                        ref.child(getString(R.string.sign_up_firebase_email)).setValue(tempEmail);
-                        ref.child(getString(R.string.sign_up_firebase_suspended)).setValue(R.string.sign_up_firebase_false);
-                        ref.child(getString(R.string.sign_up_firebase_locked)).setValue(R.string.sign_up_firebase_false);
+                        //ref.child(getString(R.string.sign_up_firebase_email)).setValue(tempEmail);
+                        //ref.child(getString(R.string.sign_up_firebase_suspended)).setValue(R.string.sign_up_firebase_false);
+                        //ref.child(getString(R.string.sign_up_firebase_locked)).setValue(R.string.sign_up_firebase_false);
+
+                        additions.put( "email", tempEmail );
+                        additions.put( "suspended", false );
+                        additions.put( "locked", false );
 
                         // Name
-                        ref.child(getString(R.string.sign_up_firebase_firstname)).setValue(tempFirstName);
-                        ref.child(getString(R.string.sign_up_firebase_middlename)).setValue(tempMiddleName);
-                        ref.child(getString(R.string.sign_up_firebase_lastname)).setValue(tempLastName);
+                        //ref.child(getString(R.string.sign_up_firebase_firstname)).setValue(tempFirstName);
+                        //ref.child(getString(R.string.sign_up_firebase_middlename)).setValue(tempMiddleName);
+                        //ref.child(getString(R.string.sign_up_firebase_lastname)).setValue(tempLastName);
+
+                        additions.put( "firstName", tempFirstName );
+                        additions.put( "middleName", tempMiddleName );
+                        additions.put( "lastName", tempLastName );
 
                         // Personal Info
-                        ref.child(getString(R.string.sign_up_firebase_bio)).setValue(getString(R.string.sign_up_firebase_empty));
+                        //ref.child(getString(R.string.sign_up_firebase_bio)).setValue("");
+                        additions.put( "bio", "" );
+
                         String tempDoB = "" + tempDoBYear + "-" + (tempDoBMonth < 10 ? "0" + tempDoBMonth : tempDoBMonth)
                                 + "-" + (tempDoBDay < 10 ? "0" + tempDoBDay : tempDoBDay);
-                        ref.child(getString(R.string.sign_up_firebase_dob)).setValue(tempDoB);
-                        ref.child(getString(R.string.sign_up_firebase_gender)).setValue(mGenderSpinner.getSelectedItem().toString());
+
+                        //ref.child(getString(R.string.sign_up_firebase_dob)).setValue(tempDoB);
+                        //ref.child(getString(R.string.sign_up_firebase_gender)).setValue(mGenderSpinner.getSelectedItem().toString());
+
+                        additions.put( "birth_date", tempDoB );
+
+                        if ( mGenderSpinner.getSelectedItem().toString().equals( "Male" ) ) {
+                            additions.put( "gender", "male" );
+                        }
+                        else if ( mGenderSpinner.getSelectedItem().toString().equals( "Female" ) ) {
+                            additions.put( "gender", "female" );
+                        }
+                        else {
+                            additions.put( "gender", "non-binary" );
+                        }
 
                         // Location
                         // TODO: Resolve undefined variables
-                        ref.child(getString(R.string.sign_up_firebase_city)).setValue(getString(R.string.sign_up_firebase_empty));
-                        ref.child(getString(R.string.sign_up_firebase_country)).setValue(getString(R.string.sign_up_firebase_empty));
-                        ref.child(getString(R.string.sign_up_firebase_latitude)).setValue(getString(R.string.sign_up_firebase_empty));
-                        ref.child(getString(R.string.sign_up_firebase_longitude)).setValue(getString(R.string.sign_up_firebase_empty));
-                        ref.child(getString(R.string.sign_up_firebase_state)).setValue(getString(R.string.sign_up_firebase_empty));
+                        //ref.child(getString(R.string.sign_up_firebase_city)).setValue(getString(R.string.sign_up_firebase_empty));
+                        //ref.child(getString(R.string.sign_up_firebase_country)).setValue(getString(R.string.sign_up_firebase_empty));
+                        //ref.child(getString(R.string.sign_up_firebase_latitude)).setValue(getString(R.string.sign_up_firebase_empty));
+                        //ref.child(getString(R.string.sign_up_firebase_longitude)).setValue(getString(R.string.sign_up_firebase_empty));
+                        //ref.child(getString(R.string.sign_up_firebase_state)).setValue(getString(R.string.sign_up_firebase_empty));
+
+                        additions.put( "city", "" );
+                        additions.put( "state", "" );
+                        additions.put( "country", "" );
+
+                        additions.put( "latitude", 0 );
+                        additions.put( "longitude", 0 );
+
+                        // DO NOT SET TO NULL - CRASHES APP
+                        //additions.put( "profile_pic", "" );
+
+                        ref.setValue( additions );
+
+                        partnerPref.setValue( prefs );
+
+                        String displayName = dbHelper.getFullName( tempFirstName, tempMiddleName, tempLastName );
+                        dbHelper.updateAuthUserDisplayName(displayName);
+
+                        // Add the new user to a new chat containing only the new user
+                        String chatID = dbHelper.getNewChildKey( dbHelper.getChatUserPath() );
+                        String userID = dbHelper.getAuth().getUid();
+                        //String displayName = dbHelper.getAuthUserDisplayName();
+                        //String displayName = dbHelper.getAuth().getCurrentUser().getDisplayName();
+
+                        //Log.d( "TEST", "DISPLAY NAME: " + displayName );
+
+                        dbHelper.addToChatUser( chatID, userID, displayName );
+                        dbHelper.addToUserChat( userID, chatID );
+
+                        String messageOneID = dbHelper.getNewChildKey(dbHelper.getMessagePath());
+                        String timestampOne = dbHelper.getNewTimestamp();
+                        String messageOne = "COUCH POTATOES:\n*** Welcome to Couch Potatoes!"
+                                + "\nEnjoy meeting new people with similar interests! ***";
+
+                        dbHelper.addToMessage( messageOneID, userID, "COUCH POTATOES", chatID, timestampOne, messageOne );
+                        dbHelper.addToChatMessage( chatID, messageOneID );
+
+                        String messageTwoID = dbHelper.getNewChildKey(dbHelper.getMessagePath());
+                        String timestampTwo = dbHelper.getNewTimestamp();
+                        String messageTwo = "COUCH POTATOES:\n*** This chat is your space. Feel free to experiment with the chat here. ***";
+
+                        dbHelper.addToMessage( messageTwoID, userID, "COUCH POTATOES", chatID, timestampTwo, messageTwo );
+                        dbHelper.addToChatMessage( chatID, messageTwoID );
                         
                         // Start LoginActivity and end SignUpActivity
                         Toast.makeText(getActivity(), getString(R.string.sign_up_success_toast_message), Toast.LENGTH_SHORT).show();

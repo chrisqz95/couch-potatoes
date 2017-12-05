@@ -55,6 +55,7 @@ public class MessageActivity extends AppCompatActivity {
   //Map<String, String> messageSenders = new HashMap<>();
   //Map<String, String> messageText = new HashMap<>();
     ArrayList<String> messageTime = new ArrayList<>();
+    Map<String,String> messageIDs = new HashMap<>();
 
     final int MESSAGE_FETCH_LIMIT = 50;
 
@@ -151,6 +152,14 @@ public class MessageActivity extends AppCompatActivity {
                 // Fetch and display the messages
                 while (messages.hasNext()) {
                     String messageID = messages.next().getKey();
+
+                    // Only add new messages to scroll view
+                    if ( messageIDs.get( messageID ) != null ) {
+                        continue;
+                    }
+                    else {
+                        messageIDs.put( messageID, "true" );
+                    }
 
                     // Fetch all information corresponding to the current message
                     helper.getDb().getReference(helper.getMessagePath() + messageID).addValueEventListener(new ValueEventListener() {
