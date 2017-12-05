@@ -76,32 +76,32 @@ public class SpinBottleActivity extends AppCompatActivity {
         if(nice == 1) {
             switch ((degrees / (360 / 6)) % 6) {
                 case 5:
-                    return "COUCHPOTATOES SUGGESTION:\n*** SAY GOODBYE WITH A HUG ;) ***";
+                    return "COUCHPOTATOES SUGGESTS:\n SAY GOODBYE WITH A HUG ;) ";
                 case 4:
-                    return "COUCHPOTATOES SUGGESTION:\n*** SAY GOODBYE WITH A HANDSHAKE ;) ***";
+                    return "COUCHPOTATOES SUGGESTS:\n SAY GOODBYE WITH A HANDSHAKE ;) ";
                 case 3:
-                    return "COUCHPOTATOES SUGGESTION:\n*** SAY GOODBYE WITH A KISS ON THE CHEEK ;) ***";
+                    return "COUCHPOTATOES SUGGESTS:\n SAY GOODBYE WITH A KISS ON THE CHEEK ;) ";
                 case 2:
-                    return "COUCHPOTATOES SUGGESTION:\n*** SAY GOODBYE WITH A PECK ON THE LIPS ;) ***";
+                    return "COUCHPOTATOES SUGGESTS:\n SAY GOODBYE WITH A PECK ON THE LIPS ;) ";
                 case 1:
-                    return "COUCHPOTATOES SUGGESTION:\n*** SAY GOODBYE WITH A WAVE ;) ***";
+                    return "COUCHPOTATOES SUGGESTS:\n SAY GOODBYE WITH A WAVE ;) ";
                 case 0:
-                    return "COUCHPOTATOES SUGGESTION:\n*** SAY GOODBYE WITH A HIGH FIVE ;) ***";
+                    return "COUCHPOTATOES SUGGESTS:\n SAY GOODBYE WITH A HIGH FIVE ;) ";
             }
         } else {
             switch((degrees / (360 / 6)) % 6) {
                 case 5:
-                    return "COUCHPOTATOES SUGGESTION:\n*** SAY GOODBYE WITH A MAKEOUT SESSION ;) ***";
+                    return "COUCHPOTATOES SUGGESTS:\n SAY GOODBYE WITH A MAKEOUT SESSION ;) ";
                 case 4:
-                    return "COUCHPOTATOES SUGGESTION:\n*** SAY GOODBYE WITH AN ADVANCED HUG ;) ***";
+                    return "COUCHPOTATOES SUGGESTS:\n SAY GOODBYE WITH AN ADVANCED HUG ;) ";
                 case 3:
-                    return "COUCHPOTATOES SUGGESTION:\n*** SAY GOODBYE WITH SOME SEXUAL ACTIVITIES ;) ***";
+                    return "COUCHPOTATOES SUGGESTS:\n SAY GOODBYE WITH SOME SEXUAL ACTIVITIES ;) ";
                 case 2:
-                    return "COUCHPOTATOES SUGGESTION:\n*** SAY GOODBYE WITH A FRENCH KISS ;) ***";
+                    return "COUCHPOTATOES SUGGESTS:\n SAY GOODBYE WITH A FRENCH KISS ;) ";
                 case 1:
-                    return "COUCHPOTATOES SUGGESTION:\n*** GO HOME ***";
+                    return "COUCHPOTATOES SUGGESTS:\n GO HOME ";
                 case 0:
-                    return "COUCHPOTATOES SUGGESTION:\n*** SAY GOODBYE WITH A SLAP ON THE BUTT ***";
+                    return "COUCHPOTATOES SUGGESTS:\n SAY GOODBYE WITH A SLAP ON THE BUTT ";
             }
         }
         return "";
