@@ -477,13 +477,13 @@ public class MessageActivity extends AppCompatActivity {
                 textView.setText(message);
                 textView.setTextSize(20);
                 lp2.gravity = Gravity.RIGHT;
-                textView.setBackgroundResource(R.drawable.bubble_in);
+                textView.setBackgroundResource(R.drawable.new_bubble_in);
                 textView.setTextColor(Color.WHITE);
             } else {
                 textView.setText(message);
                 textView.setTextSize(20);
                 lp2.gravity = Gravity.LEFT;
-                textView.setBackgroundResource(R.drawable.bubble_out);
+                textView.setBackgroundResource(R.drawable.new_bubble_out);
                 textView.setTextColor(Color.BLACK);
             }
 
