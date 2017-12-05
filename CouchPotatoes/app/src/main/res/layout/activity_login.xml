@@ -15,6 +15,7 @@
             android:layout_height="fill_parent"
             android:gravity="center"
             android:orientation="vertical"
+            android:background="@color/white"
             android:padding="@dimen/activity_horizontal_margin">
 
         <ImageView
@@ -22,6 +23,7 @@
                 android:layout_height="@dimen/logo_w_h"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginBottom="20dp"
+                android:background="@drawable/round_shape_btn"
                 android:src="@drawable/couch_potatoes_logo" />
 
         <android.support.design.widget.TextInputLayout
@@ -37,7 +39,7 @@
                     android:inputType="textEmailAddress"
                     android:padding="10dp"
                     android:textColor="@color/primaryTextColor"
-                    android:textColorHint="@color/hint"
+                    android:textColorHint="@color/colorPrimaryLight"
                     android:maxLines="1"/>
         </android.support.design.widget.TextInputLayout>
 
@@ -54,7 +56,7 @@
                     android:inputType="textPassword"
                     android:padding="10dp"
                     android:textColor="@color/primaryTextColor"
-                    android:textColorHint="@color/hint"/>
+                    android:textColorHint="@color/colorPrimaryLight"/>
         </android.support.design.widget.TextInputLayout>
 
         <!-- Login Button -->
@@ -64,9 +66,9 @@
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dip"
-                android:background="@drawable/round_shape_btn"
                 android:text="@string/btn_login"
                 android:textColor="@android:color/white"
+                android:background="@color/colorPrimary"
                 android:foreground="?android:attr/selectableItemBackground"
                 android:textSize="14sp"
                 android:elevation="2dp"/>
@@ -82,7 +84,7 @@
                 android:text="@string/btn_forgot_password"
                 android:textAllCaps="false"
                 android:minHeight="0dp"
-                android:textColor="@color/primaryColor"
+                android:textColor="@color/colorPrimary"
                 android:fontFamily="sans-serif"/>
 
 
@@ -94,7 +96,7 @@
                 android:background="@null"
                 android:text="@string/btn_link_to_register"
                 android:textAllCaps="false"
-                android:textColor="@color/primaryColor"
+                android:textColor="@color/colorPrimary"
                 android:textSize="15sp"
                 android:fontFamily="sans-serif"/>
     </LinearLayout>

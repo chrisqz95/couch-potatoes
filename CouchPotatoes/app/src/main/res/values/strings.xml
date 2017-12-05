@@ -126,6 +126,7 @@
     <string name="sign_up_email_string">Please Enter Your Email.</string>
     <string name="sign_up_prompt_email">Email</string>
     <string name="sign_up_password_string">Please Enter A Password.</string>
+    <string name="sign_up_password_string_confirm">Please Confirm Your Password.</string>
     <string name="sign_up_prompt_password">Password</string>
     <string name="sign_up_prompt_password_confirm">Password (Confirm)</string>
 
