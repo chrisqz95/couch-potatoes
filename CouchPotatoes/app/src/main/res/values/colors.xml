@@ -25,7 +25,7 @@
     <color name="secondaryTextColor">#000000</color>
 
     <color name="hint">#E1E0F5</color>
-    <color name="shadow">#DBD8F8</color>
+    <color name="shadow">#E1E0F5</color>
 
     <!--Colors for Liking and Disliking or other success/fail-->
     <color name="success">#14CC80</color>

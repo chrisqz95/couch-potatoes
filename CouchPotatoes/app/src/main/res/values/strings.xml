@@ -165,6 +165,8 @@
     <string name="sign_up_invalid_name">Please enter a valid name.</string>
     <string name="sign_up_dob_prompt">You must be at least 18 years old to use this app.</string>
     <string name="sign_up_missing_gender_preference">Please Select At Least One</string>
+    <string name="sign_up_dob_display_default">DoB: MM/DD/YYYY</string>
+    <string name="sign_up_dob_btn_label">Select Date of Birth</string>
 
 
     <string name="sign_up_abort_title">Exit Account Creation</string>
@@ -207,7 +209,7 @@
     <string name="title_activity_chat_room">Messenger</string>
     <string name="title_activity_message">MessageActivity</string>
 
-    <string name="title_reset_password">ResetPassword</string>
+    <string name="title_reset_password">Reset Password</string>
 
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_activity_registration">Registration Activity</string>

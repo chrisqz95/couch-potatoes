@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:drawable="@color/colorPrimary"/>
+    <!--<item-->
+        <!--android:width="120dp"-->
+        <!--android:height="120dp">-->
+        <!--<bitmap-->
+                <!--android:src="@drawable/couch_potatoes_logo"-->
+                <!--android:gravity="center"/>-->
+    <!--</item>-->
+    <!--TODO get appropriately sized logos. Current too big-->
+    <item
+            android:width="179dp"
+            android:height="110dp"
+            android:drawable="@drawable/couch_potatoes_logo"
+            android:gravity="center"/>
+</layer-list>

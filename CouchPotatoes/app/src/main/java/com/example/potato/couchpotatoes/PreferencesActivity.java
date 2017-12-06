@@ -187,6 +187,9 @@ public class PreferencesActivity extends AppCompatActivity
         // Want to display icons in original color scheme
         navView.setItemIconTintList(null);
 
+        // highlight the current location
+        navView.setCheckedItem(R.id.nav_profile);
+
         // initialize textViews on the sidebar header
         sidebarUserName = (android.widget.TextView) navView.getHeaderView(0)
                 .findViewById(R.id.sidebar_username);
@@ -328,6 +331,14 @@ public class PreferencesActivity extends AppCompatActivity
         cachePhotoURIs();
         */
      
+    }
+
+    // Make sure the navView highlight the correct location
+    @Override
+    public void onResume() {
+        super.onResume();
+        // highlight the current location
+        navView.setCheckedItem(R.id.nav_profile);
     }
 
     /*

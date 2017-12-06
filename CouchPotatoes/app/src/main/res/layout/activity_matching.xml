@@ -23,6 +23,7 @@
                 android:id="@+id/appbar_matching"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:elevation="10dp"
 				android:theme="@style/AppTheme.AppBarOverlay">
 
                 <android.support.v7.widget.Toolbar
@@ -30,16 +31,19 @@
                     android:layout_width="match_parent"
                     android:layout_height="?android:attr/actionBarSize"
                     android:background="@color/colorPrimary"
+                    android:elevation="10dp"
 					app:popupTheme="@style/AppTheme.PopupOverlay" />
 
                 <android.support.design.widget.TabLayout
                         android:id="@+id/matching_tabs"
                         android:layout_width="match_parent"
-                        android:layout_height="?android:attr/actionBarSize"
+                        android:layout_height="48dp"
                         android:layout_gravity="top"
-                        android:background="@color/white"
-                        app:tabTextColor="@color/primaryTextColor"
-                        app:tabSelectedTextColor="@color/primaryColor"
+                        android:background="@color/colorPrimary"
+                        android:elevation="10dp"
+                        app:tabTextColor="@color/shadow"
+                        app:tabSelectedTextColor="@color/white"
+                        app:tabIndicatorColor="@color/white"
                         app:tabGravity="fill"
                         app:tabMode="fixed"/>
 
