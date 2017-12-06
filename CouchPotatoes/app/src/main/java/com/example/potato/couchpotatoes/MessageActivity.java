@@ -229,7 +229,7 @@ public class MessageActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 //DIALOG FOR SPINNER
-                String spinners[] = {"Spin the Bottle: Nice","Spin the Bottle: Naughty","Spin the Bottle: Food", "Spin the Bottle: Activity"};
+                String spinners[] = {"Spin the Wheel: Food", "Spin the Wheel: Activity", "Spin the Bottle: Nice","Spin the Bottle: Naughty"};
                 AlertDialog.Builder builder = new AlertDialog.Builder(MessageActivity.this);
                 builder.setIcon(R.mipmap.empty_wheel)
                         .setTitle("Choose Your Spinner!")
@@ -237,7 +237,7 @@ public class MessageActivity extends AppCompatActivity {
                             public void onClick(DialogInterface dialog, int which) {
                                 Intent intent;
                                 switch (which) {
-                                    case 0:
+                                    case 2:
                                         intent = new Intent(((Dialog) dialog).getContext(), SpinBottleActivity.class);
                                         intent.putExtra("key", 1);
                                         intent.putExtra( "chatID", chatRoom );
@@ -245,7 +245,7 @@ public class MessageActivity extends AppCompatActivity {
                                         finish();
                                         startActivity(intent);
                                         break;
-                                    case 1:
+                                    case 3:
                                         //System.out.println(LoginActivity.class);
                                         intent = new Intent(((Dialog) dialog).getContext(), SpinBottleActivity.class);
                                         intent.putExtra("key", 0);
@@ -254,7 +254,7 @@ public class MessageActivity extends AppCompatActivity {
                                         finish();
                                         startActivity(intent);
                                         break;
-                                    case 2:
+                                    case 0:
                                         intent = new Intent(((Dialog) dialog).getContext(), SpinToChooseActivity.class);
                                         intent.putExtra("key", 1);
                                         intent.putExtra( "chatID", chatRoom );
@@ -262,7 +262,7 @@ public class MessageActivity extends AppCompatActivity {
                                         finish();
                                         startActivity(intent);
                                         break;
-                                    case 3:
+                                    case 1:
                                         intent = new Intent(((Dialog) dialog).getContext(), SpinToChooseActivity.class);
                                         intent.putExtra("key", 0);
                                         intent.putExtra( "chatID", chatRoom );
