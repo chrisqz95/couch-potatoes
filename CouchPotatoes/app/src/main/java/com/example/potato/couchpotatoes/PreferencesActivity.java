@@ -597,8 +597,8 @@ public class PreferencesActivity extends AppCompatActivity
             Intent intent = new Intent( getApplicationContext(), ChatRoomActivity.class );
             startActivity( intent );
             finish();
-//        }
-//        else if (id == R.id.nav_settings) {
+        }
+        else if (id == R.id.nav_settings) {
             // TODO: go to the settings page
             //Intent intent = new Intent( getApplicationContext(), SettingsActivity.class );
             //startActivity( intent );

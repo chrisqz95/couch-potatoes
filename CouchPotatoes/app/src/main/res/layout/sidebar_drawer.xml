@@ -27,10 +27,10 @@
     <group
         android:id="@+id/nav_menu_bottom">
         <!--item commented due to lack of time implementation-->
-        <!--<item-->
-            <!--android:id="@+id/nav_settings"-->
-            <!--android:icon="@drawable/potato_settings"-->
-            <!--android:title="@string/sidebar_settings" />-->
+        <item
+            android:id="@+id/nav_settings"
+            android:icon="@drawable/potato_settings"
+            android:title="@string/sidebar_settings" />
         <item
             android:id="@+id/nav_info"
             android:icon="@drawable/potato_about"
