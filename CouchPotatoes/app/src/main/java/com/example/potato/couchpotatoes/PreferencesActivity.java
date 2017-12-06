@@ -602,6 +602,7 @@ public class PreferencesActivity extends AppCompatActivity
             // TODO: go to the settings page
             //Intent intent = new Intent( getApplicationContext(), SettingsActivity.class );
             //startActivity( intent );
+            startActivity( new Intent( getApplicationContext(), AppSettingsActivity.class ) );
         }
         else if (id == R.id.nav_info) {
             // TODO: go to the "about us" page
