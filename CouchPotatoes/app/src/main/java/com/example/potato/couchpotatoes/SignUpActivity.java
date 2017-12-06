@@ -467,15 +467,15 @@ public class SignUpActivity extends AppCompatActivity {
 
                         String messageOneID = dbHelper.getNewChildKey(dbHelper.getMessagePath());
                         String timestampOne = dbHelper.getNewTimestamp();
-                        String messageOne = "COUCH POTATOES:\n*** Welcome to Couch Potatoes!"
-                                + "\nEnjoy meeting new people with similar interests! ***";
+                        String messageOne = "COUCH POTATOES:\nWelcome to Couch Potatoes!"
+                                + "\nEnjoy meeting new people with similar interests!";
 
                         dbHelper.addToMessage( messageOneID, userID, "COUCH POTATOES", chatID, timestampOne, messageOne );
                         dbHelper.addToChatMessage( chatID, messageOneID );
 
                         String messageTwoID = dbHelper.getNewChildKey(dbHelper.getMessagePath());
                         String timestampTwo = dbHelper.getNewTimestamp();
-                        String messageTwo = "COUCH POTATOES:\n*** This chat is your space. Feel free to experiment with the chat here. ***";
+                        String messageTwo = "COUCH POTATOES:\nThis chat is your space. Feel free to experiment with the chat here.";
 
                         dbHelper.addToMessage( messageTwoID, userID, "COUCH POTATOES", chatID, timestampTwo, messageTwo );
                         dbHelper.addToChatMessage( chatID, messageTwoID );
