@@ -486,12 +486,10 @@ public class MatchingActivity extends AppCompatActivity
 
         }
         else if (id == R.id.nav_settings) {
-		    // TODO
             //Intent intent = new Intent( getApplicationContext(), SettingsActivity.class );
             //startActivity( intent );
             startActivity( new Intent( getApplicationContext(), AppSettingsActivity.class ) );
-        }
-        else if (id == R.id.nav_info) {
+        } else if (id == R.id.nav_info) {
             // TODO: go to Page with device information
             Intent intent = new Intent( getApplicationContext(), AboutUsActivity.class );
             startActivity( intent );
