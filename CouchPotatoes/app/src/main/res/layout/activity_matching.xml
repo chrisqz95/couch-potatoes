@@ -70,7 +70,7 @@
                     <ImageView
                         android:id="@+id/imageView2"
                         android:layout_width="match_parent"
-                        android:layout_height="150dp"
+                        android:layout_height="225dp"
                         android:layout_gravity="center"
                         android:layout_marginLeft="15dp"
                         android:layout_marginRight="15dp"
@@ -153,12 +153,6 @@
 
         </LinearLayout>
 
-        <com.mindorks.placeholderview.SwipePlaceHolderView
-            android:id="@+id/swipeView"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-        </com.mindorks.placeholderview.SwipePlaceHolderView>
-
         <!--<android.support.design.widget.FloatingActionButton-->
                 <!--android:id="@+id/fab_unmatch"-->
                 <!--android:layout_width="wrap_content"-->
@@ -175,7 +169,7 @@
 
     <!--Layout of the side bar menu-->
     <android.support.design.widget.NavigationView
-        android:id="@+id/nav_view"
+        android:id="@+id/match_nav_view"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_gravity="start"

@@ -125,7 +125,8 @@
     <!-- Strings Used in Sign Up Activity -->
     <string name="sign_up_email_string">Please Enter Your Email.</string>
     <string name="sign_up_prompt_email">Email</string>
-    <string name="sign_up_password_string">Please Enter A Password.</string>
+    <string name="sign_up_password_string">Please Enter A Password.\n
+        \nPasswords must be at least 5 characters and be comprised of alpha numeric symbols (a-z, A-Z, 0-9).</string>
     <string name="sign_up_password_string_confirm">Please Confirm Your Password.</string>
     <string name="sign_up_prompt_password">Password</string>
     <string name="sign_up_prompt_password_confirm">Password (Confirm)</string>
@@ -133,7 +134,7 @@
     <string name="title_activity_sign_up">Signup Activity</string>
     <string name="section_format">Hello World from section: %1$d</string>
 
-    <string name="sign_up_dob">Date of Birth</string>
+    <string name="sign_up_dob">Date of Birth (YYYY/MM/DD)</string>
     <string name="sign_up_first_name">First Name</string>
     <string name="sign_up_middle_name">Middle Name</string>
     <string name="sign_up_last_name">Last Name</string>
@@ -141,10 +142,12 @@
     <string name="sign_up_gender_preference_prompt">Interested In</string>
     <string name="sign_up_male">Male</string>
     <string name="sign_up_female">Female</string>
+    <string name="sign_up_nonbinary">Non-Binary</string>
     <string name="sign_up_other">Other</string>
     <string-array name="gender_array">
         <item>Male</item>
         <item>Female</item>
+        <item>Non-Binary</item>
         <item>Other</item>
     </string-array>
     <string name="sign_up_location">Location</string>
@@ -156,7 +159,7 @@
 
     <string name="sign_up_email_collision">Email already exists.</string>
     <string name="sign_up_invalid_email">Please enter a valid email.</string>
-    <string name="sign_up_invalid_password">Invalid password.</string>
+    <string name="sign_up_invalid_password">Invalid or weak password.</string>
     <string name="sign_up_non_matching_passwords">Passwords don\'t match.</string>
     <string name="sign_up_missing_name">Please enter a name.</string>
     <string name="sign_up_invalid_name">Please enter a valid name.</string>
@@ -173,6 +176,24 @@
     <string name="sign_up_abort_toast_message">Account Creation Canceled.</string>
     <string name="sign_up_success_toast_message">Account Created.</string>
 
+    <string name="sign_up_firebase_user">User</string>
+    <string name="sign_up_firebase_bio">bio</string>
+    <string name="sign_up_firebase_dob">birth_date</string>
+    <string name="sign_up_firebase_city">city</string>
+    <string name="sign_up_firebase_country">country</string>
+    <string name="sign_up_firebase_email">email</string>
+    <string name="sign_up_firebase_firstname">firstName</string>
+    <string name="sign_up_firebase_gender">gender</string>
+    <string name="sign_up_firebase_lastname">lastName</string>
+    <string name="sign_up_firebase_latitude">latitude</string>
+    <string name="sign_up_firebase_locked">locked</string>
+    <string name="sign_up_firebase_longitude">longitude</string>
+    <string name="sign_up_firebase_middlename">middleName</string>
+    <string name="sign_up_firebase_state">state</string>
+    <string name="sign_up_firebase_suspended">suspended</string>
+
+    <string name="sign_up_firebase_false">false</string>
+    <string name="sign_up_firebase_empty">undefined</string>
 
     <!--Strings related to sidebar navigation-->
     <string name="sidebar_profile">View Profile</string>
@@ -182,8 +203,10 @@
     <string name="sidebar_aboutUs">About Us</string>
     <string name="sidebar_logout">Log Out</string>
 
-    <string name="title_activity_chat_room">Chat Room Activity</string>
-    <string name="title_activity_message">Message Activity</string>
+
+    <string name="title_activity_chat_room">Messenger</string>
+    <string name="title_activity_message">MessageActivity</string>
+
     <string name="title_reset_password">ResetPassword</string>
 
     <string name="hello_blank_fragment">Hello blank fragment</string>
@@ -211,8 +234,17 @@
     <string name="lbl_reset_password_success_generic">An email has been sent to the given email with further instructions.</string>
     <string name="reset_password_success_msg_1">An email has been sent to </string>
     <string name="reset_password_success_msg_2"> with further instructions.</string>
+    <string name="title_activity_picture_grid_tab_view">PictureGridTabView</string>
+    <string name="action_settings">Settings</string>
+    <string name="title_activity_tabbed_testtest">TabbedTESTTEST</string>
     <string name="title_activity_match_user_info">User Info</string>
     <string name="title_activity_about_us">About Us</string>
 
     <string name="about_us">Brought to you by the Providers Of Technology And Talent Organization ( P.O.T.A.T.O. )</string>
+    <string name="interests">Interests</string>
+    <string name="cancel">Cancel</string>
+    <string name="save_changes">Save Changes</string>
+    <string name="biography">Biography</string>
+    <string name="edit_photos">Edit Photos</string>
+    <string name="settings">Settings</string>
 </resources>

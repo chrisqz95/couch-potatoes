@@ -12,33 +12,32 @@
         android:id="@+id/nav_menu_top">
         <item
             android:id="@+id/nav_profile"
-            android:icon="@drawable/profile"
+            android:icon="@drawable/potato"
             android:title="@string/sidebar_profile" />
         <item
             android:id="@+id/nav_matches"
-            android:icon="@drawable/heart"
+            android:icon="@drawable/potato_like"
             android:title="@string/sidebar_matches" />
         <item
             android:id="@+id/nav_chats"
-            android:icon="@drawable/speech_bubble"
+            android:icon="@drawable/potato_chat"
             android:title="@string/sidebar_chats" />
     </group>
 
     <group
         android:id="@+id/nav_menu_bottom">
-        <!-- Remove for now. Uncomment later if needed.
+
         <item
             android:id="@+id/nav_settings"
-            android:icon="@drawable/settings_1"
+            android:icon="@drawable/potato_settings"
             android:title="@string/sidebar_settings" />
-            -->
         <item
             android:id="@+id/nav_info"
-            android:icon="@drawable/info"
+            android:icon="@drawable/potato_about"
             android:title="@string/sidebar_aboutUs" />
         <item
             android:id="@+id/nav_logout"
-            android:icon="@drawable/logout"
+            android:icon="@drawable/potato_logout"
             android:title="@string/sidebar_logout" />
     </group>
 

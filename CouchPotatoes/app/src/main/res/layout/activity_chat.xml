@@ -1,33 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-
-
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#ffffff"
-
-
     android:orientation="vertical"
     tools:context="com.example.potato.couchpotatoes.MessageActivity">
 
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="55dp"
-
         android:theme="@style/AppTheme.AppBarOverlay">
 
-        <TextView
+        <!--Toolbar to display options for the user-->
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/chat_toolbar"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:textSize="20dp"
-            android:textColor="#FFFFFF"
-            android:textAlignment="center"
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorPrimary"
+            app:popupTheme="@style/AppTheme.PopupOverlay">
 
-            android:id="@+id/userName"
-            />
+            <!--name of the matched user in the chat-->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="20dp"
+                android:textColor="#FFFFFF"
+                android:textAlignment="center"
+                android:layout_gravity="center_horizontal"
+                android:id="@+id/userName"
+                android:visibility="visible"
+                />
+
+            <!--the spinner wheel shown at the left of the toolbar-->
+            <Button
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:id="@+id/b_select_spinner"
+                android:background="@mipmap/empty_wheel"
+                android:layout_gravity="end"
+                android:layout_marginEnd="10sp"
+                />
+        </android.support.v7.widget.Toolbar>
+
     </android.support.design.widget.AppBarLayout>
 
     <ScrollView
@@ -42,15 +59,15 @@
         <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
             android:id="@+id/layout2"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            >
 
             <LinearLayout
                 android:id="@+id/layout1"
                 android:layout_width="match_parent"
-
-
                 android:layout_height="wrap_content"
-                android:orientation="vertical" />
+                android:orientation="vertical"
+                />
         </RelativeLayout>
     </ScrollView>
 
@@ -60,4 +77,5 @@
         android:layout_height="wrap_content"
         android:gravity="bottom"
         android:layout_marginTop="5dp"/>
+
 </LinearLayout>
