@@ -18,20 +18,23 @@
         android:name="android.hardware.camera2"
         android:required="true" />
 
-    <!--android:icon="@mipmap/ic_launcher"-->
+    <!-- android:icon="@mipmap/ic_launcher" -->
     <application
         android:allowBackup="true"
         android:icon="@drawable/couch_potatoes_logo"
         android:label="@string/app_name"
+        android:largeHeap="true"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme"
-        android:largeHeap="true">
+        android:theme="@style/AppTheme">
 
-        <!--android:theme="@style/AppTheme.NoActionBar">-->
+        <!-- android:theme="@style/AppTheme.NoActionBar"> -->
         <activity
             android:name=".SplashActivity"
+            android:label="@string/app_name"
             android:theme="@style/SplashTheme">
+
+            <!-- android:windowSoftInputMode="adjustResize"> -->
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -49,9 +52,8 @@
         <activity
             android:name=".PreferencesActivity"
             android:label="@string/pref_header_profile"
-            android:theme="@style/AppTheme.NoActionBar"/>
-        <activity
-            android:name=".UserGalleryActivity">
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".UserGalleryActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".MainActivity" />
@@ -76,10 +78,11 @@
             android:name=".MessageActivity"
             android:label="@string/title_activity_message"
             android:theme="@style/AppTheme.NoActionBar">
-            <!--Parent activity of the chat-->
+
+            <!-- Parent activity of the chat -->
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".ChatRoomActivity"/>
+                android:value=".ChatRoomActivity" />
         </activity>
         <activity
             android:name=".SignUpActivity"
@@ -113,10 +116,11 @@
             android:name=".AboutUsActivity"
             android:label="@string/title_activity_about_us"
             android:theme="@style/AppTheme.NoActionBar">
-            <!--Parent activity of the chat-->
+
+            <!-- Parent activity of the chat -->
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".MainActivity"/>
+                android:value=".MatchingActivity" />
         </activity>
         <activity
             android:name=".SpinBottleActivity"
@@ -126,6 +130,15 @@
             android:name=".SpinToChooseActivity"
             android:label="SpinToChoose"
             android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".AppSettingsActivity"
+            android:label="@string/title_activity_app_settings"
+            android:theme="@style/AppTheme.NoActionBar">
+            <!-- Parent activity of the chat -->
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".MatchingActivity" />
+        </activity>
     </application>
 
 </manifest>
