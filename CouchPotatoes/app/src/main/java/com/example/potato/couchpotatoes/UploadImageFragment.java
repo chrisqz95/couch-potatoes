@@ -342,9 +342,11 @@ public class UploadImageFragment extends Fragment implements View.OnClickListene
                 // Notify User of successful upload
                 Toast.makeText(getActivity(), "Photo uploaded successfully", Toast.LENGTH_LONG).show();
 
-                Intent intent = new Intent(getActivity(), PictureGridActivity.class );
+                //Intent intent = new Intent(getActivity(), PictureGridActivity.class );
+                Intent intent = new Intent( getActivity(), getActivity().getClass()  );
                 intent.putExtra( "uid", userID );
                 intent.putExtra( "isCurrentUser", true );
+                //intent.putExtra( "changeProfilePic", getActivity().getIntent().getExtras().getString( "changeProfilePic") );
                 getActivity().finish();
                 startActivity( intent );
                 // Update image view with photo
