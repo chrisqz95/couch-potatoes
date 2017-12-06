@@ -34,6 +34,9 @@ public class AppSettingsActivity extends AppCompatActivity {
         toolbar.setTitleTextColor(Color.WHITE);
         setSupportActionBar(toolbar);
 
+        // adds up navigation to the toolbar on top
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
         spinner = (ProgressBar) findViewById(R.id.progressBar2);
 
         helper = new DBHelper();

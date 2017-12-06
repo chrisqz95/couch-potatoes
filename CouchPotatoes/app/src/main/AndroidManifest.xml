@@ -115,7 +115,7 @@
             <!-- Parent activity of the chat -->
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".MainActivity" />
+                android:value=".MatchingActivity" />
         </activity>
         <activity
             android:name=".SpinBottleActivity"
@@ -128,7 +128,12 @@
         <activity
             android:name=".AppSettingsActivity"
             android:label="@string/title_activity_app_settings"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar">
+            <!-- Parent activity of the chat -->
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".MatchingActivity" />
+        </activity>
     </application>
 
 </manifest>
