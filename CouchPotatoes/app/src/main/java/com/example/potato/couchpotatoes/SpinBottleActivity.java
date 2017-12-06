@@ -2,6 +2,7 @@ package com.example.potato.couchpotatoes;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.animation.AccelerateDecelerateInterpolator;
@@ -53,12 +54,21 @@ public class SpinBottleActivity extends AppCompatActivity {
                     @Override
                     public void onAnimationEnd(Animation animation) {
                         String message = currentNumber(360 - (angle % 360), nice);
+                        final String message2 = message;
                         // return to main screen
-                        Intent intent = new Intent(getApplicationContext(), MessageActivity.class);
-                        intent.putExtra("message", message);
-                        intent.putExtra( "chatID", getIntent().getStringExtra("chatID") );
-                        intent.putExtra("otherUsers", getIntent().getStringExtra("otherUsers"));
-                        startActivity(intent);
+                        final Handler handler = new Handler();
+                        handler.postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                // Do something after 5s = 5000ms
+                                Intent intent = new Intent(getApplicationContext(), MessageActivity.class);
+                                intent.putExtra("message", message2);
+                                intent.putExtra( "chatID", getIntent().getStringExtra("chatID") );
+                                intent.putExtra("otherUsers", getIntent().getStringExtra("otherUsers"));
+                                finish();
+                                startActivity(intent);
+                            }
+                        }, 1500);
                     }
 
                     @Override
@@ -74,33 +84,33 @@ public class SpinBottleActivity extends AppCompatActivity {
     private String currentNumber(int degrees, int nice){
         if(nice == 1) {
             switch ((degrees / (360 / 6)) % 6) {
-                case 0:
-                    return "COUCHPOTATOES SUGGESTION:\n*** SAY GOODBYE WITH A HUG ;) ***";
-                case 1:
-                    return "COUCHPOTATOES SUGGESTION:\n*** SAY GOODBYE WITH A HANDSHAKE ;) ***";
-                case 2:
-                    return "COUCHPOTATOES SUGGESTION:\n*** SAY GOODBYE WITH A KISS ON THE CHEEK ;) ***";
-                case 3:
-                    return "COUCHPOTATOES SUGGESTION:\n*** SAY GOODBYE WITH A PECK ON THE LIPS ;) ***";
-                case 4:
-                    return "COUCHPOTATOES SUGGESTION:\n*** SAY GOODBYE WITH A WAVE ;) ***";
                 case 5:
-                    return "COUCHPOTATOES SUGGESTION:\n*** SAY GOODBYE WITH A HIGH FIVE ;) ***";
+                    return "COUCHPOTATOES SUGGESTS:\n SAY GOODBYE WITH A HUG ;) ";
+                case 4:
+                    return "COUCHPOTATOES SUGGESTS:\n SAY GOODBYE WITH A HANDSHAKE ;) ";
+                case 3:
+                    return "COUCHPOTATOES SUGGESTS:\n SAY GOODBYE WITH A KISS ON THE CHEEK ;) ";
+                case 2:
+                    return "COUCHPOTATOES SUGGESTS:\n SAY GOODBYE WITH A PECK ON THE LIPS ;) ";
+                case 1:
+                    return "COUCHPOTATOES SUGGESTS:\n SAY GOODBYE WITH A WAVE ;) ";
+                case 0:
+                    return "COUCHPOTATOES SUGGESTS:\n SAY GOODBYE WITH A HIGH FIVE ;) ";
             }
         } else {
             switch((degrees / (360 / 6)) % 6) {
-                case 0:
-                    return "COUCHPOTATOES SUGGESTION:\n*** SAY GOODBYE WITH A MAKEOUT SESSION ;) ***";
-                case 1:
-                    return "COUCHPOTATOES SUGGESTION:\n*** SAY GOODBYE WITH AN ADVANCED HUG ;) ***";
-                case 2:
-                    return "COUCHPOTATOES SUGGESTION:\n*** SAY GOODBYE WITH SOME SEXUAL ACTIVITIES ;) ***";
-                case 3:
-                    return "COUCHPOTATOES SUGGESTION:\n*** SAY GOODBYE WITH A FRENCH KISS ;) ***";
-                case 4:
-                    return "COUCHPOTATOES SUGGESTION:\n*** GO HOME ***";
                 case 5:
-                    return "COUCHPOTATOES SUGGESTION:\n*** SAY GOODBYE WITH A SLAP ON THE BUTT ***";
+                    return "COUCHPOTATOES SUGGESTS:\n SAY GOODBYE WITH A MAKEOUT SESSION ;) ";
+                case 4:
+                    return "COUCHPOTATOES SUGGESTS:\n SAY GOODBYE WITH AN ADVANCED HUG ;) ";
+                case 3:
+                    return "COUCHPOTATOES SUGGESTS:\n SAY GOODBYE WITH SOME SEXUAL ACTIVITIES ;) ";
+                case 2:
+                    return "COUCHPOTATOES SUGGESTS:\n SAY GOODBYE WITH A FRENCH KISS ;) ";
+                case 1:
+                    return "COUCHPOTATOES SUGGESTS:\n GO HOME ";
+                case 0:
+                    return "COUCHPOTATOES SUGGESTS:\n SAY GOODBYE WITH A SLAP ON THE BUTT ";
             }
         }
         return "";

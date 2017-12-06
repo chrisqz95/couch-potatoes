@@ -3,6 +3,7 @@ package com.example.potato.couchpotatoes;
 import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.animation.Animation;
@@ -56,12 +57,22 @@ public class SpinToChooseActivity  extends AppCompatActivity {
                     @Override
                     public void onAnimationEnd(Animation animation) {
                         String message = currentNumber(360 - (degree % 360), food);
+
                         // return to main screen
-                        Intent intent = new Intent(getApplicationContext(), MessageActivity.class);
-                        intent.putExtra("message", message);
-                        intent.putExtra( "chatID", getIntent().getStringExtra("chatID") );
-                        intent.putExtra("otherUsers", getIntent().getStringExtra("otherUsers"));
-                        startActivity(intent);
+                        final String message2 = message;
+                        // return to main screen
+                        final Handler handler = new Handler();
+                        handler.postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                Intent intent = new Intent(getApplicationContext(), MessageActivity.class);
+                                intent.putExtra("message", message2);
+                                intent.putExtra( "chatID", getIntent().getStringExtra("chatID") );
+                                intent.putExtra("otherUsers", getIntent().getStringExtra("otherUsers"));
+                                finish();
+                                startActivity(intent);
+                            }
+                        }, 1500);
                     }
 
                     @Override
@@ -80,43 +91,43 @@ public class SpinToChooseActivity  extends AppCompatActivity {
             switch ((degrees / (360 / 6)) % 6) {
                 case 0:
                     ic_potato.setImageResource(R.drawable.potato_pizza);
-                    return "COUCHPOTATOES SUGGESTION:\n*** PIZZA FOR DINNER ***";
+                    return "COUCHPOTATOES SUGGESTS:\n PIZZA FOR DINNER ";
                 case 1:
                     ic_potato.setImageResource(R.drawable.potato_hamburger);
-                    return "COUCHPOTATOES SUGGESTION:\n*** BURGERS FOR DINNER ***";
+                    return "COUCHPOTATOES SUGGESTS:\n BURGERS FOR DINNER ";
                 case 2:
                     ic_potato.setImageResource(R.drawable.potato_italian);
-                    return "COUCHPOTATOES SUGGESTION:\n*** ITALIAN FOOD FOR DINNER ***";
+                    return "COUCHPOTATOES SUGGESTS:\n ITALIAN FOOD FOR DINNER ";
                 case 3:
                     ic_potato.setImageResource(R.drawable.potato_mexican);
-                    return "COUCHPOTATOES SUGGESTION:\n*** MEXICAN FOOD FOR DINNER ***";
+                    return "COUCHPOTATOES SUGGESTS:\n MEXICAN FOOD FOR DINNER ";
                 case 4:
                     ic_potato.setImageResource(R.drawable.potato_japanese);
-                    return "COUCHPOTATOES SUGGESTION:\n*** JAPANESE FOOD FOR DINNER ***";
+                    return "COUCHPOTATOES SUGGESTS:\n JAPANESE FOOD FOR DINNER ";
                 case 5:
                     ic_potato.setImageResource(R.drawable.potato_chinese);
-                    return "COUCHPOTATOES SUGGESTION:\n*** CHINESE FOOD FOR DINNER ***";
+                    return "COUCHPOTATOES SUGGESTS:\n CHINESE FOOD FOR DINNER ";
             }
         } else {
             switch((degrees / (360 / 6)) % 6) {
                 case 0:
                     ic_potato.setImageResource(R.drawable.potato_beach);
-                    return "COUCHPOTATOES SUGGESTION:\n*** GO TO THE BEACH ***";
+                    return "COUCHPOTATOES SUGGESTS:\n GO TO THE BEACH ";
                 case 1:
                     ic_potato.setImageResource(R.drawable.potato_movie);
-                    return "COUCHPOTATOES SUGGESTION:\n*** GO TO A MOVIE ***";
+                    return "COUCHPOTATOES SUGGESTS:\n GO TO A MOVIE ";
                 case 2:
                     ic_potato.setImageResource(R.drawable.potato_videogames);
-                    return "COUCHPOTATOES SUGGESTION:\n*** PLAY VIDEOGAMES ***";
+                    return "COUCHPOTATOES SUGGESTS:\n PLAY VIDEOGAMES ";
                 case 3:
                     ic_potato.setImageResource(R.drawable.potato_coffee);
-                    return "COUCHPOTATOES SUGGESTION:\n*** GO GET COFFEE ***";
+                    return "COUCHPOTATOES SUGGESTS:\n GO GET COFFEE ";
                 case 4:
                     ic_potato.setImageResource(R.drawable.potato_hike);
-                    return "COUCHPOTATOES SUGGESTION:\n*** GO ON A HIKE ***";
+                    return "COUCHPOTATOES SUGGESTS:\n GO ON A HIKE ";
                 case 5:
                     ic_potato.setImageResource(R.drawable.potato_walk);
-                    return "COUCHPOTATOES SUGGESTION:\n*** GO FOR A WALK ***";
+                    return "COUCHPOTATOES SUGGESTS:\n GO FOR A WALK ";
             }
         }
         return "";

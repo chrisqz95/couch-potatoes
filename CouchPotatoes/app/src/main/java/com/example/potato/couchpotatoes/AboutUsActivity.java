@@ -18,6 +18,9 @@ public class AboutUsActivity extends AppCompatActivity {
         toolbar.setTitleTextColor(Color.WHITE);
         setSupportActionBar(toolbar);
 
+        // adds up navigation to the toolbar
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
     }
 
 }

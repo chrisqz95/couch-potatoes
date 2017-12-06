@@ -127,6 +127,7 @@
     <string name="sign_up_prompt_email">Email</string>
     <string name="sign_up_password_string">Please Enter A Password.\n
         \nPasswords must be at least 5 characters and be comprised of alpha numeric symbols (a-z, A-Z, 0-9).</string>
+    <string name="sign_up_password_string_confirm">Please Confirm Your Password.</string>
     <string name="sign_up_prompt_password">Password</string>
     <string name="sign_up_prompt_password_confirm">Password (Confirm)</string>
 
@@ -164,6 +165,8 @@
     <string name="sign_up_invalid_name">Please enter a valid name.</string>
     <string name="sign_up_dob_prompt">You must be at least 18 years old to use this app.</string>
     <string name="sign_up_missing_gender_preference">Please Select At Least One</string>
+    <string name="sign_up_dob_display_default">DoB: MM/DD/YYYY</string>
+    <string name="sign_up_dob_btn_label">Select Date of Birth</string>
 
 
     <string name="sign_up_abort_title">Exit Account Creation</string>
@@ -206,7 +209,7 @@
     <string name="title_activity_chat_room">Messenger</string>
     <string name="title_activity_message">MessageActivity</string>
 
-    <string name="title_reset_password">ResetPassword</string>
+    <string name="title_reset_password">Reset Password</string>
 
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_activity_registration">Registration Activity</string>
@@ -240,4 +243,11 @@
     <string name="title_activity_about_us">About Us</string>
 
     <string name="about_us">Brought to you by the Providers Of Technology And Talent Organization ( P.O.T.A.T.O. )</string>
+    <string name="interests">Interests</string>
+    <string name="cancel">Cancel</string>
+    <string name="save_changes">Save Changes</string>
+    <string name="biography">Biography</string>
+    <string name="edit_photos">Edit Photos</string>
+    <string name="settings">Settings</string>
+    <string name="title_activity_app_settings">App Settings</string>
 </resources>

@@ -37,6 +37,10 @@ public class CurrentUser extends User {
         return uniqueInstance;
     }
 
+    public static CurrentUser getInstance() {
+        return uniqueInstance;
+    }
+
     public ArrayList<String> getContactList() {
         return contactList;
     }

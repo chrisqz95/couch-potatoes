@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!--TODO Check what this is being used for-->
     <color name="colorSignUpError">#cc3030</color>
 
     <!--Backgrounds-->
@@ -9,31 +8,24 @@
     <color name="white">#ffffff</color>
 
     <!--Primary Colors (for app bar etc.)-->
-    <color name="colorPrimary">#ed3849</color>
-    <color name="colorPrimaryDark">#b30021</color>
-    <color name="colorPrimaryLight">#ee505e</color>
+    <color name="colorPrimary">#c1212d</color>
+    <color name="colorPrimaryDark">#69141c</color>
+    <color name="colorPrimaryLight">#df2f3c</color>
     <!--Main Accent Color-->
-    <color name="colorAccent">#ed3849</color>
-    <color name="colorAccent2">#faa330</color>
+    <color name="colorAccent">#c1212d</color>
+    <color name="colorAccent2">#fcb106</color>
 
     <!--Primary and Secondary Colors-->
     <color name="primaryColor">#ed3849</color>
     <color name="primaryLightColor">#ee505e</color>
     <color name="primaryDarkColor">#b30021</color>
-    <color name="secondaryColor">#faa330</color>
-    <color name="secondaryLightColor">#fdc651</color>
-    <!--<color name="primaryLightColor">#ff5131</color>--> <!-- THis is a pretty nice orangy color -->
-    <!-- possible blue or seafoam green tertiary color -->
-    <!--<color name="tertiaryColor">#3185fc</color>-->
-    <!--<color name="tertiaryLightColor">#77b4ff</color>-->
-    <!--<color name="tertiaryDarkColor">#0059c8</color>-->
 
     <color name="textColorPrimary">#16181d</color>
     <color name="primaryTextColor">#16181d</color>
     <color name="secondaryTextColor">#000000</color>
 
     <color name="hint">#E1E0F5</color>
-    <color name="shadow">#DBD8F8</color>
+    <color name="shadow">#E1E0F5</color>
 
     <!--Colors for Liking and Disliking or other success/fail-->
     <color name="success">#14CC80</color>
