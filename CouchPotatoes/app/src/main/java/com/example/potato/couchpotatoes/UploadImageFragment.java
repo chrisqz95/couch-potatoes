@@ -25,6 +25,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.firebase.ui.storage.images.FirebaseImageLoader;
@@ -307,6 +308,7 @@ public class UploadImageFragment extends Fragment implements View.OnClickListene
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                 Log.d( "TEST", "File upload success" );
 
+                /*
                 DialogInterface.OnClickListener onOkRestartActivity = new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
@@ -318,11 +320,11 @@ public class UploadImageFragment extends Fragment implements View.OnClickListene
                     }
                 };
 
-                // Notify User of successful upload
                 AlertDialog.Builder builderUploadSuccess = new AlertDialog.Builder(view.getContext());
                 builderUploadSuccess.setMessage( "Upload successful!" )
                         .setPositiveButton("Ok", onOkRestartActivity )
                         .show();
+                        */
 
                 // Get photo uri from Firebase Storage
                 Uri downloadUrl = taskSnapshot.getDownloadUrl();
@@ -337,6 +339,14 @@ public class UploadImageFragment extends Fragment implements View.OnClickListene
                 helper.addToUserPhoto( userID, photoID );
                 helper.addToPhoto( photoID, userID, title, descr, uri );
 
+                // Notify User of successful upload
+                Toast.makeText(getActivity(), "Photo uploaded successfully", Toast.LENGTH_LONG).show();
+
+                Intent intent = new Intent(getActivity(), PictureGridActivity.class );
+                intent.putExtra( "uid", userID );
+                intent.putExtra( "isCurrentUser", true );
+                getActivity().finish();
+                startActivity( intent );
                 // Update image view with photo
                 // Note: Here we only want to add listener once to verify photo upload
                 // NOTE: Image View is only used to check for successful file upload.

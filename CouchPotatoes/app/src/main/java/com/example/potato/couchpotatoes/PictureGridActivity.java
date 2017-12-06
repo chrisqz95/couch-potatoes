@@ -123,6 +123,7 @@ public class PictureGridActivity extends AppCompatActivity {
                                                                     hashList.remove(position);
                                                                     gridAdapter.notifyDataSetChanged();
                                                                     gridView.invalidateViews();
+                                                                    Toast.makeText(getApplicationContext(), "Photo deleted successfully", Toast.LENGTH_LONG).show();
                                                                 }
                                                             });
                                                 }
@@ -130,7 +131,6 @@ public class PictureGridActivity extends AppCompatActivity {
                                         }
                                     })
                                     .setNegativeButton(android.R.string.no, null).show();
-                            Toast.makeText(getApplicationContext(), "TEST", Toast.LENGTH_LONG).show();
                             return true;
                         }
                     });
