@@ -41,6 +41,7 @@ import android.util.Pair;
 import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -215,6 +216,29 @@ public class PreferencesActivity extends AppCompatActivity
                 dbHelper.fetchCurrentUser();
                 intent.putExtra("uid", dbHelper.getUser().getUid());
                 intent.putExtra("isCurrentUser", true);
+                intent.putExtra("changeProfilePic", false);
+                startActivity(intent);
+            }
+        });
+
+        imgView.setOnHoverListener(new View.OnHoverListener() {
+            @Override
+            public boolean onHover(View v, MotionEvent event) {
+                // TODO
+                //Toast.makeText(getApplicationContext(), "Click to change profile picture", Toast.LENGTH_LONG).show();
+                return false;
+            }
+        });
+
+        imgView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), PictureGridActivity.class);
+                DBHelper dbHelper = new DBHelper();
+                dbHelper.fetchCurrentUser();
+                intent.putExtra("uid", dbHelper.getUser().getUid());
+                intent.putExtra("isCurrentUser", true);
+                intent.putExtra("changeProfilePic", true);
                 startActivity(intent);
             }
         });
