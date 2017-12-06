@@ -38,6 +38,9 @@ public class CurrentUser extends User {
     }
 
     public static CurrentUser getInstance() {
+        if ( uniqueInstance == null ) {
+            uniqueInstance = new CurrentUser();
+        }
         return uniqueInstance;
     }
 
