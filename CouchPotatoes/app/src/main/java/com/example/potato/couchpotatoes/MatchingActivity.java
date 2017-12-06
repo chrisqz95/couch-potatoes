@@ -441,6 +441,9 @@ public class MatchingActivity extends AppCompatActivity
         // Want to display icons in original color scheme
         navView.setItemIconTintList(null);
 
+        // highlight the current location
+        navView.setCheckedItem(R.id.nav_matches);
+
         sidebarUserName = (android.widget.TextView) navView.getHeaderView(0)
                 .findViewById(R.id.sidebar_username);
         sidebarUserEmail = (android.widget.TextView) navView.getHeaderView(0)
@@ -453,6 +456,14 @@ public class MatchingActivity extends AppCompatActivity
         // displays user's name and email on the sidebar header
         sidebarUserName.setText( displayName );
         sidebarUserEmail.setText( displayEmail );
+    }
+
+    // Make sure the navView highlight the correct location
+    @Override
+    public void onResume() {
+        super.onResume();
+        // highlight the current location
+        navView.setCheckedItem(R.id.nav_matches);
     }
 
     // Handles pressing back button in bottom navigation bar when sidebar is on the screen
