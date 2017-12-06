@@ -484,10 +484,11 @@ public class MatchingActivity extends AppCompatActivity
             Intent intent = new Intent( getApplicationContext(), ChatRoomActivity.class );
             startActivity( intent );
 
-//        }
-//        else if (id == R.id.nav_settings) {
+        }
+        else if (id == R.id.nav_settings) {
             //Intent intent = new Intent( getApplicationContext(), SettingsActivity.class );
             //startActivity( intent );
+            startActivity( new Intent( getApplicationContext(), AppSettingsActivity.class ) );
         } else if (id == R.id.nav_info) {
             // TODO: go to Page with device information
             Intent intent = new Intent( getApplicationContext(), AboutUsActivity.class );
