@@ -197,7 +197,11 @@ public class MatchingActivity extends AppCompatActivity
                                     Toast.makeText(MatchingActivity.this, "Disliked!", Toast.LENGTH_SHORT).show();
                                     helper.addToDislike(currUserID, potentMatchID, timestamp);
                                 }
+                                else {
+                                    resetMatchingView();
+                                }
                             }
+
 
                             /**
                              * When the picture is swiped right, like the user
@@ -213,6 +217,9 @@ public class MatchingActivity extends AppCompatActivity
                                     Toast.makeText(MatchingActivity.this, "Liked!", Toast.LENGTH_SHORT).show();
                                     helper.addToLike(currUserID, potentMatchID, timestamp);
                                     helper.addToDate(currUserID, potentMatchID, timestamp);
+                                }
+                                else {
+                                    resetMatchingView();
                                 }
                             }
                         });
@@ -241,6 +248,9 @@ public class MatchingActivity extends AppCompatActivity
                                     helper.addToLike(currUserID, potentMatchID, timestamp);
                                     helper.addToDate(currUserID, potentMatchID, timestamp);
                                 }
+                                else {
+                                    resetMatchingView();
+                                }
                             }
                         });
 
@@ -255,6 +265,9 @@ public class MatchingActivity extends AppCompatActivity
 
                                     Toast.makeText(MatchingActivity.this, "Disliked!", Toast.LENGTH_SHORT).show();
                                     helper.addToDislike(currUserID, potentMatchID, timestamp);
+                                }
+                                else {
+                                    resetMatchingView();
                                 }
                             }
                         });
@@ -332,6 +345,13 @@ public class MatchingActivity extends AppCompatActivity
 
                                     Toast.makeText(MatchingActivity.this, "Disliked!", Toast.LENGTH_SHORT).show();
                                     helper.addToDislike(currUserID, potentMatchID, timestamp);
+
+//                                    if ( matchedFriendList.size() == 1 ) {
+//                                        resetMatchingView();
+//                                    }
+                                }
+                                else {
+                                    resetMatchingView();
                                 }
                             }
 
@@ -346,6 +366,13 @@ public class MatchingActivity extends AppCompatActivity
                                     Toast.makeText(MatchingActivity.this, "Liked!", Toast.LENGTH_SHORT).show();
                                     helper.addToLike(currUserID, potentMatchID, timestamp);
                                     helper.addToBefriend(currUserID, potentMatchID, timestamp);
+
+//                                    if ( matchedFriendList.size() == 1 ) {
+//                                        resetMatchingView();
+//                                    }
+                                }
+                                else {
+                                    resetMatchingView();
                                 }
                             }
                         });
@@ -373,6 +400,13 @@ public class MatchingActivity extends AppCompatActivity
                                     Toast.makeText(MatchingActivity.this, "Liked!", Toast.LENGTH_SHORT).show();
                                     helper.addToLike(currUserID, potentMatchID, timestamp);
                                     helper.addToBefriend(currUserID, potentMatchID, timestamp);
+
+//                                    if ( matchedFriendList.size() == 1 ) {
+//                                        resetMatchingView();
+//                                    }
+                                }
+                                else {
+                                    resetMatchingView();
                                 }
                             }
                         });
@@ -388,6 +422,13 @@ public class MatchingActivity extends AppCompatActivity
 
                                     Toast.makeText(MatchingActivity.this, "Disliked!", Toast.LENGTH_SHORT).show();
                                     helper.addToDislike(currUserID, potentMatchID, timestamp);
+
+//                                    if ( matchedFriendList.size() == 1 ) {
+//                                        resetMatchingView();
+//                                    }
+                                }
+                                else {
+                                    resetMatchingView();
                                 }
                             }
                         });
@@ -546,6 +587,10 @@ public class MatchingActivity extends AppCompatActivity
                     matchedFriendList.add( (String) potentDates.next().getValue() );
                 }
 
+                if ( matchedFriendList.isEmpty() ) {
+                    resetMatchingView();
+                }
+
                 adapter.notifyDataSetChanged();
                 viewPager.setAdapter(adapter);
                 viewPager.setCurrentItem( currTab );
@@ -640,6 +685,18 @@ public class MatchingActivity extends AppCompatActivity
                                 Toast.makeText(MatchingActivity.this, "Disliked!", Toast.LENGTH_SHORT).show();
                                 helper.addToDislike(currUserID, potentMatchID, timestamp);
                             }
+                            else {
+                                // Set default image
+                                String uri = "@drawable/profile";
+
+                                int imageResource = getResources().getIdentifier(uri, null, getPackageName());
+                                Drawable res = getResources().getDrawable(imageResource);
+                                imgView.setImageDrawable(res);
+
+                                adapter.notifyDataSetChanged();
+                                viewPager.setAdapter(adapter);
+                                viewPager.setCurrentItem( currTab );
+                            }
                         }
 
                         @Override
@@ -653,6 +710,18 @@ public class MatchingActivity extends AppCompatActivity
                                 Toast.makeText(MatchingActivity.this, "Liked!", Toast.LENGTH_SHORT).show();
                                 helper.addToLike(currUserID, potentMatchID, timestamp);
                                 helper.addToDate(currUserID, potentMatchID, timestamp);
+                            }
+                            else {
+                                // Set default image
+                                String uri = "@drawable/profile";
+
+                                int imageResource = getResources().getIdentifier(uri, null, getPackageName());
+                                Drawable res = getResources().getDrawable(imageResource);
+                                imgView.setImageDrawable(res);
+
+                                adapter.notifyDataSetChanged();
+                                viewPager.setAdapter(adapter);
+                                viewPager.setCurrentItem( currTab );
                             }
                         }
                     });
@@ -672,6 +741,18 @@ public class MatchingActivity extends AppCompatActivity
                                 helper.addToLike(currUserID, potentMatchID, timestamp);
                                 helper.addToDate(currUserID, potentMatchID, timestamp);
                             }
+                            else {
+                                // Set default image
+                                String uri = "@drawable/profile";
+
+                                int imageResource = getResources().getIdentifier(uri, null, getPackageName());
+                                Drawable res = getResources().getDrawable(imageResource);
+                                imgView.setImageDrawable(res);
+
+                                adapter.notifyDataSetChanged();
+                                viewPager.setAdapter(adapter);
+                                viewPager.setCurrentItem( currTab );
+                            }
                         }
                     });
 
@@ -686,6 +767,18 @@ public class MatchingActivity extends AppCompatActivity
 
                                 Toast.makeText(MatchingActivity.this, "Disliked!", Toast.LENGTH_SHORT).show();
                                 helper.addToDislike(currUserID, potentMatchID, timestamp);
+                            }
+                            else {
+                                // Set default image
+                                String uri = "@drawable/profile";
+
+                                int imageResource = getResources().getIdentifier(uri, null, getPackageName());
+                                Drawable res = getResources().getDrawable(imageResource);
+                                imgView.setImageDrawable(res);
+
+                                adapter.notifyDataSetChanged();
+                                viewPager.setAdapter(adapter);
+                                viewPager.setCurrentItem( currTab );
                             }
                         }
                     });
@@ -807,5 +900,18 @@ public class MatchingActivity extends AppCompatActivity
 
             return builder.create();
         }
+    }
+
+    private void resetMatchingView() {
+        // Set default image
+        String uri = "@drawable/profile";
+
+        int imageResource = getResources().getIdentifier(uri, null, getPackageName());
+        Drawable res = getResources().getDrawable(imageResource);
+        imgView.setImageDrawable(res);
+
+        adapter.notifyDataSetChanged();
+        viewPager.setAdapter(adapter);
+        viewPager.setCurrentItem( currTab );
     }
 }
