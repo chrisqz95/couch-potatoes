@@ -123,7 +123,6 @@ public class ChatRoomActivity extends AppCompatActivity
                 return false;
             }
 
-
             //Listener for swipe direction
             @Override
             public void onSwipe(int[] positionList, SwipeDirection[] directionList){
@@ -168,7 +167,6 @@ public class ChatRoomActivity extends AppCompatActivity
                                     }).create().show();
                             break;
                     }
-
                     mAdapter.notifyDataSetChanged();
                 }
             }
@@ -185,9 +183,7 @@ public class ChatRoomActivity extends AppCompatActivity
                 listItems.clear();
 
                 // No chats exist. Display message to user.
-                if ( !elems.hasNext() ) {
-
-                }
+                //if ( !elems.hasNext() ) {}
 
                 // Get the next chat
                 while ( elems.hasNext() ) {
@@ -305,7 +301,6 @@ public class ChatRoomActivity extends AppCompatActivity
             // user is already at the Chats page; do nothing
 
        } else if (id == R.id.nav_settings) {
-            // TODO: go to the settings page
             startActivity( new Intent( getApplicationContext(), AppSettingsActivity.class ) );
         }
         else if (id == R.id.nav_info) {

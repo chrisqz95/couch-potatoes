@@ -54,6 +54,7 @@ public class MessageActivity extends AppCompatActivity {
     Map<String,String> messageIDs = new HashMap<>();
 
     final int MESSAGE_FETCH_LIMIT = 50;
+    final int GAP_BETWEEN_MESSAGE = 30000;
 
 
     @Override
@@ -146,8 +147,6 @@ public class MessageActivity extends AppCompatActivity {
 
                 Iterator<DataSnapshot> messages = dataSnapshot.getChildren().iterator();
 
-
-
                 // Fetch and display the messages
                 while (messages.hasNext()) {
                     String messageID = messages.next().getKey();
@@ -167,46 +166,45 @@ public class MessageActivity extends AppCompatActivity {
 
                             if (dataSnapshot.exists()) {
 
-                            String from = (String) dataSnapshot.child("name").getValue();
-                            String chatID = (String) dataSnapshot.child("chat_id").getValue();
-                            String message = (String) dataSnapshot.child("text").getValue();
-                            String timestamp = (String) dataSnapshot.child("timestamp").getValue();
-                            String timeString = "";
+                                String from = (String) dataSnapshot.child("name").getValue();
+                                String chatID = (String) dataSnapshot.child("chat_id").getValue();
+                                String message = (String) dataSnapshot.child("text").getValue();
+                                String timestamp = (String) dataSnapshot.child("timestamp").getValue();
+                                String timeString = "";
 
-                            //Compare the last msg timestamp with the cur one, add timestamp if theres a gap
-                            if (messageTime.size() >= 1) {
-                                timeString = getTimeString(messageTime.get(messageTime.size() - 1), timestamp);
-                            } else {
-                                timeString = getTimeString(timestamp);
+                                //Compare the last msg timestamp with the cur one, add timestamp if theres a gap
+                                if (messageTime.size() >= 1) {
+                                    timeString = getTimeString(messageTime.get(messageTime.size() - 1), timestamp);
+                                } else {
+                                    timeString = getTimeString(timestamp);
+                                }
+
+                                if (!(timeString.equals(""))) {
+                                    addMessageBox(timeString, 1, true);
+                                }
+
+                                if ( from.equals(displayName) ) {
+                                    addMessageBox(message, 1, false);}
+                                else {
+                                    //String displayStr = displayName + ":\n";
+                                    addMessageBox(message, 2, false);
+                                }
+
+                                // Keep track of the messageID corresponding to the current message
+                                //messageIDs.put(message, dataSnapshot.getKey());
+
+                                // Keep track of the sender of the current message
+                                //messageSenders.put(dataSnapshot.getKey(), from);
+
+                                // Keep track of the text content of the current message
+                                //messageText.put(dataSnapshot.getKey(), message);
+
+                                //Keep track of the time of the current message
+                                messageTime.add(timestamp);
+
+                                Log.d("TEST", message + " " + dataSnapshot.getKey());
                             }
-
-                            if (!(timeString.equals(""))) {
-                                addMessageBox(timeString, 1, true);
-                            }
-
-                            if ( from.equals(displayName) ) {
-                                addMessageBox(message, 1, false);}
-                            else {
-                                //String displayStr = displayName + ":\n";
-                                addMessageBox(message, 2, false);
-                            }
-
-
-
-                            // Keep track of the messageID corresponding to the current message
-                            //messageIDs.put(message, dataSnapshot.getKey());
-
-                            // Keep track of the sender of the current message
-                            //messageSenders.put(dataSnapshot.getKey(), from);
-
-                            // Keep track of the text content of the current message
-                            //messageText.put(dataSnapshot.getKey(), message);
-
-                            //Keep track of the time of the current message
-                            messageTime.add(timestamp);
-
-                            Log.d("TEST", message + " " + dataSnapshot.getKey());
-                        } }
+                        }
 
                         @Override
                         public void onCancelled(DatabaseError databaseError) {
@@ -319,20 +317,17 @@ public class MessageActivity extends AppCompatActivity {
         //Date[1] is the month
         String monthString = getMonth(date[1]);
 
-        // TODO throw this into a method
         //Remove the 0 in front of day 01, 02, etc.
         int day = Integer.parseInt(date[2]);
         timeStr = monthString + " " + day + ", " + hourStr;
             return timeStr;
     }
 
-
     //Determine if they are playing hard to get by checking the timestamp difference
     public String getTimeString(String lastMsg, String curMsg) {
 
         String timeStr = "";
         String hourStr = "";
-
 
         String lastMsgDate = lastMsg.split("  ")[0];
         Log.d("MESSAGE", curMsg + ", current msg");
@@ -357,7 +352,7 @@ public class MessageActivity extends AppCompatActivity {
 
         // TODO pls guys methods they are a thing
         if (intCurDate - intCurMsgDate < 1) {
-            if (Math.abs(intCurMsgTime - intLastMsgTime) >= 30000) {
+            if (Math.abs(intCurMsgTime - intLastMsgTime) >= GAP_BETWEEN_MESSAGE) {
                 timeStr = hourStr;
             }
             //If the message has been longer than 1 day
@@ -371,7 +366,7 @@ public class MessageActivity extends AppCompatActivity {
 
         }
         //If the message has been longer than 3 hours
-        else if ((intCurMsgTime - intLastMsgTime) >= 30000) {
+        else if ((intCurMsgTime - intLastMsgTime) >= GAP_BETWEEN_MESSAGE) {
             timeStr = hourStr;
         }
         return timeStr;
