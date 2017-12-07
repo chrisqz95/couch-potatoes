@@ -10,11 +10,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.Gravity;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
+import android.view.*;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -73,6 +69,9 @@ public class MessageActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         // Activity title will not show in the toolbar
         getSupportActionBar().setDisplayShowTitleEnabled(false);
+
+        // hide the keyboard until the user wants it
+        this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
 
         b_select_spinner = (Button) findViewById(R.id.b_select_spinner);
         layout = (LinearLayout) findViewById(R.id.layout1);
@@ -229,7 +228,7 @@ public class MessageActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 //DIALOG FOR SPINNER
-                String spinners[] = {"Spin the Bottle: Nice","Spin the Bottle: Naughty","Spin the Bottle: Food", "Spin the Bottle: Activity"};
+                String spinners[] = {"Spin the Wheel: Food", "Spin the Wheel: Activity", "Spin the Bottle: Nice","Spin the Bottle: Naughty"};
                 AlertDialog.Builder builder = new AlertDialog.Builder(MessageActivity.this);
                 builder.setIcon(R.mipmap.empty_wheel)
                         .setTitle("Choose Your Spinner!")
@@ -237,7 +236,7 @@ public class MessageActivity extends AppCompatActivity {
                             public void onClick(DialogInterface dialog, int which) {
                                 Intent intent;
                                 switch (which) {
-                                    case 0:
+                                    case 2:
                                         intent = new Intent(((Dialog) dialog).getContext(), SpinBottleActivity.class);
                                         intent.putExtra("key", 1);
                                         intent.putExtra( "chatID", chatRoom );
@@ -245,7 +244,7 @@ public class MessageActivity extends AppCompatActivity {
                                         finish();
                                         startActivity(intent);
                                         break;
-                                    case 1:
+                                    case 3:
                                         //System.out.println(LoginActivity.class);
                                         intent = new Intent(((Dialog) dialog).getContext(), SpinBottleActivity.class);
                                         intent.putExtra("key", 0);
@@ -254,7 +253,7 @@ public class MessageActivity extends AppCompatActivity {
                                         finish();
                                         startActivity(intent);
                                         break;
-                                    case 2:
+                                    case 0:
                                         intent = new Intent(((Dialog) dialog).getContext(), SpinToChooseActivity.class);
                                         intent.putExtra("key", 1);
                                         intent.putExtra( "chatID", chatRoom );
@@ -262,7 +261,7 @@ public class MessageActivity extends AppCompatActivity {
                                         finish();
                                         startActivity(intent);
                                         break;
-                                    case 3:
+                                    case 1:
                                         intent = new Intent(((Dialog) dialog).getContext(), SpinToChooseActivity.class);
                                         intent.putExtra("key", 0);
                                         intent.putExtra( "chatID", chatRoom );
@@ -288,6 +287,15 @@ public class MessageActivity extends AppCompatActivity {
                 builder.create().show();
             }
         });
+
+        // force scroll view to bottom on creation
+        scrollView.post(new Runnable() {
+
+            @Override
+            public void run() {
+                scrollView.fullScroll(ScrollView.FOCUS_DOWN);
+            }
+        });
     }
         /*
          * Description: Edge case: This executes for the very first time a message is sent. Date
@@ -305,6 +313,7 @@ public class MessageActivity extends AppCompatActivity {
             String[] date = curMsgDate.split("-");
             String[] time = curMsgTime.split(":");
 
+            // TODO throw this into a method
             //Determine if its AM or PM
             int hour = Integer.parseInt(time[0]);
             if (hour >= 12) {
@@ -315,6 +324,7 @@ public class MessageActivity extends AppCompatActivity {
 
             //If the message has been longer than 6 day
 
+            // TODO throw this into a method
             String monthString;
                 //Date[1] is the month
             switch (date[1]) {
@@ -359,6 +369,7 @@ public class MessageActivity extends AppCompatActivity {
                         break;
             }
 
+            // TODO throw this into a method
                 //Remove the 0 in front of day 01, 02, etc.
             int day = Integer.parseInt(date[2]);
             timeStr = monthString + " " + day + ", " + hourStr;
@@ -389,6 +400,7 @@ public class MessageActivity extends AppCompatActivity {
             String[] date = curMsgDate.split("-");
             String[] time = curMsgTime.split(":");
 
+            // TODO Throw this into a method
             //Convert 24 Hour format to AM/PM
             String dateStr = curMsgTime;
             DateFormat readFormat = new SimpleDateFormat( "HH:mm:ss");
@@ -399,6 +411,7 @@ public class MessageActivity extends AppCompatActivity {
                 e.printStackTrace();
             }
 
+            // TODO throw a lot of this into methods
             Calendar c = Calendar.getInstance();
             //Date today = new Date();
             SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -408,6 +421,7 @@ public class MessageActivity extends AppCompatActivity {
             int intCurDate = Integer.parseInt(curDate.replaceAll("-", ""));
             //int intCurTime = Integer.parseInt(curTime.replaceAll(":", ""));
 
+            // TODO pls guys methods they are a thing
             if (intCurDate - intCurMsgDate < 1) {
                 if (Math.abs(intCurMsgTime - intLastMsgTime) >= 30000) {
                     timeStr = hourStr;
@@ -506,8 +520,6 @@ public class MessageActivity extends AppCompatActivity {
                 }
             });
         }
-
-
 }
 
 

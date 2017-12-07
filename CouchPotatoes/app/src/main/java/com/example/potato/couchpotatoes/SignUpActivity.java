@@ -274,6 +274,7 @@ public class SignUpActivity extends AppCompatActivity {
             final EditText mLastNameText = rootView.findViewById(R.id.fragment_sign_up_info_form_last_name_text);
             final TextView mDateText = rootView.findViewById(R.id.fragment_sign_up_info_form_date_text);
             final Button mDatePickerButton = rootView.findViewById(R.id.fragment_sign_up_info_form_date_picker_button);
+            final TextView mDobDisplay = rootView.findViewById(R.id.fragment_sign_up_dob_display);
             final Spinner mGenderSpinner = rootView.findViewById(R.id.fragment_sign_up_info_form_gender_spinner);
             final CheckBox mGenderPreferenceCheckBoxMale = rootView.findViewById(R.id.fragment_sign_up_info_form_gender_preference_male_checkbox);
             final CheckBox mGenderPreferenceCheckBoxFemale = rootView.findViewById(R.id.fragment_sign_up_info_form_gender_preference_female_checkbox);
@@ -294,9 +295,10 @@ public class SignUpActivity extends AppCompatActivity {
                             tempDoBYear = y;
                             tempDoBMonth = m + 1;
                             tempDoBDay = d;
-                            String mDatePickerButtonString = getString(R.string.sign_up_dob) + "  :  "
-                                    + tempDoBYear + "/" + tempDoBMonth + "/" + tempDoBDay;
-                            mDatePickerButton.setText(mDatePickerButtonString);
+//                            String mDatePickerButtonString = getString(R.string.sign_up_dob) + "  :  "
+//                                    + tempDoBYear + "/" + tempDoBMonth + "/" + tempDoBDay;
+                            //mDatePickerButton.setText(mDatePickerButtonString);
+                            mDobDisplay.setText("DoB: "+tempDoBMonth + "/" + tempDoBDay + "/" + tempDoBYear);
                         }
                     }, calendar.get(Calendar.YEAR) - minAge, calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
                     datePickerDialog.show();

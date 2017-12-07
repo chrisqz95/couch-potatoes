@@ -80,6 +80,9 @@ public class ChatRoomActivity extends AppCompatActivity
         // Want to display icons in original color scheme
         navView.setItemIconTintList(null);
 
+        // highlight the current location
+        navView.setCheckedItem(R.id.nav_chats);
+
         // initialize textViews on the sidebar header
         sidebarUserName = (android.widget.TextView) navView.getHeaderView(0)
                 .findViewById(R.id.sidebar_username);
@@ -264,6 +267,14 @@ public class ChatRoomActivity extends AppCompatActivity
         });
     }
 
+    // Make sure the navView highlight the correct location
+    @Override
+    public void onResume() {
+        super.onResume();
+        // highlight the current location
+        navView.setCheckedItem(R.id.nav_chats);
+    }
+
     // Handles pressing back button in bottom navigation bar when sidebar is on the screen
     @Override
     public void onBackPressed() {
@@ -293,9 +304,9 @@ public class ChatRoomActivity extends AppCompatActivity
         } else if (id == R.id.nav_chats) {
             // user is already at the Chats page; do nothing
 
-//        } else if (id == R.id.nav_settings) {
+       } else if (id == R.id.nav_settings) {
             // TODO: go to the settings page
-
+            startActivity( new Intent( getApplicationContext(), AppSettingsActivity.class ) );
         }
         else if (id == R.id.nav_info) {
             Intent intent = new Intent( getApplicationContext(), AboutUsActivity.class );
