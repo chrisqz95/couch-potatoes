@@ -3,6 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main_activity_screen"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.example.potato.couchpotatoes.MainActivity">
@@ -30,6 +31,14 @@
         android:layout_height="321dp"
         android:layout_width="match_parent"
         tools:layout_editor_absoluteY="247dp" />
+
+    <ProgressBar
+        android:id="@+id/main_activity_progressbar"
+        android:layout_width="100sp"
+        android:layout_height="100sp"
+        android:layout_gravity="center_horizontal|center_vertical"
+        android:layout_weight="1"
+        android:indeterminate="true" />
 
     <!--Layout of the side bar menu-->
     <!--<android.support.design.widget.NavigationView-->
