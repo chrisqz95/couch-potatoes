@@ -14,7 +14,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -35,7 +34,6 @@ import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
 import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 import com.google.firebase.auth.FirebaseAuthWeakPasswordException;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.Calendar;
 import java.util.HashMap;
@@ -159,9 +157,6 @@ public class SignUpActivity extends AppCompatActivity {
      * Fragment class for reading in email and password from user
      */
     public static class SignUpEmailPasswordFragment extends Fragment {
-
-        public SignUpEmailPasswordFragment() {
-        }
 
         /**
          * Returns a new instance of this fragment.
@@ -391,33 +386,18 @@ public class SignUpActivity extends AppCompatActivity {
 
                         Map<String,Object> additions = new HashMap<>();
 
-                        // Account
-                        //ref.child(getString(R.string.sign_up_firebase_email)).setValue(tempEmail);
-                        //ref.child(getString(R.string.sign_up_firebase_suspended)).setValue(R.string.sign_up_firebase_false);
-                        //ref.child(getString(R.string.sign_up_firebase_locked)).setValue(R.string.sign_up_firebase_false);
-
                         additions.put( "email", tempEmail );
                         additions.put( "suspended", false );
                         additions.put( "locked", false );
-
-                        // Name
-                        //ref.child(getString(R.string.sign_up_firebase_firstname)).setValue(tempFirstName);
-                        //ref.child(getString(R.string.sign_up_firebase_middlename)).setValue(tempMiddleName);
-                        //ref.child(getString(R.string.sign_up_firebase_lastname)).setValue(tempLastName);
-
                         additions.put( "firstName", tempFirstName );
                         additions.put( "middleName", tempMiddleName );
                         additions.put( "lastName", tempLastName );
 
                         // Personal Info
-                        //ref.child(getString(R.string.sign_up_firebase_bio)).setValue("");
                         additions.put( "bio", "" );
 
                         String tempDoB = "" + tempDoBYear + "-" + (tempDoBMonth < 10 ? "0" + tempDoBMonth : tempDoBMonth)
                                 + "-" + (tempDoBDay < 10 ? "0" + tempDoBDay : tempDoBDay);
-
-                        //ref.child(getString(R.string.sign_up_firebase_dob)).setValue(tempDoB);
-                        //ref.child(getString(R.string.sign_up_firebase_gender)).setValue(mGenderSpinner.getSelectedItem().toString());
 
                         additions.put( "birth_date", tempDoB );
 
@@ -433,21 +413,12 @@ public class SignUpActivity extends AppCompatActivity {
 
                         // Location
                         // TODO: Resolve undefined variables
-                        //ref.child(getString(R.string.sign_up_firebase_city)).setValue(getString(R.string.sign_up_firebase_empty));
-                        //ref.child(getString(R.string.sign_up_firebase_country)).setValue(getString(R.string.sign_up_firebase_empty));
-                        //ref.child(getString(R.string.sign_up_firebase_latitude)).setValue(getString(R.string.sign_up_firebase_empty));
-                        //ref.child(getString(R.string.sign_up_firebase_longitude)).setValue(getString(R.string.sign_up_firebase_empty));
-                        //ref.child(getString(R.string.sign_up_firebase_state)).setValue(getString(R.string.sign_up_firebase_empty));
-
                         additions.put( "city", "" );
                         additions.put( "state", "" );
                         additions.put( "country", "" );
 
                         additions.put( "latitude", 0 );
                         additions.put( "longitude", 0 );
-
-                        // DO NOT SET TO NULL - CRASHES APP
-                        //additions.put( "profile_pic", "" );
 
                         ref.setValue( additions );
 
@@ -459,10 +430,6 @@ public class SignUpActivity extends AppCompatActivity {
                         // Add the new user to a new chat containing only the new user
                         String chatID = dbHelper.getNewChildKey( dbHelper.getChatUserPath() );
                         String userID = dbHelper.getAuth().getUid();
-                        //String displayName = dbHelper.getAuthUserDisplayName();
-                        //String displayName = dbHelper.getAuth().getCurrentUser().getDisplayName();
-
-                        //Log.d( "TEST", "DISPLAY NAME: " + displayName );
 
                         dbHelper.addToChatUser( chatID, userID, displayName );
                         dbHelper.addToUserChat( userID, chatID );
