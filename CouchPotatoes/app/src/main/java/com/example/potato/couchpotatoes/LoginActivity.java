@@ -10,7 +10,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -226,13 +225,7 @@ public class LoginActivity extends AppCompatActivity {
                             showProgress(false);
                             // Continue to main activity upon successful login
                             if (task.isSuccessful()) {
-                                // Sign in success, update UI with the signed-in user's information
-                                Log.d("TEST", "signInWithEmail:success");
-
                                 dbHelper.fetchCurrentUser();
-
-                                Log.d( "TEST", "User " + dbHelper.getAuth().getUid() + " signed in successfully." );
-
                                 startActivity(new Intent(getApplicationContext(), MainActivity.class));
                                 finish();
 

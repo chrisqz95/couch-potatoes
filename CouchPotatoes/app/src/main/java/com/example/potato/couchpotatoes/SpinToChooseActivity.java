@@ -91,7 +91,7 @@ public class SpinToChooseActivity  extends AppCompatActivity {
             switch ((degrees / (360 / 6)) % 6) {
                 case 0:
                     ic_potato.setImageResource(R.drawable.potato_pizza);
-                    return "COUCHPOTATOES SUGGESTS:\n PIZZA FOR DINNER ";
+                    return "@strings/suggestion\n PIZZA FOR DINNER ";
                 case 1:
                     ic_potato.setImageResource(R.drawable.potato_hamburger);
                     return "COUCHPOTATOES SUGGESTS:\n BURGERS FOR DINNER ";
