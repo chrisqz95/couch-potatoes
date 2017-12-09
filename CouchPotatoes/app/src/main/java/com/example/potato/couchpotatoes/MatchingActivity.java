@@ -188,39 +188,28 @@ public class MatchingActivity extends AppCompatActivity
                              */
                             @Override
                             public void onSwipeLeft() {
-                                if ( !matchedDateList.isEmpty() ) {
-                                    String currUserID = helper.getAuth().getUid();
-                                    String potentMatchID = matchedDateList.get(0);
-                                    String timestamp = helper.getNewTimestamp();
-                                    showProgressBar();
+                                String currUserID = helper.getAuth().getUid();
+                                String potentMatchID = matchedDateList.get(0);
+                                String timestamp = helper.getNewTimestamp();
+                                showProgressBar();
 
-                                    Toast.makeText(MatchingActivity.this, "Disliked!", Toast.LENGTH_SHORT).show();
-                                    helper.addToDislike(currUserID, potentMatchID, timestamp);
-                                }
-                                else {
-                                    resetMatchingView();
-                                }
+                                Toast.makeText(MatchingActivity.this, "Disliked!", Toast.LENGTH_SHORT).show();
+                                helper.addToDislike(currUserID, potentMatchID, timestamp);
                             }
-
 
                             /**
                              * When the picture is swiped right, like the user
                              */
                             @Override
                             public void onSwipeRight() {
-                                if ( !matchedDateList.isEmpty() ) {
-                                    String currUserID = helper.getAuth().getUid();
-                                    String potentMatchID = matchedDateList.get(0);
-                                    String timestamp = helper.getNewTimestamp();
-                                    showProgressBar();
+                                String currUserID = helper.getAuth().getUid();
+                                String potentMatchID = matchedDateList.get(0);
+                                String timestamp = helper.getNewTimestamp();
+                                showProgressBar();
 
-                                    Toast.makeText(MatchingActivity.this, "Liked!", Toast.LENGTH_SHORT).show();
-                                    helper.addToLike(currUserID, potentMatchID, timestamp);
-                                    helper.addToDate(currUserID, potentMatchID, timestamp);
-                                }
-                                else {
-                                    resetMatchingView();
-                                }
+                                Toast.makeText(MatchingActivity.this, "Liked!", Toast.LENGTH_SHORT).show();
+                                helper.addToLike(currUserID, potentMatchID, timestamp);
+                                helper.addToDate( currUserID, potentMatchID, timestamp );
                             }
                         });
 
@@ -238,37 +227,27 @@ public class MatchingActivity extends AppCompatActivity
                         likeButton.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                if ( !matchedDateList.isEmpty() ) {
-                                    String currUserID = helper.getAuth().getUid();
-                                    String potentMatchID = matchedDateList.get(0);
-                                    String timestamp = helper.getNewTimestamp();
-                                    showProgressBar();
+                                String currUserID = helper.getAuth().getUid();
+                                String potentMatchID = matchedDateList.get(0);
+                                String timestamp = helper.getNewTimestamp();
+                                showProgressBar();
 
-                                    Toast.makeText(MatchingActivity.this, "Liked!", Toast.LENGTH_SHORT).show();
-                                    helper.addToLike(currUserID, potentMatchID, timestamp);
-                                    helper.addToDate(currUserID, potentMatchID, timestamp);
-                                }
-                                else {
-                                    resetMatchingView();
-                                }
+                                Toast.makeText(MatchingActivity.this, "Liked!", Toast.LENGTH_SHORT).show();
+                                helper.addToLike(currUserID, potentMatchID, timestamp);
+                                helper.addToDate(currUserID, potentMatchID, timestamp);
                             }
                         });
 
                         dislikeButton.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                if ( !matchedDateList.isEmpty() ) {
-                                    String currUserID = helper.getAuth().getUid();
-                                    String potentMatchID = matchedDateList.get(0);
-                                    String timestamp = helper.getNewTimestamp();
-                                    showProgressBar();
+                                String currUserID = helper.getAuth().getUid();
+                                String potentMatchID = matchedDateList.get(0);
+                                String timestamp = helper.getNewTimestamp();
+                                showProgressBar();
 
-                                    Toast.makeText(MatchingActivity.this, "Disliked!", Toast.LENGTH_SHORT).show();
-                                    helper.addToDislike(currUserID, potentMatchID, timestamp);
-                                }
-                                else {
-                                    resetMatchingView();
-                                }
+                                Toast.makeText(MatchingActivity.this, "Disliked!", Toast.LENGTH_SHORT).show();
+                                helper.addToDislike(currUserID, potentMatchID, timestamp);
                             }
                         });
                     }
@@ -337,43 +316,25 @@ public class MatchingActivity extends AppCompatActivity
                         imgView.setOnTouchListener(new OnSwipeTouchListener(MatchingActivity.this) {
                             @Override
                             public void onSwipeLeft() {
-                                if ( !matchedFriendList.isEmpty() ) {
-                                    String currUserID = helper.getAuth().getUid();
-                                    String potentMatchID = matchedFriendList.get(0);
-                                    String timestamp = helper.getNewTimestamp();
-                                    showProgressBar();
+                                String currUserID = helper.getAuth().getUid();
+                                String potentMatchID = matchedFriendList.get(0);
+                                String timestamp = helper.getNewTimestamp();
+                                showProgressBar();
 
-                                    Toast.makeText(MatchingActivity.this, "Disliked!", Toast.LENGTH_SHORT).show();
-                                    helper.addToDislike(currUserID, potentMatchID, timestamp);
-
-//                                    if ( matchedFriendList.size() == 1 ) {
-//                                        resetMatchingView();
-//                                    }
-                                }
-                                else {
-                                    resetMatchingView();
-                                }
+                                Toast.makeText(MatchingActivity.this, "Disliked!", Toast.LENGTH_SHORT).show();
+                                helper.addToDislike(currUserID, potentMatchID, timestamp);
                             }
 
                             @Override
                             public void onSwipeRight() {
-                                if ( !matchedFriendList.isEmpty() ) {
-                                    String currUserID = helper.getAuth().getUid();
-                                    String potentMatchID = matchedFriendList.get(0);
-                                    String timestamp = helper.getNewTimestamp();
-                                    showProgressBar();
+                                String currUserID = helper.getAuth().getUid();
+                                String potentMatchID = matchedFriendList.get(0);
+                                String timestamp = helper.getNewTimestamp();
+                                showProgressBar();
 
-                                    Toast.makeText(MatchingActivity.this, "Liked!", Toast.LENGTH_SHORT).show();
-                                    helper.addToLike(currUserID, potentMatchID, timestamp);
-                                    helper.addToBefriend(currUserID, potentMatchID, timestamp);
-
-//                                    if ( matchedFriendList.size() == 1 ) {
-//                                        resetMatchingView();
-//                                    }
-                                }
-                                else {
-                                    resetMatchingView();
-                                }
+                                Toast.makeText(MatchingActivity.this, "Liked!", Toast.LENGTH_SHORT).show();
+                                helper.addToLike(currUserID, potentMatchID, timestamp);
+                                helper.addToBefriend( currUserID, potentMatchID, timestamp );
                             }
                         });
 
@@ -391,45 +352,27 @@ public class MatchingActivity extends AppCompatActivity
                         likeButton.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                if ( !matchedFriendList.isEmpty() ) {
-                                    String currUserID = helper.getAuth().getUid();
-                                    String potentMatchID = matchedFriendList.get(0);
-                                    String timestamp = helper.getNewTimestamp();
-                                    showProgressBar();
+                                String currUserID = helper.getAuth().getUid();
+                                String potentMatchID = matchedFriendList.get(0);
+                                String timestamp = helper.getNewTimestamp();
+                                showProgressBar();
 
-                                    Toast.makeText(MatchingActivity.this, "Liked!", Toast.LENGTH_SHORT).show();
-                                    helper.addToLike(currUserID, potentMatchID, timestamp);
-                                    helper.addToBefriend(currUserID, potentMatchID, timestamp);
-
-//                                    if ( matchedFriendList.size() == 1 ) {
-//                                        resetMatchingView();
-//                                    }
-                                }
-                                else {
-                                    resetMatchingView();
-                                }
+                                Toast.makeText(MatchingActivity.this, "Liked!", Toast.LENGTH_SHORT).show();
+                                helper.addToLike(currUserID, potentMatchID, timestamp);
+                                helper.addToBefriend( currUserID, potentMatchID, timestamp );
                             }
                         });
 
                         dislikeButton.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                if ( !matchedFriendList.isEmpty() ) {
-                                    String currUserID = helper.getAuth().getUid();
-                                    String potentMatchID = matchedFriendList.get(0);
-                                    String timestamp = helper.getNewTimestamp();
-                                    showProgressBar();
+                                String currUserID = helper.getAuth().getUid();
+                                String potentMatchID = matchedFriendList.get(0);
+                                String timestamp = helper.getNewTimestamp();
+                                showProgressBar();
 
-                                    Toast.makeText(MatchingActivity.this, "Disliked!", Toast.LENGTH_SHORT).show();
-                                    helper.addToDislike(currUserID, potentMatchID, timestamp);
-
-//                                    if ( matchedFriendList.size() == 1 ) {
-//                                        resetMatchingView();
-//                                    }
-                                }
-                                else {
-                                    resetMatchingView();
-                                }
+                                Toast.makeText(MatchingActivity.this, "Disliked!", Toast.LENGTH_SHORT).show();
+                                helper.addToDislike(currUserID, potentMatchID, timestamp);
                             }
                         });
                     }
@@ -587,10 +530,6 @@ public class MatchingActivity extends AppCompatActivity
                     matchedFriendList.add( (String) potentDates.next().getValue() );
                 }
 
-                if ( matchedFriendList.isEmpty() ) {
-                    resetMatchingView();
-                }
-
                 adapter.notifyDataSetChanged();
                 viewPager.setAdapter(adapter);
                 viewPager.setCurrentItem( currTab );
@@ -676,53 +615,25 @@ public class MatchingActivity extends AppCompatActivity
                     imgView.setOnTouchListener(new OnSwipeTouchListener(MatchingActivity.this) {
                         @Override
                         public void onSwipeLeft() {
-                            if ( !matchedDateList.isEmpty() ) {
-                                String currUserID = helper.getAuth().getUid();
-                                String potentMatchID = matchedDateList.get(0);
-                                String timestamp = helper.getNewTimestamp();
-                                showProgressBar();
+                            String currUserID = helper.getAuth().getUid();
+                            String potentMatchID = matchedDateList.get(0);
+                            String timestamp = helper.getNewTimestamp();
+                            showProgressBar();
 
-                                Toast.makeText(MatchingActivity.this, "Disliked!", Toast.LENGTH_SHORT).show();
-                                helper.addToDislike(currUserID, potentMatchID, timestamp);
-                            }
-                            else {
-                                // Set default image
-                                String uri = "@drawable/profile";
-
-                                int imageResource = getResources().getIdentifier(uri, null, getPackageName());
-                                Drawable res = getResources().getDrawable(imageResource);
-                                imgView.setImageDrawable(res);
-
-                                adapter.notifyDataSetChanged();
-                                viewPager.setAdapter(adapter);
-                                viewPager.setCurrentItem( currTab );
-                            }
+                            Toast.makeText(MatchingActivity.this, "Disliked!", Toast.LENGTH_SHORT).show();
+                            helper.addToDislike(currUserID, potentMatchID, timestamp);
                         }
 
                         @Override
                         public void onSwipeRight() {
-                            if ( !matchedDateList.isEmpty() ) {
-                                String currUserID = helper.getAuth().getUid();
-                                String potentMatchID = matchedDateList.get(0);
-                                String timestamp = helper.getNewTimestamp();
-                                showProgressBar();
+                            String currUserID = helper.getAuth().getUid();
+                            String potentMatchID = matchedDateList.get(0);
+                            String timestamp = helper.getNewTimestamp();
+                            showProgressBar();
 
-                                Toast.makeText(MatchingActivity.this, "Liked!", Toast.LENGTH_SHORT).show();
-                                helper.addToLike(currUserID, potentMatchID, timestamp);
-                                helper.addToDate(currUserID, potentMatchID, timestamp);
-                            }
-                            else {
-                                // Set default image
-                                String uri = "@drawable/profile";
-
-                                int imageResource = getResources().getIdentifier(uri, null, getPackageName());
-                                Drawable res = getResources().getDrawable(imageResource);
-                                imgView.setImageDrawable(res);
-
-                                adapter.notifyDataSetChanged();
-                                viewPager.setAdapter(adapter);
-                                viewPager.setCurrentItem( currTab );
-                            }
+                            Toast.makeText(MatchingActivity.this, "Liked!", Toast.LENGTH_SHORT).show();
+                            helper.addToLike(currUserID, potentMatchID, timestamp);
+                            helper.addToDate( currUserID, potentMatchID, timestamp );
                         }
                     });
 
@@ -731,55 +642,27 @@ public class MatchingActivity extends AppCompatActivity
                     likeButton.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            if ( !matchedDateList.isEmpty() ) {
-                                String currUserID = helper.getAuth().getUid();
-                                String potentMatchID = matchedDateList.get(0);
-                                String timestamp = helper.getNewTimestamp();
-                                showProgressBar();
+                            String currUserID = helper.getAuth().getUid();
+                            String potentMatchID = matchedDateList.get(0);
+                            String timestamp = helper.getNewTimestamp();
+                            showProgressBar();
 
-                                Toast.makeText(MatchingActivity.this, "Liked!", Toast.LENGTH_SHORT).show();
-                                helper.addToLike(currUserID, potentMatchID, timestamp);
-                                helper.addToDate(currUserID, potentMatchID, timestamp);
-                            }
-                            else {
-                                // Set default image
-                                String uri = "@drawable/profile";
-
-                                int imageResource = getResources().getIdentifier(uri, null, getPackageName());
-                                Drawable res = getResources().getDrawable(imageResource);
-                                imgView.setImageDrawable(res);
-
-                                adapter.notifyDataSetChanged();
-                                viewPager.setAdapter(adapter);
-                                viewPager.setCurrentItem( currTab );
-                            }
+                            Toast.makeText(MatchingActivity.this, "Liked!", Toast.LENGTH_SHORT).show();
+                            helper.addToLike(currUserID, potentMatchID, timestamp);
+                            helper.addToDate(currUserID, potentMatchID, timestamp);
                         }
                     });
 
                     dislikeButton.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            if ( !matchedDateList.isEmpty() ) {
-                                String currUserID = helper.getAuth().getUid();
-                                String potentMatchID = matchedDateList.get(0);
-                                String timestamp = helper.getNewTimestamp();
-                                showProgressBar();
+                            String currUserID = helper.getAuth().getUid();
+                            String potentMatchID = matchedDateList.get(0);
+                            String timestamp = helper.getNewTimestamp();
+                            showProgressBar();
 
-                                Toast.makeText(MatchingActivity.this, "Disliked!", Toast.LENGTH_SHORT).show();
-                                helper.addToDislike(currUserID, potentMatchID, timestamp);
-                            }
-                            else {
-                                // Set default image
-                                String uri = "@drawable/profile";
-
-                                int imageResource = getResources().getIdentifier(uri, null, getPackageName());
-                                Drawable res = getResources().getDrawable(imageResource);
-                                imgView.setImageDrawable(res);
-
-                                adapter.notifyDataSetChanged();
-                                viewPager.setAdapter(adapter);
-                                viewPager.setCurrentItem( currTab );
-                            }
+                            Toast.makeText(MatchingActivity.this, "Disliked!", Toast.LENGTH_SHORT).show();
+                            helper.addToDislike(currUserID, potentMatchID, timestamp);
                         }
                     });
                 }
@@ -900,18 +783,5 @@ public class MatchingActivity extends AppCompatActivity
 
             return builder.create();
         }
-    }
-
-    private void resetMatchingView() {
-        // Set default image
-        String uri = "@drawable/profile";
-
-        int imageResource = getResources().getIdentifier(uri, null, getPackageName());
-        Drawable res = getResources().getDrawable(imageResource);
-        imgView.setImageDrawable(res);
-
-        adapter.notifyDataSetChanged();
-        viewPager.setAdapter(adapter);
-        viewPager.setCurrentItem( currTab );
     }
 }
