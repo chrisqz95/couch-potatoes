@@ -109,7 +109,6 @@ public class MatchingActivity extends AppCompatActivity
         adapter.addFragment(datingPage, tabTitles[0]);
         adapter.addFragment(friendPage, tabTitles[1]);
 
-        // line of code below causes app to crash; commenting out for app functionality -Mervin
         viewPager.setAdapter(adapter);
 
         // Change behavior of like and dislike buttons based on currently selected tab
@@ -132,20 +131,6 @@ public class MatchingActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitleTextColor(Color.WHITE);
         setSupportActionBar(toolbar);
-
-        /* NOT WORKING
-        final LayoutInflater factory = getLayoutInflater();
-
-        sideBarHeader = factory.inflate(R.layout.sidebar_header, null);
-
-        profilePic = sideBarHeader.findViewById(R.id.sidebarProfilePic);
-        circleProfilePic = (CircleImageView) sideBarHeader.findViewById(R.id.profile_image);
-
-        circleProfilePic.setVisibility(View.VISIBLE);
-        profilePic.setBackgroundColor( Color.WHITE );
-
-        //displayProfilePic();
-        */
 
         // enables toggle button on toolbar to open the sidebar
         mDrawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -208,9 +193,6 @@ public class MatchingActivity extends AppCompatActivity
             Intent intent = new Intent( getApplicationContext(), PreferencesActivity.class );
             startActivity( intent );
         } else if (id == R.id.nav_matches) {
-            // TODO: if not already in page, redirect page to MainActivity
-
-
 		} else if (id == R.id.nav_chats) {
             // redirects user to ChatRoomActivity.xml
             Intent intent = new Intent( getApplicationContext(), ChatRoomActivity.class );
@@ -218,11 +200,8 @@ public class MatchingActivity extends AppCompatActivity
 
         }
         else if (id == R.id.nav_settings) {
-            //Intent intent = new Intent( getApplicationContext(), SettingsActivity.class );
-            //startActivity( intent );
             startActivity( new Intent( getApplicationContext(), AppSettingsActivity.class ) );
         } else if (id == R.id.nav_info) {
-            // TODO: go to Page with device information
             Intent intent = new Intent( getApplicationContext(), AboutUsActivity.class );
             startActivity( intent );
         } else if (id == R.id.nav_logout) {
@@ -290,7 +269,6 @@ public class MatchingActivity extends AppCompatActivity
                 // NOTE: Temporary workaround for now: ( Want functionality before Layout tabs are pressed )
                 // Try to fetch profile pic from Firebase and update ImageView
                 // If profile pic is null, display default profile pic instead
-                // TODO Create method to do this
                 if ( !matchedDateList.isEmpty() ) {
                     displayPotentMatchProfilePic( matchedDateList.get(0) );
 
@@ -329,8 +307,6 @@ public class MatchingActivity extends AppCompatActivity
                     }
                 } else {
                     // Default Profile Pic
-                    // TODO Add method to DBHelper to get this
-                    //url = "gs://couch-potatoes-47758.appspot.com/Default/ProfilePic/potato_1_profile_pic.png";
                     resetImageView();
                 }
             }
@@ -437,8 +413,6 @@ public class MatchingActivity extends AppCompatActivity
                     }
                 } else {
                     // Default Profile Pic
-                    // TODO Add method to DBHelper to get this
-                    // url = "gs://couch-potatoes-47758.appspot.com/Default/ProfilePic/potato_1_profile_pic.png";
                     resetImageView();
                 }
             }
@@ -492,7 +466,6 @@ public class MatchingActivity extends AppCompatActivity
         });
 
         // NOTE: Temporary workaround for now: Set default action button listeners ( before Layout tabs are pressed )
-        // TODO Create method to do this
         likeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -520,7 +493,6 @@ public class MatchingActivity extends AppCompatActivity
 
     private void addPageChangeListener() {
         // Change behavior of like and dislike buttons based on currently selected tab
-        // TODO Create methods to handle behaviour below and reduce code redundancy
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {}
@@ -528,7 +500,7 @@ public class MatchingActivity extends AppCompatActivity
             @Override
             public void onPageSelected(int position) {
                 String matchUserID = "";
-                
+
                 // If Date tab selected, have like button add to Date object on Firebase
                 if ( position == VIEW_PAGER_DATE_TAB_POSITION ) {
                     currTab = VIEW_PAGER_DATE_TAB_POSITION;
