@@ -5,9 +5,7 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.util.Log;
-import android.view.GestureDetector;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -22,6 +20,9 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+
+import static com.example.potato.couchpotatoes.StringUtilities.addStrAtPos;
+import static com.example.potato.couchpotatoes.StringUtilities.paddSpace;
 
 public class MatchPageFragment extends Fragment {
     public static final String ARG_LIST = "ARG_LIST";
@@ -42,25 +43,14 @@ public class MatchPageFragment extends Fragment {
     private LinearLayout matchingUserInfoLayout;
 
     private ImageView imgView;
-
     private String gUserInfo;
 
     /**
-     * TODO: NOTE IF WE WANT TO PASS IN THE LIST DIRECTLY, WE NEED TO MAKE MATCHEDUSER EXTEND PARCELABLE
-     * @param savedInstanceState
-     */
-//    public static MatchPageFragment newInstance(List<MatchedUser> matchedUserList) {
-//        Bundle args = new Bundle();
-//        args.putParcelableArrayList(ARG_LIST, matchedUserList);
-//        MatchPageFragment fragment = new MatchPageFragment();
-//        fragment.setArguments(args);
-//        return fragment;
-//    }
-
-    /**
-     * give it a list of the strings of the matched users
-     * @param matchedUserList
-     * @return
+     * Create a new fragment while passing in a list of the strings of the matched users
+     *
+     * @param matchedUserList - list of matched users as strings
+     * @param isDating - true if this is the dating page, false if it's the friend page
+     * @return new MatchPageFragment object
      */
     public static MatchPageFragment newInstance(ArrayList<String> matchedUserList, boolean isDating) {
         Bundle args = new Bundle();
@@ -74,26 +64,12 @@ public class MatchPageFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         helper = new DBHelper();
 
+        // Gets the matched user list
         matchedUserList = getArguments().getStringArrayList(ARG_LIST);
         isDating = getArguments().getBoolean("Is_Dating");
-
-        matchButton = (FloatingActionButton) getActivity().findViewById(R.id.fab_match);
-        unmatchButton = (FloatingActionButton) getActivity().findViewById(R.id.fab_unmatch);
-
-        matchButton.setOnClickListener(onClickListener);
-        unmatchButton.setOnClickListener(onClickListener);
     }
-
-    private View.OnClickListener onClickListener = new View.OnClickListener() {
-        @Override
-        public void onClick(final View v) {
-            //Log.d( "TEST", "FRAGMENT CLICKED" );
-            // NOTE: MAY NOT NEED THIS
-        }
-    };
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -105,10 +81,14 @@ public class MatchPageFragment extends Fragment {
         userInfoText = (TextView) view.findViewById(R.id.userInfoText);
         matchingUserInfoLayout = (LinearLayout) view.findViewById(R.id.matchingUserInfoLayout);
 
+        // If the user doesn't have a list of potential matches, tell them to update their profile
         if ( matchedUserList.isEmpty() ) {
             userInfoText.setText( "No new matches? Make sure to fill out your account settings or try adding more interests." );
         }
+
+        // Otherwise, populate the fragment
         else {
+            // Get the first user on the list
             currMatchID = matchedUserList.get( 0 );
 
             // Creates a gesture listener for the user text
@@ -145,15 +125,18 @@ public class MatchPageFragment extends Fragment {
 
                     Toast.makeText(getActivity(), "Liked!", Toast.LENGTH_SHORT).show();
                     helper.addToLike(currUserID, potentMatchID, timestamp);
+
+                    // If this is the dating page, add to dating like list
                     if (isDating)
                         helper.addToDate( currUserID, potentMatchID, timestamp );
+
+                    // Otherwise, add to friend like list
                     else
                         helper.addToBefriend(currUserID, potentMatchID, timestamp);
                 }
             });
 
             // Fetch and display info about the potential match
-            // TODO Create method to do this
             helper.getDb().getReference( helper.getUserPath() + currMatchID ).addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
@@ -169,44 +152,25 @@ public class MatchPageFragment extends Fragment {
                     String gender = (String) res.get( "gender" );
                     String birth_date = (String) res.get( "birth_date" );
                     String bio = (String) res.get( "bio" );
-
                     String userInfo = "";
-
-                    // TODO Need a better way to format text
-                    /*
-                    String format = "%30s%30s\n";
-                    userInfo += String.format( format, "First Name:", firstName );
-                    userInfo += String.format( format, "Middle Name:", middleName );
-                    userInfo += String.format( format, "Last Name:", lastName );
-                    userInfo += String.format( format, "Gender:", gender );
-                    userInfo += String.format( format, "Birth Day:", birth_date );
-                    userInfo += String.format( format, "Bio:", bio );
-                    */
-
                     String genderAbbrev = "";
 
-                    // Abbreviate gender
-                    // If non-binary, do not mention gender
-                    // TODO Create helper method to do this
-                    if ( gender.equals( "male" ) ) {
+                    // Abbreviate gender. If non-binary, do not mention gender
+                    if ( gender.equals( "male" ) )
                         genderAbbrev= "M";
-                    }
-                    else if ( gender.equals( "female" ) ) {
+                    else if ( gender.equals( "female" ) )
                         genderAbbrev = "F";
-                    }
 
                     // Get the potential match's full name
-                    // Omitt the middle name - Personal preference - Can change later
+                    // Omit the middle name - Personal preference - Can change later
                     String potentMatchName = helper.getFullName( firstName, "", lastName );
 
                     // Display potential match's full name and gender on the same line
                     int numSpaces = 30;
                     userInfo += paddSpace( potentMatchName, genderAbbrev, numSpaces );
-
                     userInfoText.setText( userInfo );
 
                     // Display substring of bio here and full bio in MatchUserInfoActivity
-                    // TODO Create helper method to do this
                     if ( bio.length() <= BIO_SUBSTRING_LENGTH ) {
                         bioText.setText( bio );
                     }
@@ -216,11 +180,9 @@ public class MatchPageFragment extends Fragment {
                     }
 
                     String interestsHeaderStr = "Interests";
-
                     interestsHeader.setText( interestsHeaderStr );
 
                     // Fetch and display User's Interests
-                    // TODO Create method to do this
                     helper.getDb().getReference( helper.getUserInterestPath() ).child( currMatchID ).addValueEventListener(new ValueEventListener() {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
@@ -251,74 +213,17 @@ public class MatchPageFragment extends Fragment {
 
                         @Override
                         public void onCancelled(DatabaseError databaseError) {
-                            Log.d( "TEST", databaseError.getMessage() );
+
                         }
                     });
                 }
 
                 @Override
                 public void onCancelled(DatabaseError databaseError) {
-                    Log.d( "TEST", databaseError.getMessage() );
+
                 }
             });
         }
-
         return view;
-    }
-
-    //TODO MOVE THESE METHODS TO A NEW CLASS
-    private String paddSpace( String title, String value, int desiredLength ) {
-        String str = "";
-
-        str += title;
-
-        int numSpaces = desiredLength - title.length() - value.length();
-
-        for ( int i = 0; i < numSpaces; i++ ) {
-            str += "\t";
-        }
-
-        str += value;
-
-        return str;
-    }
-
-    private String paddSpaceln( String title, String value, int desiredLength ) {
-        return paddSpace( title, value + "\n", desiredLength );
-    }
-
-    private String paddSpaceEnd( String title, String value, int desiredLength ) {
-        String str = "";
-
-        str += title;
-
-        str += value;
-
-        int numSpaces = desiredLength - title.length() - value.length();
-
-        for ( int i = 0; i < numSpaces; i++ ) {
-            str += "\t";
-        }
-
-        str += "|";
-
-        return str;
-    }
-
-    private String paddSpaceEndln( String title, String value, int desiredLength ) {
-        return paddSpaceEnd( title, value, desiredLength ) + "\n";
-    }
-
-    private String addStrAtPos( String str, String addition, int position ) {
-        String ret = "";
-
-        for ( int i = 0; i < str.length(); i++ ) {
-            if ( i == position ) {
-                ret += addition;
-            }
-            ret += str.charAt( i );
-        }
-
-        return ret;
     }
 }

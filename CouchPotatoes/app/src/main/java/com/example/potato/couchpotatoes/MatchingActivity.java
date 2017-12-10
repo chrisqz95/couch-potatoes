@@ -30,16 +30,6 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.StorageReference;
-import com.mindorks.placeholderview.SwipeDecor;
-import com.mindorks.placeholderview.SwipePlaceHolderView;
-import com.mindorks.placeholderview.annotations.Click;
-import com.mindorks.placeholderview.annotations.Layout;
-import com.mindorks.placeholderview.annotations.Resolve;
-import com.mindorks.placeholderview.annotations.swipe.SwipeCancelState;
-import com.mindorks.placeholderview.annotations.swipe.SwipeIn;
-import com.mindorks.placeholderview.annotations.swipe.SwipeInState;
-import com.mindorks.placeholderview.annotations.swipe.SwipeOut;
-import com.mindorks.placeholderview.annotations.swipe.SwipeOutState;
 
 import java.util.Iterator;
 // for the side bar activity
@@ -70,9 +60,7 @@ public class MatchingActivity extends AppCompatActivity
     private android.widget.TextView sidebarUserName;
     private android.widget.TextView sidebarUserEmail;
 
-    // list of matches for dating and friending
-//    private List<MatchedUser> matchedDateList = new ArrayList<>();
-//    private List<MatchedUser> matchedFriendList = new ArrayList<>();
+    // List of matches for dating and friending
     private ArrayList<String> matchedDateList = new ArrayList<>();
     private ArrayList<String> matchedFriendList = new ArrayList<>();
 
@@ -92,9 +80,7 @@ public class MatchingActivity extends AppCompatActivity
     private ImageView profilePic;
 
     private int currTab = 0;
-
     private String currUserID;
-
     private View sideBarHeader;
 
     @Override
@@ -121,13 +107,11 @@ public class MatchingActivity extends AppCompatActivity
 
         adapter = new MatchFragmentPagerAdapter(getSupportFragmentManager());
 
-        // add fragments to the view pager
+        // Add fragments to the view pager
         datingPage = MatchPageFragment.newInstance(matchedDateList, true);
         friendPage = MatchPageFragment.newInstance(matchedFriendList, false);
         adapter.addFragment(datingPage, tabTitles[0]);
         adapter.addFragment(friendPage, tabTitles[1]);
-
-        // line of code below causes app to crash; commenting out for app functionality -Mervin
         viewPager.setAdapter(adapter);
 
         // Change behavior of like and dislike buttons based on currently selected tab
@@ -181,96 +165,8 @@ public class MatchingActivity extends AppCompatActivity
                             }
                         });
 
-                        // Creates a gesture listener for the user image
-                        imgView.setOnTouchListener(new OnSwipeTouchListener(MatchingActivity.this) {
-                            /**
-                             * When the picture is swiped left, dislike the user
-                             */
-                            @Override
-                            public void onSwipeLeft() {
-                                if ( !matchedDateList.isEmpty() ) {
-                                    String currUserID = helper.getAuth().getUid();
-                                    String potentMatchID = matchedDateList.get(0);
-                                    String timestamp = helper.getNewTimestamp();
-                                    showProgressBar();
-
-                                    Toast.makeText(MatchingActivity.this, "Disliked!", Toast.LENGTH_SHORT).show();
-                                    helper.addToDislike(currUserID, potentMatchID, timestamp);
-                                }
-                                else {
-                                    resetMatchingView();
-                                }
-                            }
-
-
-                            /**
-                             * When the picture is swiped right, like the user
-                             */
-                            @Override
-                            public void onSwipeRight() {
-                                if ( !matchedDateList.isEmpty() ) {
-                                    String currUserID = helper.getAuth().getUid();
-                                    String potentMatchID = matchedDateList.get(0);
-                                    String timestamp = helper.getNewTimestamp();
-                                    showProgressBar();
-
-                                    Toast.makeText(MatchingActivity.this, "Liked!", Toast.LENGTH_SHORT).show();
-                                    helper.addToLike(currUserID, potentMatchID, timestamp);
-                                    helper.addToDate(currUserID, potentMatchID, timestamp);
-                                }
-                                else {
-                                    resetMatchingView();
-                                }
-                            }
-                        });
-
-                        imgView.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                Log.d( "TEST", "IMG CLICKED" );
-                                //TODO Go to new activity to view potential match's photos
-                                //Intent intent = new Intent( getApplicationContext(), ( INSERT IMAGE GALLERY ACTIVITY CLASS ) );
-                                //intent.putExtra( "targetUserID", matchedDateList.get(0) );
-                                //startActivity( intent );
-                            }
-                        });
-
-                        likeButton.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                if ( !matchedDateList.isEmpty() ) {
-                                    String currUserID = helper.getAuth().getUid();
-                                    String potentMatchID = matchedDateList.get(0);
-                                    String timestamp = helper.getNewTimestamp();
-                                    showProgressBar();
-
-                                    Toast.makeText(MatchingActivity.this, "Liked!", Toast.LENGTH_SHORT).show();
-                                    helper.addToLike(currUserID, potentMatchID, timestamp);
-                                    helper.addToDate(currUserID, potentMatchID, timestamp);
-                                }
-                                else {
-                                    resetMatchingView();
-                                }
-                            }
-                        });
-
-                        dislikeButton.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                if ( !matchedDateList.isEmpty() ) {
-                                    String currUserID = helper.getAuth().getUid();
-                                    String potentMatchID = matchedDateList.get(0);
-                                    String timestamp = helper.getNewTimestamp();
-                                    showProgressBar();
-
-                                    Toast.makeText(MatchingActivity.this, "Disliked!", Toast.LENGTH_SHORT).show();
-                                    helper.addToDislike(currUserID, potentMatchID, timestamp);
-                                }
-                                else {
-                                    resetMatchingView();
-                                }
-                            }
-                        });
+                        // Sets the buttons and image to refer to the dating page
+                        updateLikeDislikeButtons(true);
                     }
                     else {
                         // Default profile pic
@@ -334,104 +230,8 @@ public class MatchingActivity extends AppCompatActivity
                             }
                         });
 
-                        imgView.setOnTouchListener(new OnSwipeTouchListener(MatchingActivity.this) {
-                            @Override
-                            public void onSwipeLeft() {
-                                if ( !matchedFriendList.isEmpty() ) {
-                                    String currUserID = helper.getAuth().getUid();
-                                    String potentMatchID = matchedFriendList.get(0);
-                                    String timestamp = helper.getNewTimestamp();
-                                    showProgressBar();
-
-                                    Toast.makeText(MatchingActivity.this, "Disliked!", Toast.LENGTH_SHORT).show();
-                                    helper.addToDislike(currUserID, potentMatchID, timestamp);
-
-//                                    if ( matchedFriendList.size() == 1 ) {
-//                                        resetMatchingView();
-//                                    }
-                                }
-                                else {
-                                    resetMatchingView();
-                                }
-                            }
-
-                            @Override
-                            public void onSwipeRight() {
-                                if ( !matchedFriendList.isEmpty() ) {
-                                    String currUserID = helper.getAuth().getUid();
-                                    String potentMatchID = matchedFriendList.get(0);
-                                    String timestamp = helper.getNewTimestamp();
-                                    showProgressBar();
-
-                                    Toast.makeText(MatchingActivity.this, "Liked!", Toast.LENGTH_SHORT).show();
-                                    helper.addToLike(currUserID, potentMatchID, timestamp);
-                                    helper.addToBefriend(currUserID, potentMatchID, timestamp);
-
-//                                    if ( matchedFriendList.size() == 1 ) {
-//                                        resetMatchingView();
-//                                    }
-                                }
-                                else {
-                                    resetMatchingView();
-                                }
-                            }
-                        });
-
-                        imgView.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                Log.d( "TEST", "IMG CLICKED" );
-                                //TODO Go to new activity to view potential match's photos
-                                //Intent intent = new Intent( getApplicationContext(), ( INSERT IMAGE GALLERY ACTIVITY CLASS ) );
-                                //intent.putExtra( "targetUserID", matchedFriendList.get(0) );
-                                //startActivity( intent );
-                            }
-                        });
-
-                        likeButton.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                if ( !matchedFriendList.isEmpty() ) {
-                                    String currUserID = helper.getAuth().getUid();
-                                    String potentMatchID = matchedFriendList.get(0);
-                                    String timestamp = helper.getNewTimestamp();
-                                    showProgressBar();
-
-                                    Toast.makeText(MatchingActivity.this, "Liked!", Toast.LENGTH_SHORT).show();
-                                    helper.addToLike(currUserID, potentMatchID, timestamp);
-                                    helper.addToBefriend(currUserID, potentMatchID, timestamp);
-
-//                                    if ( matchedFriendList.size() == 1 ) {
-//                                        resetMatchingView();
-//                                    }
-                                }
-                                else {
-                                    resetMatchingView();
-                                }
-                            }
-                        });
-
-                        dislikeButton.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                if ( !matchedFriendList.isEmpty() ) {
-                                    String currUserID = helper.getAuth().getUid();
-                                    String potentMatchID = matchedFriendList.get(0);
-                                    String timestamp = helper.getNewTimestamp();
-                                    showProgressBar();
-
-                                    Toast.makeText(MatchingActivity.this, "Disliked!", Toast.LENGTH_SHORT).show();
-                                    helper.addToDislike(currUserID, potentMatchID, timestamp);
-
-//                                    if ( matchedFriendList.size() == 1 ) {
-//                                        resetMatchingView();
-//                                    }
-                                }
-                                else {
-                                    resetMatchingView();
-                                }
-                            }
-                        });
+                        // Sets the buttons and image to refer to the friend page
+                        updateLikeDislikeButtons(false);
                     }
                     else {
                         // Default profile pic
@@ -673,115 +473,8 @@ public class MatchingActivity extends AppCompatActivity
                         }
                     });
 
-                    imgView.setOnTouchListener(new OnSwipeTouchListener(MatchingActivity.this) {
-                        @Override
-                        public void onSwipeLeft() {
-                            if ( !matchedDateList.isEmpty() ) {
-                                String currUserID = helper.getAuth().getUid();
-                                String potentMatchID = matchedDateList.get(0);
-                                String timestamp = helper.getNewTimestamp();
-                                showProgressBar();
-
-                                Toast.makeText(MatchingActivity.this, "Disliked!", Toast.LENGTH_SHORT).show();
-                                helper.addToDislike(currUserID, potentMatchID, timestamp);
-                            }
-                            else {
-                                // Set default image
-                                String uri = "@drawable/profile";
-
-                                int imageResource = getResources().getIdentifier(uri, null, getPackageName());
-                                Drawable res = getResources().getDrawable(imageResource);
-                                imgView.setImageDrawable(res);
-
-                                adapter.notifyDataSetChanged();
-                                viewPager.setAdapter(adapter);
-                                viewPager.setCurrentItem( currTab );
-                            }
-                        }
-
-                        @Override
-                        public void onSwipeRight() {
-                            if ( !matchedDateList.isEmpty() ) {
-                                String currUserID = helper.getAuth().getUid();
-                                String potentMatchID = matchedDateList.get(0);
-                                String timestamp = helper.getNewTimestamp();
-                                showProgressBar();
-
-                                Toast.makeText(MatchingActivity.this, "Liked!", Toast.LENGTH_SHORT).show();
-                                helper.addToLike(currUserID, potentMatchID, timestamp);
-                                helper.addToDate(currUserID, potentMatchID, timestamp);
-                            }
-                            else {
-                                // Set default image
-                                String uri = "@drawable/profile";
-
-                                int imageResource = getResources().getIdentifier(uri, null, getPackageName());
-                                Drawable res = getResources().getDrawable(imageResource);
-                                imgView.setImageDrawable(res);
-
-                                adapter.notifyDataSetChanged();
-                                viewPager.setAdapter(adapter);
-                                viewPager.setCurrentItem( currTab );
-                            }
-                        }
-                    });
-
-                    // NOTE: Temporary workaround for now: Set default action button listeners ( before Layout tabs are pressed )
-                    // TODO Create method to do this
-                    likeButton.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            if ( !matchedDateList.isEmpty() ) {
-                                String currUserID = helper.getAuth().getUid();
-                                String potentMatchID = matchedDateList.get(0);
-                                String timestamp = helper.getNewTimestamp();
-                                showProgressBar();
-
-                                Toast.makeText(MatchingActivity.this, "Liked!", Toast.LENGTH_SHORT).show();
-                                helper.addToLike(currUserID, potentMatchID, timestamp);
-                                helper.addToDate(currUserID, potentMatchID, timestamp);
-                            }
-                            else {
-                                // Set default image
-                                String uri = "@drawable/profile";
-
-                                int imageResource = getResources().getIdentifier(uri, null, getPackageName());
-                                Drawable res = getResources().getDrawable(imageResource);
-                                imgView.setImageDrawable(res);
-
-                                adapter.notifyDataSetChanged();
-                                viewPager.setAdapter(adapter);
-                                viewPager.setCurrentItem( currTab );
-                            }
-                        }
-                    });
-
-                    dislikeButton.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            if ( !matchedDateList.isEmpty() ) {
-                                String currUserID = helper.getAuth().getUid();
-                                String potentMatchID = matchedDateList.get(0);
-                                String timestamp = helper.getNewTimestamp();
-                                showProgressBar();
-
-                                Toast.makeText(MatchingActivity.this, "Disliked!", Toast.LENGTH_SHORT).show();
-                                helper.addToDislike(currUserID, potentMatchID, timestamp);
-                            }
-                            else {
-                                // Set default image
-                                String uri = "@drawable/profile";
-
-                                int imageResource = getResources().getIdentifier(uri, null, getPackageName());
-                                Drawable res = getResources().getDrawable(imageResource);
-                                imgView.setImageDrawable(res);
-
-                                adapter.notifyDataSetChanged();
-                                viewPager.setAdapter(adapter);
-                                viewPager.setCurrentItem( currTab );
-                            }
-                        }
-                    });
+                    // Sets the buttons and image to refer to the dating page
+                    updateLikeDislikeButtons(true);
                 }
 
                 // Done fetching potent matches from Firebase
@@ -836,6 +529,95 @@ public class MatchingActivity extends AppCompatActivity
         });
     }
 
+    private void updateLikeDislikeButtons(final boolean dating) {
+        // Creates a gesture listener for the user image
+        imgView.setOnTouchListener(new OnSwipeTouchListener(MatchingActivity.this) {
+            /**
+             * When the picture is swiped left, dislike the user
+             */
+            @Override
+            public void onSwipeLeft() {
+                if ( !matchedDateList.isEmpty() ) {
+                    String currUserID = helper.getAuth().getUid();
+                    String potentMatchID = matchedDateList.get(0);
+                    String timestamp = helper.getNewTimestamp();
+                    showProgressBar();
+
+                    Toast.makeText(MatchingActivity.this, "Disliked!", Toast.LENGTH_SHORT).show();
+                    helper.addToDislike(currUserID, potentMatchID, timestamp);
+                }
+                else {
+                    resetMatchingView();
+                }
+            }
+
+            /**
+             * When the picture is swiped right, like the user
+             */
+            @Override
+            public void onSwipeRight() {
+                if ( !matchedDateList.isEmpty() ) {
+                    String currUserID = helper.getAuth().getUid();
+                    String potentMatchID = matchedDateList.get(0);
+                    String timestamp = helper.getNewTimestamp();
+                    showProgressBar();
+
+                    Toast.makeText(MatchingActivity.this, "Liked!", Toast.LENGTH_SHORT).show();
+                    helper.addToLike(currUserID, potentMatchID, timestamp);
+
+                    if (dating)
+                        helper.addToDate(currUserID, potentMatchID, timestamp);
+                    else
+                        helper.addToBefriend(currUserID, potentMatchID, timestamp);
+                }
+                else {
+                    resetMatchingView();
+                }
+            }
+        });
+
+        likeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if ( !matchedDateList.isEmpty() ) {
+                    String currUserID = helper.getAuth().getUid();
+                    String potentMatchID = matchedDateList.get(0);
+                    String timestamp = helper.getNewTimestamp();
+                    showProgressBar();
+
+                    Toast.makeText(MatchingActivity.this, "Liked!", Toast.LENGTH_SHORT).show();
+                    helper.addToLike(currUserID, potentMatchID, timestamp);
+
+                    if (dating)
+                        helper.addToDate(currUserID, potentMatchID, timestamp);
+                    else
+                        helper.addToBefriend(currUserID, potentMatchID, timestamp);
+                }
+                else {
+                    resetMatchingView();
+                }
+            }
+        });
+
+        dislikeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if ( !matchedDateList.isEmpty() ) {
+                    String currUserID = helper.getAuth().getUid();
+                    String potentMatchID = matchedDateList.get(0);
+                    String timestamp = helper.getNewTimestamp();
+                    showProgressBar();
+
+                    Toast.makeText(MatchingActivity.this, "Disliked!", Toast.LENGTH_SHORT).show();
+                    helper.addToDislike(currUserID, potentMatchID, timestamp);
+                }
+                else {
+                    resetMatchingView();
+                }
+            }
+        });
+    }
+
     /**
      * Displays the progress bar while hiding everything else
      */
@@ -854,52 +636,6 @@ public class MatchingActivity extends AppCompatActivity
         imgView.setVisibility(View.VISIBLE);
         viewPager.setVisibility(View.VISIBLE);
         likeAndDislikeLayout.setVisibility(View.VISIBLE);
-    }
-
-    /**
-     * Creates a dialog containing the info of a user and the similar interests they share.
-     */
-    public static class UserInfoDialogFragment extends DialogFragment {
-        /**
-         * Creates a dialog fragment using a user object
-         * @param user - user to get info from
-         * @return dialog containing user info
-         */
-        public static UserInfoDialogFragment newInstance(User user) {
-            UserInfoDialogFragment frag = new UserInfoDialogFragment();
-            Bundle args = new Bundle();
-
-            // Pass the user object into the dialog
-            args.putSerializable("UserInfo", user);
-            frag.setArguments(args);
-            return frag;
-        }
-
-        // When the dialog is created, show the info
-        @Override
-        public Dialog onCreateDialog(Bundle savedInstanceState) {
-            // Sets up the dialog layout
-            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-            LayoutInflater inflater = getActivity().getLayoutInflater();
-            View content = inflater.inflate(R.layout.user_dialog, null);
-            User mUser = (User) getArguments().getSerializable("UserInfo");
-
-            // Creates a close button to dismiss the dialog
-            builder.setView(content).setNegativeButton(R.string.close, new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int id) {
-                    // User closed the dialog
-                    UserInfoDialogFragment.this.getDialog().cancel();
-                }
-            });
-
-            // Populates the user info text views
-            TextView nameAgeTxt = (TextView) content.findViewById(R.id.nameAgeTxt);
-            TextView locationTxt = (TextView) content.findViewById(R.id.locationTxt);
-            nameAgeTxt.setText(mUser.getFirstName());
-            locationTxt.setText(mUser.getCity());
-
-            return builder.create();
-        }
     }
 
     private void resetMatchingView() {
