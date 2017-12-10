@@ -6,8 +6,6 @@ import java.util.LinkedList;
 
 public class CurrentUser extends User {
     private static CurrentUser uniqueInstance;
-    // may or may not need. Alternative is to populate one a linked list in HomeActivity instead.
-    private LinkedList<MatchedUser> matchedUsers = new LinkedList<>();
 
     private CurrentUser () {}
 
