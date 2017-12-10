@@ -195,7 +195,7 @@ public class MatchingActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_profile) {
-            Intent intent = new Intent( getApplicationContext(), PreferencesActivity.class );
+            Intent intent = new Intent( getApplicationContext(), ProfileActivity.class );
             startActivity( intent );
         } else if (id == R.id.nav_matches) {
         } else if (id == R.id.nav_chats) {

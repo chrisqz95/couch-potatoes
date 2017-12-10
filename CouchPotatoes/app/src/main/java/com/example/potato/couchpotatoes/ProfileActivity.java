@@ -46,7 +46,7 @@ import java.util.ArrayList;
  * href="http://developer.android.com/guide/topics/ui/settings.html">Settings
  * API Guide</a> for more information on developing a Settings UI.
  */
-public class PreferencesActivity extends AppCompatActivity
+public class ProfileActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
     private DBHelper dbHelper;
 

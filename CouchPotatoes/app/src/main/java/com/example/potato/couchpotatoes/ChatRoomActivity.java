@@ -289,7 +289,7 @@ public class ChatRoomActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_profile) {
-            Intent intent = new Intent( getApplicationContext(), PreferencesActivity.class );
+            Intent intent = new Intent( getApplicationContext(), ProfileActivity.class );
             startActivity( intent );
             finish();
 
