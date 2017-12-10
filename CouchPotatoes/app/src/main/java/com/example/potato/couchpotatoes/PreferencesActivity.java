@@ -1,51 +1,21 @@
 package com.example.potato.couchpotatoes;
 
-import android.annotation.TargetApi;
-import android.app.Activity;
-import android.app.Fragment;
-import android.app.ListFragment;
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.content.res.Configuration;
-import android.graphics.Picture;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
-import android.media.Ringtone;
-import android.media.RingtoneManager;
-import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
-import android.preference.ListPreference;
-import android.preference.Preference;
 import android.preference.PreferenceActivity;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
-import android.support.design.widget.Snackbar;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBar;
-import android.preference.PreferenceFragment;
-import android.preference.PreferenceManager;
-import android.preference.RingtonePreference;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.text.TextUtils;
-import android.util.JsonWriter;
-import android.transition.Transition;
-import android.util.Log;
-import android.util.Pair;
-import android.util.SparseBooleanArray;
-import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.CheckedTextView;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ArrayAdapter;
@@ -54,30 +24,16 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import com.bumptech.glide.Glide;
 import com.firebase.ui.storage.images.FirebaseImageLoader;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
 
 /**
  * A {@link PreferenceActivity} that presents a set of application settings. On
@@ -93,19 +49,12 @@ import java.util.Map;
 public class PreferencesActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
     private DBHelper helper;
-    private static String[] moviePrefList = new String[] {"Action", "Adventure", "Animation", "Biography", "Comedy", "Crime", "Documentary", "Drama", "Family", "Fantasy", "Film-Noir", "History", "Horror", "Music", "Musical", "Mystery", "Romance", "Sci-Fi", "Sport", "Thriller", "War", "Western"};
-    private static String[] sportsPrefList = new String[] {"The", "Thing", "Go", "Skrraaaa"};
 
     private ArrayList<String> interestList;
 
     private Button settingsTab;
     private Button photosTab;
-    private Button movieTab;
-    private Button sportsTab;
     private EditText userBio;
-    private TextView moviesSelection;
-    private TextView sportsSelection;
-    private LinearLayout interestsLayout;
     private ListView interestListView;
     private ArrayAdapter<String> interestAdapter;
     private TextView userTitle;
@@ -132,25 +81,23 @@ public class PreferencesActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
-        SharedPreferences prefs = this.getSharedPreferences("com.example.potato.couchpotatoes", Context.MODE_PRIVATE);
 
-        profileLayout = (LinearLayout) findViewById(R.id.profileLayout);
-        userTitle = (TextView) findViewById(R.id.user_title);
-        prefHorizBtns = (LinearLayout) findViewById(R.id.preferencesHorizBtns);
-        bioTitle = (TextView) findViewById(R.id.biography_title);
-        userBio = (EditText) findViewById(R.id.user_bio);
-        bioBtnLayout = (LinearLayout) findViewById(R.id.bioBtnLayout);
-        bioSubmitBtn = (Button) findViewById(R.id.profileBioSubmitBtn);
-        bioSubmitCancelBtn = (Button) findViewById(R.id.profileBioSubmitCancelBtn);
-        interestsTitle = (TextView) findViewById(R.id.interests_title);
-        imgView = (ImageView) findViewById(R.id.preferencesProfilePic);
-        spinner = (ProgressBar)findViewById(R.id.preferencesSpinner);
+        profileLayout = findViewById(R.id.profileLayout);
+        userTitle = findViewById(R.id.user_title);
+        prefHorizBtns = findViewById(R.id.preferencesHorizBtns);
+        bioTitle = findViewById(R.id.biography_title);
+        userBio = findViewById(R.id.user_bio);
+        bioBtnLayout = findViewById(R.id.bioBtnLayout);
+        bioSubmitBtn = findViewById(R.id.profileBioSubmitBtn);
+        bioSubmitCancelBtn = findViewById(R.id.profileBioSubmitCancelBtn);
+        interestsTitle = findViewById(R.id.interests_title);
+        imgView = findViewById(R.id.preferencesProfilePic);
+        spinner = findViewById(R.id.preferencesSpinner);
 
         userTitle.setVisibility(View.GONE);
         prefHorizBtns.setVisibility(View.GONE);
         bioTitle.setVisibility(View.GONE);
         userBio.setVisibility(View.GONE);
-        //bioSubmitBtn.setVisibility(View.GONE);
         bioBtnLayout.setVisibility(View.GONE);
         interestsTitle.setVisibility(View.GONE);
         imgView.setVisibility(View.GONE);
@@ -163,13 +110,11 @@ public class PreferencesActivity extends AppCompatActivity
         interestList = new ArrayList<>();
         interestAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, interestList );
 
-        interestListView = (ListView) findViewById(R.id.interestListView);
+        interestListView = findViewById(R.id.interestListView);
         interestListView.setAdapter( interestAdapter );
 
-        //interestsLayout = (LinearLayout) findViewById(R.id.interestsLayout);
-
         // places toolbar on top of the screen
-        Toolbar toolbar = (Toolbar) findViewById(R.id.profile_toolbar);
+        Toolbar toolbar = findViewById(R.id.profile_toolbar);
         toolbar.setTitleTextColor(Color.WHITE);
         setSupportActionBar(toolbar);
 
@@ -178,7 +123,7 @@ public class PreferencesActivity extends AppCompatActivity
         navView = (NavigationView) findViewById(R.id.profile_nav_view);
         setSideBarDrawer( mDrawer, navView, toolbar , helper );
 
-        settingsTab = (Button) findViewById(R.id.settingsTab);
+        settingsTab = findViewById(R.id.settingsTab);
         settingsTab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -187,7 +132,7 @@ public class PreferencesActivity extends AppCompatActivity
             }
         });
 
-        photosTab = (Button) findViewById(R.id.photosTab);
+        photosTab = findViewById(R.id.photosTab);
         photosTab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -204,8 +149,6 @@ public class PreferencesActivity extends AppCompatActivity
         imgView.setOnHoverListener(new View.OnHoverListener() {
             @Override
             public boolean onHover(View v, MotionEvent event) {
-                // TODO
-                //Toast.makeText(getApplicationContext(), "Click to change profile picture", Toast.LENGTH_LONG).show();
                 return false;
             }
         });
@@ -230,7 +173,6 @@ public class PreferencesActivity extends AppCompatActivity
         interestListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                //Log.d( "TEST", interestList.get( position ) + " CLICKED" );
                 Intent intent = new Intent(getApplicationContext(), PreferenceChart.class);
                 intent.putExtra( "interest", interestList.get( position ) );
                 startActivity(intent);
@@ -249,16 +191,13 @@ public class PreferencesActivity extends AppCompatActivity
         bioSubmitBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //Log.d( "TEST", "SUBMIT CHANGES" );
                 // Hide bio buttons
-                // TODO MOVE TO new helper method
                 if ( bioBtnLayout.getVisibility() == View.VISIBLE ) {
                     bioBtnLayout.setVisibility(View.GONE);
                 }
 
                 // Remove bio edit text focus
                 // Workaround: Remove focus by requesting focus elsewhere
-                // TODO May want to find a better way of doing this later
                 profileLayout.requestFocus();
 
                 String bioChanges = userBio.getText().toString();
@@ -267,9 +206,7 @@ public class PreferencesActivity extends AppCompatActivity
                 bioTextPrev = bioChanges;
 
                 // Submit bio to Firebase
-                // TODO Add method to DBHelper to only change bio
                 helper.getDb().getReference( helper.getUserPath() ).child( currUserID ).child( "bio" ).setValue( bioChanges );
-                //Log.d( "TEST", bioChanges );
             }
         });
 
@@ -277,61 +214,18 @@ public class PreferencesActivity extends AppCompatActivity
             @Override
             public void onClick(View v) {
                 // Hide bio buttons
-                // TODO MOVE TO new helper method
                 if ( bioBtnLayout.getVisibility() == View.VISIBLE ) {
                     bioBtnLayout.setVisibility(View.GONE);
                 }
 
                 // Remove bio edit text focus
                 // Workaround: Remove focus by requesting focus elsewhere
-                // TODO May want to find a better way of doing this later
                 profileLayout.requestFocus();
 
                 // Restore bio to previous state
                 userBio.setText( bioTextPrev );
             }
         });
-
-        /*
-        TextView htext =new TextView(this);
-        htext.setText("Test");
-        //htext.setId(5);
-        htext.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-        interestsLayout.addView(htext);
-        */
-
-
-        /*
-        movieTab = (Button) findViewById(R.id.moviePrefTab);
-        movieTab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(getApplicationContext(), PreferenceChart.class);
-                Bundle b = new Bundle();
-                b.putInt("type", 0);
-                intent.putExtras(b);
-                startActivity(intent);
-            }
-        });
-
-
-        sportsTab = (Button) findViewById(R.id.sportsPrefTab);
-        sportsTab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(getApplicationContext(), PreferenceChart.class);
-                Bundle b = new Bundle();
-                b.putInt("type", 1);
-                intent.putExtras(b);
-                startActivity(intent);
-            }
-        });
-
-        userBio = (EditText) findViewById(R.id.user_bio);
-        userBio.setText(prefs.getString("user_bio", ""), TextView.BufferType.EDITABLE);
-        cachePhotoURIs();
-        */
-     
     }
 
     // Make sure the navView highlight the correct location
@@ -342,134 +236,13 @@ public class PreferencesActivity extends AppCompatActivity
         navView.setCheckedItem(R.id.nav_profile);
     }
 
-    /*
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        SharedPreferences prefs = this.getSharedPreferences("com.example.potato.couchpotatoes", Context.MODE_PRIVATE);
-        moviesSelection = (TextView) findViewById(R.id.movies_selection);
-        String prefsList = prefs.getString("testList0", "");
-        if (prefsList != "") {
-            String[] selectedItems = prefsList.split(",");
-            ArrayList<String> prefSelection = new ArrayList<String>();
-
-            for (int i = 0; i < selectedItems.length; i++) {
-                prefSelection.add(moviePrefList[Integer.parseInt(selectedItems[i])]);
-            }
-
-            StringBuilder selection = new StringBuilder();
-            for (int i = 0; i < prefSelection.size(); i++) {
-                selection.append(prefSelection.get(i));
-                if (i != prefSelection.size() - 1) {
-                    selection.append(", ");
-                }
-            }
-
-            moviesSelection.setText(selection.toString());
-        }
-        else {
-            moviesSelection.setText("");
-        }
-
-        // update the list of selected items for the the sports interests section
-        sportsSelection = (TextView) findViewById(R.id.sports_selection);
-        prefsList = prefs.getString("testList1", "");
-        if (prefsList != "") {
-            String[] selectedItems = prefsList.split(",");
-            ArrayList<String> prefSelection = new ArrayList<String>();
-
-            for (int i = 0; i < selectedItems.length; i++) {
-                prefSelection.add(sportsPrefList[Integer.parseInt(selectedItems[i])]);
-            }
-
-            StringBuilder selection = new StringBuilder();
-            for (int i = 0; i < prefSelection.size(); i++) {
-                selection.append(prefSelection.get(i));
-                if (i != prefSelection.size() - 1) {
-                    selection.append(", ");
-                }
-            }
-
-            sportsSelection.setText(selection.toString());
-        }
-        else {
-            sportsSelection.setText("");
-        }
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-
-        SharedPreferences prefs = this.getSharedPreferences("com.example.potato.couchpotatoes", Context.MODE_PRIVATE);
-        prefs.edit().putString("user_bio", userBio.getText().toString()).apply();
-    }
-
-    private void cachePhotoURIs(){
-        final ArrayList<String> uriList = new ArrayList<String>();
-        final DBHelper dbHelper = new DBHelper();
-        dbHelper.fetchCurrentUser();
-
-        //final DatabaseReference listRef = dbHelper.getDb().getReference().child("User_Photo").child(dbHelper.getUser().getUid());
-        //final DatabaseReference imgRef = dbHelper.getDb().getReference().child("Photo");
-
-        //final DatabaseReference listRef = dbHelper.getDb().getReference().child("Photo");
-        final DatabaseReference listRef = dbHelper.getDb().getReference();
-
-        listRef.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot snapshot) {
-                for (DataSnapshot dataSnapshot : snapshot.child("User_Photo").child(dbHelper.getUser().getUid()).getChildren()) {
-                    try {
-                        uriList.add(snapshot.child("Photo").child(dataSnapshot.getKey()).child("uri").getValue().toString());
-                    } catch (NullPointerException e) {
-                        e.printStackTrace();
-                    }
-                }
-
-                JSONArray jsArray = new JSONArray(uriList);
-                PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).edit().putString("PhotoList",jsArray.toString()).apply();
-    */
-  
-
     private void displayInterests() {
         helper.getDb().getReference( helper.getInterestPath() ).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                /*
-                TextView htext =new TextView(this);
-                htext.setText("Test");
-                //htext.setId(5);
-                htext.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-                interestsLayout.addView(htext);
-                */
-                //Log.d( "TEST", dataSnapshot.toString() );
                 for ( final DataSnapshot interest : dataSnapshot.getChildren() ) {
-                    //Log.d( "TEST", interest.toString() );
                     String currInterest = (String) interest.getValue();
                     interestList.add( currInterest );
-                    //Log.d( "TEST", currInterest );
-                    /*
-                    TextView newTextView = new TextView(getApplicationContext());
-                    newTextView.setText( currInterest );
-                    newTextView.setTextColor( Color.BLACK );
-                    newTextView.setTextSize( 18 );
-                    newTextView.setId( interestList.indexOf( currInterest ) );
-                    LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams( LinearLayout.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-                    layoutParams.setMargins( 200, 100, 200, 0 );
-                    newTextView.setLayoutParams( layoutParams );
-                    newTextView.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            //Log.d( "TEST", interestList.get( v.getId() ) + " CLICKED" );
-                            Intent intent = new Intent(getApplicationContext(), PreferenceChart.class);
-                            intent.putExtra( "interest", interestList.get( v.getId() ) );
-                            startActivity(intent);
-                        }
-                    });
-                    interestsLayout.addView( newTextView );
-                    */
                 }
 
                 interestAdapter.notifyDataSetChanged();
@@ -486,7 +259,6 @@ public class PreferencesActivity extends AppCompatActivity
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-                Log.d( "TEST", databaseError.getMessage() );
             }
         });
     }
@@ -501,7 +273,6 @@ public class PreferencesActivity extends AppCompatActivity
                 String bio = "";
 
                 for ( DataSnapshot field : dataSnapshot.getChildren() ) {
-                    //Log.d( "TEST", field.toString() );
                     switch ( field.getKey() ) {
                         case "firstName":
                             firstName = (String) field.getValue();
@@ -527,7 +298,6 @@ public class PreferencesActivity extends AppCompatActivity
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-                Log.d( "TEST", databaseError.getMessage() );
             }
         });
     }
@@ -562,10 +332,7 @@ public class PreferencesActivity extends AppCompatActivity
             }
 
             @Override
-            public void onCancelled(DatabaseError databaseError) {
-                //System.out.println("The read failed: " + databaseError.getMessage());
-                Log.d("TEST", databaseError.getMessage());
-            }
+            public void onCancelled(DatabaseError databaseError) {}
         });
     }
 
@@ -641,13 +408,9 @@ public class PreferencesActivity extends AppCompatActivity
             finish();
         }
         else if (id == R.id.nav_settings) {
-            // TODO: go to the settings page
-            //Intent intent = new Intent( getApplicationContext(), SettingsActivity.class );
-            //startActivity( intent );
             startActivity( new Intent( getApplicationContext(), AppSettingsActivity.class ) );
         }
         else if (id == R.id.nav_info) {
-            // TODO: go to the "about us" page
             Intent intent = new Intent( getApplicationContext(), AboutUsActivity.class );
             startActivity( intent );
         } else if (id == R.id.nav_logout) {
@@ -657,7 +420,7 @@ public class PreferencesActivity extends AppCompatActivity
             finish();
         }
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.profile_drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.profile_drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
 
         return true;

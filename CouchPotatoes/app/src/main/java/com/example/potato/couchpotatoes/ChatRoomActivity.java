@@ -1,28 +1,22 @@
 package com.example.potato.couchpotatoes;
 
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
-import android.support.design.widget.Snackbar;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -42,7 +36,6 @@ public class ChatRoomActivity extends AppCompatActivity
     private ArrayAdapter<String> listAdapter;
     private SwipeActionAdapter mAdapter;
     private ListView listView;
-    private TextView userName;
     private Map<String,String> chats = new HashMap<>();
     private String userID = helper.getAuth().getUid();
     private String displayName = helper.getAuthUserDisplayName();
@@ -60,7 +53,7 @@ public class ChatRoomActivity extends AppCompatActivity
         setContentView(R.layout.activity_chat_room);
 
         // places toolbar into the screen
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         toolbar.setTitleTextColor(Color.WHITE);
 
@@ -70,9 +63,8 @@ public class ChatRoomActivity extends AppCompatActivity
         setSideBarDrawer( mDrawer, navView, toolbar , helper );
 
         // Use a ListView to display the list of chats
-        listView = (ListView) findViewById(R.id.chatList);
+        listView = findViewById(R.id.chatList);
         listAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, listItems);
-        //listView.setAdapter( listAdapter );
 
         // Wrap your content in a SwipeActionAdapter
         mAdapter = new SwipeActionAdapter(listAdapter);
@@ -88,15 +80,12 @@ public class ChatRoomActivity extends AppCompatActivity
         mAdapter.setSwipeActionListener(new SwipeActionAdapter.SwipeActionListener(){
             @Override
             public boolean hasActions(int position, SwipeDirection direction){
-                if(direction.isLeft()) return true; // Change this to false to disable left swipes
-                if(direction.isRight()) return false;
-                return false;
+                return (direction.isLeft());
             }
 
             @Override
             public boolean shouldDismiss(int position, SwipeDirection direction){
                 // Only dismiss an item when swiping normal left
-                //return direction == SwipeDirection.DIRECTION_NORMAL_LEFT;
                 return false;
             }
 
@@ -161,11 +150,6 @@ public class ChatRoomActivity extends AppCompatActivity
                 // Make sure not to display already existing chatIDs more than once
                 listItems.clear();
 
-                // No chats exist. Display message to user.
-                if ( !elems.hasNext() ) {
-
-                }
-
                 // Get the next chat
                 while ( elems.hasNext() ) {
                     String chatID = elems.next().getKey();
@@ -210,19 +194,13 @@ public class ChatRoomActivity extends AppCompatActivity
                         }
 
                         @Override
-                        public void onCancelled(DatabaseError databaseError) {
-                            Log.d( "TEST", databaseError.toString() );
-                        }
+                        public void onCancelled(DatabaseError databaseError) {}
                     });
                 }
-
-                //listAdapter.notifyDataSetChanged();
             }
 
             @Override
-            public void onCancelled(DatabaseError databaseError) {
-                Log.d( "TEST", databaseError.toString() );
-            }
+            public void onCancelled(DatabaseError databaseError) {}
         });
 
         // Add an event handler to begin the MessageActivity corresponding to the clicked chatID
@@ -239,7 +217,6 @@ public class ChatRoomActivity extends AppCompatActivity
 
                 // Begin the messaging activity corresponding to the selected chat
                 startActivity( intent );
-                //finish();
             }
         });
     }
@@ -255,7 +232,7 @@ public class ChatRoomActivity extends AppCompatActivity
     // Handles pressing back button in bottom navigation bar when sidebar is on the screen
     @Override
     public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.chatroom_drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.chatroom_drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
@@ -322,7 +299,7 @@ public class ChatRoomActivity extends AppCompatActivity
         } else if (id == R.id.nav_chats) {
             // user is already at the Chats page; do nothing
 
-       } else if (id == R.id.nav_settings) {
+        } else if (id == R.id.nav_settings) {
             startActivity( new Intent( getApplicationContext(), AppSettingsActivity.class ) );
         }
         else if (id == R.id.nav_info) {
@@ -343,7 +320,5 @@ public class ChatRoomActivity extends AppCompatActivity
     }
 
     @Override
-    public void onPointerCaptureChanged(boolean hasCapture) {
-
-    }
+    public void onPointerCaptureChanged(boolean hasCapture) {}
 }

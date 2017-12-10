@@ -5,12 +5,9 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ProgressBar;
@@ -19,46 +16,36 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 
 public class AppSettingsActivity extends AppCompatActivity {
+
     private DBHelper helper;
-
     private Button deleteAccountBtn;
-
     private DialogInterface.OnClickListener dialogClickListener;
-
     private ProgressBar spinner;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_app_settings);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setTitleTextColor(Color.WHITE);
         setSupportActionBar(toolbar);
 
         // adds up navigation to the toolbar on top
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        spinner = (ProgressBar) findViewById(R.id.progressBar2);
+        spinner = findViewById(R.id.progressBar2);
 
         helper = new DBHelper();
 
-        deleteAccountBtn = (Button) findViewById(R.id.deleteAccountBtn);
+        deleteAccountBtn = findViewById(R.id.deleteAccountBtn);
 
         dialogClickListener = new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                switch (which){
-                    // Case to upload photo
-                    case DialogInterface.BUTTON_POSITIVE:
-                        //Log.d( "TEST", "YES" );
-                        deleteAccountBtn.setVisibility(View.GONE);
-                        spinner.setVisibility(View.VISIBLE);
-                        deleteAccount();
-                        break;
-                    // Case to cancel photo upload
-                    case DialogInterface.BUTTON_NEGATIVE:
-                        //Log.d( "TEST", "NO" );
-                        break;
-                }
+            if(which == DialogInterface.BUTTON_POSITIVE){
+                deleteAccountBtn.setVisibility(View.GONE);
+                spinner.setVisibility(View.VISIBLE);
+                deleteAccount();
+            }
             }
         };
 

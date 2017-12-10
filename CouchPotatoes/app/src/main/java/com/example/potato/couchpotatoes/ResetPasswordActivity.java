@@ -32,12 +32,12 @@ public class ResetPasswordActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_reset_password);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        inputEmail = (EditText) findViewById(R.id.reset_email);
-        progressBar = (ProgressBar) findViewById(R.id.reset_progressBar);
-        Button btnReset = (Button) findViewById(R.id.btn_reset_password);
+        inputEmail = findViewById(R.id.reset_email);
+        progressBar = findViewById(R.id.reset_progressBar);
+        Button btnReset = findViewById(R.id.btn_reset_password);
 
         btnReset.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -71,8 +71,6 @@ public class ResetPasswordActivity extends AppCompatActivity {
         if (mResetTask != null) {
             return;
         }
-
-        Log.d("PASS RESET", "attempting to reset password.");
 
         // Reset errors.
         inputEmail.setError(null);
@@ -115,20 +113,17 @@ public class ResetPasswordActivity extends AppCompatActivity {
 
         ResetPasswordTask(String email) {
             mEmail = email;
-            Log.d("PASS RESET", "Constructed ResetPasswordTask with " + mEmail);
         }
 
         @Override
         protected Boolean doInBackground(Void... params) {
             // Attempt to send the reset link with the passed email
 
-            final boolean[] success = {false}; // TODO check if this is correct
+            final boolean[] success = {false};
             dbHelper.getAuth().sendPasswordResetEmail(mEmail)
                     .addOnCompleteListener(new OnCompleteListener<Void>() {
                         @Override
                         public void onComplete(@NonNull Task<Void> task) {
-                            Log.d("PASS RESET", "Completed Reset Firebase side task with " + task.isSuccessful());
-
                             if (task.isSuccessful()) {
                                 AlertDialog.Builder builder = new AlertDialog.Builder(ResetPasswordActivity.this);
                                 builder.setTitle("Password Reset Email Sent");
@@ -143,10 +138,6 @@ public class ResetPasswordActivity extends AppCompatActivity {
                                         });
                                 builder.show();
                                 progressBar.setVisibility(View.GONE);
-
-//                                Toast.makeText(ResetPasswordActivity.this,
-//                                        "We have sent you instructions to reset your password!",
-//                                        Toast.LENGTH_SHORT).show();
                                 success[0] = true;
                             } else {
                                 Toast.makeText(ResetPasswordActivity.this,

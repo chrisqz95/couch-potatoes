@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -30,17 +29,15 @@ public class RegistrationActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_registration);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        Log.d( "TEST", helper.getAuth().getUid() );
-
-        mFirstName = (EditText) findViewById(R.id.firstName);
-        mMiddleName = (EditText) findViewById(R.id.middleName);
-        mLastName = (EditText) findViewById(R.id.lastName);
-        mBirthDate = (EditText) findViewById(R.id.birthDate);
-        mGender = (EditText) findViewById(R.id.gender);
-        submit = (Button) findViewById(R.id.Submit);
+        mFirstName = findViewById(R.id.firstName);
+        mMiddleName = findViewById(R.id.middleName);
+        mLastName = findViewById(R.id.lastName);
+        mBirthDate = findViewById(R.id.birthDate);
+        mGender = findViewById(R.id.gender);
+        submit = findViewById(R.id.Submit);
 
         // Attempt to submit user registration information
         submit.setOnClickListener(new View.OnClickListener() {
@@ -62,95 +59,81 @@ public class RegistrationActivity extends AppCompatActivity {
         helper.getAuth().createUserWithEmailAndPassword( email, password ).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
+            // TODO USE STRING VALIDATOR
+            String userID = helper.getAuth().getUid();
+            String firstName = mFirstName.getText().toString();
+            String middleName = mMiddleName.getText().toString();
+            String lastName = mLastName.getText().toString();
+            String birthDate = mBirthDate.getText().toString();
+            String gender = mGender.getText().toString();
+            String city = "";
+            String state = "";
+            String country = "";
+            String bio = "";
+            final String displayName = helper.getFullName( firstName, middleName, lastName );
+            Double latitude = 0.0;
+            Double longitude = 0.0;
+            boolean locked = false;
+            boolean suspended = false;
 
-                //email = helper.getAuth().getCurrentUser().getEmail();
+            // Create new user object
+            user = CurrentUser.getInstance(
+                email, userID, firstName, middleName, lastName, birthDate, gender, city, state, country, bio,
+                latitude, longitude, locked, suspended );
 
-                // TODO USE STRING VALIDATOR
-                String userID = helper.getAuth().getUid();
-                String firstName = mFirstName.getText().toString();
-                String middleName = mMiddleName.getText().toString();
-                String lastName = mLastName.getText().toString();
-                String birthDate = mBirthDate.getText().toString();
-                String gender = mGender.getText().toString();
-                String city = "";
-                String state = "";
-                String country = "";
-                String bio = "";
-                final String displayName = helper.getFullName( firstName, middleName, lastName );
-                Double latitude = 0.0;
-                Double longitude = 0.0;
-                boolean locked = false;
-                boolean suspended = false;
+            // Create new Firebase Authentication user account update request to update user's display name
+            UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
+                    .setDisplayName( displayName )
+                    .build();
 
-                // Create new user object
-                user = CurrentUser.getInstance(
-                    email, userID, firstName, middleName, lastName, birthDate, gender, city, state, country, bio,
-                    latitude, longitude, locked, suspended );
+            // Update Firebase Authentication user's display name
+            helper.getAuth().getCurrentUser().updateProfile(profileUpdates)
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                    if (task.isSuccessful()) {
 
-                //helper.updateAuthUserDisplayName( displayName );
-
-                // Create new Firebase Authentication user account update request to update user's display name
-                UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
-                        .setDisplayName( displayName )
-                        .build();
-
-                // Update Firebase Authentication user's display name
-                helper.getAuth().getCurrentUser().updateProfile(profileUpdates)
-                        .addOnCompleteListener(new OnCompleteListener<Void>() {
+                        // Log user into new Firebase Authentication account
+                        helper.getAuth().signInWithEmailAndPassword( email, password ).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                             @Override
-                            public void onComplete(@NonNull Task<Void> task) {
-                                if (task.isSuccessful()) {
-                                    Log.d("TEST", "User profile updated.");
-                                    Log.d("TEST", "User name: " + helper.getAuth().getCurrentUser().getDisplayName());
+                            public void onComplete(@NonNull Task<AuthResult> task) {
 
+                            // Add user account info to Firebase Database
+                            helper.addNewUser( user );
 
-                                    //password = (String) getIntent().getExtras().get( "password" );
+                            // Get new FirebaseUser
+                            helper.fetchCurrentUser();
 
-                                    // Log user into new Firebase Authentication account
-                                    helper.getAuth().signInWithEmailAndPassword( email, password ).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                                        @Override
-                                        public void onComplete(@NonNull Task<AuthResult> task) {
-                                            //getIntent().putExtra( "password", "" );
+                            // Add the new user to a new chat containing only the new user
+                            String chatID = helper.getNewChildKey( helper.getChatUserPath() );
+                            String userID = helper.getAuth().getUid();
+                            String displayName = helper.getAuthUserDisplayName();
 
-                                            // Add user account info to Firebase Database
-                                            helper.addNewUser( user );
+                            helper.addToChatUser( chatID, userID, displayName );
+                            helper.addToUserChat( userID, chatID );
 
-                                            // Get new FirebaseUser
-                                            helper.fetchCurrentUser();
+                              String messageOneID = helper.getNewChildKey(helper.getMessagePath());
+                              String timestampOne = helper.getNewTimestamp();
+                              String messageOne = "COUCH POTATOES:\nWelcome to Couch Potatoes!"
+                                             + "\nEnjoy meeting new people with similar interests!";
 
-                                            // Add the new user to a new chat containing only the new user
-                                            String chatID = helper.getNewChildKey( helper.getChatUserPath() );
-                                            String userID = helper.getAuth().getUid();
-                                            String displayName = helper.getAuthUserDisplayName();
-                                            //String displayName = helper.getAuth().getCurrentUser().getDisplayName();
+                              helper.addToMessage( messageOneID, userID, "COUCH POTATOES", chatID, timestampOne, messageOne );
 
-                                            Log.d( "TEST", "DISPLAY NAME: " + displayName );
+                              String messageTwoID = helper.getNewChildKey(helper.getMessagePath());
+                              String timestampTwo = helper.getNewTimestamp();
+                              String messageTwo = "COUCH POTATOES:\nThis chat is your space. Feel free to experiment with the chat here.";
 
-                                            helper.addToChatUser( chatID, userID, displayName );
-                                            helper.addToUserChat( userID, chatID );
+                              helper.addToMessage( messageTwoID, userID, "COUCH POTATOES", chatID, timestampTwo, messageTwo );
 
-                                              String messageOneID = helper.getNewChildKey(helper.getMessagePath());
-                                              String timestampOne = helper.getNewTimestamp();
-                                              String messageOne = "COUCH POTATOES:\nWelcome to Couch Potatoes!"
-                                                             + "\nEnjoy meeting new people with similar interests!";
-
-                                              helper.addToMessage( messageOneID, userID, "COUCH POTATOES", chatID, timestampOne, messageOne );
-
-                                              String messageTwoID = helper.getNewChildKey(helper.getMessagePath());
-                                              String timestampTwo = helper.getNewTimestamp();
-                                              String messageTwo = "COUCH POTATOES:\nThis chat is your space. Feel free to experiment with the chat here.";
-
-                                              helper.addToMessage( messageTwoID, userID, "COUCH POTATOES", chatID, timestampTwo, messageTwo );
-
-                                            // Registration complete. Redirect the new user the the main activity.
-                                            startActivity( new Intent( getApplicationContext(), MainActivity.class ) );
-                                            finish();
-                                        }
-                                    });
-
-                                }
+                            // Registration complete. Redirect the new user the the main activity.
+                            startActivity( new Intent( getApplicationContext(), MainActivity.class ) );
+                            finish();
                             }
                         });
+
+                    }
+                    }
+                });
             }
         });
     }

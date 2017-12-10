@@ -59,12 +59,9 @@ public class SignUpActivity extends AppCompatActivity {
     /**
      * CurrentUser - temp object to hold information collected from sign up forms
      * DBHelper - Connect to FireBase upon successful sign up
-     * tempPass - Holds temp password for account creation
-     * TODO: Resolve storage of temp variables.
+     * tempPass - Holds temp password for account creations
      */
     private static int minAge = 18;
-
-    //private static CurrentUser currentUser = new CurrentUser();
     private static DBHelper dbHelper;
     private static Calendar calendar;
     private static String tempEmail;
@@ -81,14 +78,14 @@ public class SignUpActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
 
         // Set up the ViewPager with the sections adapter.
-        mViewPager = (NonSwipeableViewPager) findViewById(R.id.container);
+        mViewPager = findViewById(R.id.container);
         mViewPager.setAdapter(mSectionsPagerAdapter);
 
         // Intialise variables
@@ -290,9 +287,6 @@ public class SignUpActivity extends AppCompatActivity {
                             tempDoBYear = y;
                             tempDoBMonth = m + 1;
                             tempDoBDay = d;
-//                            String mDatePickerButtonString = getString(R.string.sign_up_dob) + "  :  "
-//                                    + tempDoBYear + "/" + tempDoBMonth + "/" + tempDoBDay;
-                            //mDatePickerButton.setText(mDatePickerButtonString);
                             mDobDisplay.setText("DoB: "+tempDoBMonth + "/" + tempDoBDay + "/" + tempDoBYear);
                         }
                     }, calendar.get(Calendar.YEAR) - minAge, calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
@@ -412,7 +406,6 @@ public class SignUpActivity extends AppCompatActivity {
                         }
 
                         // Location
-                        // TODO: Resolve undefined variables
                         additions.put( "city", "" );
                         additions.put( "state", "" );
                         additions.put( "country", "" );
