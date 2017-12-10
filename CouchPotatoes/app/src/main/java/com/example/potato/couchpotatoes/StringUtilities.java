@@ -38,39 +38,6 @@ public final class StringUtilities {
     }
 
     /**
-     * Adds space to the end of two strings
-     *
-     * @param title - first string to combine
-     * @param value - second string to combine
-     * @param desiredLength - intended length of combined string
-     * @return combined string
-     */
-    public static String paddSpaceEnd( String title, String value, int desiredLength ) {
-        String str = title + value;
-        int numSpaces = desiredLength - title.length() - value.length();
-
-        for ( int i = 0; i < numSpaces; i++ ) {
-            str += "\t";
-        }
-
-        str += "|";
-
-        return str;
-    }
-
-    /**
-     * Adds space to the end of two strings and adds a newline
-     *
-     * @param title - first string to combine
-     * @param value - second string to combine
-     * @param desiredLength - intended length of combined string
-     * @return combined string with newline
-     */
-    public static String paddSpaceEndln( String title, String value, int desiredLength ) {
-        return paddSpaceEnd( title, value, desiredLength ) + "\n";
-    }
-
-    /**
      * Adds space inside a string
      *
      * @param str - string to insert another string into

@@ -1,7 +1,5 @@
 package com.example.potato.couchpotatoes;
 
-import android.*;
-import android.Manifest;
 import android.app.Fragment;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -17,23 +15,16 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.text.InputType;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
-import com.firebase.ui.storage.images.FirebaseImageLoader;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
@@ -42,11 +33,6 @@ import java.io.FileNotFoundException;
 import java.io.InputStream;
 
 import static android.app.Activity.RESULT_OK;
-
-/**
- * Created by Admin on 11/24/17.
- */
-
 
 // NOTE: Image View is only used to check for successful file upload.
 //       Remove image view in actual app.
@@ -58,7 +44,6 @@ import static android.app.Activity.RESULT_OK;
 public class UploadImageFragment extends Fragment implements View.OnClickListener {
     private static final int PICK_FROM_CAMERA = 1;
     private static final int PICK_FROM_FILE = 2;
-    //private static int CAN_WRITE_TO_EXTERNAL_STORAGE = 0;
     private static final int REQUEST_WRITE_TO_EXTERNAL_STORAGE = 20;
 
     private int canWriteToExternalStorage = PackageManager.PERMISSION_DENIED;
@@ -92,7 +77,6 @@ public class UploadImageFragment extends Fragment implements View.OnClickListene
         view = inflater.inflate(R.layout.fragment_upload_image, container, false);
         btnUploadImage = (FloatingActionButton) view.findViewById(R.id.btnUploadImage);
         btnUploadImage.setOnClickListener(this);
-        //mImageView = (ImageView) view.findViewById( R.id.testUploadImageView );
 
         // Check for permissions to write to external storage
         int permissionCheck = ContextCompat.checkSelfPermission(view.getContext(),
@@ -100,11 +84,7 @@ public class UploadImageFragment extends Fragment implements View.OnClickListene
 
         // If no permissions, try to get permission to write to external storage
         if ( permissionCheck != PackageManager.PERMISSION_GRANTED ) {
-            // Display explanation of need for permission to user
             // TODO
-            //if ( ActivityCompat.shouldShowRequestPermissionRationale( getActivity(),
-            //        Manifest.permission.WRITE_EXTERNAL_STORAGE ) ) {
-            //}
         }
         // No explanation needed, request permission
         else {
@@ -205,12 +185,6 @@ public class UploadImageFragment extends Fragment implements View.OnClickListene
 
     @Override
     public void onRequestPermissionsResult ( int requestCode, String permissions[], int[] grantResults ) {
-        if ( canWriteToExternalStorage == PackageManager.PERMISSION_GRANTED ) {
-            Log.d( "TEST", "CAN WRITE" );
-        }
-        else {
-            Log.d( "TEST", "CANNOT WRITE" );
-        }
         switch ( requestCode ) {
             case REQUEST_WRITE_TO_EXTERNAL_STORAGE: {
                 if ( grantResults.length > 0 && grantResults[ 0 ] == PackageManager.PERMISSION_GRANTED ) {
@@ -251,19 +225,14 @@ public class UploadImageFragment extends Fragment implements View.OnClickListene
                 switch (which){
                     // Case to upload photo
                     case DialogInterface.BUTTON_POSITIVE:
-                        Log.d( "TEST", "YES" );
                         UploadImage( is );
                         break;
                     // Case to cancel photo upload
                     case DialogInterface.BUTTON_NEGATIVE:
-                        Log.d( "TEST", "NO" );
                         break;
                 }
             }
         };
-
-        //LayoutInflater factory = LayoutInflater.from(MainActivity.this);
-        //final View view = factory.inflate(R.layout.content_image_view, null);
 
         // Create EditText field for AlertDialog
         input = new EditText(view.getContext());
@@ -275,7 +244,6 @@ public class UploadImageFragment extends Fragment implements View.OnClickListene
                 .setNegativeButton("Cancel", dialogClickListener)
                 .setPositiveButton("Upload", dialogClickListener)
                 .setView(input)
-                //.setView( view )
                 .show();
     }
 
@@ -295,8 +263,6 @@ public class UploadImageFragment extends Fragment implements View.OnClickListene
         uploadTask.addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
-                Log.d( "TEST", "File uplaod failed" );
-
                 // Notify User of failed upload
                 AlertDialog.Builder builderUploadFailed = new AlertDialog.Builder(view.getContext());
                 builderUploadFailed.setMessage( "Upload failed! Please try again." )
@@ -306,76 +272,26 @@ public class UploadImageFragment extends Fragment implements View.OnClickListene
         }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                Log.d( "TEST", "File upload success" );
 
-                /*
-                DialogInterface.OnClickListener onOkRestartActivity = new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        Intent intent = new Intent(getActivity(), PictureGridActivity.class );
-                        intent.putExtra( "uid", userID );
-                        intent.putExtra( "isCurrentUser", true );
-                        getActivity().finish();
-                        startActivity( intent );
-                    }
-                };
+            // Get photo uri from Firebase Storage
+            Uri downloadUrl = taskSnapshot.getDownloadUrl();
 
-                AlertDialog.Builder builderUploadSuccess = new AlertDialog.Builder(view.getContext());
-                builderUploadSuccess.setMessage( "Upload successful!" )
-                        .setPositiveButton("Ok", onOkRestartActivity )
-                        .show();
-                        */
+            String title = imageCaptureUri.getLastPathSegment();
+            String descr = input.getText().toString();
+            String uri = ( downloadUrl != null ) ? downloadUrl.toString() : "";
 
-                // Get photo uri from Firebase Storage
-                Uri downloadUrl = taskSnapshot.getDownloadUrl();
+            // Add photo meta data to Firebase Database
+            helper.addToUserPhoto( userID, photoID );
+            helper.addToPhoto( photoID, userID, title, descr, uri );
 
-                Log.d( "TEST", "Download URL: " + downloadUrl );
+            // Notify User of successful upload
+            Toast.makeText(getActivity(), "Photo uploaded successfully", Toast.LENGTH_LONG).show();
 
-                String title = imageCaptureUri.getLastPathSegment();
-                String descr = input.getText().toString();
-                String uri = ( downloadUrl != null ) ? downloadUrl.toString() : "";
-
-                // Add photo meta data to Firebase Database
-                helper.addToUserPhoto( userID, photoID );
-                helper.addToPhoto( photoID, userID, title, descr, uri );
-
-                // Notify User of successful upload
-                Toast.makeText(getActivity(), "Photo uploaded successfully", Toast.LENGTH_LONG).show();
-
-                //Intent intent = new Intent(getActivity(), PictureGridActivity.class );
-                Intent intent = new Intent( getActivity(), getActivity().getClass()  );
-                intent.putExtra( "uid", userID );
-                intent.putExtra( "isCurrentUser", true );
-                //intent.putExtra( "changeProfilePic", getActivity().getIntent().getExtras().getString( "changeProfilePic") );
-                getActivity().finish();
-                startActivity( intent );
-                // Update image view with photo
-                // Note: Here we only want to add listener once to verify photo upload
-                // NOTE: Image View is only used to check for successful file upload.
-                //       Remove image view and all code below in actual app.
-                /*
-                helper.getDb().getReference( helper.getPhotoPath() ).child( photoID ).child( "uri" ).addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        if ( dataSnapshot.getValue() != null ) {
-                            // Get reference to photo on Firebase Storage
-                            StorageReference uriRef = helper.getStorage().getReferenceFromUrl( dataSnapshot.getValue().toString() );
-
-                            // Set ImageView to contain photo
-                            Glide.with(getActivity())
-                                    .using(new FirebaseImageLoader())
-                                    .load(uriRef)
-                                    .into(mImageView);
-                        }
-                    }
-
-
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
-                        Log.d( "TEST", databaseError.getMessage() );
-                    }
-                });
-                */
+            Intent intent = new Intent( getActivity(), getActivity().getClass()  );
+            intent.putExtra( "uid", userID );
+            intent.putExtra( "isCurrentUser", true );
+            getActivity().finish();
+            startActivity( intent );
             }
         });
     }
