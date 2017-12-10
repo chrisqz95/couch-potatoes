@@ -173,33 +173,10 @@ public class PreferencesActivity extends AppCompatActivity
         toolbar.setTitleTextColor(Color.WHITE);
         setSupportActionBar(toolbar);
 
-        // enables toggle button on toolbar to open the sidebar
+        // set up the side navigation bar on the left side of screen
         mDrawer = (DrawerLayout) findViewById(R.id.profile_drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, mDrawer, toolbar, R.string.navigation_drawer_open,
-                R.string.navigation_drawer_close);
-        mDrawer.addDrawerListener(toggle);
-        toggle.syncState();
-
-        // set up side navigation bar layout
         navView = (NavigationView) findViewById(R.id.profile_nav_view);
-        navView.setNavigationItemSelectedListener(this);
-
-        // Want to display icons in original color scheme
-        navView.setItemIconTintList(null);
-
-        // highlight the current location
-        navView.setCheckedItem(R.id.nav_profile);
-
-        // initialize textViews on the sidebar header
-        sidebarUserName = (android.widget.TextView) navView.getHeaderView(0)
-                .findViewById(R.id.sidebar_username);
-        sidebarUserEmail = (android.widget.TextView) navView.getHeaderView(0)
-                .findViewById(R.id.sidebar_user_email);
-
-        // displays user's name and email on the sidebar header
-        sidebarUserName.setText( helper.getAuthUserDisplayName() );
-        sidebarUserEmail.setText( helper.getUser().getEmail() );
+        setSideBarDrawer( mDrawer, navView, toolbar , helper );
 
         settingsTab = (Button) findViewById(R.id.settingsTab);
         settingsTab.setOnClickListener(new View.OnClickListener() {
@@ -590,6 +567,49 @@ public class PreferencesActivity extends AppCompatActivity
                 Log.d("TEST", databaseError.getMessage());
             }
         });
+    }
+
+    /*
+     * The method sets up the navigation drawer (a.k.a. the sidebar) on the
+     * left side of the screen.
+     */
+    private void setSideBarDrawer( DrawerLayout mDrawer, NavigationView navView,
+                                   Toolbar toolbar, DBHelper helper) {
+        // enables toggle button on toolbar to open the sidebar
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                this, mDrawer, toolbar, R.string.navigation_drawer_open,
+                R.string.navigation_drawer_close);
+        mDrawer.addDrawerListener(toggle);
+        toggle.syncState();
+
+        // set up side navigation bar layout
+        navView.setNavigationItemSelectedListener(this);
+
+        // Want to display icons in original color scheme
+        navView.setItemIconTintList(null);
+
+        // highlight the current location
+        navView.setCheckedItem(R.id.nav_matches);
+
+        // sets up TextViews in sidebar to display the user's name and email
+        sidebarUserName = (android.widget.TextView) navView.getHeaderView(0)
+                .findViewById(R.id.sidebar_username);
+        sidebarUserEmail = (android.widget.TextView) navView.getHeaderView(0)
+                .findViewById(R.id.sidebar_user_email);
+        setSideBarText( sidebarUserName, sidebarUserEmail, helper );
+    }
+
+    /*
+     * This method sets the text of the TextViews in the sidebar to display the
+     * user's name and email.
+     */
+    private void setSideBarText( TextView nameView, TextView emailView, DBHelper helper ) {
+        // fetches user's name and email
+        String displayName = helper.getAuthUserDisplayName();
+        String displayEmail = helper.getUser().getEmail();
+
+        nameView.setText( displayName );
+        emailView.setText( displayEmail );
     }
 
     // Handles action in the sidebar menu

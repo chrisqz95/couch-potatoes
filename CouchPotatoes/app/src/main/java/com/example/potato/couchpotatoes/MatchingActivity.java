@@ -469,22 +469,27 @@ public class MatchingActivity extends AppCompatActivity
         toolbar.setTitleTextColor(Color.WHITE);
         setSupportActionBar(toolbar);
 
-        /* NOT WORKING
-        final LayoutInflater factory = getLayoutInflater();
+        // set up the side navigation bar on the left side of screen
+        mDrawer = (DrawerLayout) findViewById(R.id.match_drawer_layout);
+        navView = (NavigationView) findViewById(R.id.match_nav_view);
+        setSideBarDrawer( mDrawer, navView, toolbar , helper );
+    }
 
-        sideBarHeader = factory.inflate(R.layout.sidebar_header, null);
+    // Make sure the navView highlight the correct location on the sidebar
+    @Override
+    public void onResume() {
+        super.onResume();
+        // highlight the current location
+        navView.setCheckedItem(R.id.nav_matches);
+    }
 
-        profilePic = sideBarHeader.findViewById(R.id.sidebarProfilePic);
-        circleProfilePic = (CircleImageView) sideBarHeader.findViewById(R.id.profile_image);
-
-        circleProfilePic.setVisibility(View.VISIBLE);
-        profilePic.setBackgroundColor( Color.WHITE );
-
-        //displayProfilePic();
-        */
-
+    /*
+     * The method sets up the navigation drawer (a.k.a. the sidebar) on the
+     * left side of the screen.
+     */
+    private void setSideBarDrawer( DrawerLayout mDrawer, NavigationView navView,
+                                   Toolbar toolbar, DBHelper helper) {
         // enables toggle button on toolbar to open the sidebar
-        mDrawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, mDrawer, toolbar, R.string.navigation_drawer_open,
                 R.string.navigation_drawer_close);
@@ -492,7 +497,6 @@ public class MatchingActivity extends AppCompatActivity
         toggle.syncState();
 
         // set up side navigation bar layout
-        navView = (NavigationView) findViewById(R.id.match_nav_view);
         navView.setNavigationItemSelectedListener(this);
 
         // Want to display icons in original color scheme
@@ -501,32 +505,31 @@ public class MatchingActivity extends AppCompatActivity
         // highlight the current location
         navView.setCheckedItem(R.id.nav_matches);
 
+        // sets up TextViews in sidebar to display the user's name and email
         sidebarUserName = (android.widget.TextView) navView.getHeaderView(0)
                 .findViewById(R.id.sidebar_username);
         sidebarUserEmail = (android.widget.TextView) navView.getHeaderView(0)
                 .findViewById(R.id.sidebar_user_email);
+        setSideBarText( sidebarUserName, sidebarUserEmail, helper );
+    }
 
+    /*
+     * This method sets the text of the TextViews in the sidebar to display the
+     * user's name and email.
+     */
+    private void setSideBarText( TextView nameView, TextView emailView, DBHelper helper ) {
         // fetches user's name and email
         String displayName = helper.getAuthUserDisplayName();
         String displayEmail = helper.getUser().getEmail();
 
-        // displays user's name and email on the sidebar header
-        sidebarUserName.setText( displayName );
-        sidebarUserEmail.setText( displayEmail );
-    }
-
-    // Make sure the navView highlight the correct location
-    @Override
-    public void onResume() {
-        super.onResume();
-        // highlight the current location
-        navView.setCheckedItem(R.id.nav_matches);
+        nameView.setText( displayName );
+        emailView.setText( displayEmail );
     }
 
     // Handles pressing back button in bottom navigation bar when sidebar is on the screen
     @Override
     public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.match_drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
@@ -568,7 +571,7 @@ public class MatchingActivity extends AppCompatActivity
             finish();
         }
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.match_drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
 
         return true;
