@@ -175,11 +175,7 @@ public class SignUpActivity extends AppCompatActivity {
             Button mEmailPasswordNextButton = rootView.findViewById(R.id.fragment_sign_up_email_password_next_button);
 
             mEmailPasswordNextButton.setOnClickListener(new View.OnClickListener() {
-                /**
-                 * Verifies email with StringValidator
-                 * Displays error if email or password is invalid
-                 * Creates user and continues to next fragment if valid
-                 */
+
                 public void onClick(View v) {
                     // Read current fields
                     tempEmail = mEmailText.getText().toString();
@@ -187,57 +183,78 @@ public class SignUpActivity extends AppCompatActivity {
                     tempPassConfirm = mPasswordConfirmText.getText().toString();
 
                     // Check if email is empty or invalid
-                    if (tempEmail.isEmpty() || !StringValidator.isValidEmail(tempEmail)) {
-                        mEmailText.setError(getString(R.string.sign_up_invalid_email));
-                        mEmailText.requestFocus();
-                        return;
-                    } else
-                        mEmailText.setError(null);
+                    checkInvalidEmail( mEmailText );
 
                     // Check if password is invalid
-                    if (!StringValidator.isValidPassword(tempPass)) {
-                        mPasswordText.setError(getString(R.string.sign_up_invalid_password));
-                        mPasswordText.requestFocus();
-                        return;
-                    } else
-                        mPasswordText.setError(null);
+                    checkInvalidPassword( mPasswordText );
 
                     // Check if passwords match
-                    if (!StringValidator.checkPasswords(tempPass, tempPassConfirm)) {
-                        mPasswordConfirmText.setError(getString(R.string.sign_up_non_matching_passwords));
-                        mPasswordConfirmText.requestFocus();
-                        return;
-                    } else
-                        mPasswordConfirmText.setError(null);
+                    checkPasswordsMatch( mPasswordConfirmText );
 
                     // Use DBHelper to create the user and handle exceptions, continues to next fragment if successful
-                    dbHelper.getAuth().createUserWithEmailAndPassword(tempEmail, tempPass)
-                            .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                                @Override
-                                public void onComplete(@NonNull Task<AuthResult> task) {
-                                    if (!task.isSuccessful()) {
-                                        try {
-                                            throw task.getException();
-                                        } catch (FirebaseAuthWeakPasswordException e) {
-                                            mPasswordText.setError(getString(R.string.sign_up_invalid_password));
-                                            mPasswordText.requestFocus();
-                                        } catch (FirebaseAuthInvalidCredentialsException e) {
-                                            mEmailText.setError(getString(R.string.sign_up_invalid_email));
-                                            mEmailText.requestFocus();
-                                        } catch (FirebaseAuthUserCollisionException e) {
-                                            mEmailText.setError(getString(R.string.sign_up_email_collision));
-                                            mEmailText.requestFocus();
-                                        } catch (Exception e) {
-                                        }
-                                    } else {
-                                        mViewPager.setCurrentItem(mViewPager.getCurrentItem() + 1);
-                                    }
-
-                                }
-                            });
+                    createNewUser( mPasswordText, mEmailText );
                 }
             });
+
             return rootView;
+        }
+
+        private void createNewUser( final EditText mPasswordText, final EditText mEmailText ) {
+            // Use DBHelper to create the user and handle exceptions, continues to next fragment if successful
+            dbHelper.getAuth().createUserWithEmailAndPassword(tempEmail, tempPass)
+                    .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                        @Override
+                        public void onComplete(@NonNull Task<AuthResult> task) {
+                            if (!task.isSuccessful()) {
+                                try {
+                                    throw task.getException();
+                                } catch (FirebaseAuthWeakPasswordException e) {
+                                    mPasswordText.setError(getString(R.string.sign_up_invalid_password));
+                                    mPasswordText.requestFocus();
+                                } catch (FirebaseAuthInvalidCredentialsException e) {
+                                    mEmailText.setError(getString(R.string.sign_up_invalid_email));
+                                    mEmailText.requestFocus();
+                                } catch (FirebaseAuthUserCollisionException e) {
+                                    mEmailText.setError(getString(R.string.sign_up_email_collision));
+                                    mEmailText.requestFocus();
+                                } catch (Exception e) {
+                                }
+                            } else {
+                                mViewPager.setCurrentItem(mViewPager.getCurrentItem() + 1);
+                            }
+
+                        }
+                    });
+        }
+
+        private void checkPasswordsMatch( final EditText mPasswordConfirmText ) {
+            // Check if passwords match
+            if (!StringValidator.checkPasswords(tempPass, tempPassConfirm)) {
+                mPasswordConfirmText.setError(getString(R.string.sign_up_non_matching_passwords));
+                mPasswordConfirmText.requestFocus();
+                return;
+            } else
+                mPasswordConfirmText.setError(null);
+        }
+
+        private void checkInvalidPassword( final EditText mPasswordText ) {
+            // Check if password is invalid
+            if (!StringValidator.isValidPassword(tempPass)) {
+                mPasswordText.setError(getString(R.string.sign_up_invalid_password));
+                mPasswordText.requestFocus();
+                return;
+            } else
+                mPasswordText.setError(null);
+        }
+
+        private void checkInvalidEmail( final EditText mEmailText ) {
+            // Check if email is empty or invalid
+            if (tempEmail.isEmpty() || !StringValidator.isValidEmail(tempEmail)) {
+                mEmailText.setError(getString(R.string.sign_up_invalid_email));
+                mEmailText.requestFocus();
+                return;
+            } else
+                mEmailText.setError(null);
         }
     }
     /**
@@ -304,143 +321,30 @@ public class SignUpActivity extends AppCompatActivity {
                     tempLastName = mLastNameText.getText().toString();
 
                     // Check first name for valid alpha and non empty
-                    if (tempFirstName.isEmpty()){
-                        errorFlag = true;
-                        mFirstNameText.setError(getString(R.string.sign_up_missing_name));
-                    } else if (!StringValidator.isAlpha(tempFirstName)){
-                        errorFlag = true;
-                        mFirstNameText.setError(getString(R.string.sign_up_invalid_name));
-                    } else
-                        mFirstNameText.setError(null);
-
+                    checkValidFirstName( errorFlag, mFirstNameText );
 
                     // Check middle name for valid alpha
-                    if (!StringValidator.isAlpha(tempMiddleName) && !tempMiddleName.isEmpty()){
-                        errorFlag = true;
-                        mMiddleNameText.setError(getString(R.string.sign_up_invalid_name));
-                    } else
-                        mMiddleNameText.setError(null);
+                    checkValidMiddleName( errorFlag, mMiddleNameText );
 
                     // Check last name for valid alpha and non empty
-                    if (tempLastName.isEmpty()){
-                        errorFlag = true;
-                        mLastNameText.setError(getString(R.string.sign_up_missing_name));
-                    } else if (!StringValidator.isAlpha(tempLastName)){
-                        errorFlag = true;
-                        mLastNameText.setError(getString(R.string.sign_up_invalid_name));
-                    } else
-                        mLastNameText.setError(null);
+                    checkValidLastName( errorFlag, mLastNameText );
 
                      // Check if user entered DoB
-                    if (!checkOver18(tempDoBYear, tempDoBMonth, tempDoBDay)){
-                        errorFlag = true;
-                        mDateText.setTextColor(getResources().getColor(R.color.colorSignUpError));
-                    } else {
-                        mDateText.setTextColor(getResources().getColor(R.color.common_google_signin_btn_text_light));
-                    }
+                    checkValidDOB( errorFlag, mDateText );
 
                     // Check if user selected at least one gender
-                    if (!mGenderPreferenceCheckBoxMale.isChecked() && !mGenderPreferenceCheckBoxFemale.isChecked() &&
-                            !mGenderPreferenceCheckBoxOther.isChecked() && !mGenderPreferenceCheckBoxNonbinary.isChecked()){
-                        errorFlag = true;
-                        mGenderPreferenceCheckBoxMale.setTextColor((getResources().getColor(R.color.colorSignUpError)));
-                        mGenderPreferenceCheckBoxFemale.setTextColor((getResources().getColor(R.color.colorSignUpError)));
-                        mGenderPreferenceCheckBoxOther.setTextColor((getResources().getColor(R.color.colorSignUpError)));
-                        mGenderPreferenceCheckBoxNonbinary.setTextColor((getResources().getColor(R.color.colorSignUpError)));
-                    } else {
-                        mGenderPreferenceCheckBoxMale.setTextColor(getResources().getColor(R.color.common_google_signin_btn_text_light));
-                        mGenderPreferenceCheckBoxFemale.setTextColor(getResources().getColor(R.color.common_google_signin_btn_text_light));
-                        mGenderPreferenceCheckBoxOther.setTextColor(getResources().getColor(R.color.common_google_signin_btn_text_light));
-                        mGenderPreferenceCheckBoxNonbinary.setTextColor(getResources().getColor(R.color.common_google_signin_btn_text_light));
-                    }
+                    checkGenderSelected( errorFlag, mGenderPreferenceCheckBoxFemale, mGenderPreferenceCheckBoxMale, mGenderPreferenceCheckBoxNonbinary,
+                            mGenderPreferenceCheckBoxOther);
 
                     if (!errorFlag){
                         // Enter information into FireBase
                         dbHelper.fetchCurrentUser();
-                        DatabaseReference ref = dbHelper.getDb().getReference().child(getString(R.string.sign_up_firebase_user)).child(dbHelper.getUser().getUid());
 
-                        DatabaseReference partnerPref = dbHelper.getDb().getReference(dbHelper.getPartnerPreferencePath() ).child( dbHelper.getUser().getUid()).child( "gender" );
+                        addNewUserToFirebase( mGenderSpinner );
 
-                        Map<String,Object> prefs = new HashMap<>();
+                        addPartnerPrefToFirebase( mGenderPreferenceCheckBoxFemale, mGenderPreferenceCheckBoxMale, mGenderPreferenceCheckBoxNonbinary );
 
-                        if ( mGenderPreferenceCheckBoxFemale.isChecked() ) {
-                            prefs.put( "female", true );
-                            //partnerPref.child( "female" ).setValue( true );
-                        }
-
-                        if ( mGenderPreferenceCheckBoxMale.isChecked() ) {
-                            prefs.put( "male", true );
-                            //partnerPref.child( "male" ).setValue( true );
-                        }
-
-                        if ( mGenderPreferenceCheckBoxNonbinary.isChecked() ) {
-                            prefs.put( "non-binary", true );
-                            //partnerPref.child( "non-binary" ).setValue( true );
-                        }
-
-                        Map<String,Object> additions = new HashMap<>();
-
-                        additions.put( "email", tempEmail );
-                        additions.put( "suspended", false );
-                        additions.put( "locked", false );
-                        additions.put( "firstName", tempFirstName );
-                        additions.put( "middleName", tempMiddleName );
-                        additions.put( "lastName", tempLastName );
-
-                        // Personal Info
-                        additions.put( "bio", "" );
-
-                        String tempDoB = "" + tempDoBYear + "-" + (tempDoBMonth < 10 ? "0" + tempDoBMonth : tempDoBMonth)
-                                + "-" + (tempDoBDay < 10 ? "0" + tempDoBDay : tempDoBDay);
-
-                        additions.put( "birth_date", tempDoB );
-
-                        if ( mGenderSpinner.getSelectedItem().toString().equals( "Male" ) ) {
-                            additions.put( "gender", "male" );
-                        }
-                        else if ( mGenderSpinner.getSelectedItem().toString().equals( "Female" ) ) {
-                            additions.put( "gender", "female" );
-                        }
-                        else {
-                            additions.put( "gender", "non-binary" );
-                        }
-
-                        // Location
-                        additions.put( "city", "" );
-                        additions.put( "state", "" );
-                        additions.put( "country", "" );
-
-                        additions.put( "latitude", 0 );
-                        additions.put( "longitude", 0 );
-
-                        ref.setValue( additions );
-
-                        partnerPref.setValue( prefs );
-
-                        String displayName = dbHelper.getFullName( tempFirstName, tempMiddleName, tempLastName );
-                        dbHelper.updateAuthUserDisplayName(displayName);
-
-                        // Add the new user to a new chat containing only the new user
-                        String chatID = dbHelper.getNewChildKey( dbHelper.getChatUserPath() );
-                        String userID = dbHelper.getAuth().getUid();
-
-                        dbHelper.addToChatUser( chatID, userID, displayName );
-                        dbHelper.addToUserChat( userID, chatID );
-
-                        String messageOneID = dbHelper.getNewChildKey(dbHelper.getMessagePath());
-                        String timestampOne = dbHelper.getNewTimestamp();
-                        String messageOne = "COUCH POTATOES:\nWelcome to Couch Potatoes!"
-                                + "\nEnjoy meeting new people with similar interests!";
-
-                        dbHelper.addToMessage( messageOneID, userID, "COUCH POTATOES", chatID, timestampOne, messageOne );
-                        dbHelper.addToChatMessage( chatID, messageOneID );
-
-                        String messageTwoID = dbHelper.getNewChildKey(dbHelper.getMessagePath());
-                        String timestampTwo = dbHelper.getNewTimestamp();
-                        String messageTwo = "COUCH POTATOES:\nThis chat is your space. Feel free to experiment with the chat here.";
-
-                        dbHelper.addToMessage( messageTwoID, userID, "COUCH POTATOES", chatID, timestampTwo, messageTwo );
-                        dbHelper.addToChatMessage( chatID, messageTwoID );
+                        addWelcomeChat();
                         
                         // Start LoginActivity and end SignUpActivity
                         Toast.makeText(getActivity(), getString(R.string.sign_up_success_toast_message), Toast.LENGTH_SHORT).show();
@@ -461,6 +365,155 @@ public class SignUpActivity extends AppCompatActivity {
                     && day > calendar.get(Calendar.DAY_OF_MONTH))
                 return false;
             return true;
+        }
+
+        private void checkValidFirstName( boolean errorFlag, final EditText mFirstNameText ) {
+            // Check first name for valid alpha and non empty
+            if (tempFirstName.isEmpty()){
+                errorFlag = true;
+                mFirstNameText.setError(getString(R.string.sign_up_missing_name));
+            } else if (!StringValidator.isAlpha(tempFirstName)){
+                errorFlag = true;
+                mFirstNameText.setError(getString(R.string.sign_up_invalid_name));
+            } else
+                mFirstNameText.setError(null);
+        }
+
+        private void checkValidMiddleName( boolean errorFlag, final EditText mMiddleNameText ) {
+            // Check middle name for valid alpha
+            if (!StringValidator.isAlpha(tempMiddleName) && !tempMiddleName.isEmpty()){
+                errorFlag = true;
+                mMiddleNameText.setError(getString(R.string.sign_up_invalid_name));
+            } else
+                mMiddleNameText.setError(null);
+        }
+
+        private void checkValidLastName( boolean errorFlag, final EditText mLastNameText ) {
+            // Check last name for valid alpha and non empty
+            if (tempLastName.isEmpty()){
+                errorFlag = true;
+                mLastNameText.setError(getString(R.string.sign_up_missing_name));
+            } else if (!StringValidator.isAlpha(tempLastName)){
+                errorFlag = true;
+                mLastNameText.setError(getString(R.string.sign_up_invalid_name));
+            } else
+                mLastNameText.setError(null);
+        }
+
+        private void checkValidDOB( boolean errorFlag, final TextView mDateText ) {
+            // Check if user entered DoB
+            if (!checkOver18(tempDoBYear, tempDoBMonth, tempDoBDay)){
+                errorFlag = true;
+                mDateText.setTextColor(getResources().getColor(R.color.colorSignUpError));
+            } else {
+                mDateText.setTextColor(getResources().getColor(R.color.common_google_signin_btn_text_light));
+            }
+        }
+
+        private void checkGenderSelected( boolean errorFlag, final CheckBox mGenderPreferenceCheckBoxFemale, final CheckBox mGenderPreferenceCheckBoxMale, final CheckBox mGenderPreferenceCheckBoxNonbinary,
+                                          final CheckBox mGenderPreferenceCheckBoxOther ) {
+            if (!mGenderPreferenceCheckBoxMale.isChecked() && !mGenderPreferenceCheckBoxFemale.isChecked() &&
+                    !mGenderPreferenceCheckBoxOther.isChecked() && !mGenderPreferenceCheckBoxNonbinary.isChecked()){
+                errorFlag = true;
+                mGenderPreferenceCheckBoxMale.setTextColor((getResources().getColor(R.color.colorSignUpError)));
+                mGenderPreferenceCheckBoxFemale.setTextColor((getResources().getColor(R.color.colorSignUpError)));
+                mGenderPreferenceCheckBoxOther.setTextColor((getResources().getColor(R.color.colorSignUpError)));
+                mGenderPreferenceCheckBoxNonbinary.setTextColor((getResources().getColor(R.color.colorSignUpError)));
+            } else {
+                mGenderPreferenceCheckBoxMale.setTextColor(getResources().getColor(R.color.common_google_signin_btn_text_light));
+                mGenderPreferenceCheckBoxFemale.setTextColor(getResources().getColor(R.color.common_google_signin_btn_text_light));
+                mGenderPreferenceCheckBoxOther.setTextColor(getResources().getColor(R.color.common_google_signin_btn_text_light));
+                mGenderPreferenceCheckBoxNonbinary.setTextColor(getResources().getColor(R.color.common_google_signin_btn_text_light));
+            }
+        }
+
+        private void addNewUserToFirebase( final Spinner mGenderSpinner ) {
+            Map<String,Object> additions = new HashMap<>();
+
+            additions.put( "email", tempEmail );
+            additions.put( "suspended", false );
+            additions.put( "locked", false );
+            additions.put( "firstName", tempFirstName );
+            additions.put( "middleName", tempMiddleName );
+            additions.put( "lastName", tempLastName );
+
+            // Personal Info
+            additions.put( "bio", "" );
+
+            String tempDoB = "" + tempDoBYear + "-" + (tempDoBMonth < 10 ? "0" + tempDoBMonth : tempDoBMonth)
+                    + "-" + (tempDoBDay < 10 ? "0" + tempDoBDay : tempDoBDay);
+
+            additions.put( "birth_date", tempDoB );
+
+            if ( mGenderSpinner.getSelectedItem().toString().equals( "Male" ) ) {
+                additions.put( "gender", "male" );
+            }
+            else if ( mGenderSpinner.getSelectedItem().toString().equals( "Female" ) ) {
+                additions.put( "gender", "female" );
+            }
+            else {
+                additions.put( "gender", "non-binary" );
+            }
+
+            // Location
+            additions.put( "city", "" );
+            additions.put( "state", "" );
+            additions.put( "country", "" );
+
+            additions.put( "latitude", 0 );
+            additions.put( "longitude", 0 );
+
+            DatabaseReference ref = dbHelper.getDb().getReference().child(getString(R.string.sign_up_firebase_user)).child(dbHelper.getUser().getUid());
+            ref.setValue( additions );
+        }
+
+        private void addPartnerPrefToFirebase( final CheckBox mGenderPreferenceCheckBoxFemale, final CheckBox mGenderPreferenceCheckBoxMale, final CheckBox mGenderPreferenceCheckBoxNonbinary ) {
+            Map<String,Object> prefs = new HashMap<>();
+
+            if ( mGenderPreferenceCheckBoxFemale.isChecked() ) {
+                prefs.put( "female", true );
+                //partnerPref.child( "female" ).setValue( true );
+            }
+
+            if ( mGenderPreferenceCheckBoxMale.isChecked() ) {
+                prefs.put( "male", true );
+                //partnerPref.child( "male" ).setValue( true );
+            }
+
+            if ( mGenderPreferenceCheckBoxNonbinary.isChecked() ) {
+                prefs.put( "non-binary", true );
+                //partnerPref.child( "non-binary" ).setValue( true );
+            }
+
+            DatabaseReference partnerPref = dbHelper.getDb().getReference(dbHelper.getPartnerPreferencePath() ).child( dbHelper.getUser().getUid()).child( "gender" );
+            partnerPref.setValue( prefs );
+        }
+
+        private void addWelcomeChat() {
+            String displayName = dbHelper.getFullName( tempFirstName, tempMiddleName, tempLastName );
+            dbHelper.updateAuthUserDisplayName(displayName);
+
+            // Add the new user to a new chat containing only the new user
+            String chatID = dbHelper.getNewChildKey( dbHelper.getChatUserPath() );
+            String userID = dbHelper.getAuth().getUid();
+
+            dbHelper.addToChatUser( chatID, userID, displayName );
+            dbHelper.addToUserChat( userID, chatID );
+
+            String messageOneID = dbHelper.getNewChildKey(dbHelper.getMessagePath());
+            String timestampOne = dbHelper.getNewTimestamp();
+            String messageOne = "COUCH POTATOES:\nWelcome to Couch Potatoes!"
+                    + "\nEnjoy meeting new people with similar interests!";
+
+            dbHelper.addToMessage( messageOneID, userID, "COUCH POTATOES", chatID, timestampOne, messageOne );
+            dbHelper.addToChatMessage( chatID, messageOneID );
+
+            String messageTwoID = dbHelper.getNewChildKey(dbHelper.getMessagePath());
+            String timestampTwo = dbHelper.getNewTimestamp();
+            String messageTwo = "COUCH POTATOES:\nThis chat is your space. Feel free to experiment with the chat here.";
+
+            dbHelper.addToMessage( messageTwoID, userID, "COUCH POTATOES", chatID, timestampTwo, messageTwo );
+            dbHelper.addToChatMessage( chatID, messageTwoID );
         }
     }
 
