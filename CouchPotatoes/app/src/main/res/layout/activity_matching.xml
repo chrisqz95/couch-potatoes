@@ -131,43 +131,7 @@
                 android:src="@mipmap/ic_thumb_down_white_24dp"
                 app:fabSize="normal" />
 
-            <!--<android.support.design.widget.FloatingActionButton-->
-            <!--android:id="@+id/fab_match"-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:layout_margin="16dp"-->
-            <!--android:layout_gravity="end|bottom|right"-->
-            <!--android:src="@android:drawable/ic_menu_add"-->
-            <!--android:clickable="true"-->
-            <!--app:fabSize="normal"-->
-            <!--app:layout_anchor="@id/matching_viewpager"-->
-            <!--app:layout_anchorGravity="bottom|right|end"/>-->
-            <!---->
-            <!--<android.support.design.widget.FloatingActionButton-->
-            <!--android:id="@+id/fab_unmatch"-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:layout_margin="16dp"-->
-            <!--android:layout_gravity="end|bottom|right"-->
-            <!--android:src="@android:drawable/ic_menu_delete"-->
-            <!--android:clickable="true"-->
-            <!--app:fabSize="normal"-->
-            <!--app:layout_anchor="@id/matching_viewpager"-->
-            <!--app:layout_anchorGravity="bottom|right|end"/>-->
-
         </LinearLayout>
-
-        <!--<android.support.design.widget.FloatingActionButton-->
-                <!--android:id="@+id/fab_unmatch"-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:layout_margin="16dp"-->
-                <!--android:layout_gravity="end|bottom|right"-->
-                <!--android:src="@android:drawable/ic_menu_add"-->
-                <!--android:clickable="true"-->
-                <!--app:fabSize="normal"-->
-                <!--app:layout_anchor="@id/matching_viewpager"-->
-                <!--app:layout_anchorGravity="bottom|right|end"/>-->
 
     </android.support.design.widget.CoordinatorLayout>
 
