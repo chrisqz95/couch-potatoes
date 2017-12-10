@@ -304,14 +304,7 @@ public class SignUpActivity extends AppCompatActivity {
                     tempLastName = mLastNameText.getText().toString();
 
                     // Check first name for valid alpha and non empty
-                    if (tempFirstName.isEmpty()){
-                        errorFlag = true;
-                        mFirstNameText.setError(getString(R.string.sign_up_missing_name));
-                    } else if (!StringValidator.isAlpha(tempFirstName)){
-                        errorFlag = true;
-                        mFirstNameText.setError(getString(R.string.sign_up_invalid_name));
-                    } else
-                        mFirstNameText.setError(null);
+                    errorFlag = checkName(tempFirstName, mFirstNameText);
 
 
                     // Check middle name for valid alpha
@@ -322,16 +315,9 @@ public class SignUpActivity extends AppCompatActivity {
                         mMiddleNameText.setError(null);
 
                     // Check last name for valid alpha and non empty
-                    if (tempLastName.isEmpty()){
-                        errorFlag = true;
-                        mLastNameText.setError(getString(R.string.sign_up_missing_name));
-                    } else if (!StringValidator.isAlpha(tempLastName)){
-                        errorFlag = true;
-                        mLastNameText.setError(getString(R.string.sign_up_invalid_name));
-                    } else
-                        mLastNameText.setError(null);
+                    errorFlag = checkName(tempLastName, mLastNameText);
 
-                     // Check if user entered DoB
+                    // Check if user entered DoB
                     if (!checkOver18(tempDoBYear, tempDoBMonth, tempDoBDay)){
                         errorFlag = true;
                         mDateText.setTextColor(getResources().getColor(R.color.colorSignUpError));
@@ -450,6 +436,19 @@ public class SignUpActivity extends AppCompatActivity {
                 }
             });
             return rootView;
+        }
+
+        private boolean checkName(String tempFirstName, EditText mFirstNameText) {
+            boolean errorFlag = false;
+            if (tempFirstName.isEmpty()){
+                errorFlag = true;
+                mFirstNameText.setError(getString(R.string.sign_up_missing_name));
+            } else if (!StringValidator.isAlpha(tempFirstName)){
+                errorFlag = true;
+                mFirstNameText.setError(getString(R.string.sign_up_invalid_name));
+            } else
+                mFirstNameText.setError(null);
+            return errorFlag;
         }
 
         private boolean checkOver18(int year, int month, int day){
