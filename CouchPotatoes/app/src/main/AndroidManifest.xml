@@ -50,7 +50,7 @@
             android:label="@string/title_activity_main"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".PreferencesActivity"
+            android:name=".ProfileActivity"
             android:label="@string/pref_header_profile"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".UserGalleryActivity">
