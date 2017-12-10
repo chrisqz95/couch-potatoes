@@ -39,7 +39,7 @@ import android.widget.Toast;
 
 public class MatchingActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
-    private DBHelper helper;
+    private DBHelper dbHelper;
     private final String[] tabTitles = new String[] { "Date", "Friend" };
 
     private final int VIEW_PAGER_DATE_TAB_POSITION = 0;
@@ -76,7 +76,9 @@ public class MatchingActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_matching);
-        helper = new DBHelper();
+        dbHelper = DBHelper.getInstance();
+
+        currUserID = dbHelper.getAuth().getUid();
 
         final TabLayout tabLayout = findViewById(R.id.matching_tabs);
         likeButton = findViewById(R.id.fab_match);
@@ -124,7 +126,7 @@ public class MatchingActivity extends AppCompatActivity
         // set up the side navigation bar on the left side of screen
         mDrawer = (DrawerLayout) findViewById(R.id.match_drawer_layout);
         navView = (NavigationView) findViewById(R.id.match_nav_view);
-        setSideBarDrawer( mDrawer, navView, toolbar , helper );
+        setSideBarDrawer( mDrawer, navView, toolbar , dbHelper);
     }
 
     // Make sure the navView highlight the correct location on the sidebar
@@ -212,7 +214,7 @@ public class MatchingActivity extends AppCompatActivity
             startActivity( intent );
         } else if (id == R.id.nav_logout) {
             // logs out and redirects user to LoginActivity.xml
-            helper.getAuth().signOut();
+            dbHelper.getAuth().signOut();
             startActivity( new Intent( getApplicationContext(), LoginActivity.class ) );
             finish();
         }
@@ -225,7 +227,7 @@ public class MatchingActivity extends AppCompatActivity
 
     // Populates the machtedFriendList with the list of potential friends and notifies the adapter of changes
     public void fetchPotentFriendsFromFirebase () {
-        helper.getDb().getReference( helper.getPotentFriendPath() + helper.getAuth().getUid() ).addValueEventListener(new ValueEventListener() {
+        dbHelper.getDb().getReference( dbHelper.getPotentFriendPath() + dbHelper.getAuth().getUid() ).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Iterator<DataSnapshot> potentDates = dataSnapshot.getChildren().iterator();
@@ -255,7 +257,7 @@ public class MatchingActivity extends AppCompatActivity
 
     // Populates the machtedDateList with the list of potential dates and notifies the adapter of changes
     public void fetchPotentDatesFromFirebase () {
-        helper.getDb().getReference( helper.getPotentDatePath() + helper.getAuth().getUid() ).addValueEventListener(new ValueEventListener() {
+        dbHelper.getDb().getReference( dbHelper.getPotentDatePath() + dbHelper.getAuth().getUid() ).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Iterator<DataSnapshot> potentDates = dataSnapshot.getChildren().iterator();
@@ -327,28 +329,28 @@ public class MatchingActivity extends AppCompatActivity
     }
 
     private void likeUser( int tabPos ) {
-        String currUserID = helper.getAuth().getUid();
+        String currUserID = dbHelper.getAuth().getUid();
         String potentMatchID = "";
-        String timestamp = helper.getNewTimestamp();
+        String timestamp = dbHelper.getNewTimestamp();
         showProgressBar();
 
         if ( tabPos == VIEW_PAGER_FRIEND_TAB_POSITION ) {
             potentMatchID = matchedFriendList.get(0);
-            helper.addToBefriend(currUserID, potentMatchID, timestamp);
+            dbHelper.addToBefriend(currUserID, potentMatchID, timestamp);
         }
         else {
             potentMatchID = matchedDateList.get(0);
-            helper.addToDate(currUserID, potentMatchID, timestamp);
+            dbHelper.addToDate(currUserID, potentMatchID, timestamp);
         }
 
         Toast.makeText(MatchingActivity.this, "Liked!", Toast.LENGTH_SHORT).show();
-        helper.addToLike(currUserID, potentMatchID, timestamp);
+        dbHelper.addToLike(currUserID, potentMatchID, timestamp);
     }
 
     private void dislikeUser( int tabPos ) {
-        String currUserID = helper.getAuth().getUid();
+        String currUserID = dbHelper.getAuth().getUid();
         String potentMatchID = "";
-        String timestamp = helper.getNewTimestamp();
+        String timestamp = dbHelper.getNewTimestamp();
         showProgressBar();
 
         if ( tabPos == VIEW_PAGER_FRIEND_TAB_POSITION ) {
@@ -359,13 +361,13 @@ public class MatchingActivity extends AppCompatActivity
         }
 
         Toast.makeText(MatchingActivity.this, "Disliked!", Toast.LENGTH_SHORT).show();
-        helper.addToDislike(currUserID, potentMatchID, timestamp);
+        dbHelper.addToDislike(currUserID, potentMatchID, timestamp);
     }
 
     private void displayPotentMatchProfilePic( String matchUserID ) {
         // Try to fetch profile pic from Firebase and update ImageView
         // If profile pic is null, display default profile pic instead
-        helper.getDb().getReference(helper.getUserPath()).child( matchUserID ).child("profile_pic").addValueEventListener(new ValueEventListener() {
+        dbHelper.getDb().getReference(dbHelper.getUserPath()).child( matchUserID ).child("profile_pic").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 String url = "";
@@ -373,7 +375,7 @@ public class MatchingActivity extends AppCompatActivity
                 if (dataSnapshot != null && dataSnapshot.getValue() != null) {
                     url = (String) dataSnapshot.getValue();
                     if (imgView != null) {
-                        StorageReference uriRef = helper.getStorage().getReferenceFromUrl(url);
+                        StorageReference uriRef = dbHelper.getStorage().getReferenceFromUrl(url);
 
                         // Set ImageView to contain photo
                         Glide.with(getApplicationContext())

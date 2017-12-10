@@ -46,7 +46,7 @@ public class PictureGridActivity extends AppCompatActivity {
     }
 
     private void loadData(final String uid, final boolean isCurrentUser, final boolean changeProfilePic ) {
-        final DBHelper dbHelper = new DBHelper();
+        final DBHelper dbHelper = DBHelper.getInstance();
         dbHelper.fetchCurrentUser();
 
         urlList = new ArrayList<>();

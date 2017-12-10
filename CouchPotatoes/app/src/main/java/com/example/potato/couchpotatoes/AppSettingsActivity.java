@@ -17,7 +17,7 @@ import com.google.android.gms.tasks.Task;
 
 public class AppSettingsActivity extends AppCompatActivity {
 
-    private DBHelper helper;
+    private DBHelper dbHelper;
     private Button deleteAccountBtn;
     private DialogInterface.OnClickListener dialogClickListener;
     private ProgressBar spinner;
@@ -34,7 +34,7 @@ public class AppSettingsActivity extends AppCompatActivity {
 
         spinner = findViewById(R.id.progressBar2);
 
-        helper = new DBHelper();
+        dbHelper = DBHelper.getInstance();
 
         deleteAccountBtn = findViewById(R.id.deleteAccountBtn);
 
@@ -63,17 +63,17 @@ public class AppSettingsActivity extends AppCompatActivity {
     }
 
     private void deleteAccount() {
-        String currUserID = helper.getAuth().getUid();
+        String currUserID = dbHelper.getAuth().getUid();
 
-        helper.removeUser( currUserID );
+        dbHelper.removeUser( currUserID );
 
         // TODO REMOVE ALL OTHER USER DATA
 
-        helper.getAuth().getCurrentUser().delete().addOnCompleteListener(new OnCompleteListener<Void>() {
+        dbHelper.getAuth().getCurrentUser().delete().addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 spinner.setVisibility(View.GONE);
-                helper.getAuth().signOut();
+                dbHelper.getAuth().signOut();
                 Intent intent = new Intent( getApplicationContext(), LoginActivity.class );
                 startActivity(intent);
                 finish();

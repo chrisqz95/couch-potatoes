@@ -18,7 +18,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-import static com.example.potato.couchpotatoes.StringUtilities.addStrAtPos;
 import static com.example.potato.couchpotatoes.StringUtilities.paddSpace;
 
 public class MatchPageFragment extends Fragment {
@@ -27,7 +26,7 @@ public class MatchPageFragment extends Fragment {
     private final int BIO_SUBSTRING_LENGTH = 60;
 
     private ArrayList<String> matchedUserList;
-    private DBHelper helper;
+    private DBHelper dbHelper;
     private boolean isDating;
 
     private String currMatchID;
@@ -55,7 +54,7 @@ public class MatchPageFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        helper = new DBHelper();
+        dbHelper = DBHelper.getInstance();
 
         // Gets the matched user list
         matchedUserList = getArguments().getStringArrayList(ARG_LIST);
@@ -97,12 +96,12 @@ public class MatchPageFragment extends Fragment {
                  */
                 @Override
                 public void onSwipeLeft() {
-                    String currUserID = helper.getAuth().getUid();
+                    String currUserID = dbHelper.getAuth().getUid();
                     String potentMatchID = matchedUserList.get(0);
-                    String timestamp = helper.getNewTimestamp();
+                    String timestamp = dbHelper.getNewTimestamp();
 
                     Toast.makeText(getActivity(), "Disliked!", Toast.LENGTH_SHORT).show();
-                    helper.addToDislike(currUserID, potentMatchID, timestamp);
+                    dbHelper.addToDislike(currUserID, potentMatchID, timestamp);
                 }
 
                 /**
@@ -110,25 +109,25 @@ public class MatchPageFragment extends Fragment {
                  */
                 @Override
                 public void onSwipeRight() {
-                    String currUserID = helper.getAuth().getUid();
+                    String currUserID = dbHelper.getAuth().getUid();
                     String potentMatchID = matchedUserList.get(0);
-                    String timestamp = helper.getNewTimestamp();
+                    String timestamp = dbHelper.getNewTimestamp();
 
                     Toast.makeText(getActivity(), "Liked!", Toast.LENGTH_SHORT).show();
-                    helper.addToLike(currUserID, potentMatchID, timestamp);
+                    dbHelper.addToLike(currUserID, potentMatchID, timestamp);
 
                     // If this is the dating page, add to dating like list
                     if (isDating)
-                        helper.addToDate( currUserID, potentMatchID, timestamp );
+                        dbHelper.addToDate( currUserID, potentMatchID, timestamp );
 
                         // Otherwise, add to friend like list
                     else
-                        helper.addToBefriend(currUserID, potentMatchID, timestamp);
+                        dbHelper.addToBefriend(currUserID, potentMatchID, timestamp);
                 }
             });
 
             // Fetch and display info about the potential match
-            helper.getDb().getReference( helper.getUserPath() + currMatchID ).addValueEventListener(new ValueEventListener() {
+            dbHelper.getDb().getReference( dbHelper.getUserPath() + currMatchID ).addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     Map<String, Object> res = new HashMap<>();
@@ -152,7 +151,7 @@ public class MatchPageFragment extends Fragment {
 
                     // Get the potential match's full name
                     // Omit the middle name - Personal preference - Can change later
-                    String potentMatchName = helper.getFullName( firstName, "", lastName );
+                    String potentMatchName = dbHelper.getFullName( firstName, "", lastName );
 
                     // Display potential match's full name and gender on the same line
                     int numSpaces = 30;
@@ -172,7 +171,7 @@ public class MatchPageFragment extends Fragment {
                     interestsHeader.setText( interestsHeaderStr );
 
                     // Fetch and display User's Interests
-                    helper.getDb().getReference( helper.getUserInterestPath() ).child( currMatchID ).addValueEventListener(new ValueEventListener() {
+                    dbHelper.getDb().getReference( dbHelper.getUserInterestPath() ).child( currMatchID ).addValueEventListener(new ValueEventListener() {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
                             InterestStringBuilder builder = new InterestStringBuilder();

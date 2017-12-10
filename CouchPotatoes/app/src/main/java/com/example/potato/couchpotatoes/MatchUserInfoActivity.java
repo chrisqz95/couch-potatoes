@@ -16,7 +16,7 @@ import java.util.Map;
 import static com.example.potato.couchpotatoes.StringUtilities.*;
 
 public class MatchUserInfoActivity extends AppCompatActivity {
-    private DBHelper helper;
+    private DBHelper dbHelper;
     private TextView matchUserInfoGeneralHeader;
     private TextView matchUserInfoGeneralText;
     private TextView matchUserInfoBioHeader;
@@ -33,7 +33,7 @@ public class MatchUserInfoActivity extends AppCompatActivity {
         toolbar.setTitleTextColor(Color.WHITE);
         setSupportActionBar(toolbar);
 
-        helper = new DBHelper();
+        dbHelper = DBHelper.getInstance();
 
         matchUserInfoGeneralHeader = (TextView) findViewById(R.id.matchUserInfoGeneralHeader);
         matchUserInfoGeneralText = (TextView) findViewById(R.id.matchUserInfoGeneralText);
@@ -49,7 +49,7 @@ public class MatchUserInfoActivity extends AppCompatActivity {
         }
 
         // Fetch and display potential match's info
-        helper.getDb().getReference( helper.getUserPath() + currMatchID ).addValueEventListener(new ValueEventListener() {
+        dbHelper.getDb().getReference( dbHelper.getUserPath() + currMatchID ).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Map<String, Object> res = new HashMap<>();
@@ -77,7 +77,7 @@ public class MatchUserInfoActivity extends AppCompatActivity {
                     genderAbbrev = "F";
 
                 // Omit middle name here - Personal preference - can change later
-                String potentMatchName = helper.getFullName( firstName, "", lastName );
+                String potentMatchName = dbHelper.getFullName( firstName, "", lastName );
                 matchUserInfoGeneralHeader.setText( potentMatchName );
 
                 userInfo += paddSpaceln( "Gender: ", genderAbbrev, 38 );
@@ -102,7 +102,7 @@ public class MatchUserInfoActivity extends AppCompatActivity {
                 matchUserInfoInterestHeader.setText( interestsHeaderStr );
 
                 // Fetch and display User's Interests
-                helper.getDb().getReference( helper.getUserInterestPath() ).child( currMatchID ).addValueEventListener(new ValueEventListener() {
+                dbHelper.getDb().getReference( dbHelper.getUserInterestPath() ).child( currMatchID ).addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {                                                
                         InterestStringBuilder builder = new InterestStringBuilder();
