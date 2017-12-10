@@ -4,11 +4,9 @@ import android.content.Context;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.Toast;
 
 /**
  * Handles the swipe right and left gestures.
- *
  * Source: https://stackoverflow.com/questions/4139288/android-how-to-handle-right-to-left-swipe-gestures/19506010#19506010
  */
 
@@ -84,7 +82,6 @@ public class OnSwipeTouchListener implements View.OnTouchListener {
                 if (distanceX > 0) {
                     onSwipeRight();
                 }
-
                 // Swipe left
                 else {
                     onSwipeLeft();

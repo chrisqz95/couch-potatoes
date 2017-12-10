@@ -5,12 +5,9 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ProgressBar;
@@ -30,18 +27,18 @@ public class AppSettingsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_app_settings);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setTitleTextColor(Color.WHITE);
         setSupportActionBar(toolbar);
 
         // adds up navigation to the toolbar on top
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        spinner = (ProgressBar) findViewById(R.id.progressBar2);
+        spinner = findViewById(R.id.progressBar2);
 
         helper = new DBHelper();
 
-        deleteAccountBtn = (Button) findViewById(R.id.deleteAccountBtn);
+        deleteAccountBtn = findViewById(R.id.deleteAccountBtn);
 
         dialogClickListener = new DialogInterface.OnClickListener() {
             @Override
@@ -56,7 +53,6 @@ public class AppSettingsActivity extends AppCompatActivity {
                         break;
                     // Case to cancel photo upload
                     case DialogInterface.BUTTON_NEGATIVE:
-                        //Log.d( "TEST", "NO" );
                         break;
                 }
             }

@@ -3,13 +3,7 @@ package com.example.potato.couchpotatoes;
 import com.google.firebase.database.DataSnapshot;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.LinkedList;
-import java.util.Map;
-
-/**
- * Created by Admin on 11/7/17.
- */
 
 public class CurrentUser extends User {
     private static CurrentUser uniqueInstance;
@@ -45,7 +39,7 @@ public class CurrentUser extends User {
         }
         return uniqueInstance;
     }
-
+  
     /**
      * Parses the DataSnapshot and initializes the CurrentUser from those fields
      * @param dataSnapshot snapshot of data to initialize CurrentUser from
