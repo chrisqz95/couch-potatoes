@@ -33,8 +33,6 @@ public class RegistrationActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        Log.d( "TEST", helper.getAuth().getUid() );
-
         mFirstName = findViewById(R.id.firstName);
         mMiddleName = findViewById(R.id.middleName);
         mLastName = findViewById(R.id.lastName);

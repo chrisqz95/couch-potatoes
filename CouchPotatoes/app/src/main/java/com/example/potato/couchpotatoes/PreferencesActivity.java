@@ -172,7 +172,6 @@ public class PreferencesActivity extends AppCompatActivity
         imgView.setOnHoverListener(new View.OnHoverListener() {
             @Override
             public boolean onHover(View v, MotionEvent event) {
-                // TODO
                 return false;
             }
         });
@@ -216,14 +215,12 @@ public class PreferencesActivity extends AppCompatActivity
             @Override
             public void onClick(View v) {
                 // Hide bio buttons
-                // TODO MOVE TO new helper method
                 if ( bioBtnLayout.getVisibility() == View.VISIBLE ) {
                     bioBtnLayout.setVisibility(View.GONE);
                 }
 
                 // Remove bio edit text focus
                 // Workaround: Remove focus by requesting focus elsewhere
-                // TODO May want to find a better way of doing this later
                 profileLayout.requestFocus();
 
                 String bioChanges = userBio.getText().toString();
@@ -232,7 +229,6 @@ public class PreferencesActivity extends AppCompatActivity
                 bioTextPrev = bioChanges;
 
                 // Submit bio to Firebase
-                // TODO Add method to DBHelper to only change bio
                 helper.getDb().getReference( helper.getUserPath() ).child( currUserID ).child( "bio" ).setValue( bioChanges );
             }
         });
@@ -241,14 +237,12 @@ public class PreferencesActivity extends AppCompatActivity
             @Override
             public void onClick(View v) {
                 // Hide bio buttons
-                // TODO MOVE TO new helper method
                 if ( bioBtnLayout.getVisibility() == View.VISIBLE ) {
                     bioBtnLayout.setVisibility(View.GONE);
                 }
 
                 // Remove bio edit text focus
                 // Workaround: Remove focus by requesting focus elsewhere
-                // TODO May want to find a better way of doing this later
                 profileLayout.requestFocus();
 
                 // Restore bio to previous state
@@ -384,11 +378,9 @@ public class PreferencesActivity extends AppCompatActivity
             finish();
         }
         else if (id == R.id.nav_settings) {
-            // TODO: go to the settings page
             startActivity( new Intent( getApplicationContext(), AppSettingsActivity.class ) );
         }
         else if (id == R.id.nav_info) {
-            // TODO: go to the "about us" page
             Intent intent = new Intent( getApplicationContext(), AboutUsActivity.class );
             startActivity( intent );
         } else if (id == R.id.nav_logout) {

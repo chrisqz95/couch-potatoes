@@ -59,8 +59,7 @@ public class SignUpActivity extends AppCompatActivity {
     /**
      * CurrentUser - temp object to hold information collected from sign up forms
      * DBHelper - Connect to FireBase upon successful sign up
-     * tempPass - Holds temp password for account creation
-     * TODO: Resolve storage of temp variables.
+     * tempPass - Holds temp password for account creations
      */
     private static int minAge = 18;
     private static DBHelper dbHelper;
@@ -407,7 +406,6 @@ public class SignUpActivity extends AppCompatActivity {
                         }
 
                         // Location
-                        // TODO: Resolve undefined variables
                         additions.put( "city", "" );
                         additions.put( "state", "" );
                         additions.put( "country", "" );
