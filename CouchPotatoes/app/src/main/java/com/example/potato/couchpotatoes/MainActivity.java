@@ -20,11 +20,6 @@ public class MainActivity extends AppCompatActivity {
     // AsyncTasks
     private FetchCurrentUserInfoTask mFetchCurrUserInfoTask;
 
-    // For the user cards
-    private android.widget.Button chat;
-
-    private String currUserID;
-
     protected void onCreate(Bundle savedInstanceState) {
         // Sets up the activity layout
         super.onCreate(savedInstanceState);
@@ -35,8 +30,7 @@ public class MainActivity extends AppCompatActivity {
 
         helper = new DBHelper();
 
-        chat = findViewById(R.id.viewChats);
-        currUserID = helper.getAuth().getUid();
+        android.widget.Button chat = (android.widget.Button) findViewById(R.id.viewChats);
 
         // Display user's name if logged in
         if ( helper.isUserLoggedIn() ) {
@@ -66,74 +60,6 @@ public class MainActivity extends AppCompatActivity {
 
     private class FetchCurrentUserInfoTask extends AsyncTask<Void, Void, Void> {
 
-    // Grabs the user info of the current user from Firebase
-    private void pullCurrentUserInfo() {
-        final CurrentUser currentUser = CurrentUser.getInstance();
-
-        helper.getDb().getReference( helper.getUserPath() ).child( currUserID )
-                .addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-
-                for ( DataSnapshot field : dataSnapshot.getChildren() ) {
-                    switch ( field.getKey() ) {
-                        case "email":
-                            currentUser.setEmail( (String) field.getValue() );
-                            break;
-                        case "uid":
-                            currentUser.setUid( (String) field.getValue() );
-                            break;
-                        case "firstName":
-                            currentUser.setFirstName( (String) field.getValue() );
-                            break;
-                        case "middleName":
-                            currentUser.setFirstName( (String) field.getValue() );
-                            break;
-                        case "lastName":
-                            currentUser.setFirstName( (String) field.getValue() );
-                            break;
-                        case "dob":
-                            currentUser.setDob( (String) field.getValue() );
-                            break;
-                        case "gender":
-                            currentUser.setGender( (String) field.getValue() );
-                            break;
-                        case "city":
-                            currentUser.setFirstName( (String) field.getValue() );
-                            break;
-                        case "state":
-                            currentUser.setFirstName( (String) field.getValue() );
-                            break;
-                        case "country":
-                            currentUser.setFirstName( (String) field.getValue() );
-                            break;
-                        case "bio":
-                            currentUser.setBio( (String) field.getValue());
-                            break;
-                        case "latitude":
-                            long num = (long) field.getValue();
-                            currentUser.setLatitude( 0.0 );
-                            if( field.getValue() != null ) {
-                                currentUser.setLatitude( (double) num );
-                            }
-                            break;
-                        case "longitude":
-                            num = (long) field.getValue();
-                            currentUser.setLatitude( 0.0 );
-                            if( field.getValue() != null ) {
-                                currentUser.setLongitude( (double) num );
-                            }
-                            break;
-                        case "locked":
-                            currentUser.setLocked( (boolean) field.getValue() );
-                            break;
-                        case "suspended":
-                            currentUser.setSuspended( (boolean) field.getValue() );
-                            break;
-                        default:
-                            break;
-                    }
-
         @Override
         protected Void doInBackground(Void... voids) {
             helper.fetchCurrentUserInfo(getApplicationContext(), new SimpleCallback<DataSnapshot>() {
@@ -146,9 +72,6 @@ public class MainActivity extends AppCompatActivity {
 
             return null;
         }
-            @Override
-            public void onCancelled(DatabaseError databaseError) {}
-        });
     }
 
     // Grabs the user info of the current user from firebase and sets CurrentUser from that data
@@ -161,4 +84,3 @@ public class MainActivity extends AppCompatActivity {
         mFetchCurrUserInfoTask.execute((Void) null);
     }
 }
-
