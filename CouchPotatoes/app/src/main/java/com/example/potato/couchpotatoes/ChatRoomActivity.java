@@ -305,7 +305,6 @@ public class ChatRoomActivity extends AppCompatActivity
             // user is already at the Chats page; do nothing
 
        } else if (id == R.id.nav_settings) {
-            // TODO: go to the settings page
             startActivity( new Intent( getApplicationContext(), AppSettingsActivity.class ) );
         }
         else if (id == R.id.nav_info) {
