@@ -421,16 +421,6 @@ public class MatchingActivity extends AppCompatActivity
     }
 
     private void addLikeDislikeListeners() {
-        imgView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Log.d( "TEST", "IMG CLICKED" );
-                //TODO Go to new activity to view potential match's photos
-                //Intent intent = new Intent( getApplicationContext(), ( INSERT IMAGE GALLERY ACTIVITY CLASS ) );
-                //intent.putExtra( "targetUserID", matchedDateList.get(0) );
-                //startActivity( intent );
-            }
-        });
 
         imgView.setOnTouchListener(new OnSwipeTouchListener(MatchingActivity.this) {
 

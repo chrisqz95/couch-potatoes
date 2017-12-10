@@ -212,7 +212,7 @@ public class MessageActivity extends AppCompatActivity {
     }
 
     /*
-     * TODO
+     * Creates the dialog to choose spinner.
      */
     private void createDialog(){
         //DIALOG FOR SPINNER
@@ -253,7 +253,7 @@ public class MessageActivity extends AppCompatActivity {
     }
 
     /*
-     * TODO
+     * Opens the corrent spinnerActivity
      */
     private void openSpinner(int key, Intent intent) {
         intent.putExtra("key", key);
@@ -264,7 +264,7 @@ public class MessageActivity extends AppCompatActivity {
     }
 
     /*
-     * TODO: Add description
+     * Returns timestamp above messages based on time since last message.
      */
     private String getTimeString(String lastMsg, String curMsg) {
 
@@ -282,7 +282,6 @@ public class MessageActivity extends AppCompatActivity {
 
         String[] date = curMsgDate.split("-");
 
-        // TODO Throw this into a method
         //Convert 24 Hour format to AM/PM
         String dateStr = curMsgTime;
         DateFormat readFormat = new SimpleDateFormat( "HH:mm:ss");
@@ -293,13 +292,11 @@ public class MessageActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
-        // TODO throw a lot of this into methods
         Calendar c = Calendar.getInstance();
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         String curDate = df.format(c.getTime()).split(" ")[0];
         int intCurDate = Integer.parseInt(curDate.replaceAll("-", ""));
 
-        // TODO pls guys methods they are a thing
         if (intCurDate - intCurMsgDate < 1) {
             if (Math.abs(intCurMsgTime - intLastMsgTime) >= 30000) {
                 timeStr = hourStr;
@@ -321,7 +318,7 @@ public class MessageActivity extends AppCompatActivity {
     }
 
     /*
-     * TODO: Add description
+     * Makes the bubble in the chat.
      */
     private void addMessageBox (String message, int type, boolean isTimeString){
         TextView textView = new TextView(MessageActivity.this);
@@ -385,7 +382,7 @@ public class MessageActivity extends AppCompatActivity {
     }
 
     /*
-     * TODO
+     * Return whether the date is am or pm
      */
     private String getAmPm(String[] time) {
         String hourStr;
@@ -398,7 +395,7 @@ public class MessageActivity extends AppCompatActivity {
     }
 
     /*
-     * TODO: Add description
+     * Return month based on numerical value of month
      */
     private String getMonth(String month) {
         String monthString;

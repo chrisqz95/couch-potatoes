@@ -138,14 +138,12 @@ public class SettingsActivity extends AppCompatActivity {
                 prevSexualPrefChecked = sexualPrefChecked;
 
                 // Submit partner preference changes to Firebase
-                // TODO add DBHelper method to update gender only and replace below
                 helper.getDb().getReference( helper.getPartnerPreferencePath() ).child( currUserID ).child( "gender" ).setValue( sexualPreferenceMap );
 
                 settingsBtnLayout.setVisibility(View.GONE);
 
                 // Remove bio edit text focus
                 // Workaround: Remove focus by requesting focus elsewhere
-                // TODO May want to find a better way of doing this later
                 settingsLayout.requestFocus();
             }
         });
@@ -161,7 +159,6 @@ public class SettingsActivity extends AppCompatActivity {
 
                 // Remove bio edit text focus
                 // Workaround: Remove focus by requesting focus elsewhere
-                // TODO May want to find a better way of doing this later
                 settingsLayout.requestFocus();
             }
         });

@@ -27,7 +27,6 @@ import com.google.firebase.auth.AuthResult;
  * A login screen that offers login via email/password.
  */
 public class LoginActivity extends AppCompatActivity {
-    // TODO replace strings with variables
 
     /**
      * Keep track of the login task to ensure we can cancel it if requested.
@@ -135,7 +134,6 @@ public class LoginActivity extends AppCompatActivity {
 
         // Check for a valid password, if the user entered one.
         if (!StringValidator.isValidPassword(password)) {
-            // TODO change the message
             mPasswordView.setError(getString(R.string.error_invalid_password));
             focusView = mPasswordView;
             cancel = true;
