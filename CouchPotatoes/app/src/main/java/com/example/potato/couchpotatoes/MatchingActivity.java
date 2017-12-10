@@ -78,7 +78,7 @@ public class MatchingActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_matching);
-        helper = new DBHelper();
+        helper = DBHelper.getInstance();
 
         currUserID = helper.getAuth().getUid();
 

@@ -31,7 +31,7 @@ import java.util.Map;
 
 public class ChatRoomActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
-    private DBHelper helper = new DBHelper();
+    private DBHelper helper = DBHelper.getInstance();
     private ArrayList<String> listItems = new ArrayList<>();
     private ArrayAdapter<String> listAdapter;
     private SwipeActionAdapter mAdapter;

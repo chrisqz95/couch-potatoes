@@ -44,7 +44,7 @@ public class LoginActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        dbHelper = new DBHelper();
+        dbHelper = DBHelper.getInstance();
 
         // If user is logged in, have user finish Registration if needed or go to MainActivity
         if ( dbHelper.isUserLoggedIn() ) {

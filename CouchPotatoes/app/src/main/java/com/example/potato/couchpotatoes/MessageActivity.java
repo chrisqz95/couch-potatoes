@@ -39,7 +39,7 @@ public class MessageActivity extends AppCompatActivity {
     private ImageView sendButton;
     private EditText messageArea;
     private ScrollView scrollView;
-    private DBHelper helper = new DBHelper();
+    private DBHelper helper = DBHelper.getInstance();
     private String userID, chatRoom, displayName, messageID, timestamp, message, companion;
     private TextView userName;
     private Button b_select_spinner;

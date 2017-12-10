@@ -38,7 +38,7 @@ public class SettingsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
 
-        helper = new DBHelper();
+        helper = DBHelper.getInstance();
 
         prevSexualPrefChecked = new SparseBooleanArray();
 

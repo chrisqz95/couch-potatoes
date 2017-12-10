@@ -46,7 +46,7 @@ public class PreferenceChart extends AppCompatActivity {
 
         prevGenderChecked = new SparseBooleanArray();
 
-        helper = new DBHelper();
+        helper = DBHelper.getInstance();
 
         currUserID = helper.getAuth().getUid();
 

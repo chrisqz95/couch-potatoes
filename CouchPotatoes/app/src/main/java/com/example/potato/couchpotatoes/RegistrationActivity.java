@@ -15,7 +15,7 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.UserProfileChangeRequest;
 
 public class RegistrationActivity extends AppCompatActivity {
-    DBHelper helper = new DBHelper();
+    DBHelper helper = DBHelper.getInstance();
     EditText mFirstName;
     EditText mMiddleName;
     EditText mLastName;

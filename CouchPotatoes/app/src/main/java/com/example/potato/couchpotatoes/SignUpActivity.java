@@ -89,7 +89,7 @@ public class SignUpActivity extends AppCompatActivity {
         mViewPager.setAdapter(mSectionsPagerAdapter);
 
         // Intialise variables
-        dbHelper = new DBHelper();
+        dbHelper = DBHelper.getInstance();
         calendar = Calendar.getInstance();
         tempDoBYear = calendar.get(Calendar.YEAR);
         tempDoBMonth = calendar.get(Calendar.MONTH);

@@ -67,7 +67,7 @@ public class UploadImageFragment extends Fragment implements View.OnClickListene
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        helper = new DBHelper();
+        helper = DBHelper.getInstance();
 
         // Source: https://stackoverflow.com/questions/42251634/android-os-fileuriexposedexception-file-jpg-exposed-beyond-app-through-clipdata
         // Workaround: Allows access to camera

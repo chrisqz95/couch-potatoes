@@ -33,7 +33,7 @@ public class MatchUserInfoActivity extends AppCompatActivity {
         toolbar.setTitleTextColor(Color.WHITE);
         setSupportActionBar(toolbar);
 
-        helper = new DBHelper();
+        helper = DBHelper.getInstance();
 
         matchUserInfoGeneralHeader = (TextView) findViewById(R.id.matchUserInfoGeneralHeader);
         matchUserInfoGeneralText = (TextView) findViewById(R.id.matchUserInfoGeneralText);

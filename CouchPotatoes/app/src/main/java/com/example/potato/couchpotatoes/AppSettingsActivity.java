@@ -34,7 +34,7 @@ public class AppSettingsActivity extends AppCompatActivity {
 
         spinner = findViewById(R.id.progressBar2);
 
-        helper = new DBHelper();
+        helper = DBHelper.getInstance();
 
         deleteAccountBtn = findViewById(R.id.deleteAccountBtn);
 

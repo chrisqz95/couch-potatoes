@@ -56,7 +56,7 @@ public class MatchPageFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        helper = new DBHelper();
+        helper = DBHelper.getInstance();
 
         // Gets the matched user list
         matchedUserList = getArguments().getStringArrayList(ARG_LIST);

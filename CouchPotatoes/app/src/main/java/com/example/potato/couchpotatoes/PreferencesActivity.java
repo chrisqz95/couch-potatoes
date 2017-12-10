@@ -103,7 +103,7 @@ public class PreferencesActivity extends AppCompatActivity
         imgView.setVisibility(View.GONE);
         spinner.setVisibility(View.VISIBLE);
 
-        helper = new DBHelper();
+        helper = DBHelper.getInstance();
 
         currUserID = helper.getAuth().getUid();
 
@@ -137,7 +137,7 @@ public class PreferencesActivity extends AppCompatActivity
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(getApplicationContext(), PictureGridActivity.class);
-                DBHelper dbHelper = new DBHelper();
+                DBHelper dbHelper = DBHelper.getInstance();
                 dbHelper.fetchCurrentUser();
                 intent.putExtra("uid", dbHelper.getUser().getUid());
                 intent.putExtra("isCurrentUser", true);
@@ -157,7 +157,7 @@ public class PreferencesActivity extends AppCompatActivity
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getApplicationContext(), PictureGridActivity.class);
-                DBHelper dbHelper = new DBHelper();
+                DBHelper dbHelper = DBHelper.getInstance();
                 dbHelper.fetchCurrentUser();
                 intent.putExtra("uid", dbHelper.getUser().getUid());
                 intent.putExtra("isCurrentUser", true);
