@@ -345,7 +345,7 @@ public class SignUpActivity extends AppCompatActivity {
                         addPartnerPrefToFirebase( mGenderPreferenceCheckBoxFemale, mGenderPreferenceCheckBoxMale, mGenderPreferenceCheckBoxNonbinary );
 
                         addWelcomeChat();
-                        
+
                         // Start LoginActivity and end SignUpActivity
                         Toast.makeText(getActivity(), getString(R.string.sign_up_success_toast_message), Toast.LENGTH_SHORT).show();
                         startActivity(new Intent(getContext(), LoginActivity.class));

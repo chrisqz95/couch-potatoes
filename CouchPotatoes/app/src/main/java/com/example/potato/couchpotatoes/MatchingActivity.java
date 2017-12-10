@@ -71,16 +71,12 @@ public class MatchingActivity extends AppCompatActivity
     private ImageView profilePic;
 
     private int currTab = 0;
-    private String currUserID;
-    private View sideBarHeader;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_matching);
         helper = new DBHelper();
-
-        currUserID = helper.getAuth().getUid();
 
         final TabLayout tabLayout = findViewById(R.id.matching_tabs);
         likeButton = findViewById(R.id.fab_match);
@@ -402,28 +398,26 @@ public class MatchingActivity extends AppCompatActivity
 
         imgView.setOnTouchListener(new OnSwipeTouchListener(MatchingActivity.this) {
 
-            @Override
             /**
              * When the picture is swiped left, dislike the user
              */
+            @Override
             public void onSwipeLeft() {
                 if ( !matchedDateList.isEmpty() ) {
                     dislikeUser( currTab );
-                }
-                else {
+                } else {
                     resetMatchingView();
                 }
             }
 
-            @Override
             /**
              * When the picture is swiped right, like the user
              */
+            @Override
             public void onSwipeRight() {
                 if ( !matchedDateList.isEmpty() ) {
                     likeUser( currTab );
-                }
-                else {
+                } else {
                     resetMatchingView();
                 }
             }
@@ -435,8 +429,7 @@ public class MatchingActivity extends AppCompatActivity
             public void onClick(View v) {
                 if ( !matchedDateList.isEmpty() ) {
                     likeUser( currTab );
-                }
-                else {
+                } else {
                     resetMatchingView();
                 }
             }
@@ -447,8 +440,7 @@ public class MatchingActivity extends AppCompatActivity
             public void onClick(View v) {
                 if ( !matchedDateList.isEmpty() ) {
                     dislikeUser( currTab );
-                }
-                else {
+                } else {
                     resetMatchingView();
                 }
             }

@@ -22,7 +22,7 @@ import static com.example.potato.couchpotatoes.StringUtilities.addStrAtPos;
 import static com.example.potato.couchpotatoes.StringUtilities.paddSpace;
 
 public class MatchPageFragment extends Fragment {
-    public static final String ARG_LIST = "ARG_LIST";
+    private static final String ARG_LIST = "ARG_LIST";
 
     private final int BIO_SUBSTRING_LENGTH = 60;
 
@@ -35,7 +35,6 @@ public class MatchPageFragment extends Fragment {
     private TextView interestsHeader;
     private TextView interestsText;
     private TextView userInfoText;
-    private LinearLayout matchingUserInfoLayout;
 
     /**
      * Create a new fragment while passing in a list of the strings of the matched users
@@ -71,11 +70,11 @@ public class MatchPageFragment extends Fragment {
         interestsHeader = view.findViewById(R.id.interestsHeader);
         interestsText = view.findViewById(R.id.interestsText);
         userInfoText = view.findViewById(R.id.userInfoText);
-        matchingUserInfoLayout = view.findViewById(R.id.matchingUserInfoLayout);
+        LinearLayout matchingUserInfoLayout = view.findViewById(R.id.matchingUserInfoLayout);
 
         // If the user doesn't have a list of potential matches, tell them to update their profile
         if ( matchedUserList.isEmpty() ) {
-            userInfoText.setText( "No new matches? Make sure to fill out your account settings or try adding more interests." );
+            userInfoText.setText(R.string.no_new_matches_message);
         }
 
         // Otherwise, populate the fragment
