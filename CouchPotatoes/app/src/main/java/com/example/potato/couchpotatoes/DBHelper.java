@@ -160,7 +160,7 @@ public class DBHelper {
     }
 
     /**
-     *
+     * fetch text information of a message
      * @param messageId id of message to fetch
      * @param finishedCallback returns data snapshot of message in callback. Guarenteed to exist.
      */
@@ -171,6 +171,50 @@ public class DBHelper {
                 if (dataSnapshot.exists()) {
                     finishedCallback.callback(dataSnapshot);
                 }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                // Do nothing
+            }
+        });
+    }
+
+    /**
+     * return basic information of a matched user
+     * @param currMatchId
+     * @param finishedCallback
+     */
+    public void fetchMatchInfo(String currMatchId, @NonNull final SimpleCallback<Map<String, Object>> finishedCallback) {
+        getDb().getReference(getUserPath() + currMatchId).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Map<String, Object> res = new HashMap<>();
+
+                for ( DataSnapshot children : dataSnapshot.getChildren() ) {
+                    res.put( children.getKey(), children.getValue() );
+                }
+
+                finishedCallback.callback(res);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                // Do nothing
+            }
+        });
+    }
+
+    /**
+     * Return the interests of the matched user in a data snapshot
+     * @param id of matched user
+     * @param finishedCallback
+     */
+    public void fetchMatchInterests(String id, @NonNull final SimpleCallback<DataSnapshot> finishedCallback) {
+        getDb().getReference(getUserInterestPath()).child(id).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                finishedCallback.callback(dataSnapshot);
             }
 
             @Override

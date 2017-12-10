@@ -127,19 +127,13 @@ public class MatchPageFragment extends Fragment {
             });
 
             // Fetch and display info about the potential match
-            dbHelper.getDb().getReference( dbHelper.getUserPath() + currMatchID ).addValueEventListener(new ValueEventListener() {
+            dbHelper.fetchMatchInfo(currMatchID, new SimpleCallback<Map<String, Object>>() {
                 @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-                    Map<String, Object> res = new HashMap<>();
-
-                    for ( DataSnapshot children : dataSnapshot.getChildren() ) {
-                        res.put( children.getKey(), children.getValue() );
-                    }
-
-                    String firstName = (String) res.get( "firstName" );
-                    String lastName = (String) res.get( "lastName" );
-                    String gender = (String) res.get( "gender" );
-                    String bio = (String) res.get( "bio" );
+                public void callback(Map<String, Object> data) {
+                    String firstName = (String) data.get( "firstName" );
+                    String lastName = (String) data.get( "lastName" );
+                    String gender = (String) data.get( "gender" );
+                    String bio = (String) data.get( "bio" );
                     String userInfo = "";
                     String genderAbbrev = "";
 
@@ -171,24 +165,14 @@ public class MatchPageFragment extends Fragment {
                     interestsHeader.setText( interestsHeaderStr );
 
                     // Fetch and display User's Interests
-                    dbHelper.getDb().getReference( dbHelper.getUserInterestPath() ).child( currMatchID ).addValueEventListener(new ValueEventListener() {
+                    dbHelper.fetchMatchInterests(currMatchID, new SimpleCallback<DataSnapshot>() {
                         @Override
-                        public void onDataChange(DataSnapshot dataSnapshot) {
+                        public void callback(DataSnapshot data) {
                             InterestStringBuilder builder = new InterestStringBuilder();
-                            String interests = builder.getInterestString(dataSnapshot) ;
+                            String interests = builder.getInterestString(data) ;
                             interestsText.setText( interests );
                         }
-
-                        @Override
-                        public void onCancelled(DatabaseError databaseError) {
-
-                        }
                     });
-                }
-
-                @Override
-                public void onCancelled(DatabaseError databaseError) {
-
                 }
             });
         }
