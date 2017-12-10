@@ -612,6 +612,17 @@ public class PreferencesActivity extends AppCompatActivity
         emailView.setText( displayEmail );
     }
 
+    // Handles pressing back button in bottom navigation bar when sidebar is on the screen
+    @Override
+    public void onBackPressed() {
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.chatroom_drawer_layout);
+        if (drawer.isDrawerOpen(GravityCompat.START)) {
+            drawer.closeDrawer(GravityCompat.START);
+        } else {
+            super.onBackPressed();
+        }
+    }
+
     // Handles action in the sidebar menu
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
