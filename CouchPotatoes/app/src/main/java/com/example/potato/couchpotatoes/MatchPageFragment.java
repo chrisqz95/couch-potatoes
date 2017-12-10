@@ -176,28 +176,8 @@ public class MatchPageFragment extends Fragment {
                     helper.getDb().getReference( helper.getUserInterestPath() ).child( currMatchID ).addValueEventListener(new ValueEventListener() {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
-                            String interests = "";
-
-                            for ( DataSnapshot child : dataSnapshot.getChildren() ) {
-                                String interest = child.getKey();
-                                interests += interest;
-                                interests += "\n\n";
-
-                                for ( DataSnapshot subchild : child.getChildren() ) {
-                                    String subcategory = subchild.getKey();
-                                    String preference = (String) subchild.getValue();
-
-                                    int newLinePos = 22;
-                                    //interests += "◇  ";
-                                    interests += "    ";
-                                    interests += addStrAtPos( subcategory, "\n     ", newLinePos );
-                                    interests += "  -  ";
-                                    interests += addStrAtPos( preference, "\n     ", newLinePos );
-                                    interests += "\n";
-                                }
-                                interests += "\n";
-                            }
-
+                            InterestStringBuilder builder = new InterestStringBuilder();
+                            String interests = builder.getInterestString(dataSnapshot) ;
                             interestsText.setText( interests );
                         }
 

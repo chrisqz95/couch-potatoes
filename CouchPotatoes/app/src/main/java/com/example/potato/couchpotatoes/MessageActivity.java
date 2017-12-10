@@ -8,6 +8,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.*;
 import android.widget.Button;
 import android.widget.EditText;
@@ -27,6 +28,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class MessageActivity extends AppCompatActivity {
+
+    public static final int TIME_BETWEEN_MESSAGE = 30000;
 
     private enum MESSAGE_TYPE {SENT, RECEIVED};
 
@@ -239,6 +242,28 @@ public class MessageActivity extends AppCompatActivity {
     }
 
     /*
+    * Description: Edge case: This executes for the very first time a message is sent. Date
+    * should always be displayed for first message
+    */
+    private String getTimeString(String curMsg) {
+        String timeStr = "";
+        String hourStr = "";
+        String curMsgDate = curMsg.split(" {2}")[0];
+        String curMsgTime = curMsg.split(" {2}")[1];
+        String[] date = curMsgDate.split("-");
+        String[] time = curMsgTime.split(":");
+
+        hourStr = toAmPm(curMsgTime);
+
+        // get Month
+        String monthString = getMonth(date[1]);
+        int day = Integer.parseInt(date[2]);
+        timeStr = monthString + " " + day + ", " + hourStr;
+
+        return timeStr;
+    }
+
+    /*
      * Returns timestamp above messages based on time since last message.
      */
     private String getTimeString(String lastMsg, String curMsg) {
@@ -257,28 +282,15 @@ public class MessageActivity extends AppCompatActivity {
 
         String[] date = curMsgDate.split("-");
 
-        // TODO throw this into a method
         //Convert 24 Hour format to AM/PM
-        String dateStr = curMsgTime;
-        DateFormat readFormat = new SimpleDateFormat( "HH:mm:ss");
-        DateFormat writeFormat = new SimpleDateFormat( "hh:mm a");
-        try {
-            hourStr = writeFormat.format(readFormat.parse(dateStr));
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
+        hourStr = toAmPm(curMsgTime);
 
-        // TODO throw a lot of this into methods
-        Calendar c = Calendar.getInstance();
-        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        String curDate = df.format(c.getTime()).split(" ")[0];
-        int intCurDate = Integer.parseInt(curDate.replaceAll("-", ""));
+        //Convert current date to an integer for comparison
+        int intCurDate = Integer.parseInt(getCurrentDate().replaceAll("-", ""));
 
-        // TODO pls guys methods they are a thing
         if (intCurDate - intCurMsgDate < 1) {
-            if (Math.abs(intCurMsgTime - intLastMsgTime) >= 30000) {
+            if (isGapMessage(intCurMsgTime, intLastMsgTime)) {
                 timeStr = hourStr;
-
             }
             //If the message has been longer than 1 day
         } else if ((intCurMsgDate - intLastMsgDate) >=1) {
@@ -289,10 +301,22 @@ public class MessageActivity extends AppCompatActivity {
 
         }
         //If the message has been longer than 3 hours
-        else if ((intCurMsgTime - intLastMsgTime) >= 30000) {
+        else if (isGapMessage(intCurMsgTime, intLastMsgTime)) {
             timeStr = hourStr;
         }
         return timeStr;
+    }
+
+    //Determine if there is a gap between messages
+    private boolean isGapMessage(int curMsgTime, int lastMsgTime) {
+        return Math.abs(curMsgTime - lastMsgTime) >= TIME_BETWEEN_MESSAGE;
+    }
+
+    private String getCurrentDate() {
+        Calendar c = Calendar.getInstance();
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String curDate = df.format(c.getTime()).split(" ")[0];
+        return curDate;
     }
 
     /**
@@ -345,42 +369,36 @@ public class MessageActivity extends AppCompatActivity {
         textView.setTextColor(Color.GRAY);
         textView.setTextSize(14);
         textView.setText(time);
+        layoutParams.weight = 1.0f;
+
+        textView.setLayoutParams(layoutParams);
+        layout.addView(textView);
+
+        scrollView.post(new Runnable() {
+            @Override
+            public void run() {
+                scrollView.fullScroll(View.FOCUS_DOWN);
+            }
+        });
     }
 
-    /*
-     * Description: Edge case: This executes for the very first time a message is sent. Date
-     * should always be displayed for first message
-     */
-    private String getTimeString(String curMsg) {
-        String timeStr = "";
-        String hourStr = "";
-        String curMsgDate = curMsg.split(" {2}")[0];
-        String curMsgTime = curMsg.split(" {2}")[1];
-        String[] date = curMsgDate.split("-");
-        String[] time = curMsgTime.split(":");
 
-        hourStr = toAmPm(time);
-
-        // get Month
-        String monthString = getMonth(date[1]);
-        int day = Integer.parseInt(date[2]);
-        timeStr = monthString + " " + day + ", " + hourStr;
-
-        return timeStr;
-    }
 
     /**
      * Returns the time in AM PM format
      * @param time to convert
      * @return the time in AM PM format
      */
-    private String toAmPm(String[] time) {
-        int hour = Integer.parseInt(time[0]);
-        if (hour >= 12) {
-            return (hour - 12) + ":" + time[1] + " PM";
-        } else {
-            return time[0] + ":" + time[1] + " AM";
+    private String toAmPm(String time) {
+        String hourStr = "";
+        DateFormat readFormat = new SimpleDateFormat("HH:mm:ss");
+        DateFormat writeFormat = new SimpleDateFormat("hh:mm a");
+        try {
+            hourStr = writeFormat.format(readFormat.parse(time));
+        } catch (ParseException e) {
+            e.printStackTrace();
         }
+        return hourStr;
     }
 
     /**

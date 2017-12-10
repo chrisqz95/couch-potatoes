@@ -57,33 +57,10 @@ public class ChatRoomActivity extends AppCompatActivity
         setSupportActionBar(toolbar);
         toolbar.setTitleTextColor(Color.WHITE);
 
-        // enables toggle button on toolbar to open the sidebar
-        mDrawer = findViewById(R.id.chatroom_drawer_layout);
-        // adds the toggle button
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, mDrawer, toolbar, R.string.navigation_drawer_open,
-                R.string.navigation_drawer_close);
-        mDrawer.addDrawerListener(toggle);
-        toggle.syncState();
-
-        // set up side navigation bar layout
-        navView = findViewById(R.id.chatroom_nav_view);
-        navView.setNavigationItemSelectedListener(this);
-
-        // Want to display icons in original color scheme
-        navView.setItemIconTintList(null);
-
-        // highlight the current location
-        navView.setCheckedItem(R.id.nav_chats);
-
-        // initialize textViews on the sidebar header
-        sidebarUserName =  navView.getHeaderView(0)
-                .findViewById(R.id.sidebar_username);
-        sidebarUserEmail =  navView.getHeaderView(0)
-                .findViewById(R.id.sidebar_user_email);
-        // displays user's name and email on the sidebar header
-        sidebarUserName.setText( displayName );
-        sidebarUserEmail.setText( helper.getUser().getEmail() );
+        // set up the side navigation bar on the left side of screen
+        mDrawer = (DrawerLayout) findViewById(R.id.chatroom_drawer_layout);
+        navView = (NavigationView) findViewById(R.id.chatroom_nav_view);
+        setSideBarDrawer( mDrawer, navView, toolbar , helper );
 
         // Use a ListView to display the list of chats
         listView = findViewById(R.id.chatList);
@@ -263,6 +240,49 @@ public class ChatRoomActivity extends AppCompatActivity
         }
     }
 
+    /*
+     * The method sets up the navigation drawer (a.k.a. the sidebar) on the
+     * left side of the screen.
+     */
+    private void setSideBarDrawer( DrawerLayout mDrawer, NavigationView navView,
+                                   Toolbar toolbar, DBHelper helper) {
+        // enables toggle button on toolbar to open the sidebar
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                this, mDrawer, toolbar, R.string.navigation_drawer_open,
+                R.string.navigation_drawer_close);
+        mDrawer.addDrawerListener(toggle);
+        toggle.syncState();
+
+        // set up side navigation bar layout
+        navView.setNavigationItemSelectedListener(this);
+
+        // Want to display icons in original color scheme
+        navView.setItemIconTintList(null);
+
+        // highlight the current location
+        navView.setCheckedItem(R.id.nav_matches);
+
+        // sets up TextViews in sidebar to display the user's name and email
+        sidebarUserName = (android.widget.TextView) navView.getHeaderView(0)
+                .findViewById(R.id.sidebar_username);
+        sidebarUserEmail = (android.widget.TextView) navView.getHeaderView(0)
+                .findViewById(R.id.sidebar_user_email);
+        setSideBarText( sidebarUserName, sidebarUserEmail, helper );
+    }
+
+    /*
+     * This method sets the text of the TextViews in the sidebar to display the
+     * user's name and email.
+     */
+    private void setSideBarText( TextView nameView, TextView emailView, DBHelper helper ) {
+        // fetches user's name and email
+        String displayName = helper.getAuthUserDisplayName();
+        String displayEmail = helper.getUser().getEmail();
+
+        nameView.setText( displayName );
+        emailView.setText( displayEmail );
+    }
+
     // Handles action in the sidebar menu
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
@@ -274,8 +294,6 @@ public class ChatRoomActivity extends AppCompatActivity
             finish();
 
         } else if (id == R.id.nav_matches) {
-            Intent intent = new Intent( getApplicationContext(), MainActivity.class );
-            startActivity( intent );
             finish();
 
         } else if (id == R.id.nav_chats) {
