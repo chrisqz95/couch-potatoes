@@ -5,7 +5,6 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
-import android.widget.Toast;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.*;
@@ -18,6 +17,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class DBHelper {
+
+    // max number of messages to fetch
+    private static int MESSAGE_FETCH_LIMIT = 50;
 
     private FirebaseAuth auth;
     private FirebaseDatabase db;
@@ -140,6 +142,47 @@ public class DBHelper {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
                 finishedCallback.callback(task.isSuccessful());
+            }
+        });
+    }
+
+    /**
+     *
+     * @param chatRoom id of the chatroom to get information of
+     * @param finishedCallback returns the information of the chatroom in the callback
+     */
+    public void fetchChat(String chatRoom, @NonNull final SimpleCallback<DataSnapshot> finishedCallback) {
+        getDb().getReference(getChatMessagePath() + chatRoom).limitToLast(MESSAGE_FETCH_LIMIT)
+                .addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        finishedCallback.callback(dataSnapshot);
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+                        // Do nothing
+                    }
+                });
+    }
+
+    /**
+     *
+     * @param messageId id of message to fetch
+     * @param finishedCallback returns data snapshot of message in callback. Guarenteed to exist.
+     */
+    public void fetchMessage(String messageId, @NonNull final SimpleCallback<DataSnapshot> finishedCallback) {
+        getDb().getReference(getMessagePath() + messageId).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    finishedCallback.callback(dataSnapshot);
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                // Do nothing
             }
         });
     }
