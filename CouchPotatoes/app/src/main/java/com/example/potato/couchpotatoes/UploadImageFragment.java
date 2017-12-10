@@ -83,16 +83,13 @@ public class UploadImageFragment extends Fragment implements View.OnClickListene
                 android.Manifest.permission.WRITE_EXTERNAL_STORAGE);
 
         // If no permissions, try to get permission to write to external storage
-        if ( permissionCheck != PackageManager.PERMISSION_GRANTED ) {
-            // TODO
-        }
+        if ( permissionCheck != PackageManager.PERMISSION_GRANTED ) {}
         // No explanation needed, request permission
         else {
             ActivityCompat.requestPermissions(getActivity(),
                     new String[]{android.Manifest.permission.WRITE_EXTERNAL_STORAGE},
                     REQUEST_WRITE_TO_EXTERNAL_STORAGE );
 
-            // TODO Rewrite so that this is set on permission request result instead
             canWriteToExternalStorage = PackageManager.PERMISSION_GRANTED;
         }
 

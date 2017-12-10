@@ -20,7 +20,6 @@
             android:orientation="vertical">
 
             <!-- Prevent keyboard from showing on startup -->
-            <!--TODO is there a better way than this hack?-->
             <LinearLayout
                 android:focusable="true"
                 android:focusableInTouchMode="true"
@@ -87,8 +86,6 @@
                 android:textSize="16dp"
                 android:layout_marginTop="16dp" />
 
-            <!--TODO change this to select date, then have a text view that will display the date chosen-->
-            <!--TODO may have to nest this next part in another horizontal linear layout to display the date next to the button-->
             <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

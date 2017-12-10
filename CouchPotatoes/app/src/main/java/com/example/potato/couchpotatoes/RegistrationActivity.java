@@ -59,7 +59,6 @@ public class RegistrationActivity extends AppCompatActivity {
         helper.getAuth().createUserWithEmailAndPassword( email, password ).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
-            // TODO USE STRING VALIDATOR
             String userID = helper.getAuth().getUid();
             String firstName = mFirstName.getText().toString();
             String middleName = mMiddleName.getText().toString();
