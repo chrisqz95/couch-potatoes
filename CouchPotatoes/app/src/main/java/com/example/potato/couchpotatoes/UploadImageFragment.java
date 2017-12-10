@@ -48,7 +48,7 @@ public class UploadImageFragment extends Fragment implements View.OnClickListene
 
     private int canWriteToExternalStorage = PackageManager.PERMISSION_DENIED;
 
-    private DBHelper helper;
+    private DBHelper dbHelper;
 
     private View view;
     private ImageView mImageView;
@@ -67,7 +67,7 @@ public class UploadImageFragment extends Fragment implements View.OnClickListene
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        helper = DBHelper.getInstance();
+        dbHelper = DBHelper.getInstance();
 
         // Source: https://stackoverflow.com/questions/42251634/android-os-fileuriexposedexception-file-jpg-exposed-beyond-app-through-clipdata
         // Workaround: Allows access to camera
@@ -250,11 +250,11 @@ public class UploadImageFragment extends Fragment implements View.OnClickListene
     // Uploads the passed InputStream of an image to Firebase Storage and then uploads
     // the photo meta data to Firebase Database
     public void UploadImage ( InputStream imgStream ) {
-        photoID = helper.getNewChildKey( helper.getPhotoPath() );
-        userID = helper.getAuth().getUid();
+        photoID = dbHelper.getNewChildKey( dbHelper.getPhotoPath() );
+        userID = dbHelper.getAuth().getUid();
 
         // Get reference to photo destination on Firebase Storage
-        StorageReference ref = helper.getStorage().getReference().child( helper.getPhotoPath() + userID + "/" + photoID );
+        StorageReference ref = dbHelper.getStorage().getReference().child( dbHelper.getPhotoPath() + userID + "/" + photoID );
 
         // Get upload task of photo
         UploadTask uploadTask = ref.putStream( imgStream );
@@ -281,8 +281,8 @@ public class UploadImageFragment extends Fragment implements View.OnClickListene
             String uri = ( downloadUrl != null ) ? downloadUrl.toString() : "";
 
             // Add photo meta data to Firebase Database
-            helper.addToUserPhoto( userID, photoID );
-            helper.addToPhoto( photoID, userID, title, descr, uri );
+            dbHelper.addToUserPhoto( userID, photoID );
+            dbHelper.addToPhoto( photoID, userID, title, descr, uri );
 
             // Notify User of successful upload
             Toast.makeText(getActivity(), "Photo uploaded successfully", Toast.LENGTH_LONG).show();

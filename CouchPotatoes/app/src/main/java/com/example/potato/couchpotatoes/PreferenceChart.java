@@ -17,7 +17,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 public class PreferenceChart extends AppCompatActivity {
-    private DBHelper helper;
+    private DBHelper dbHelper;
 
     private ListView subcategoryLayout;
 
@@ -46,9 +46,9 @@ public class PreferenceChart extends AppCompatActivity {
 
         prevGenderChecked = new SparseBooleanArray();
 
-        helper = DBHelper.getInstance();
+        dbHelper = DBHelper.getInstance();
 
-        currUserID = helper.getAuth().getUid();
+        currUserID = dbHelper.getAuth().getUid();
 
         subcategoryList = new ArrayList<>();
 
@@ -87,10 +87,10 @@ public class PreferenceChart extends AppCompatActivity {
                 for (int i = 0; i < subcategoryLayout.getAdapter().getCount(); i++) {
                     if (genderChecked.get(i)) {
                         // Submit gender changes to Firebase
-                        helper.addToUserInterest( currUserID, interest, subcategoryList.get( i ), "like" );
+                        dbHelper.addToUserInterest( currUserID, interest, subcategoryList.get( i ), "like" );
                     }
                     else {
-                        helper.removeFromUserInterest( currUserID, interest, subcategoryList.get( i ) );
+                        dbHelper.removeFromUserInterest( currUserID, interest, subcategoryList.get( i ) );
                     }
                 }
 
@@ -118,7 +118,7 @@ public class PreferenceChart extends AppCompatActivity {
     }
 
     private void displaySubcategories() {
-        helper.getDb().getReference( helper.getInterestSubcategoryPath() ).child( interest ).addValueEventListener(new ValueEventListener() {
+        dbHelper.getDb().getReference( dbHelper.getInterestSubcategoryPath() ).child( interest ).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                for ( DataSnapshot subcategory : dataSnapshot.getChildren() ) {
@@ -137,7 +137,7 @@ public class PreferenceChart extends AppCompatActivity {
     }
 
     private void displayLikedSubcategories() {
-        helper.getDb().getReference( helper.getUserInterestPath() ).child( currUserID ).child( interest ).addValueEventListener(new ValueEventListener() {
+        dbHelper.getDb().getReference( dbHelper.getUserInterestPath() ).child( currUserID ).child( interest ).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for ( DataSnapshot subcat : dataSnapshot.getChildren() ) {

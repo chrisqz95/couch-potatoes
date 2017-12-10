@@ -21,7 +21,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class SettingsActivity extends AppCompatActivity {
-    private DBHelper helper;
+    private DBHelper dbHelper;
     private static String[] genders = new String[] {"male", "female", "non-binary"};
     private ListView sexualPreference;
     private Button submitBtn;
@@ -38,7 +38,7 @@ public class SettingsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
 
-        helper = DBHelper.getInstance();
+        dbHelper = DBHelper.getInstance();
 
         prevSexualPrefChecked = new SparseBooleanArray();
 
@@ -61,7 +61,7 @@ public class SettingsActivity extends AppCompatActivity {
         sexualPreference.setAdapter( new ArrayAdapter<String>(this, android.R.layout.simple_list_item_multiple_choice, genders) );
         sexualPreference.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
 
-        currUserID = helper.getAuth().getUid();
+        currUserID = dbHelper.getAuth().getUid();
 
         //displayGender();
         displaySexualPreference();
@@ -121,9 +121,9 @@ public class SettingsActivity extends AppCompatActivity {
             String state = stateEditText.getText().toString();
             String country = countryEditText.getText().toString();
 
-            helper.getDb().getReference( helper.getUserPath() ).child( currUserID ).child( "city" ).setValue( city );
-            helper.getDb().getReference( helper.getUserPath() ).child( currUserID ).child( "state" ).setValue( state );
-            helper.getDb().getReference( helper.getUserPath() ).child( currUserID ).child( "country" ).setValue( country );
+            dbHelper.getDb().getReference( dbHelper.getUserPath() ).child( currUserID ).child( "city" ).setValue( city );
+            dbHelper.getDb().getReference( dbHelper.getUserPath() ).child( currUserID ).child( "state" ).setValue( state );
+            dbHelper.getDb().getReference( dbHelper.getUserPath() ).child( currUserID ).child( "country" ).setValue( country );
 
             Map<String, Object> sexualPreferenceMap = new HashMap<>();
 
@@ -138,7 +138,7 @@ public class SettingsActivity extends AppCompatActivity {
             prevSexualPrefChecked = sexualPrefChecked;
 
             // Submit partner preference changes to Firebase
-            helper.getDb().getReference( helper.getPartnerPreferencePath() ).child( currUserID ).child( "gender" ).setValue( sexualPreferenceMap );
+            dbHelper.getDb().getReference( dbHelper.getPartnerPreferencePath() ).child( currUserID ).child( "gender" ).setValue( sexualPreferenceMap );
 
             settingsBtnLayout.setVisibility(View.GONE);
 
@@ -166,7 +166,7 @@ public class SettingsActivity extends AppCompatActivity {
 
     // Fetch preferences from Firebase
     private void displaySexualPreference() {
-        helper.getDb().getReference( helper.getPartnerPreferencePath() ).child( currUserID ).child( "gender" ).addValueEventListener(new ValueEventListener() {
+        dbHelper.getDb().getReference( dbHelper.getPartnerPreferencePath() ).child( currUserID ).child( "gender" ).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for ( DataSnapshot currGender : dataSnapshot.getChildren() ) {
@@ -184,7 +184,7 @@ public class SettingsActivity extends AppCompatActivity {
     }
 
     private void displayCityStateCountry() {
-        helper.getDb().getReference( helper.getUserPath() ).child( currUserID ).addValueEventListener(new ValueEventListener() {
+        dbHelper.getDb().getReference( dbHelper.getUserPath() ).child( currUserID ).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for ( DataSnapshot field : dataSnapshot.getChildren() ) {

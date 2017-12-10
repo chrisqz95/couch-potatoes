@@ -31,14 +31,14 @@ import java.util.Map;
 
 public class ChatRoomActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
-    private DBHelper helper = DBHelper.getInstance();
+    private DBHelper dbHelper = DBHelper.getInstance();
     private ArrayList<String> listItems = new ArrayList<>();
     private ArrayAdapter<String> listAdapter;
     private SwipeActionAdapter mAdapter;
     private ListView listView;
     private Map<String,String> chats = new HashMap<>();
-    private String userID = helper.getAuth().getUid();
-    private String displayName = helper.getAuthUserDisplayName();
+    private String userID = dbHelper.getAuth().getUid();
+    private String displayName = dbHelper.getAuthUserDisplayName();
     private String userNames = ""; // The list of users in a chat exl. displayName
 
     // For the side navigation bar
@@ -60,7 +60,7 @@ public class ChatRoomActivity extends AppCompatActivity
         // set up the side navigation bar on the left side of screen
         mDrawer = (DrawerLayout) findViewById(R.id.chatroom_drawer_layout);
         navView = (NavigationView) findViewById(R.id.chatroom_nav_view);
-        setSideBarDrawer( mDrawer, navView, toolbar , helper );
+        setSideBarDrawer( mDrawer, navView, toolbar , dbHelper);
 
         // Use a ListView to display the list of chats
         listView = findViewById(R.id.chatList);
@@ -106,8 +106,8 @@ public class ChatRoomActivity extends AppCompatActivity
                                     .setMessage("This will permanently delete the conversation history.")
                                     .setPositiveButton("Delete", new DialogInterface.OnClickListener() {
                                         public void onClick(DialogInterface dialog, int id) {
-                                            helper.removeFromChatUser(chatID, userID);
-                                            helper.removeFromUserChat(userID, chatID);
+                                            dbHelper.removeFromChatUser(chatID, userID);
+                                            dbHelper.removeFromUserChat(userID, chatID);
                                         }
                                     })
                                     .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -123,8 +123,8 @@ public class ChatRoomActivity extends AppCompatActivity
                                     .setMessage("This will permanently delete the conversation history.")
                                     .setPositiveButton("Delete", new DialogInterface.OnClickListener() {
                                         public void onClick(DialogInterface dialog, int id) {
-                                            helper.removeFromChatUser(chatID, userID);
-                                            helper.removeFromUserChat(userID, chatID);
+                                            dbHelper.removeFromChatUser(chatID, userID);
+                                            dbHelper.removeFromUserChat(userID, chatID);
                                         }
                                     })
                                     .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -142,7 +142,7 @@ public class ChatRoomActivity extends AppCompatActivity
 
         // Fetch and display all chats the current user belongs to.
         // The names of all chat members that belong to a chat are displayed and identify each chat.
-        helper.getDb().getReference( helper.getUserChatPath() + userID ).addValueEventListener(new ValueEventListener() {
+        dbHelper.getDb().getReference( dbHelper.getUserChatPath() + userID ).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Iterator<DataSnapshot> elems = dataSnapshot.getChildren().iterator();
@@ -155,7 +155,7 @@ public class ChatRoomActivity extends AppCompatActivity
                     String chatID = elems.next().getKey();
 
                     // Fetch the names of all users that belong to the selected chat
-                    helper.getDb().getReference( helper.getChatUserPath() + chatID ).addListenerForSingleValueEvent(new ValueEventListener() {
+                    dbHelper.getDb().getReference( dbHelper.getChatUserPath() + chatID ).addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
                             Iterator<DataSnapshot> users = dataSnapshot.getChildren().iterator();
@@ -309,7 +309,7 @@ public class ChatRoomActivity extends AppCompatActivity
 
         } else if (id == R.id.nav_logout) {
             // logs out and redirects user to LoginActivity.xml
-            helper.getAuth().signOut();
+            dbHelper.getAuth().signOut();
             startActivity( new Intent( getApplicationContext(), LoginActivity.class ) );
             finish();
         }

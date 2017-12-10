@@ -8,7 +8,6 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.*;
 import android.widget.Button;
 import android.widget.EditText;
@@ -39,7 +38,7 @@ public class MessageActivity extends AppCompatActivity {
     private ImageView sendButton;
     private EditText messageArea;
     private ScrollView scrollView;
-    private DBHelper helper = DBHelper.getInstance();
+    private DBHelper dbHelper = DBHelper.getInstance();
     private String userID, chatRoom, displayName, messageID, timestamp, message, companion;
     private TextView userName;
     private Button b_select_spinner;
@@ -73,10 +72,10 @@ public class MessageActivity extends AppCompatActivity {
         scrollView = findViewById(R.id.scrollView);
 
         // Get the current user's display name
-        displayName = helper.getAuthUserDisplayName();
+        displayName = dbHelper.getAuthUserDisplayName();
 
         // Get the current user's id
-        userID = helper.getAuth().getUid();
+        userID = dbHelper.getAuth().getUid();
 
         // Get the current chat room's id
         chatRoom = (String) getIntent().getExtras().get("chatID");
@@ -90,8 +89,8 @@ public class MessageActivity extends AppCompatActivity {
         // Check if a spinner sent a message
         String spinner_message = getIntent().getStringExtra("message");
         if(!(spinner_message.equals("1"))){
-            messageID = helper.getNewChildKey(helper.getChatMessagePath() + chatRoom);
-            timestamp = helper.getNewTimestamp();
+            messageID = dbHelper.getNewChildKey(dbHelper.getChatMessagePath() + chatRoom);
+            timestamp = dbHelper.getNewTimestamp();
             message = spinner_message;
 
             // Clear the message text field on submitting a message
@@ -100,8 +99,8 @@ public class MessageActivity extends AppCompatActivity {
             // Add the message to the chat.
             // Message data will be sent to the Firebase Database accordingly.
             if (!(message.equals(""))) {
-                helper.addToChatMessage(chatRoom, messageID);
-                helper.addToMessage(messageID, userID, displayName, chatRoom, timestamp, message);
+                dbHelper.addToChatMessage(chatRoom, messageID);
+                dbHelper.addToMessage(messageID, userID, displayName, chatRoom, timestamp, message);
             }
         }
 
@@ -109,8 +108,8 @@ public class MessageActivity extends AppCompatActivity {
         sendButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                messageID = helper.getNewChildKey(helper.getChatMessagePath() + chatRoom);
-                timestamp = helper.getNewTimestamp();
+                messageID = dbHelper.getNewChildKey(dbHelper.getChatMessagePath() + chatRoom);
+                timestamp = dbHelper.getNewTimestamp();
                 message = messageArea.getText().toString();
 
                 // Clear the message text field on submitting a message
@@ -119,13 +118,13 @@ public class MessageActivity extends AppCompatActivity {
                 // Add the message to the chat.
                 // Message data will be sent to the Firebase Database accordingly.
                 if (!(message.equals(""))) {
-                    helper.addToChatMessage(chatRoom, messageID);
-                    helper.addToMessage(messageID, userID, displayName, chatRoom, timestamp, message);
+                    dbHelper.addToChatMessage(chatRoom, messageID);
+                    dbHelper.addToMessage(messageID, userID, displayName, chatRoom, timestamp, message);
                 }
             }
         });
 
-        helper.fetchChat(chatRoom, new SimpleCallback<DataSnapshot>() {
+        dbHelper.fetchChat(chatRoom, new SimpleCallback<DataSnapshot>() {
             @Override
             public void callback(DataSnapshot data) {
                 for (DataSnapshot messageSnapshot : data.getChildren()) {
@@ -139,7 +138,7 @@ public class MessageActivity extends AppCompatActivity {
                     }
 
                     // Fetch all information corresponding to the current message
-                    helper.fetchMessage(messageId, new SimpleCallback<DataSnapshot>() {
+                    dbHelper.fetchMessage(messageId, new SimpleCallback<DataSnapshot>() {
                         @Override
                         public void callback(DataSnapshot messageData) {
                             String from = (String) messageData.child("name").getValue();
