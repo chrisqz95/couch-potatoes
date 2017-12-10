@@ -246,10 +246,7 @@
     <string name="biography">Biography</string>
     <string name="edit_photos">Edit Photos</string>
     <string name="settings">Settings</string>
-<<<<<<< HEAD
     <string name="title_activity_app_settings">App Settings</string>
 
     <string name="suggest">COUCHPOTATOES SUGGESTS:</string>
-=======
->>>>>>> parent of fa2f89b... Merged with 'master'
 </resources>
