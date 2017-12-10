@@ -56,7 +56,7 @@ public class MessageActivity extends AppCompatActivity {
         setContentView(R.layout.activity_chat);
 
         // places toolbar into the screen
-        Toolbar toolbar = (Toolbar) findViewById(R.id.chat_toolbar);
+        Toolbar toolbar = findViewById(R.id.chat_toolbar);
         setSupportActionBar(toolbar);
 
         // adds up navigation to the toolbar on top
@@ -226,27 +226,21 @@ public class MessageActivity extends AppCompatActivity {
                         switch (which) {
                             case 0:
                                 intent = new Intent(((Dialog) dialog).getContext(), SpinToChooseActivity.class);
-                                openSpinner(1, intent);
+                                openSpinner(0, intent);
                                 break;
                             case 1:
                                 intent = new Intent(((Dialog) dialog).getContext(), SpinToChooseActivity.class);
-                                openSpinner(0, intent);
-                                break;
-                            case 2:
-                                intent = new Intent(((Dialog) dialog).getContext(), SpinBottleActivity.class);
                                 openSpinner(1, intent);
                                 break;
+                            case 2:
+                                intent = new Intent(((Dialog) dialog).getContext(), SpinToChooseActivity.class);
+                                openSpinner(2, intent);
+                                break;
                             case 3:
-                                //System.out.println(LoginActivity.class);
-                                intent = new Intent(((Dialog) dialog).getContext(), SpinBottleActivity.class);
-                                openSpinner(0, intent);
+                                intent = new Intent(((Dialog) dialog).getContext(), SpinToChooseActivity.class);
+                                openSpinner(3, intent);
                                 break;
                         }
-                    }
-                })
-                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        // Do something else
                     }
                 })
 
