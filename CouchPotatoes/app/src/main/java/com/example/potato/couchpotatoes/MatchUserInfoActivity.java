@@ -104,31 +104,9 @@ public class MatchUserInfoActivity extends AppCompatActivity {
                 // Fetch and display User's Interests
                 helper.getDb().getReference( helper.getUserInterestPath() ).child( currMatchID ).addValueEventListener(new ValueEventListener() {
                     @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        String interests = "";
-
-                        // Format the user's interests
-                        for ( DataSnapshot child : dataSnapshot.getChildren() ) {
-                            String interest = child.getKey();
-                            interests += interest;
-                            interests += "\n\n";
-
-                            for ( DataSnapshot subchild : child.getChildren() ) {
-                                String subcategory = subchild.getKey();
-                                String preference = (String) subchild.getValue();
-
-
-                                int newLinePos = 22;
-                                //interests += "◇  ";
-                                interests += "    ";
-                                interests += addStrAtPos( subcategory, "\n     ", newLinePos );
-                                interests += "  -  ";
-                                interests += addStrAtPos( preference, "\n     ", newLinePos );
-                                interests += "\n";
-                            }
-                            interests += "\n";
-                        }
-
+                    public void onDataChange(DataSnapshot dataSnapshot) {                                                
+                        InterestStringBuilder builder = new InterestStringBuilder();
+                        String interests = builder.getInterestString(dataSnapshot) ;
                         matchUserInfoInterestText.setText( interests );
                     }
 
