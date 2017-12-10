@@ -7,7 +7,7 @@ android:layout_height="match_parent"
 tools:context="com.example.potato.couchpotatoes.SpinBottleActivity">
 
 <Button
-    android:id="@+id/b_go"
+    android:id="@+id/button"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_alignParentBottom="true"
@@ -16,7 +16,7 @@ tools:context="com.example.potato.couchpotatoes.SpinBottleActivity">
     android:text="SPIN!" />
 
 <ImageView
-    android:id="@+id/iv_spinner"
+    android:id="@+id/ic_spinner"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_centerHorizontal="true"
