@@ -10,7 +10,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -59,8 +58,8 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
 
         // Set up the login form.
-        mEmailView = (EditText) findViewById(R.id.email);
-        mPasswordView = (EditText) findViewById(R.id.password);
+        mEmailView = findViewById(R.id.email);
+        mPasswordView = findViewById(R.id.password);
         mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {
@@ -72,13 +71,13 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
-        Button mSignInButton = (Button) findViewById(R.id.btn_login);
+        Button mSignInButton = findViewById(R.id.btn_login);
         mSignInButton.setOnClickListener(onClickListener);
 
-        Button mSignUpButton = (Button) findViewById(R.id.btn_signup);
+        Button mSignUpButton = findViewById(R.id.btn_signup);
         mSignUpButton.setOnClickListener(onClickListener);
 
-        Button mResetPasswordButton = (Button) findViewById(R.id.btn_reset_password);
+        Button mResetPasswordButton = findViewById(R.id.btn_reset_password);
         mResetPasswordButton.setOnClickListener(onClickListener);
 
         mLoginFormView = findViewById(R.id.login_form);
@@ -226,13 +225,7 @@ public class LoginActivity extends AppCompatActivity {
                             showProgress(false);
                             // Continue to main activity upon successful login
                             if (task.isSuccessful()) {
-                                // Sign in success, update UI with the signed-in user's information
-                                Log.d("TEST", "signInWithEmail:success");
-
                                 dbHelper.fetchCurrentUser();
-
-                                Log.d( "TEST", "User " + dbHelper.getAuth().getUid() + " signed in successfully." );
-
                                 startActivity(new Intent(getApplicationContext(), MainActivity.class));
                                 finish();
 

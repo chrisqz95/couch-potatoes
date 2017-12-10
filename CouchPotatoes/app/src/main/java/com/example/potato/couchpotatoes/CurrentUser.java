@@ -1,13 +1,7 @@
 package com.example.potato.couchpotatoes;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.LinkedList;
-import java.util.Map;
-
-/**
- * Created by Admin on 11/7/17.
- */
 
 public class CurrentUser extends User {
     private static CurrentUser uniqueInstance;
@@ -42,13 +36,5 @@ public class CurrentUser extends User {
             uniqueInstance = new CurrentUser();
         }
         return uniqueInstance;
-    }
-
-    public ArrayList<String> getContactList() {
-        return contactList;
-    }
-
-    public void setContactList(ArrayList<String> contactList) {
-        this.contactList = contactList;
     }
 }
