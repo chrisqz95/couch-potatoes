@@ -55,7 +55,7 @@ public class MatchingActivity extends AppCompatActivity
     private android.widget.TextView sidebarUserName;
     private android.widget.TextView sidebarUserEmail;
 
-    // list of matches for dating and friending
+    // List of matches for dating and friending
     private ArrayList<String> matchedDateList = new ArrayList<>();
     private ArrayList<String> matchedFriendList = new ArrayList<>();
 
@@ -75,9 +75,7 @@ public class MatchingActivity extends AppCompatActivity
     private ImageView profilePic;
 
     private int currTab = 0;
-
     private String currUserID;
-
     private View sideBarHeader;
 
     @Override
@@ -103,12 +101,11 @@ public class MatchingActivity extends AppCompatActivity
 
         adapter = new MatchFragmentPagerAdapter(getSupportFragmentManager());
 
-        // add fragments to the view pager
+        // Add fragments to the view pager
         datingPage = MatchPageFragment.newInstance(matchedDateList, true);
         friendPage = MatchPageFragment.newInstance(matchedFriendList, false);
         adapter.addFragment(datingPage, tabTitles[0]);
         adapter.addFragment(friendPage, tabTitles[1]);
-
         viewPager.setAdapter(adapter);
 
         // Change behavior of like and dislike buttons based on currently selected tab
@@ -271,7 +268,6 @@ public class MatchingActivity extends AppCompatActivity
                 // If profile pic is null, display default profile pic instead
                 if ( !matchedDateList.isEmpty() ) {
                     displayPotentMatchProfilePic( matchedDateList.get(0) );
-
                     addLikeDislikeListeners();
                 }
 
