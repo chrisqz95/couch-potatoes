@@ -43,7 +43,7 @@ import android.widget.Toast;
 
 public class MatchingActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
-	private DBHelper helper;
+    private DBHelper helper;
     private final String[] tabTitles = new String[] { "Date", "Friend" };
 
     private final int VIEW_PAGER_DATE_TAB_POSITION = 0;
@@ -55,7 +55,7 @@ public class MatchingActivity extends AppCompatActivity
     private android.widget.TextView sidebarUserName;
     private android.widget.TextView sidebarUserEmail;
 
-    // list of matches for dating and friending
+    // List of matches for dating and friending
     private ArrayList<String> matchedDateList = new ArrayList<>();
     private ArrayList<String> matchedFriendList = new ArrayList<>();
 
@@ -75,9 +75,7 @@ public class MatchingActivity extends AppCompatActivity
     private ImageView profilePic;
 
     private int currTab = 0;
-
     private String currUserID;
-
     private View sideBarHeader;
 
     @Override
@@ -103,12 +101,11 @@ public class MatchingActivity extends AppCompatActivity
 
         adapter = new MatchFragmentPagerAdapter(getSupportFragmentManager());
 
-        // add fragments to the view pager
+        // Add fragments to the view pager
         datingPage = MatchPageFragment.newInstance(matchedDateList, true);
         friendPage = MatchPageFragment.newInstance(matchedFriendList, false);
         adapter.addFragment(datingPage, tabTitles[0]);
         adapter.addFragment(friendPage, tabTitles[1]);
-
         viewPager.setAdapter(adapter);
 
         // Change behavior of like and dislike buttons based on currently selected tab
@@ -127,7 +124,7 @@ public class MatchingActivity extends AppCompatActivity
         // Fetch list of potential dates from Firebase
         fetchPotentDatesFromFirebase();
 
-		// places toolbar on top of the screen
+        // places toolbar on top of the screen
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitleTextColor(Color.WHITE);
         setSupportActionBar(toolbar);
@@ -182,18 +179,18 @@ public class MatchingActivity extends AppCompatActivity
             super.onBackPressed();
         }
     }
-    
+
     // Handles action in the sidebar menu
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-		if (id == R.id.nav_profile) {
+        if (id == R.id.nav_profile) {
             Intent intent = new Intent( getApplicationContext(), PreferencesActivity.class );
             startActivity( intent );
         } else if (id == R.id.nav_matches) {
-		} else if (id == R.id.nav_chats) {
+        } else if (id == R.id.nav_chats) {
             // redirects user to ChatRoomActivity.xml
             Intent intent = new Intent( getApplicationContext(), ChatRoomActivity.class );
             startActivity( intent );
@@ -271,7 +268,6 @@ public class MatchingActivity extends AppCompatActivity
                 // If profile pic is null, display default profile pic instead
                 if ( !matchedDateList.isEmpty() ) {
                     displayPotentMatchProfilePic( matchedDateList.get(0) );
-
                     addLikeDislikeListeners();
                 }
 

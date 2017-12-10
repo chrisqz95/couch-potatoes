@@ -9,6 +9,8 @@ import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.FloatingActionButton;
+import android.support.annotation.NonNull;
+import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.AdapterView;
@@ -24,13 +26,11 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.StorageReference;
-
 import java.util.ArrayList;
 
 public class PictureGridActivity extends AppCompatActivity {
     private GridView gridView;
     private GridViewAdapter gridAdapter;
-
     private ArrayList<String> urlList;
     private ArrayList<String> hashList;
     private int pos;
@@ -60,7 +60,7 @@ public class PictureGridActivity extends AppCompatActivity {
                 updatePicList( snapshot, uid );
 
                 setContentView(R.layout.activity_picture_grid);
-                gridView = (GridView) findViewById(R.id.gridView);
+                gridView = findViewById(R.id.gridView);
                 gridAdapter = new GridViewAdapter(PictureGridActivity.this, R.layout.fragment_picture_grid_item, urlList);
                 gridView.setAdapter(gridAdapter);
 

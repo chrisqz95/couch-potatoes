@@ -2,10 +2,6 @@ package com.example.potato.couchpotatoes;
 
 import java.io.Serializable;
 
-/**
- * Created by chris on 11/5/17.
- */
-
 public abstract class User implements Serializable {
     private String email;
     private String uid;
