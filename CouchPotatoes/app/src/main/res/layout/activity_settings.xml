@@ -86,7 +86,7 @@
         android:layout_weight=".25"
         android:fontFamily="@font/courgette"
         android:paddingLeft="4dp"
-        android:text="Sexual Preference"
+        android:text="Interested in"
         android:textColor="@color/common_google_signin_btn_text_dark_focused"
         android:textSize="24dp" />
 
