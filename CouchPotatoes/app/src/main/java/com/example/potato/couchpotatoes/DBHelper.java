@@ -1,5 +1,11 @@
 package com.example.potato.couchpotatoes;
 
+import android.app.Activity;
+import android.content.Context;
+import android.support.annotation.NonNull;
+
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.*;
 import com.google.firebase.database.*;
 import com.google.firebase.storage.FirebaseStorage;
@@ -11,6 +17,8 @@ import java.util.Map;
 
 public class DBHelper {
 
+    // max number of messages to fetch
+    private static int MESSAGE_FETCH_LIMIT = 50;
 
     private FirebaseAuth auth;
     private FirebaseDatabase db;
@@ -83,6 +91,88 @@ public class DBHelper {
 
     public void fetchCurrentUser() {
         user = auth.getCurrentUser();
+    }
+
+    /* Database CRUD methods */
+
+    /* Read Methods */
+
+    /**
+     * NOTE: This can only be called after a current user has been initialized.
+     * @param context used to notify the user of any errors when fetching data.
+     * @param finishedCallback function to run when the data has been fetched.
+     */
+    public void fetchCurrentUserInfo(final Context context, @NonNull final SimpleCallback<DataSnapshot> finishedCallback) {
+        getDb().getReference(getUserPath()).child(getAuth().getUid()).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                // data has been received. Call the callback method.
+                finishedCallback.callback(dataSnapshot);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                // Do nothing
+            }
+        });
+    }
+
+    /**
+     * Attempts to login. Returns whether login was successful through the callback interface.
+     * @param email user email
+     * @param password user password
+     * @param activity used for the on complete listener
+     * @param finishedCallback returns the whether or not the login was a success through the callback
+     */
+    public void attemptLogin(String email, String password, Activity activity,
+                             @NonNull final SimpleCallback<Boolean> finishedCallback) {
+        getAuth().signInWithEmailAndPassword(email, password).addOnCompleteListener(activity, new OnCompleteListener<AuthResult>() {
+            @Override
+            public void onComplete(@NonNull Task<AuthResult> task) {
+                finishedCallback.callback(task.isSuccessful());
+            }
+        });
+    }
+
+    /**
+     *
+     * @param chatRoom id of the chatroom to get information of
+     * @param finishedCallback returns the information of the chatroom in the callback
+     */
+    public void fetchChat(String chatRoom, @NonNull final SimpleCallback<DataSnapshot> finishedCallback) {
+        getDb().getReference(getChatMessagePath() + chatRoom).limitToLast(MESSAGE_FETCH_LIMIT)
+                .addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        finishedCallback.callback(dataSnapshot);
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+                        // Do nothing
+                    }
+                });
+    }
+
+    /**
+     *
+     * @param messageId id of message to fetch
+     * @param finishedCallback returns data snapshot of message in callback. Guarenteed to exist.
+     */
+    public void fetchMessage(String messageId, @NonNull final SimpleCallback<DataSnapshot> finishedCallback) {
+        getDb().getReference(getMessagePath() + messageId).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    finishedCallback.callback(dataSnapshot);
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                // Do nothing
+            }
+        });
     }
 
     /* Methods to add data to Firebase */

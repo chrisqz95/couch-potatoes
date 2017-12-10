@@ -208,6 +208,7 @@
 
     <string name="title_activity_chat_room">Messenger</string>
     <string name="title_activity_message">MessageActivity</string>
+    <string name="message_area_hint">Write a message…</string>
 
     <string name="title_reset_password">Reset Password</string>
 
@@ -225,7 +226,6 @@
     <string name="btn_link_to_login">Already registered.</string>
     <string name="btn_forgot_password">Forgot your password?</string>
     <string name="btn_reset_password">Reset Password</string>
-    <string name="btn_back"><![CDATA[<< Back]]></string>
     <string name="hint_new_email">New Email</string>
     <string name="btn_change">Change</string>
     <string name="btn_send">Send</string>
@@ -238,7 +238,6 @@
     <string name="reset_password_success_msg_2"> with further instructions.</string>
     <string name="title_activity_picture_grid_tab_view">PictureGridTabView</string>
     <string name="action_settings">Settings</string>
-    <string name="title_activity_tabbed_testtest">TabbedTESTTEST</string>
     <string name="title_activity_match_user_info">User Info</string>
     <string name="title_activity_about_us">About Us</string>
 

@@ -13,14 +13,10 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.ValueEventListener;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -28,32 +24,31 @@ import java.util.Calendar;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 
 public class MessageActivity extends AppCompatActivity {
 
-    LinearLayout layout;
-    RelativeLayout layout_2;
-    ImageView sendButton;
-    EditText messageArea;
-    ScrollView scrollView;
-    DBHelper helper = new DBHelper();
-    DatabaseReference reference1, reference2;
-    String userID, chatRoom, displayName, messageID, timestamp, message, companion;
-    TextView userName;
-    Button b_select_spinner;
+    private enum MESSAGE_TYPE {SENT, RECEIVED};
 
-    ArrayList<String> messageTime = new ArrayList<>();
-    Map<String,String> messageIDs = new HashMap<>();
+    private final int MESSAGE_FETCH_LIMIT = 50;
 
-    final int MESSAGE_FETCH_LIMIT = 50;
+    private LinearLayout layout;
+    private ImageView sendButton;
+    private EditText messageArea;
+    private ScrollView scrollView;
+    private DBHelper helper = new DBHelper();
+    private String userID, chatRoom, displayName, messageID, timestamp, message, companion;
+    private TextView userName;
+    private Button b_select_spinner;
+
+    private ArrayList<String> messageTime = new ArrayList<>();
+    private Map<String,Boolean> messageIds = new HashMap<>();
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_chat);
+        setContentView(R.layout.activity_message);
 
         // places toolbar into the screen
         Toolbar toolbar = findViewById(R.id.chat_toolbar);
@@ -69,15 +64,10 @@ public class MessageActivity extends AppCompatActivity {
 
         // get views
         b_select_spinner = findViewById(R.id.b_select_spinner);
-        layout = findViewById(R.id.layout1);
-        layout_2 = findViewById(R.id.layout2);
+        layout = findViewById(R.id.layout_message_box);
         sendButton = findViewById(R.id.sendButton);
         messageArea = findViewById(R.id.messageArea);
         scrollView = findViewById(R.id.scrollView);
-
-        //Firebase.setAndroidContext(this);
-        reference1 = helper.getDb().getReference();
-        reference2 = helper.getDb().getReference();
 
         // Get the current user's display name
         displayName = helper.getAuthUserDisplayName();
@@ -132,35 +122,26 @@ public class MessageActivity extends AppCompatActivity {
             }
         });
 
-        // Add an event handler to fetch and display all messages in the current chat
-        helper.getDb().getReference(helper.getChatMessagePath() + chatRoom).limitToLast(MESSAGE_FETCH_LIMIT).addValueEventListener(new ValueEventListener() {
-
+        helper.fetchChat(chatRoom, new SimpleCallback<DataSnapshot>() {
             @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                Iterator<DataSnapshot> messages = dataSnapshot.getChildren().iterator();
-
-                // Fetch and display the messages
-                while (messages.hasNext()) {
-                    String messageID = messages.next().getKey();
+            public void callback(DataSnapshot data) {
+                for (DataSnapshot messageSnapshot : data.getChildren()) {
+                    String messageId = messageSnapshot.getKey();
 
                     // Only add new messages to scroll view
-                    if ( messageIDs.get( messageID ) != null ) {
+                    if (messageIds.get(messageId) != null) {
                         continue;
-                    }
-                    else {
-                        messageIDs.put( messageID, "true" );
+                    } else {
+                        messageIds.put(messageId, true);
                     }
 
                     // Fetch all information corresponding to the current message
-                    helper.getDb().getReference(helper.getMessagePath() + messageID).addValueEventListener(new ValueEventListener() {
+                    helper.fetchMessage(messageId, new SimpleCallback<DataSnapshot>() {
                         @Override
-                        public void onDataChange(DataSnapshot dataSnapshot) {
-
-                            if (dataSnapshot.exists()) {
-
-                            String from = (String) dataSnapshot.child("name").getValue();
-                            String message = (String) dataSnapshot.child("text").getValue();
-                            String timestamp = (String) dataSnapshot.child("timestamp").getValue();
+                        public void callback(DataSnapshot messageData) {
+                            String from = (String) messageData.child("name").getValue();
+                            String message = (String) messageData.child("text").getValue();
+                            String timestamp = (String) messageData.child("timestamp").getValue();
                             String timeString = "";
 
                             //Compare the last msg timestamp with the cur one, add timestamp if theres a gap
@@ -171,27 +152,21 @@ public class MessageActivity extends AppCompatActivity {
                             }
 
                             if (!(timeString.equals(""))) {
-                                addMessageBox(timeString, 1, true);
+                                displayTime(timeString);
                             }
 
-                            if ( from.equals(displayName) ) {
-                                addMessageBox(message, 1, false);}
-                            else {
-                                addMessageBox(message, 2, false);
+                            if (from.equals(displayName)) {
+                                addMessageBox(message, MESSAGE_TYPE.SENT);
+                            } else {
+                                addMessageBox(message, MESSAGE_TYPE.RECEIVED);
                             }
 
                             //Keep track of the time of the current message
                             messageTime.add(timestamp);
-                        } }
-
-                        @Override
-                        public void onCancelled(DatabaseError databaseError) {}
+                        }
                     });
                 }
             }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {}
         });
 
         // OnClick to get to spinners
@@ -282,6 +257,7 @@ public class MessageActivity extends AppCompatActivity {
 
         String[] date = curMsgDate.split("-");
 
+        // TODO throw this into a method
         //Convert 24 Hour format to AM/PM
         String dateStr = curMsgTime;
         DateFormat readFormat = new SimpleDateFormat( "HH:mm:ss");
@@ -292,11 +268,13 @@ public class MessageActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
+        // TODO throw a lot of this into methods
         Calendar c = Calendar.getInstance();
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         String curDate = df.format(c.getTime()).split(" ")[0];
         int intCurDate = Integer.parseInt(curDate.replaceAll("-", ""));
 
+        // TODO pls guys methods they are a thing
         if (intCurDate - intCurMsgDate < 1) {
             if (Math.abs(intCurMsgTime - intLastMsgTime) >= 30000) {
                 timeStr = hourStr;
@@ -317,36 +295,33 @@ public class MessageActivity extends AppCompatActivity {
         return timeStr;
     }
 
-    /*
-     * Makes the bubble in the chat.
+    /**
+     * Display a message
+     * @param message content
+     * @param type whether it is a sent message or a received message
      */
-    private void addMessageBox (String message, int type, boolean isTimeString){
+    private void addMessageBox (String message, MESSAGE_TYPE type){
         TextView textView = new TextView(MessageActivity.this);
 
-        LinearLayout.LayoutParams lp2 = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        lp2.weight = 1.0f;
+        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT);
+        layoutParams.weight = 1.0f;
 
-        if (isTimeString) {
-            lp2.gravity = Gravity.CENTER_HORIZONTAL;
-            textView.setTextColor(Color.GRAY);
-            textView.setTextSize(14);
-            textView.setText(message);
-
-        } else if (type == 1) {
+        if (type == MESSAGE_TYPE.SENT) {
             textView.setText(message);
             textView.setTextSize(20);
-            lp2.gravity = Gravity.RIGHT;
+            layoutParams.gravity = Gravity.END;
             textView.setBackgroundResource(R.drawable.new_bubble_in);
             textView.setTextColor(Color.WHITE);
         } else {
             textView.setText(message);
             textView.setTextSize(20);
-            lp2.gravity = Gravity.LEFT;
+            layoutParams.gravity = Gravity.START;
             textView.setBackgroundResource(R.drawable.new_bubble_out);
             textView.setTextColor(Color.BLACK);
         }
 
-        textView.setLayoutParams(lp2);
+        textView.setLayoutParams(layoutParams);
         layout.addView(textView);
 
         scrollView.post(new Runnable() {
@@ -357,6 +332,21 @@ public class MessageActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * Display time
+     * @param time
+     */
+    private void displayTime(String time) {
+        TextView textView = new TextView(MessageActivity.this);
+        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT);
+
+        layoutParams.gravity = Gravity.CENTER_HORIZONTAL;
+        textView.setTextColor(Color.GRAY);
+        textView.setTextSize(14);
+        textView.setText(time);
+    }
+
     /*
      * Description: Edge case: This executes for the very first time a message is sent. Date
      * should always be displayed for first message
@@ -364,14 +354,12 @@ public class MessageActivity extends AppCompatActivity {
     private String getTimeString(String curMsg) {
         String timeStr = "";
         String hourStr = "";
-        String curMsgDate = curMsg.split("  ")[0];
-        String curMsgTime = curMsg.split("  ")[1];
+        String curMsgDate = curMsg.split(" {2}")[0];
+        String curMsgTime = curMsg.split(" {2}")[1];
         String[] date = curMsgDate.split("-");
         String[] time = curMsgTime.split(":");
 
-        //Determine if its AM or PM
-        hourStr = getAmPm(time);
-
+        hourStr = toAmPm(time);
 
         // get Month
         String monthString = getMonth(date[1]);
@@ -381,21 +369,24 @@ public class MessageActivity extends AppCompatActivity {
         return timeStr;
     }
 
-    /*
-     * Return whether the date is am or pm
+    /**
+     * Returns the time in AM PM format
+     * @param time to convert
+     * @return the time in AM PM format
      */
-    private String getAmPm(String[] time) {
-        String hourStr;
+    private String toAmPm(String[] time) {
         int hour = Integer.parseInt(time[0]);
         if (hour >= 12) {
-            return hourStr = (hour - 12) + ":" + time[1] + " PM";
+            return (hour - 12) + ":" + time[1] + " PM";
         } else {
-            return hourStr = time[0] + ":" + time[1] + " AM";
+            return time[0] + ":" + time[1] + " AM";
         }
     }
 
-    /*
-     * Return month based on numerical value of month
+    /**
+     * gets the month's abbreviation.
+     * @param month string of the month number.
+     * @return a string abbreviation of the month.
      */
     private String getMonth(String month) {
         String monthString;
