@@ -4,7 +4,6 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.widget.TextView;
 
 import com.google.firebase.database.DataSnapshot;
@@ -13,6 +12,8 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import static com.example.potato.couchpotatoes.StringUtilities.*;
 
 public class MatchUserInfoActivity extends AppCompatActivity {
     private DBHelper helper;
@@ -44,12 +45,10 @@ public class MatchUserInfoActivity extends AppCompatActivity {
         currMatchID = getIntent().getExtras().getString( "currMatchID" );
 
         if ( currMatchID == null || currMatchID.equals( "" ) ) {
-            // TODO HANDLE IF NULL
             currMatchID = "MATCH USER ID COULD NOT BE READ";
         }
 
         // Fetch and display potential match's info
-        // TODO Create method to do this
         helper.getDb().getReference( helper.getUserPath() + currMatchID ).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -59,12 +58,7 @@ public class MatchUserInfoActivity extends AppCompatActivity {
                     res.put( children.getKey(), children.getValue() );
                 }
 
-                //String generalInfoHeader = "General Info";
-
-                //matchUserInfoGeneralHeader.setText( generalInfoHeader );
-
                 String firstName = (String) res.get( "firstName" );
-                String middleName = (String) res.get( "middleName" );
                 String lastName = (String) res.get( "lastName" );
                 String gender = (String) res.get( "gender" );
                 String birth_date = (String) res.get( "birth_date" );
@@ -74,39 +68,21 @@ public class MatchUserInfoActivity extends AppCompatActivity {
                 String country = (String) res.get( "country" );
 
                 String userInfo = "";
-
-                // TODO Need a better way to format text
-                    /*
-                    String format = "%30s%30s\n";
-                    userInfo += String.format( format, "First Name:", firstName );
-                    userInfo += String.format( format, "Middle Name:", middleName );
-                    userInfo += String.format( format, "Last Name:", lastName );
-                    userInfo += String.format( format, "Gender:", gender );
-                    userInfo += String.format( format, "Birth Day:", birth_date );
-                    userInfo += String.format( format, "Bio:", bio );
-                    */
-
                 String genderAbbrev = "";
 
-                // Abbreviate gender
-                // If non-binary, do not mention gender
-                // TODO Create method to do this
-                if ( gender.equals( "male" ) ) {
+                // Abbreviate gender. If non-binary, do not mention gender
+                if ( gender.equals( "male" ) )
                     genderAbbrev= "M";
-                }
-                else if ( gender.equals( "female" ) ) {
+                else if ( gender.equals( "female" ) )
                     genderAbbrev = "F";
-                }
 
-                // Omitt middle name here - Personal preference - can change later
+                // Omit middle name here - Personal preference - can change later
                 String potentMatchName = helper.getFullName( firstName, "", lastName );
                 matchUserInfoGeneralHeader.setText( potentMatchName );
 
-                //userInfo += paddSpaceln( "Name: ", helper.getFullName( firstName, "", lastName ), 30 );
-                //userInfo += "\n";
                 userInfo += paddSpaceln( "Gender: ", genderAbbrev, 38 );
                 userInfo += "\n";
-                // TODO
+
                 // Calculate and display age instead of birthday
                 userInfo += paddSpaceln( "Birthday: ", birth_date, 34 );
                 userInfo += "\n";
@@ -119,23 +95,19 @@ public class MatchUserInfoActivity extends AppCompatActivity {
                 matchUserInfoGeneralText.setText( userInfo );
 
                 String bioHeaderStr = "About Me";
-
                 matchUserInfoBioHeader.setText( bioHeaderStr );
-
                 matchUserInfoBioText.setText( bio );
 
-                //String interestsHeaderStr = "Interests";
                 String interestsHeaderStr = "My Interests";
-
                 matchUserInfoInterestHeader.setText( interestsHeaderStr );
 
                 // Fetch and display User's Interests
-                // TODO Create method to do this
                 helper.getDb().getReference( helper.getUserInterestPath() ).child( currMatchID ).addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         String interests = "";
 
+                        // Format the user's interests
                         for ( DataSnapshot child : dataSnapshot.getChildren() ) {
                             String interest = child.getKey();
                             interests += interest;
@@ -162,72 +134,15 @@ public class MatchUserInfoActivity extends AppCompatActivity {
 
                     @Override
                     public void onCancelled(DatabaseError databaseError) {
-                        Log.d( "TEST", databaseError.getMessage() );
+
                     }
                 });
             }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-                Log.d( "TEST", databaseError.getMessage() );
+
             }
         });
     }
-
-    //TODO MOVE THESE METHODS TO A NEW CLASS
-    private String paddSpace( String title, String value, int desiredLength ) {
-        String str = "";
-
-        str += title;
-
-        int numSpaces = desiredLength - title.length() - value.length();
-
-        for ( int i = 0; i < numSpaces; i++ ) {
-            str += "\t";
-        }
-
-        str += value;
-
-        return str;
-    }
-
-    private String paddSpaceln( String title, String value, int desiredLength ) {
-        return paddSpace( title, value + "\n", desiredLength );
-    }
-
-    private String paddSpaceEnd( String title, String value, int desiredLength ) {
-        String str = "";
-
-        str += title;
-
-        str += value;
-
-        int numSpaces = desiredLength - title.length() - value.length();
-
-        for ( int i = 0; i < numSpaces; i++ ) {
-            str += "\t";
-        }
-
-        str += "|";
-
-        return str;
-    }
-
-    private String paddSpaceEndln( String title, String value, int desiredLength ) {
-        return paddSpaceEnd( title, value, desiredLength ) + "\n";
-    }
-
-    private String addStrAtPos( String str, String addition, int position ) {
-        String ret = "";
-
-        for ( int i = 0; i < str.length(); i++ ) {
-            if ( i == position ) {
-                ret += addition;
-            }
-            ret += str.charAt( i );
-        }
-
-        return ret;
-    }
-
 }

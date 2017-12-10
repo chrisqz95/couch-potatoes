@@ -76,9 +76,6 @@ public class UserGalleryActivity extends AppCompatActivity {
          */
         @Override
         public void onViewCreated(View view, Bundle savedInstanceState) {
-//        ImageView userImage = (ImageView) getView().findViewById(R.id.userImage);
-//        String image = "http://www.aft.com/components/com_easyblog/themes/wireframe/images/placeholder-image.png";
-//        Glide.with(getActivity()).load(image).into(userImage);
         }
     }
 

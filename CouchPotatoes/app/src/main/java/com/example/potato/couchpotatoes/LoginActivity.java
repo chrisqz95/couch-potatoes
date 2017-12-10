@@ -58,8 +58,8 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
 
         // Set up the login form.
-        mEmailView = (EditText) findViewById(R.id.email);
-        mPasswordView = (EditText) findViewById(R.id.password);
+        mEmailView = findViewById(R.id.email);
+        mPasswordView = findViewById(R.id.password);
         mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {
@@ -71,13 +71,13 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
-        Button mSignInButton = (Button) findViewById(R.id.btn_login);
+        Button mSignInButton = findViewById(R.id.btn_login);
         mSignInButton.setOnClickListener(onClickListener);
 
-        Button mSignUpButton = (Button) findViewById(R.id.btn_signup);
+        Button mSignUpButton = findViewById(R.id.btn_signup);
         mSignUpButton.setOnClickListener(onClickListener);
 
-        Button mResetPasswordButton = (Button) findViewById(R.id.btn_reset_password);
+        Button mResetPasswordButton = findViewById(R.id.btn_reset_password);
         mResetPasswordButton.setOnClickListener(onClickListener);
 
         mLoginFormView = findViewById(R.id.login_form);

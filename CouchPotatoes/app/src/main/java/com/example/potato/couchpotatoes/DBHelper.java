@@ -79,21 +79,11 @@ public class DBHelper {
     }
 
     public String getAuthUserDisplayName () {
-        if ( user != null ) {
-            return user.getDisplayName();
-        }
-
-        Log.d( "TEST", "User is not logged in! Cannot get display name!" );
-
-        return "";
+        return ( user != null ) ? user.getDisplayName() : "";
     }
 
     public boolean isUserLoggedIn() {
         return ( user != null );
-    }
-
-    public boolean isUserLoggedOut() {
-        return !isUserLoggedIn();
     }
 
     public void fetchCurrentUser() {
@@ -153,7 +143,7 @@ public class DBHelper {
 
         return checkExists( getInterestPath() + category );
     }
-
+  
     public boolean addToUserInterest( String userID, String category, String subcategory, String preference ) {
         db.getReference( getUserInterestPath() ).child( userID ).child( category ).child( subcategory ).setValue( preference );
 
@@ -260,7 +250,7 @@ public class DBHelper {
     }
 
     public String getNewTimestamp() {
-        return (String) (new SimpleDateFormat( "yyyy-MM-dd  HH:mm:ss" ).format( new Date()));
+        return (new SimpleDateFormat( "yyyy-MM-dd  HH:mm:ss" ).format( new Date()));
     }
 
     /**
