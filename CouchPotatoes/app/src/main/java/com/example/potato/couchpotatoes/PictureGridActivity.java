@@ -55,16 +55,10 @@ public class PictureGridActivity extends AppCompatActivity {
         ref.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
-                urlList.clear();
-                hashList.clear();
-                for (DataSnapshot dataSnapshot : snapshot.child("User_Photo").child(uid).getChildren()) {
-                    try {
-                        urlList.add(snapshot.child("Photo").child(dataSnapshot.getKey()).child("uri").getValue().toString());
-                        hashList.add(dataSnapshot.getKey().toString());
-                    } catch (NullPointerException e) {
-                        e.printStackTrace();
-                    }
-                }
+                clearPicList();
+
+                updatePicList( snapshot, uid );
+
                 setContentView(R.layout.activity_picture_grid);
                 gridView = (GridView) findViewById(R.id.gridView);
                 gridAdapter = new GridViewAdapter(PictureGridActivity.this, R.layout.fragment_picture_grid_item, urlList);
@@ -72,6 +66,8 @@ public class PictureGridActivity extends AppCompatActivity {
 
                 ConstraintLayout fab = findViewById(R.id.btnUploadImage);
 
+                // If user wants to change profile pic, set appropriate listener.
+                // Else, set tab view listener.
                 if ( isCurrentUser && changeProfilePic ) {
                     fab.setVisibility(View.GONE);
                     Toast.makeText(getApplicationContext(), "Select new profile picture", Toast.LENGTH_LONG).show();
@@ -93,7 +89,6 @@ public class PictureGridActivity extends AppCompatActivity {
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-                System.out.println("The read failed: " + databaseError.getMessage());
                 ref.removeEventListener(this);
             }
         });
@@ -106,16 +101,10 @@ public class PictureGridActivity extends AppCompatActivity {
                 ref.addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot snapshot) {
-                        urlList.clear();
-                        hashList.clear();
-                        for (DataSnapshot dataSnapshot : snapshot.child("User_Photo").child(uid).getChildren()) {
-                            try {
-                                urlList.add(snapshot.child("Photo").child(dataSnapshot.getKey()).child("uri").getValue().toString());
-                                hashList.add(dataSnapshot.getKey().toString());
-                            } catch (NullPointerException e) {
-                                e.printStackTrace();
-                            }
-                        }
+                        clearPicList();
+
+                        updatePicList( snapshot, uid );
+
                         gridAdapter.notifyDataSetChanged();
                         gridView.invalidateViews();
                         ref.removeEventListener(this);
@@ -203,5 +192,21 @@ public class PictureGridActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+    }
+
+    private void clearPicList() {
+        urlList.clear();
+        hashList.clear();
+    }
+
+    private void updatePicList( final DataSnapshot snapshot, final String uid ) {
+        for (DataSnapshot dataSnapshot : snapshot.child("User_Photo").child(uid).getChildren()) {
+            try {
+                urlList.add(snapshot.child("Photo").child(dataSnapshot.getKey()).child("uri").getValue().toString());
+                hashList.add(dataSnapshot.getKey().toString());
+            } catch (NullPointerException e) {
+                e.printStackTrace();
+            }
+        }
     }
 }
