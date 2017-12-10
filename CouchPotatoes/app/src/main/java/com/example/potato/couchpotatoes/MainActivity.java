@@ -56,7 +56,6 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-
     private class FetchCurrentUserInfoTask extends AsyncTask<Void, Void, Void> {
 
         @Override

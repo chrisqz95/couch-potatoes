@@ -103,29 +103,26 @@ public class DBHelper {
     /* Database CRUD methods */
 
     /* Read Methods */
+
     /**
      * NOTE: This can only be called after a current user has been initialized.
      * @param context used to notify the user of any errors when fetching data.
      * @param finishedCallback function to run when the data has been fetched.
      */
     public void fetchCurrentUserInfo(final Context context, @NonNull final SimpleCallback<DataSnapshot> finishedCallback) {
-        try {
-            getDb().getReference(getUserPath()).child(getAuth().getUid()).addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-                    // data has been received. Call the callback method.
-                    finishedCallback.callback(dataSnapshot);
-                }
+        getDb().getReference(getUserPath()).child(getAuth().getUid()).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                // data has been received. Call the callback method.
+                finishedCallback.callback(dataSnapshot);
+            }
 
-                @Override
-                public void onCancelled(DatabaseError databaseError) {
-                    // something failed, notify the user.
-                    Toast.makeText(context, "Failed to fetch data", Toast.LENGTH_LONG).show();
-                }
-            });
-        } catch (NullPointerException e) {
-
-        }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                // something failed, notify the user.
+                Toast.makeText(context, "Failed to fetch data", Toast.LENGTH_LONG).show();
+            }
+        });
     }
 
     /* Methods to add data to Firebase */
