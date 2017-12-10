@@ -72,8 +72,6 @@ public class ResetPasswordActivity extends AppCompatActivity {
             return;
         }
 
-        Log.d("PASS RESET", "attempting to reset password.");
-
         // Reset errors.
         inputEmail.setError(null);
 
@@ -121,7 +119,7 @@ public class ResetPasswordActivity extends AppCompatActivity {
         protected Boolean doInBackground(Void... params) {
             // Attempt to send the reset link with the passed email
 
-            final boolean[] success = {false}; // TODO check if this is correct
+            final boolean[] success = {false};
             dbHelper.getAuth().sendPasswordResetEmail(mEmail)
                     .addOnCompleteListener(new OnCompleteListener<Void>() {
                         @Override

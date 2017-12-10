@@ -187,7 +187,7 @@ public class MessageActivity extends AppCompatActivity {
     }
 
     /*
-     * TODO
+     * Creates the dialog to choose spinner.
      */
     private void createDialog(){
         //DIALOG FOR SPINNER
@@ -228,7 +228,7 @@ public class MessageActivity extends AppCompatActivity {
     }
 
     /*
-     * TODO
+     * Opens the corrent spinnerActivity
      */
     private void openSpinner(int key, Intent intent) {
         intent.putExtra("key", key);
@@ -239,7 +239,7 @@ public class MessageActivity extends AppCompatActivity {
     }
 
     /*
-     * TODO: Add description
+     * Returns timestamp above messages based on time since last message.
      */
     private String getTimeString(String lastMsg, String curMsg) {
 
@@ -257,7 +257,7 @@ public class MessageActivity extends AppCompatActivity {
 
         String[] date = curMsgDate.split("-");
 
-        // TODO Throw this into a method
+        // TODO throw this into a method
         //Convert 24 Hour format to AM/PM
         String dateStr = curMsgTime;
         DateFormat readFormat = new SimpleDateFormat( "HH:mm:ss");

@@ -2,10 +2,6 @@ package com.example.potato.couchpotatoes;
 
 import java.util.ArrayList;
 
-import android.app.AlertDialog;
-import android.app.Dialog;
-import android.app.DialogFragment;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
@@ -16,7 +12,6 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
 
 import com.bumptech.glide.Glide;
@@ -37,7 +32,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import de.hdodenhof.circleimageview.CircleImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 
@@ -86,17 +80,17 @@ public class MatchingActivity extends AppCompatActivity
 
         currUserID = helper.getAuth().getUid();
 
-        final TabLayout tabLayout = (TabLayout) findViewById(R.id.matching_tabs);
-        likeButton = (FloatingActionButton) findViewById(R.id.fab_match);
-        dislikeButton = (FloatingActionButton) findViewById(R.id.fab_unmatch);
-        imgView = (ImageView) findViewById(R.id.imageView2);
+        final TabLayout tabLayout = findViewById(R.id.matching_tabs);
+        likeButton = findViewById(R.id.fab_match);
+        dislikeButton = findViewById(R.id.fab_unmatch);
+        imgView = findViewById(R.id.imageView2);
         imgView.setVisibility(View.GONE);
 
-        viewPager = (MatchViewPager) findViewById(R.id.matching_viewpager);
+        viewPager = findViewById(R.id.matching_viewpager);
         viewPager.setVisibility(View.GONE);
-        likeAndDislikeLayout = (LinearLayout) findViewById(R.id.likeAndDislikeLayout);
+        likeAndDislikeLayout =  findViewById(R.id.likeAndDislikeLayout);
         likeAndDislikeLayout.setVisibility(View.GONE);
-        spinner = (ProgressBar)findViewById(R.id.progressBar);
+        spinner = findViewById(R.id.progressBar);
         spinner.setVisibility(View.VISIBLE);
 
         adapter = new MatchFragmentPagerAdapter(getSupportFragmentManager());
@@ -130,7 +124,7 @@ public class MatchingActivity extends AppCompatActivity
         setSupportActionBar(toolbar);
 
         // enables toggle button on toolbar to open the sidebar
-        mDrawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        mDrawer = findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, mDrawer, toolbar, R.string.navigation_drawer_open,
                 R.string.navigation_drawer_close);
@@ -138,7 +132,7 @@ public class MatchingActivity extends AppCompatActivity
         toggle.syncState();
 
         // set up side navigation bar layout
-        navView = (NavigationView) findViewById(R.id.match_nav_view);
+        navView = findViewById(R.id.match_nav_view);
         navView.setNavigationItemSelectedListener(this);
 
         // Want to display icons in original color scheme
@@ -147,9 +141,9 @@ public class MatchingActivity extends AppCompatActivity
         // highlight the current location
         navView.setCheckedItem(R.id.nav_matches);
 
-        sidebarUserName = (android.widget.TextView) navView.getHeaderView(0)
+        sidebarUserName = navView.getHeaderView(0)
                 .findViewById(R.id.sidebar_username);
-        sidebarUserEmail = (android.widget.TextView) navView.getHeaderView(0)
+        sidebarUserEmail = navView.getHeaderView(0)
                 .findViewById(R.id.sidebar_user_email);
 
         // fetches user's name and email
@@ -172,7 +166,7 @@ public class MatchingActivity extends AppCompatActivity
     // Handles pressing back button in bottom navigation bar when sidebar is on the screen
     @Override
     public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
@@ -240,9 +234,7 @@ public class MatchingActivity extends AppCompatActivity
             }
 
             @Override
-            public void onCancelled(DatabaseError databaseError) {
-                Log.d( "TEST", databaseError.getMessage() );
-            }
+            public void onCancelled(DatabaseError databaseError) {}
         });
     }
 
@@ -277,40 +269,7 @@ public class MatchingActivity extends AppCompatActivity
             }
 
             @Override
-            public void onCancelled(DatabaseError databaseError) {
-                Log.d( "TEST", databaseError.getMessage() );
-            }
-        });
-    }
-
-    private void displayProfilePic() {
-        helper.getDb().getReference(helper.getUserPath()).child( currUserID ).child("profile_pic").addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                String url = "";
-
-                if (dataSnapshot != null && dataSnapshot.getValue() != null) {
-                    url = (String) dataSnapshot.getValue();
-
-                    if (profilePic != null) {
-                        StorageReference uriRef = helper.getStorage().getReferenceFromUrl(url);
-
-                        // Set ImageView to contain photo
-                        Glide.with(sideBarHeader.getContext().getApplicationContext())
-                                .using(new FirebaseImageLoader())
-                                .load(uriRef)
-                                .into(profilePic);
-                    }
-                } else {
-                    // Default Profile Pic
-                    resetImageView();
-                }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                Log.d("TEST", databaseError.getMessage());
-            }
+            public void onCancelled(DatabaseError databaseError) {}
         });
     }
 
@@ -421,16 +380,6 @@ public class MatchingActivity extends AppCompatActivity
     }
 
     private void addLikeDislikeListeners() {
-        imgView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Log.d( "TEST", "IMG CLICKED" );
-                //TODO Go to new activity to view potential match's photos
-                //Intent intent = new Intent( getApplicationContext(), ( INSERT IMAGE GALLERY ACTIVITY CLASS ) );
-                //intent.putExtra( "targetUserID", matchedDateList.get(0) );
-                //startActivity( intent );
-            }
-        });
 
         imgView.setOnTouchListener(new OnSwipeTouchListener(MatchingActivity.this) {
 
@@ -495,7 +444,6 @@ public class MatchingActivity extends AppCompatActivity
 
             @Override
             public void onPageSelected(int position) {
-                String matchUserID = "";
 
                 // If Date tab selected, have like button add to Date object on Firebase
                 if ( position == VIEW_PAGER_DATE_TAB_POSITION ) {
@@ -520,7 +468,6 @@ public class MatchingActivity extends AppCompatActivity
                     // If profile pic is null, display default profile pic instead
                     if ( !matchedFriendList.isEmpty() ) {
                         displayPotentMatchProfilePic( matchedFriendList.get(0) );
-
                         addLikeDislikeListeners();
                     }
                     else {
