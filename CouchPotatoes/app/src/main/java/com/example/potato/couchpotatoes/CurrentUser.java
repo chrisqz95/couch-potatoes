@@ -34,7 +34,7 @@ public class CurrentUser extends User {
   
     /**
      * Parses the DataSnapshot and initializes the CurrentUser from those fields
-     * @param dataSnapshot snapshot of data to initialize CurrentUser fromt p
+     * @param dataSnapshot snapshot of data to initialize CurrentUser from
      */
     public void initializeFromDataSnapshot(DataSnapshot dataSnapshot) {
         for ( DataSnapshot field : dataSnapshot.getChildren() ) {
