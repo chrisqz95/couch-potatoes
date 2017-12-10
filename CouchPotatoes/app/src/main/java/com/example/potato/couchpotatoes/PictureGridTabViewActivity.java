@@ -22,6 +22,10 @@ import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
+/*
+ * This activity is started when a user clicks on a photo in PictureGridActivity to a get a full
+ * screen view of the photo that they clicked.
+ */
 public class PictureGridTabViewActivity extends AppCompatActivity {
 
     /**
