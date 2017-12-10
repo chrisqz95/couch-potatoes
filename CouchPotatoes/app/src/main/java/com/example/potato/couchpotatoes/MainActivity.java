@@ -26,7 +26,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_main);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         helper = new DBHelper();
@@ -41,8 +41,6 @@ public class MainActivity extends AppCompatActivity {
 
             startActivity(new Intent(getApplicationContext(), MatchingActivity.class));
             finish();
-            //mProgressView.setVisibility(View.VISIBLE);
-
         }
         // Else, redirect user to login page
         else {

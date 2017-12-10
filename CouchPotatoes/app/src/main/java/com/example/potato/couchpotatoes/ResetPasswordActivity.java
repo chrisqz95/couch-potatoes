@@ -72,8 +72,6 @@ public class ResetPasswordActivity extends AppCompatActivity {
             return;
         }
 
-        Log.d("PASS RESET", "attempting to reset password.");
-
         // Reset errors.
         inputEmail.setError(null);
 

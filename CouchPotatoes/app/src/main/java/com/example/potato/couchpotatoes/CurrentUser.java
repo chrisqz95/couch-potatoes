@@ -5,8 +5,6 @@ import java.util.LinkedList;
 
 public class CurrentUser extends User {
     private static CurrentUser uniqueInstance;
-    private ArrayList<String> contactList = new ArrayList<String>();
-    private LinkedList<String> matchedUsersId = new LinkedList<>();
     // may or may not need. Alternative is to populate one a linked list in HomeActivity instead.
     private LinkedList<MatchedUser> matchedUsers = new LinkedList<>();
 
@@ -22,19 +20,13 @@ public class CurrentUser extends User {
     public static CurrentUser getInstance( String email, String uid, String firstName, String middleName, String lastName,
                                            String dob, String gender, String city, String state, String country, String bio,
                                            double latitude, double longitude, boolean locked, boolean suspended ) {
-        if ( uniqueInstance == null ) {
-            uniqueInstance = new CurrentUser(
-                    email, uid, firstName, middleName, lastName, dob, gender, city, state, country, bio,
-                    latitude, longitude, locked, suspended
-            );
-        }
-        return uniqueInstance;
+
+        return (uniqueInstance == null) ? new CurrentUser(
+                email, uid, firstName, middleName, lastName, dob, gender, city, state, country, bio,
+                latitude, longitude, locked, suspended) : uniqueInstance;
     }
 
     public static CurrentUser getInstance() {
-        if ( uniqueInstance == null ) {
-            uniqueInstance = new CurrentUser();
-        }
-        return uniqueInstance;
+        return (uniqueInstance == null) ? new CurrentUser() : uniqueInstance;
     }
 }

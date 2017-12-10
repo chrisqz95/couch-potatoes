@@ -70,42 +70,42 @@ public class SettingsActivity extends AppCompatActivity {
         cityEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
-                if ( hasFocus ) {
-                    if ( settingsBtnLayout.getVisibility() == View.GONE ) {
-                        settingsBtnLayout.setVisibility(View.VISIBLE);
-                    }
+            if ( hasFocus ) {
+                if ( settingsBtnLayout.getVisibility() == View.GONE ) {
+                    settingsBtnLayout.setVisibility(View.VISIBLE);
                 }
+            }
             }
         });
 
         stateEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
-                if ( hasFocus ) {
-                    if ( settingsBtnLayout.getVisibility() == View.GONE ) {
-                        settingsBtnLayout.setVisibility(View.VISIBLE);
-                    }
+            if ( hasFocus ) {
+                if ( settingsBtnLayout.getVisibility() == View.GONE ) {
+                    settingsBtnLayout.setVisibility(View.VISIBLE);
                 }
+            }
             }
         });
 
         countryEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
-                if ( hasFocus ) {
-                    if ( settingsBtnLayout.getVisibility() == View.GONE ) {
-                        settingsBtnLayout.setVisibility(View.VISIBLE);
-                    }
+            if ( hasFocus ) {
+                if ( settingsBtnLayout.getVisibility() == View.GONE ) {
+                    settingsBtnLayout.setVisibility(View.VISIBLE);
                 }
+            }
             }
         });
 
         sexualPreference.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                if ( settingsBtnLayout.getVisibility() == View.GONE ) {
-                    settingsBtnLayout.setVisibility(View.VISIBLE);
-                }
+            if ( settingsBtnLayout.getVisibility() == View.GONE ) {
+                settingsBtnLayout.setVisibility(View.VISIBLE);
+            }
             }
         });
 
@@ -113,53 +113,53 @@ public class SettingsActivity extends AppCompatActivity {
         submitBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Source: https://stackoverflow.com/questions/4831918/how-to-get-all-checked-items-from-a-listview
-                //SparseBooleanArray genderChecked = genderList.getCheckedItemPositions();
-                SparseBooleanArray sexualPrefChecked = sexualPreference.getCheckedItemPositions();
+            // Source: https://stackoverflow.com/questions/4831918/how-to-get-all-checked-items-from-a-listview
+            //SparseBooleanArray genderChecked = genderList.getCheckedItemPositions();
+            SparseBooleanArray sexualPrefChecked = sexualPreference.getCheckedItemPositions();
 
-                String city = cityEditText.getText().toString();
-                String state = stateEditText.getText().toString();
-                String country = countryEditText.getText().toString();
+            String city = cityEditText.getText().toString();
+            String state = stateEditText.getText().toString();
+            String country = countryEditText.getText().toString();
 
-                helper.getDb().getReference( helper.getUserPath() ).child( currUserID ).child( "city" ).setValue( city );
-                helper.getDb().getReference( helper.getUserPath() ).child( currUserID ).child( "state" ).setValue( state );
-                helper.getDb().getReference( helper.getUserPath() ).child( currUserID ).child( "country" ).setValue( country );
+            helper.getDb().getReference( helper.getUserPath() ).child( currUserID ).child( "city" ).setValue( city );
+            helper.getDb().getReference( helper.getUserPath() ).child( currUserID ).child( "state" ).setValue( state );
+            helper.getDb().getReference( helper.getUserPath() ).child( currUserID ).child( "country" ).setValue( country );
 
-                Map<String, Object> sexualPreferenceMap = new HashMap<>();
+            Map<String, Object> sexualPreferenceMap = new HashMap<>();
 
-                // Get all checked items
-                for (int i = 0; i < sexualPreference.getAdapter().getCount(); i++) {
-                    if (sexualPrefChecked.get(i)) {
-                        sexualPreferenceMap.put( genders[i], true );
-                    }
+            // Get all checked items
+            for (int i = 0; i < sexualPreference.getAdapter().getCount(); i++) {
+                if (sexualPrefChecked.get(i)) {
+                    sexualPreferenceMap.put( genders[i], true );
                 }
+            }
 
-                // Record changes
-                prevSexualPrefChecked = sexualPrefChecked;
+            // Record changes
+            prevSexualPrefChecked = sexualPrefChecked;
 
-                // Submit partner preference changes to Firebase
-                helper.getDb().getReference( helper.getPartnerPreferencePath() ).child( currUserID ).child( "gender" ).setValue( sexualPreferenceMap );
+            // Submit partner preference changes to Firebase
+            helper.getDb().getReference( helper.getPartnerPreferencePath() ).child( currUserID ).child( "gender" ).setValue( sexualPreferenceMap );
 
-                settingsBtnLayout.setVisibility(View.GONE);
+            settingsBtnLayout.setVisibility(View.GONE);
 
-                // Remove bio edit text focus
-                // Workaround: Remove focus by requesting focus elsewhere
-                settingsLayout.requestFocus();
+            // Remove bio edit text focus
+            // Workaround: Remove focus by requesting focus elsewhere
+            settingsLayout.requestFocus();
             }
         });
 
         cancelBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                settingsBtnLayout.setVisibility(View.GONE);
+            settingsBtnLayout.setVisibility(View.GONE);
 
-                for (int i = 0; i < sexualPreference.getAdapter().getCount(); i++) {
-                    sexualPreference.setItemChecked( i, prevSexualPrefChecked.get( i ) );
-                }
+            for (int i = 0; i < sexualPreference.getAdapter().getCount(); i++) {
+                sexualPreference.setItemChecked( i, prevSexualPrefChecked.get( i ) );
+            }
 
-                // Remove bio edit text focus
-                // Workaround: Remove focus by requesting focus elsewhere
-                settingsLayout.requestFocus();
+            // Remove bio edit text focus
+            // Workaround: Remove focus by requesting focus elsewhere
+            settingsLayout.requestFocus();
             }
         });
     }

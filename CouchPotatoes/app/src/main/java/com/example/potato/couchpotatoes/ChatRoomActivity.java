@@ -36,7 +36,6 @@ public class ChatRoomActivity extends AppCompatActivity
     private ArrayAdapter<String> listAdapter;
     private SwipeActionAdapter mAdapter;
     private ListView listView;
-    private TextView userName;
     private Map<String,String> chats = new HashMap<>();
     private String userID = helper.getAuth().getUid();
     private String displayName = helper.getAuthUserDisplayName();
@@ -104,9 +103,7 @@ public class ChatRoomActivity extends AppCompatActivity
         mAdapter.setSwipeActionListener(new SwipeActionAdapter.SwipeActionListener(){
             @Override
             public boolean hasActions(int position, SwipeDirection direction){
-                if(direction.isLeft()) return true; // Change this to false to disable left swipes
-                if(direction.isRight()) return false;
-                return false;
+                return (direction.isLeft());
             }
 
             @Override
@@ -175,11 +172,6 @@ public class ChatRoomActivity extends AppCompatActivity
 
                 // Make sure not to display already existing chatIDs more than once
                 listItems.clear();
-
-                // No chats exist. Display message to user.
-                if ( !elems.hasNext() ) {
-
-                }
 
                 // Get the next chat
                 while ( elems.hasNext() ) {
