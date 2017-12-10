@@ -321,7 +321,6 @@ public class PreferencesActivity extends AppCompatActivity
                     }
                 } else {
                     // Default Profile Pic
-                    // TODO Add method to DBHelper to get this
                     //url = "gs://couch-potatoes-47758.appspot.com/Default/ProfilePic/potato_1_profile_pic.png";
                     String uri = "@drawable/profile";
 

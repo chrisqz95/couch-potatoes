@@ -41,11 +41,11 @@ public class AppSettingsActivity extends AppCompatActivity {
         dialogClickListener = new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-            if(which == DialogInterface.BUTTON_POSITIVE){
-                deleteAccountBtn.setVisibility(View.GONE);
-                spinner.setVisibility(View.VISIBLE);
-                deleteAccount();
-            }
+                if(which == DialogInterface.BUTTON_POSITIVE){
+                    deleteAccountBtn.setVisibility(View.GONE);
+                    spinner.setVisibility(View.VISIBLE);
+                    deleteAccount();
+                }
             }
         };
 
