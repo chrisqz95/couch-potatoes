@@ -48,7 +48,7 @@ import java.util.ArrayList;
  */
 public class PreferencesActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
-    private DBHelper helper;
+    private DBHelper dbHelper;
 
     private ArrayList<String> interestList;
 
@@ -103,9 +103,9 @@ public class PreferencesActivity extends AppCompatActivity
         imgView.setVisibility(View.GONE);
         spinner.setVisibility(View.VISIBLE);
 
-        helper = new DBHelper();
+        dbHelper = DBHelper.getInstance();
 
-        currUserID = helper.getAuth().getUid();
+        currUserID = dbHelper.getAuth().getUid();
 
         interestList = new ArrayList<>();
         interestAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, interestList );
@@ -121,7 +121,7 @@ public class PreferencesActivity extends AppCompatActivity
         // set up the side navigation bar on the left side of screen
         mDrawer = (DrawerLayout) findViewById(R.id.profile_drawer_layout);
         navView = (NavigationView) findViewById(R.id.profile_nav_view);
-        setSideBarDrawer( mDrawer, navView, toolbar , helper );
+        setSideBarDrawer( mDrawer, navView, toolbar , dbHelper);
 
         settingsTab = findViewById(R.id.settingsTab);
         settingsTab.setOnClickListener(new View.OnClickListener() {
@@ -137,7 +137,7 @@ public class PreferencesActivity extends AppCompatActivity
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(getApplicationContext(), PictureGridActivity.class);
-                DBHelper dbHelper = new DBHelper();
+                DBHelper dbHelper = DBHelper.getInstance();
                 dbHelper.fetchCurrentUser();
                 intent.putExtra("uid", dbHelper.getUser().getUid());
                 intent.putExtra("isCurrentUser", true);
@@ -157,7 +157,7 @@ public class PreferencesActivity extends AppCompatActivity
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getApplicationContext(), PictureGridActivity.class);
-                DBHelper dbHelper = new DBHelper();
+                DBHelper dbHelper = DBHelper.getInstance();
                 dbHelper.fetchCurrentUser();
                 intent.putExtra("uid", dbHelper.getUser().getUid());
                 intent.putExtra("isCurrentUser", true);
@@ -206,7 +206,7 @@ public class PreferencesActivity extends AppCompatActivity
                 bioTextPrev = bioChanges;
 
                 // Submit bio to Firebase
-                helper.getDb().getReference( helper.getUserPath() ).child( currUserID ).child( "bio" ).setValue( bioChanges );
+                dbHelper.getDb().getReference( dbHelper.getUserPath() ).child( currUserID ).child( "bio" ).setValue( bioChanges );
             }
         });
 
@@ -237,7 +237,7 @@ public class PreferencesActivity extends AppCompatActivity
     }
 
     private void displayInterests() {
-        helper.getDb().getReference( helper.getInterestPath() ).addValueEventListener(new ValueEventListener() {
+        dbHelper.getDb().getReference( dbHelper.getInterestPath() ).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for ( final DataSnapshot interest : dataSnapshot.getChildren() ) {
@@ -264,7 +264,7 @@ public class PreferencesActivity extends AppCompatActivity
     }
 
     private void displayUserInfo() {
-        helper.getDb().getReference( helper.getUserPath() ).child( currUserID ).addValueEventListener(new ValueEventListener() {
+        dbHelper.getDb().getReference( dbHelper.getUserPath() ).child( currUserID ).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 String firstName = "";
@@ -290,7 +290,7 @@ public class PreferencesActivity extends AppCompatActivity
                             break;
                     }
                 }
-                String name = helper.getFullName( firstName, middleName, lastName );
+                String name = dbHelper.getFullName( firstName, middleName, lastName );
                 userTitle.setText( name );
                 userBio.setText( bio );
                 bioTextPrev = bio;
@@ -303,7 +303,7 @@ public class PreferencesActivity extends AppCompatActivity
     }
 
     private void displayProfilePic() {
-        helper.getDb().getReference(helper.getUserPath()).child( currUserID ).child("profile_pic").addValueEventListener(new ValueEventListener() {
+        dbHelper.getDb().getReference(dbHelper.getUserPath()).child( currUserID ).child("profile_pic").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 String url = "";
@@ -311,7 +311,7 @@ public class PreferencesActivity extends AppCompatActivity
                 if (dataSnapshot != null && dataSnapshot.getValue() != null) {
                     url = (String) dataSnapshot.getValue();
                     if (imgView != null) {
-                        StorageReference uriRef = helper.getStorage().getReferenceFromUrl(url);
+                        StorageReference uriRef = dbHelper.getStorage().getReferenceFromUrl(url);
 
                         // Set ImageView to contain photo
                         Glide.with(getApplicationContext())
@@ -415,7 +415,7 @@ public class PreferencesActivity extends AppCompatActivity
             startActivity( intent );
         } else if (id == R.id.nav_logout) {
             // logs out and redirects user to LoginActivity.xml
-            helper.getAuth().signOut();
+            dbHelper.getAuth().signOut();
             startActivity( new Intent( getApplicationContext(), LoginActivity.class ) );
             finish();
         }

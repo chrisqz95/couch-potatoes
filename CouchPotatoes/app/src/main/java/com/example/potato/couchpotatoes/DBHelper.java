@@ -20,6 +20,8 @@ public class DBHelper {
     // max number of messages to fetch
     private static int MESSAGE_FETCH_LIMIT = 50;
 
+    private static DBHelper uniqueInstance;
+
     private FirebaseAuth auth;
     private FirebaseDatabase db;
     private FirebaseStorage storage;
@@ -46,15 +48,18 @@ public class DBHelper {
     private final String potentDatePath = "User_Potential_Date/";
     private final String potentFriendPath = "User_Potential_Friend/";
 
-    public DBHelper() {
+    private DBHelper() {
         auth = FirebaseAuth.getInstance();
         db = FirebaseDatabase.getInstance();
         storage = FirebaseStorage.getInstance();
         user = auth.getCurrentUser();
     }
 
-    /* User account methods */
+    public static DBHelper getInstance() {
+        return (uniqueInstance == null) ? new DBHelper() : uniqueInstance;
+    }
 
+    /* User account methods */
     public FirebaseAuth getAuth() {
         return auth;
     }

@@ -27,7 +27,7 @@ public class ResetPasswordActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        dbHelper = new DBHelper();
+        dbHelper = DBHelper.getInstance();
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_reset_password);
