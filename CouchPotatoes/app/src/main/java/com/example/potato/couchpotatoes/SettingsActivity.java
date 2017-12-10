@@ -2,7 +2,6 @@ package com.example.potato.couchpotatoes;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.util.SparseBooleanArray;
 import android.view.View;
 import android.widget.AdapterView;
@@ -177,9 +176,7 @@ public class SettingsActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onCancelled(DatabaseError databaseError) {
-                Log.d( "TEST", databaseError.getMessage() );
-            }
+            public void onCancelled(DatabaseError databaseError) {}
         });
     }
 

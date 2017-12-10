@@ -67,8 +67,6 @@ public class AppSettingsActivity extends AppCompatActivity {
 
         dbHelper.removeUser( currUserID );
 
-        // TODO REMOVE ALL OTHER USER DATA
-
         dbHelper.getAuth().getCurrentUser().delete().addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
