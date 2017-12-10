@@ -78,8 +78,6 @@ public class MatchingActivity extends AppCompatActivity
         setContentView(R.layout.activity_matching);
         dbHelper = DBHelper.getInstance();
 
-        currUserID = dbHelper.getAuth().getUid();
-
         final TabLayout tabLayout = findViewById(R.id.matching_tabs);
         likeButton = findViewById(R.id.fab_match);
         dislikeButton = findViewById(R.id.fab_unmatch);
