@@ -25,9 +25,7 @@ public class MainActivity extends AppCompatActivity {
 
         helper = new DBHelper();
 
-        android.widget.Button chat = findViewById
-
-(R.id.viewChats);
+        android.widget.Button chat = findViewById(R.id.viewChats);
 
         // Display user's name if logged in
         if ( helper.isUserLoggedIn() ) {
