@@ -71,7 +71,7 @@ public class SignUpActivity extends AppCompatActivity {
     private static String tempMiddleName;
     private static String tempLastName;
     private static int tempDoBYear, tempDoBMonth, tempDoBDay;
-
+    private static boolean errorFlag = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -313,7 +313,7 @@ public class SignUpActivity extends AppCompatActivity {
             mSignUpButton.setOnClickListener(new View.OnClickListener(){
                 public void onClick(View v){
                     // Boolean flag to not create the user account if any fields are invalid.
-                    boolean errorFlag = false;
+                    errorFlag = false;
 
                     // Read current fields
                     tempFirstName = mFirstNameText.getText().toString();
@@ -321,19 +321,19 @@ public class SignUpActivity extends AppCompatActivity {
                     tempLastName = mLastNameText.getText().toString();
 
                     // Check first name for valid alpha and non empty
-                    checkValidFirstName( errorFlag, mFirstNameText );
+                    checkValidFirstName(mFirstNameText );
 
                     // Check middle name for valid alpha
-                    checkValidMiddleName( errorFlag, mMiddleNameText );
+                    checkValidMiddleName( mMiddleNameText );
 
                     // Check last name for valid alpha and non empty
-                    checkValidLastName( errorFlag, mLastNameText );
+                    checkValidLastName( mLastNameText );
 
                      // Check if user entered DoB
-                    checkValidDOB( errorFlag, mDateText );
+                    checkValidDOB( mDateText );
 
                     // Check if user selected at least one gender
-                    checkGenderSelected( errorFlag, mGenderPreferenceCheckBoxFemale, mGenderPreferenceCheckBoxMale, mGenderPreferenceCheckBoxNonbinary,
+                    checkGenderSelected( mGenderPreferenceCheckBoxFemale, mGenderPreferenceCheckBoxMale, mGenderPreferenceCheckBoxNonbinary,
                             mGenderPreferenceCheckBoxOther);
 
                     if (!errorFlag){
@@ -367,7 +367,7 @@ public class SignUpActivity extends AppCompatActivity {
             return true;
         }
 
-        private void checkValidFirstName( boolean errorFlag, final EditText mFirstNameText ) {
+        private void checkValidFirstName( final EditText mFirstNameText ) {
             // Check first name for valid alpha and non empty
             if (tempFirstName.isEmpty()){
                 errorFlag = true;
@@ -379,7 +379,7 @@ public class SignUpActivity extends AppCompatActivity {
                 mFirstNameText.setError(null);
         }
 
-        private void checkValidMiddleName( boolean errorFlag, final EditText mMiddleNameText ) {
+        private void checkValidMiddleName( final EditText mMiddleNameText ) {
             // Check middle name for valid alpha
             if (!StringValidator.isAlpha(tempMiddleName) && !tempMiddleName.isEmpty()){
                 errorFlag = true;
@@ -388,7 +388,7 @@ public class SignUpActivity extends AppCompatActivity {
                 mMiddleNameText.setError(null);
         }
 
-        private void checkValidLastName( boolean errorFlag, final EditText mLastNameText ) {
+        private void checkValidLastName( final EditText mLastNameText ) {
             // Check last name for valid alpha and non empty
             if (tempLastName.isEmpty()){
                 errorFlag = true;
@@ -400,7 +400,7 @@ public class SignUpActivity extends AppCompatActivity {
                 mLastNameText.setError(null);
         }
 
-        private void checkValidDOB( boolean errorFlag, final TextView mDateText ) {
+        private void checkValidDOB( final TextView mDateText ) {
             // Check if user entered DoB
             if (!checkOver18(tempDoBYear, tempDoBMonth, tempDoBDay)){
                 errorFlag = true;
@@ -410,7 +410,7 @@ public class SignUpActivity extends AppCompatActivity {
             }
         }
 
-        private void checkGenderSelected( boolean errorFlag, final CheckBox mGenderPreferenceCheckBoxFemale, final CheckBox mGenderPreferenceCheckBoxMale, final CheckBox mGenderPreferenceCheckBoxNonbinary,
+        private void checkGenderSelected( final CheckBox mGenderPreferenceCheckBoxFemale, final CheckBox mGenderPreferenceCheckBoxMale, final CheckBox mGenderPreferenceCheckBoxNonbinary,
                                           final CheckBox mGenderPreferenceCheckBoxOther ) {
             if (!mGenderPreferenceCheckBoxMale.isChecked() && !mGenderPreferenceCheckBoxFemale.isChecked() &&
                     !mGenderPreferenceCheckBoxOther.isChecked() && !mGenderPreferenceCheckBoxNonbinary.isChecked()){

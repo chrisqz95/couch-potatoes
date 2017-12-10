@@ -2,7 +2,6 @@ package com.example.potato.couchpotatoes;
 
 import com.google.firebase.database.DataSnapshot;
 
-import java.util.ArrayList;
 import java.util.LinkedList;
 
 public class CurrentUser extends User {
