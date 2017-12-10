@@ -10,7 +10,7 @@ import android.view.View;
 import com.google.firebase.database.DataSnapshot;
 
 public class MainActivity extends AppCompatActivity {
-    private DBHelper helper;
+    private DBHelper dbHelper;
 
     // AsyncTasks
     private FetchCurrentUserInfoTask mFetchCurrUserInfoTask;
@@ -23,12 +23,12 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        helper = new DBHelper();
+        dbHelper = DBHelper.getInstance();
 
         android.widget.Button chat = findViewById(R.id.viewChats);
 
         // Display user's name if logged in
-        if ( helper.isUserLoggedIn() ) {
+        if ( dbHelper.isUserLoggedIn() ) {
 
             // reads all the user info on the current user
             attemptFetchCurUserInfo();
@@ -57,7 +57,7 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         protected Void doInBackground(Void... voids) {
-            helper.fetchCurrentUserInfo(getApplicationContext(), new SimpleCallback<DataSnapshot>() {
+            dbHelper.fetchCurrentUserInfo(getApplicationContext(), new SimpleCallback<DataSnapshot>() {
                 @Override
                 public void callback(DataSnapshot data) {
                     final CurrentUser currentUser = CurrentUser.getInstance();

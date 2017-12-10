@@ -15,7 +15,7 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.UserProfileChangeRequest;
 
 public class RegistrationActivity extends AppCompatActivity {
-    DBHelper helper = new DBHelper();
+    DBHelper dbHelper = DBHelper.getInstance();
     EditText mFirstName;
     EditText mMiddleName;
     EditText mLastName;
@@ -56,83 +56,84 @@ public class RegistrationActivity extends AppCompatActivity {
         getIntent().putExtra( "password", "" );
 
         // Attempt to create a Firebase Authentication user account with the provided login credentials
-        helper.getAuth().createUserWithEmailAndPassword( email, password ).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+        dbHelper.getAuth().createUserWithEmailAndPassword( email, password ).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
-            String userID = helper.getAuth().getUid();
-            String firstName = mFirstName.getText().toString();
-            String middleName = mMiddleName.getText().toString();
-            String lastName = mLastName.getText().toString();
-            String birthDate = mBirthDate.getText().toString();
-            String gender = mGender.getText().toString();
-            String city = "";
-            String state = "";
-            String country = "";
-            String bio = "";
-            final String displayName = helper.getFullName( firstName, middleName, lastName );
-            Double latitude = 0.0;
-            Double longitude = 0.0;
-            boolean locked = false;
-            boolean suspended = false;
+                // TODO USE STRING VALIDATOR
+                String userID = dbHelper.getAuth().getUid();
+                String firstName = mFirstName.getText().toString();
+                String middleName = mMiddleName.getText().toString();
+                String lastName = mLastName.getText().toString();
+                String birthDate = mBirthDate.getText().toString();
+                String gender = mGender.getText().toString();
+                String city = "";
+                String state = "";
+                String country = "";
+                String bio = "";
+                final String displayName = dbHelper.getFullName( firstName, middleName, lastName );
+                Double latitude = 0.0;
+                Double longitude = 0.0;
+                boolean locked = false;
+                boolean suspended = false;
 
-            // Create new user object
-            user = CurrentUser.getInstance(
-                email, userID, firstName, middleName, lastName, birthDate, gender, city, state, country, bio,
-                latitude, longitude, locked, suspended );
+                // Create new user object
+                user = CurrentUser.getInstance(
+                        email, userID, firstName, middleName, lastName, birthDate, gender, city, state, country, bio,
+                        latitude, longitude, locked, suspended );
 
-            // Create new Firebase Authentication user account update request to update user's display name
-            UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
-                    .setDisplayName( displayName )
-                    .build();
+                // Create new Firebase Authentication user account update request to update user's display name
+                UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
+                        .setDisplayName( displayName )
+                        .build();
 
-            // Update Firebase Authentication user's display name
-            helper.getAuth().getCurrentUser().updateProfile(profileUpdates)
-                .addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                    if (task.isSuccessful()) {
-
-                        // Log user into new Firebase Authentication account
-                        helper.getAuth().signInWithEmailAndPassword( email, password ).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                // Update Firebase Authentication user's display name
+                dbHelper.getAuth().getCurrentUser().updateProfile(profileUpdates)
+                        .addOnCompleteListener(new OnCompleteListener<Void>() {
                             @Override
-                            public void onComplete(@NonNull Task<AuthResult> task) {
+                            public void onComplete(@NonNull Task<Void> task) {
+                                if (task.isSuccessful()) {
 
-                            // Add user account info to Firebase Database
-                            helper.addNewUser( user );
+                                    // Log user into new Firebase Authentication account
+                                    dbHelper.getAuth().signInWithEmailAndPassword( email, password ).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<AuthResult> task) {
 
-                            // Get new FirebaseUser
-                            helper.fetchCurrentUser();
+                                            // Add user account info to Firebase Database
+                                            dbHelper.addNewUser( user );
 
-                            // Add the new user to a new chat containing only the new user
-                            String chatID = helper.getNewChildKey( helper.getChatUserPath() );
-                            String userID = helper.getAuth().getUid();
-                            String displayName = helper.getAuthUserDisplayName();
+                                            // Get new FirebaseUser
+                                            dbHelper.fetchCurrentUser();
 
-                            helper.addToChatUser( chatID, userID, displayName );
-                            helper.addToUserChat( userID, chatID );
+                                            // Add the new user to a new chat containing only the new user
+                                            String chatID = dbHelper.getNewChildKey( dbHelper.getChatUserPath() );
+                                            String userID = dbHelper.getAuth().getUid();
+                                            String displayName = dbHelper.getAuthUserDisplayName();
 
-                              String messageOneID = helper.getNewChildKey(helper.getMessagePath());
-                              String timestampOne = helper.getNewTimestamp();
-                              String messageOne = "COUCH POTATOES:\nWelcome to Couch Potatoes!"
-                                             + "\nEnjoy meeting new people with similar interests!";
+                                            dbHelper.addToChatUser( chatID, userID, displayName );
+                                            dbHelper.addToUserChat( userID, chatID );
 
-                              helper.addToMessage( messageOneID, userID, "COUCH POTATOES", chatID, timestampOne, messageOne );
+                                            String messageOneID = dbHelper.getNewChildKey(dbHelper.getMessagePath());
+                                            String timestampOne = dbHelper.getNewTimestamp();
+                                            String messageOne = "COUCH POTATOES:\nWelcome to Couch Potatoes!"
+                                                    + "\nEnjoy meeting new people with similar interests!";
 
-                              String messageTwoID = helper.getNewChildKey(helper.getMessagePath());
-                              String timestampTwo = helper.getNewTimestamp();
-                              String messageTwo = "COUCH POTATOES:\nThis chat is your space. Feel free to experiment with the chat here.";
+                                            dbHelper.addToMessage( messageOneID, userID, "COUCH POTATOES", chatID, timestampOne, messageOne );
 
-                              helper.addToMessage( messageTwoID, userID, "COUCH POTATOES", chatID, timestampTwo, messageTwo );
+                                            String messageTwoID = dbHelper.getNewChildKey(dbHelper.getMessagePath());
+                                            String timestampTwo = dbHelper.getNewTimestamp();
+                                            String messageTwo = "COUCH POTATOES:\nThis chat is your space. Feel free to experiment with the chat here.";
 
-                            // Registration complete. Redirect the new user the the main activity.
-                            startActivity( new Intent( getApplicationContext(), MainActivity.class ) );
-                            finish();
+                                            dbHelper.addToMessage( messageTwoID, userID, "COUCH POTATOES", chatID, timestampTwo, messageTwo );
+
+                                            // Registration complete. Redirect the new user the the main activity.
+                                            startActivity( new Intent( getApplicationContext(), MainActivity.class ) );
+                                            finish();
+                                        }
+                                    });
+
+                                }
                             }
                         });
-
-                    }
-                    }
-                });
             }
         });
     }
