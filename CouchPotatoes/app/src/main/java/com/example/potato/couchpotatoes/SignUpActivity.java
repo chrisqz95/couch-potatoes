@@ -192,7 +192,10 @@ public class SignUpActivity extends AppCompatActivity {
                     checkPasswordsMatch( mPasswordConfirmText );
 
                     // Use DBHelper to create the user and handle exceptions, continues to next fragment if successful
-                    createNewUser( mPasswordText, mEmailText );
+
+                    if (!errorFlag) {
+                        createNewUser( mPasswordText, mEmailText );
+                    }
                 }
             });
 
@@ -230,9 +233,9 @@ public class SignUpActivity extends AppCompatActivity {
         private void checkPasswordsMatch( final EditText mPasswordConfirmText ) {
             // Check if passwords match
             if (!StringValidator.checkPasswords(tempPass, tempPassConfirm)) {
+                errorFlag = true;
                 mPasswordConfirmText.setError(getString(R.string.sign_up_non_matching_passwords));
                 mPasswordConfirmText.requestFocus();
-                return;
             } else
                 mPasswordConfirmText.setError(null);
         }
@@ -240,9 +243,9 @@ public class SignUpActivity extends AppCompatActivity {
         private void checkInvalidPassword( final EditText mPasswordText ) {
             // Check if password is invalid
             if (!StringValidator.isValidPassword(tempPass)) {
+                errorFlag = true;
                 mPasswordText.setError(getString(R.string.sign_up_invalid_password));
                 mPasswordText.requestFocus();
-                return;
             } else
                 mPasswordText.setError(null);
         }
@@ -250,9 +253,9 @@ public class SignUpActivity extends AppCompatActivity {
         private void checkInvalidEmail( final EditText mEmailText ) {
             // Check if email is empty or invalid
             if (tempEmail.isEmpty() || !StringValidator.isValidEmail(tempEmail)) {
+                errorFlag = true;
                 mEmailText.setError(getString(R.string.sign_up_invalid_email));
                 mEmailText.requestFocus();
-                return;
             } else
                 mEmailText.setError(null);
         }
