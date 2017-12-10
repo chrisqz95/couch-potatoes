@@ -1,10 +1,10 @@
 package com.example.potato.couchpotatoes;
 
+import android.content.Context;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
+import android.widget.Toast;
 import com.google.firebase.auth.*;
 import com.google.firebase.database.*;
 import com.google.firebase.storage.FirebaseStorage;
@@ -15,7 +15,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class DBHelper {
-
 
     private FirebaseAuth auth;
     private FirebaseDatabase db;
@@ -36,6 +35,7 @@ public class DBHelper {
     private final String dislikePath = "Dislike/";
     private final String befriendPath = "Befriend/";
     private final String datePath = "Date/";
+    private final String userMatchPath = "User_Match/";
     private final String userChatPath = "User_Chat/";
     private final String chatUserPath = "Chat_User/";
     private final String chatMessagePath = "Chat_Message/";
@@ -90,6 +90,31 @@ public class DBHelper {
         user = auth.getCurrentUser();
     }
 
+    /* Database CRUD methods */
+
+    /* Read Methods */
+
+    /**
+     * NOTE: This can only be called after a current user has been initialized.
+     * @param context used to notify the user of any errors when fetching data.
+     * @param finishedCallback function to run when the data has been fetched.
+     */
+    public void fetchCurrentUserInfo(final Context context, @NonNull final SimpleCallback<DataSnapshot> finishedCallback) {
+        getDb().getReference(getUserPath()).child(getAuth().getUid()).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                // data has been received. Call the callback method.
+                finishedCallback.callback(dataSnapshot);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                // something failed, notify the user.
+                Toast.makeText(context, "Failed to fetch data", Toast.LENGTH_LONG).show();
+            }
+        });
+    }
+
     /* Methods to add data to Firebase */
 
     public boolean addNewUser( User user ) {
@@ -113,6 +138,12 @@ public class DBHelper {
         return checkExists( getPhotoPath() + photoID );
     }
 
+    public boolean addToInterest( String category ) {
+        db.getReference( getInterestPath() ).child( category ).setValue( true );
+
+        return checkExists( getInterestPath() + category );
+    }
+  
     public boolean addToUserInterest( String userID, String category, String subcategory, String preference ) {
         db.getReference( getUserInterestPath() ).child( userID ).child( category ).child( subcategory ).setValue( preference );
 

@@ -1,6 +1,7 @@
 package com.example.potato.couchpotatoes;
 
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -16,6 +17,9 @@ import com.google.firebase.database.ValueEventListener;
 public class MainActivity extends AppCompatActivity {
     private DBHelper helper;
 
+    // AsyncTasks
+    private FetchCurrentUserInfoTask mFetchCurrUserInfoTask;
+
     // For the user cards
     private android.widget.Button chat;
 
@@ -30,6 +34,7 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         helper = new DBHelper();
+
         chat = findViewById(R.id.viewChats);
         currUserID = helper.getAuth().getUid();
 
@@ -37,11 +42,10 @@ public class MainActivity extends AppCompatActivity {
         if ( helper.isUserLoggedIn() ) {
 
             // reads all the user info on the current user
-            pullCurrentUserInfo();
+            attemptFetchCurUserInfo();
 
             startActivity(new Intent(getApplicationContext(), MatchingActivity.class));
             finish();
-            //mProgressView.setVisibility(View.VISIBLE);
 
         }
         // Else, redirect user to login page
@@ -59,6 +63,8 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
+
+    private class FetchCurrentUserInfoTask extends AsyncTask<Void, Void, Void> {
 
     // Grabs the user info of the current user from Firebase
     private void pullCurrentUserInfo() {
@@ -128,13 +134,31 @@ public class MainActivity extends AppCompatActivity {
                             break;
                     }
 
+        @Override
+        protected Void doInBackground(Void... voids) {
+            helper.fetchCurrentUserInfo(getApplicationContext(), new SimpleCallback<DataSnapshot>() {
+                @Override
+                public void callback(DataSnapshot data) {
+                    final CurrentUser currentUser = CurrentUser.getInstance();
+                    currentUser.initializeFromDataSnapshot(data);
                 }
-            }
+            });
 
+            return null;
+        }
             @Override
             public void onCancelled(DatabaseError databaseError) {}
         });
     }
 
+    // Grabs the user info of the current user from firebase and sets CurrentUser from that data
+    private void attemptFetchCurUserInfo() {
+        if (mFetchCurrUserInfoTask != null) {
+            return;
+        }
+
+        mFetchCurrUserInfoTask = new FetchCurrentUserInfoTask();
+        mFetchCurrUserInfoTask.execute((Void) null);
+    }
 }
 
