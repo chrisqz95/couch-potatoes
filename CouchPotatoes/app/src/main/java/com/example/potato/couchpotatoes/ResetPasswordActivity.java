@@ -3,15 +3,14 @@ package com.example.potato.couchpotatoes;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
-import android.view.MenuItem;
 import android.view.View;
-import android.support.v7.widget.Toolbar;
 
 import android.widget.*;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -32,9 +31,6 @@ public class ResetPasswordActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_reset_password);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-
         inputEmail = (EditText) findViewById(R.id.reset_email);
         progressBar = (ProgressBar) findViewById(R.id.reset_progressBar);
         Button btnReset = (Button) findViewById(R.id.btn_reset_password);
@@ -45,20 +41,8 @@ public class ResetPasswordActivity extends AppCompatActivity {
                 attemptResetPassword();
             }
         });
-
-        // Add back button in ActionBar
-        android.support.v7.app.ActionBar actionBar = getSupportActionBar();
-        actionBar.setDisplayHomeAsUpEnabled(true);
     }
 
-    /**
-     * Function for ActionBar back button.
-     */
-    public boolean onOptionsItemSelected(MenuItem item){
-        startActivity(new Intent(ResetPasswordActivity.this, LoginActivity.class));
-        finish();
-        return true;
-    }
     /**
      * Overrides the back button from ending the activity.
      */

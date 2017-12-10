@@ -188,9 +188,6 @@ public class PreferencesActivity extends AppCompatActivity
         // Want to display icons in original color scheme
         navView.setItemIconTintList(null);
 
-        // highlight the current location
-        navView.setCheckedItem(R.id.nav_profile);
-
         // initialize textViews on the sidebar header
         sidebarUserName = (android.widget.TextView) navView.getHeaderView(0)
                 .findViewById(R.id.sidebar_username);
@@ -355,14 +352,6 @@ public class PreferencesActivity extends AppCompatActivity
         cachePhotoURIs();
         */
      
-    }
-
-    // Make sure the navView highlight the correct location
-    @Override
-    public void onResume() {
-        super.onResume();
-        // highlight the current location
-        navView.setCheckedItem(R.id.nav_profile);
     }
 
     /*
@@ -608,12 +597,11 @@ public class PreferencesActivity extends AppCompatActivity
             Intent intent = new Intent( getApplicationContext(), ChatRoomActivity.class );
             startActivity( intent );
             finish();
-        }
-        else if (id == R.id.nav_settings) {
+//        }
+//        else if (id == R.id.nav_settings) {
             // TODO: go to the settings page
             //Intent intent = new Intent( getApplicationContext(), SettingsActivity.class );
             //startActivity( intent );
-            startActivity( new Intent( getApplicationContext(), AppSettingsActivity.class ) );
         }
         else if (id == R.id.nav_info) {
             // TODO: go to the "about us" page

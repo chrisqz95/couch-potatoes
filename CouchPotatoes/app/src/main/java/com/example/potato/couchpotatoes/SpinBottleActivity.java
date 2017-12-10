@@ -2,7 +2,6 @@ package com.example.potato.couchpotatoes;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.animation.AccelerateDecelerateInterpolator;
@@ -54,21 +53,13 @@ public class SpinBottleActivity extends AppCompatActivity {
                     @Override
                     public void onAnimationEnd(Animation animation) {
                         String message = currentNumber(360 - (angle % 360), nice);
-                        final String message2 = message;
                         // return to main screen
-                        final Handler handler = new Handler();
-                        handler.postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-                                // Do something after 5s = 5000ms
-                                Intent intent = new Intent(getApplicationContext(), MessageActivity.class);
-                                intent.putExtra("message", message2);
-                                intent.putExtra( "chatID", getIntent().getStringExtra("chatID") );
-                                intent.putExtra("otherUsers", getIntent().getStringExtra("otherUsers"));
-                                finish();
-                                startActivity(intent);
-                            }
-                        }, 1500);
+                        Intent intent = new Intent(getApplicationContext(), MessageActivity.class);
+                        intent.putExtra("message", message);
+                        intent.putExtra( "chatID", getIntent().getStringExtra("chatID") );
+                        intent.putExtra("otherUsers", getIntent().getStringExtra("otherUsers"));
+                        finish();
+                        startActivity(intent);
                     }
 
                     @Override

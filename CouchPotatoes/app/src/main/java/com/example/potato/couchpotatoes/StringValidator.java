@@ -9,14 +9,14 @@ import java.text.SimpleDateFormat;
  * Validates strings to be of the correct type.
  * Author: Alan Mai
  */
-public final class StringValidator {
+public class StringValidator {
 
     private static final int MIN_PASS_LENGTH = 5;
 
     /**
      * Default Constructor
      */
-    private StringValidator() {}
+    public StringValidator() {}
 
     /**
      * Verifies if the given string is a proper email address.

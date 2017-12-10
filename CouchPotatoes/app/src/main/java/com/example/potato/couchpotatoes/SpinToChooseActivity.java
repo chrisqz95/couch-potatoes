@@ -3,7 +3,6 @@ package com.example.potato.couchpotatoes;
 import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.animation.Animation;
@@ -57,22 +56,13 @@ public class SpinToChooseActivity  extends AppCompatActivity {
                     @Override
                     public void onAnimationEnd(Animation animation) {
                         String message = currentNumber(360 - (degree % 360), food);
-
                         // return to main screen
-                        final String message2 = message;
-                        // return to main screen
-                        final Handler handler = new Handler();
-                        handler.postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-                                Intent intent = new Intent(getApplicationContext(), MessageActivity.class);
-                                intent.putExtra("message", message2);
-                                intent.putExtra( "chatID", getIntent().getStringExtra("chatID") );
-                                intent.putExtra("otherUsers", getIntent().getStringExtra("otherUsers"));
-                                finish();
-                                startActivity(intent);
-                            }
-                        }, 1500);
+                        Intent intent = new Intent(getApplicationContext(), MessageActivity.class);
+                        intent.putExtra("message", message);
+                        intent.putExtra( "chatID", getIntent().getStringExtra("chatID") );
+                        intent.putExtra("otherUsers", getIntent().getStringExtra("otherUsers"));
+                        finish();
+                        startActivity(intent);
                     }
 
                     @Override

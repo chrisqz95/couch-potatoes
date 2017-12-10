@@ -9,7 +9,6 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.example.potato.couchpotatoes.LoginActivity">
-
     <ScrollView
         android:layout_width="fill_parent"
         android:layout_height="wrap_content">
@@ -20,7 +19,6 @@
             android:orientation="vertical">
 
             <!-- Prevent keyboard from showing on startup -->
-            <!--TODO is there a better way than this hack?-->
             <LinearLayout
                 android:focusable="true"
                 android:focusableInTouchMode="true"
@@ -41,7 +39,8 @@
                     android:imeActionLabel="@string/sign_up_first_name"
                     android:imeOptions="actionUnspecified"
                     android:inputType="textPersonName"
-                    android:maxLines="1"/>
+                    android:maxLines="1"
+                    android:singleLine="true" />
             </android.support.design.widget.TextInputLayout>
 
             <!-- Middle Name -->
@@ -58,7 +57,8 @@
                     android:imeActionLabel="@string/sign_up_middle_name"
                     android:imeOptions="actionUnspecified"
                     android:inputType="textPersonName"
-                    android:maxLines="1"/>
+                    android:maxLines="1"
+                    android:singleLine="true" />
             </android.support.design.widget.TextInputLayout>
 
             <!-- Last Name -->
@@ -75,7 +75,8 @@
                     android:imeActionLabel="@string/sign_up_last_name"
                     android:imeOptions="actionUnspecified"
                     android:inputType="textPersonName"
-                    android:maxLines="1"/>
+                    android:maxLines="1"
+                    android:singleLine="true" />
             </android.support.design.widget.TextInputLayout>
 
             <!-- Date of Birth -->
@@ -87,42 +88,13 @@
                 android:textSize="16dp"
                 android:layout_marginTop="16dp" />
 
-            <!--TODO change this to select date, then have a text view that will display the date chosen-->
-            <!--TODO may have to nest this next part in another horizontal linear layout to display the date next to the button-->
-            <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:paddingTop="10dp">
-
-                <TextView
-                        android:id="@+id/fragment_sign_up_dob_display"
-                        android:layout_width="match_parent"
-                        android:layout_height="fill_parent"
-                        android:layout_gravity="start"
-                        android:gravity="center_vertical|start"
-                        android:layout_alignParentStart="true"
-                        android:textSize="18sp"
-                        android:textColor="@color/primaryTextColor"
-                        android:paddingRight="10dp"
-                        android:paddingLeft="10dp"
-                        android:text="@string/sign_up_dob_display_default"/>
-                <Button
-                        android:id="@+id/fragment_sign_up_info_form_date_picker_button"
-                        style="?android:textAppearanceSmall"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:paddingRight="10dp"
-                        android:paddingLeft="10dp"
-                        android:layout_gravity="end"
-                        android:gravity="center_vertical|end"
-                        android:layout_alignParentEnd="true"
-                        android:background="@color/colorPrimary"
-                        android:textColor="@color/white"
-                        android:text="@string/sign_up_dob_btn_label"
-                        android:textStyle="bold" />
-                <!--android:text="@string/sign_up_dob"-->
-
-            </RelativeLayout>
+            <Button
+                android:id="@+id/fragment_sign_up_info_form_date_picker_button"
+                style="?android:textAppearanceSmall"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/sign_up_dob"
+                android:textStyle="bold" />
 
             <!-- Gender -->
             <TextView
@@ -201,8 +173,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                android:background="@color/colorPrimary"
-                android:textColor="@color/white"
                 android:text="Sign Up"
                 android:textStyle="bold" />
         </LinearLayout>
