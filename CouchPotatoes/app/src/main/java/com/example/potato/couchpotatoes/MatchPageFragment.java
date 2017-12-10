@@ -6,7 +6,6 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -38,9 +37,6 @@ public class MatchPageFragment extends Fragment {
     private TextView userInfoText;
     private LinearLayout matchingUserInfoLayout;
 
-    private ImageView imgView;
-    private String gUserInfo;
-
     /**
      * Create a new fragment while passing in a list of the strings of the matched users
      *
@@ -71,11 +67,11 @@ public class MatchPageFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_match_page, container, false);
-        bioText = (TextView) view.findViewById(R.id.bioText);
-        interestsHeader = (TextView) view.findViewById(R.id.interestsHeader);
-        interestsText = (TextView) view.findViewById(R.id.interestsText);
-        userInfoText = (TextView) view.findViewById(R.id.userInfoText);
-        matchingUserInfoLayout = (LinearLayout) view.findViewById(R.id.matchingUserInfoLayout);
+        bioText = view.findViewById(R.id.bioText);
+        interestsHeader = view.findViewById(R.id.interestsHeader);
+        interestsText = view.findViewById(R.id.interestsText);
+        userInfoText = view.findViewById(R.id.userInfoText);
+        matchingUserInfoLayout = view.findViewById(R.id.matchingUserInfoLayout);
 
         // If the user doesn't have a list of potential matches, tell them to update their profile
         if ( matchedUserList.isEmpty() ) {
@@ -143,10 +139,8 @@ public class MatchPageFragment extends Fragment {
                     }
 
                     String firstName = (String) res.get( "firstName" );
-                    String middleName = (String) res.get( "middleName" );
                     String lastName = (String) res.get( "lastName" );
                     String gender = (String) res.get( "gender" );
-                    String birth_date = (String) res.get( "birth_date" );
                     String bio = (String) res.get( "bio" );
                     String userInfo = "";
                     String genderAbbrev = "";

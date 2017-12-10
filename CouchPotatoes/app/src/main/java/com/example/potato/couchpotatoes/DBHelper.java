@@ -1,10 +1,5 @@
 package com.example.potato.couchpotatoes;
 
-import android.support.annotation.NonNull;
-import android.util.Log;
-
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.*;
 import com.google.firebase.database.*;
 import com.google.firebase.storage.FirebaseStorage;
@@ -94,13 +89,11 @@ public class DBHelper {
 
     public boolean addNewUser( User user ) {
         db.getReference(getUserPath()).child( user.getUid() ).setValue( user );
-
         return checkExists( getUserPath() + user.getUid() );
     }
 
     public boolean addToUserPhoto( String userID, String photoID ) {
         db.getReference( getUserPhotoPath() ).child( userID ).child( photoID ).setValue( true );
-
         return checkExists( getUserPhotoPath() + userID + "/" + photoID );
     }
 
@@ -115,18 +108,15 @@ public class DBHelper {
 
     public boolean addToUserInterest( String userID, String category, String subcategory, String preference ) {
         db.getReference( getUserInterestPath() ).child( userID ).child( category ).child( subcategory ).setValue( preference );
-
         return checkExists( getUserInterestPath() + userID + "/" + category + "/" + subcategory );
     }
 
     public boolean addToLike( String actorUserID, String receiverUserID, String timestamp ) {
         db.getReference( getLikePath() ).child( actorUserID ).child( receiverUserID ).child( "timestamp" ).setValue( timestamp );
-
         return checkExists( getLikePath() + actorUserID + "/" + receiverUserID );
     }
     public boolean addToDislike( String actorUserID, String receiverUserID, String timestamp ) {
         db.getReference( getDislikePath() ).child( actorUserID ).child( receiverUserID ).child( "timestamp" ).setValue( timestamp );
-
         return checkExists( getDislikePath() + actorUserID + "/" + receiverUserID );
     }
 
@@ -154,19 +144,16 @@ public class DBHelper {
 
     public boolean addToUserChat( String userID, String chatID ) {
         db.getReference( getUserChatPath() ).child( userID ).child( chatID ).setValue( true );
-
         return checkExists( getUserChatPath() + userID + "/" + chatID );
     }
 
     public boolean addToChatUser( String chatID, String userID, String userName ) {
         db.getReference( getChatUserPath() ).child( chatID ).child( userID ).setValue( userName );
-
         return checkExists( getChatUserPath() + chatID + "/" + userID );
     }
 
     public boolean addToChatMessage( String chatID, String messageID ) {
         db.getReference( getChatMessagePath() ).child( chatID ).child( messageID ).setValue( true );
-
         return checkExists( getChatMessagePath() + chatID + "/" + messageID );
     }
 
@@ -184,25 +171,21 @@ public class DBHelper {
 
     public boolean removeUser( String userID ) {
         db.getReference(getUserPath()).child( userID ).setValue( null );
-
         return !checkExists( getUserPath() + userID );
     }
 
     public boolean removeFromUserInterest( String userID, String category, String subcategory  ) {
         db.getReference( getUserInterestPath() ).child( userID ).child( category ).child( subcategory ).setValue( null );
-
         return !checkExists( getUserInterestPath() + userID + "/" + category + "/" + subcategory );
     }
 
     public boolean removeFromUserChat( String userID, String chatID ) {
         db.getReference( getUserChatPath() ).child( userID ).child( chatID ).setValue( null );
-
         return !checkExists( getUserChatPath() + userID + "/" + chatID );
     }
 
     public boolean removeFromChatUser( String chatID, String userID ) {
         db.getReference( getChatUserPath() ).child( chatID ).child( userID ).setValue( null );
-
         return !checkExists( getChatUserPath() + chatID + "/" + userID );
     }
 
@@ -311,10 +294,6 @@ public class DBHelper {
 
     public FirebaseStorage getStorage() {
         return storage;
-    }
-
-    public void setStorage(FirebaseStorage storage) {
-        this.storage = storage;
     }
 
     public String getPotentDatePath() {

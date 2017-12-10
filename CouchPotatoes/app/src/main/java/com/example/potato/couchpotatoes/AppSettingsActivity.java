@@ -16,12 +16,10 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 
 public class AppSettingsActivity extends AppCompatActivity {
+
     private DBHelper helper;
-
     private Button deleteAccountBtn;
-
     private DialogInterface.OnClickListener dialogClickListener;
-
     private ProgressBar spinner;
 
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,18 +41,11 @@ public class AppSettingsActivity extends AppCompatActivity {
         dialogClickListener = new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                switch (which){
-                    // Case to upload photo
-                    case DialogInterface.BUTTON_POSITIVE:
-                        //Log.d( "TEST", "YES" );
-                        deleteAccountBtn.setVisibility(View.GONE);
-                        spinner.setVisibility(View.VISIBLE);
-                        deleteAccount();
-                        break;
-                    // Case to cancel photo upload
-                    case DialogInterface.BUTTON_NEGATIVE:
-                        break;
-                }
+            if(which == DialogInterface.BUTTON_POSITIVE){
+                deleteAccountBtn.setVisibility(View.GONE);
+                spinner.setVisibility(View.VISIBLE);
+                deleteAccount();
+            }
             }
         };
 
