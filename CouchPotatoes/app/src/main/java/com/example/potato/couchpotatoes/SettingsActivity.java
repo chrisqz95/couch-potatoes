@@ -178,7 +178,6 @@ public class SettingsActivity extends AppCompatActivity {
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-                Log.d( "TEST", databaseError.getMessage() );
             }
         });
     }

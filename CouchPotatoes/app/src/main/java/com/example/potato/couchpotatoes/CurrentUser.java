@@ -38,7 +38,6 @@ public class CurrentUser extends User {
      */
     public void initializeFromDataSnapshot(DataSnapshot dataSnapshot) {
         for ( DataSnapshot field : dataSnapshot.getChildren() ) {
-            // Log.d( "TEST", field.toString() );
             switch (field.getKey()) {
                 case "email":
                     setEmail((String) field.getValue());
