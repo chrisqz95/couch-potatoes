@@ -43,7 +43,7 @@ import android.widget.Toast;
 
 public class MatchingActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
-	private DBHelper helper;
+    private DBHelper helper;
     private final String[] tabTitles = new String[] { "Date", "Friend" };
 
     private final int VIEW_PAGER_DATE_TAB_POSITION = 0;
@@ -124,7 +124,7 @@ public class MatchingActivity extends AppCompatActivity
         // Fetch list of potential dates from Firebase
         fetchPotentDatesFromFirebase();
 
-		// places toolbar on top of the screen
+        // places toolbar on top of the screen
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitleTextColor(Color.WHITE);
         setSupportActionBar(toolbar);
@@ -179,18 +179,18 @@ public class MatchingActivity extends AppCompatActivity
             super.onBackPressed();
         }
     }
-    
+
     // Handles action in the sidebar menu
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-		if (id == R.id.nav_profile) {
+        if (id == R.id.nav_profile) {
             Intent intent = new Intent( getApplicationContext(), PreferencesActivity.class );
             startActivity( intent );
         } else if (id == R.id.nav_matches) {
-		} else if (id == R.id.nav_chats) {
+        } else if (id == R.id.nav_chats) {
             // redirects user to ChatRoomActivity.xml
             Intent intent = new Intent( getApplicationContext(), ChatRoomActivity.class );
             startActivity( intent );

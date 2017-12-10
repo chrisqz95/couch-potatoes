@@ -4,7 +4,6 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.widget.TextView;
 
 import com.google.firebase.database.DataSnapshot;
@@ -60,7 +59,6 @@ public class MatchUserInfoActivity extends AppCompatActivity {
                 }
 
                 String firstName = (String) res.get( "firstName" );
-                String middleName = (String) res.get( "middleName" );
                 String lastName = (String) res.get( "lastName" );
                 String gender = (String) res.get( "gender" );
                 String birth_date = (String) res.get( "birth_date" );

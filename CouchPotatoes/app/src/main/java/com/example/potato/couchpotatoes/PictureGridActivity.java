@@ -1,21 +1,13 @@
 package com.example.potato.couchpotatoes;
 
 import android.app.AlertDialog;
-import android.app.Fragment;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.AlertDialogLayout;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -30,22 +22,11 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.StorageReference;
-import com.squareup.picasso.LruCache;
-import com.squareup.picasso.Picasso;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-
 import java.util.ArrayList;
 
 public class PictureGridActivity extends AppCompatActivity {
     private GridView gridView;
     private GridViewAdapter gridAdapter;
-
-    //    private String uid;
-//    private boolean uploadButton;
-    private boolean isCurrentUser = false;
-    private boolean changeProfilePic = false;
     private ArrayList<String> urlList;
     private ArrayList<String> hashList;
     private int pos;
@@ -57,12 +38,6 @@ public class PictureGridActivity extends AppCompatActivity {
         setContentView(R.layout.activity_picture_grid_loading);
         Bundle extras = getIntent().getExtras();
         loadData(extras.getString("uid"), extras.getBoolean("isCurrentUser"), extras.getBoolean( "changeProfilePic" ) );
-
-
-//        Picasso picasso = new Picasso.Builder(getApplicationContext()).memoryCache(new LruCache(2400000)).build();
-//        picasso.setIndicatorsEnabled(true);
-//        Picasso.setSingletonInstance(picasso);
-
     }
 
     private void loadData(final String uid, final boolean isCurrentUser, final boolean changeProfilePic ) {
@@ -87,7 +62,7 @@ public class PictureGridActivity extends AppCompatActivity {
                     }
                 }
                 setContentView(R.layout.activity_picture_grid);
-                gridView = (GridView) findViewById(R.id.gridView);
+                gridView = findViewById(R.id.gridView);
                 gridAdapter = new GridViewAdapter(PictureGridActivity.this, R.layout.fragment_picture_grid_item, urlList);
                 gridView.setAdapter(gridAdapter);
 
@@ -106,14 +81,11 @@ public class PictureGridActivity extends AppCompatActivity {
                                     .setIcon(android.R.drawable.ic_dialog_alert)
                                     .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                                         public void onClick(DialogInterface dialog, int whichButton) {
-                                            //StorageReference storageRef = dbHelper.getStorage().getReference(); //("Photo/pPqKDpd6TXaO5Utj7s3Te6OTaLT2/Tobedeleted.PNG");
-                                            //storageRef.child("Photo/").child(uid + "/").child(hashList.get(position));
                                             StorageReference storageRef = dbHelper.getStorage().getReference("Photo/" + uid + "/" + hashList.get(pos));
                                             storageRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                                                 @Override
                                                 public void onSuccess(Uri downloadUrl) {
                                                     dbHelper.getDb().getReference(dbHelper.getUserPath()).child(uid).child("profile_pic").setValue(downloadUrl.toString());
-                                                    //Log.d( "TEST", downloadUrl.toString() );
                                                     finish();
                                                 }
                                             });
@@ -145,8 +117,6 @@ public class PictureGridActivity extends AppCompatActivity {
                                         .setIcon(android.R.drawable.ic_dialog_alert)
                                         .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                                             public void onClick(DialogInterface dialog, int whichButton) {
-                                                //StorageReference storageRef = dbHelper.getStorage().getReference(); //("Photo/pPqKDpd6TXaO5Utj7s3Te6OTaLT2/Tobedeleted.PNG");
-                                                //storageRef.child("Photo/").child(uid + "/").child(hashList.get(position));
                                                 StorageReference storageRef = dbHelper.getStorage().getReference("Photo/" + uid + "/" + hashList.get(position));
                                                 storageRef.delete().addOnCompleteListener(new OnCompleteListener<Void>() {
                                                     @Override
@@ -200,16 +170,6 @@ public class PictureGridActivity extends AppCompatActivity {
                                     ref.removeEventListener(this);
                                 }
                             });
-                            //startActivity(new Intent(PictureGridActivity.this, UploadImageFragment.class));
-//                            Snackbar.make(view, "TODO: UploadImageFragment", Snackbar.LENGTH_LONG)
-//                                    .setAction("Action", null).show();
-
-//                        FragmentManager fragmentManager = getSupportFragmentManager();
-//                        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-//
-//                        UploadImageFragment fragment = new UploadImageFragment();
-//                        fragmentTransaction.add(R.id.viewer, fragment);
-//                        fragmentTransaction.commit();
                         }
                     });
                 } else {

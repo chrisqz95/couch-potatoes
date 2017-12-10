@@ -2,9 +2,7 @@ package com.example.potato.couchpotatoes;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,8 +28,6 @@ public class MatchPageFragment extends Fragment {
     private final int BIO_SUBSTRING_LENGTH = 60;
 
     private ArrayList<String> matchedUserList;
-    private FloatingActionButton matchButton;
-    private FloatingActionButton unmatchButton;
     private DBHelper helper;
     private boolean isDating;
 
@@ -130,7 +126,7 @@ public class MatchPageFragment extends Fragment {
                     if (isDating)
                         helper.addToDate( currUserID, potentMatchID, timestamp );
 
-                    // Otherwise, add to friend like list
+                        // Otherwise, add to friend like list
                     else
                         helper.addToBefriend(currUserID, potentMatchID, timestamp);
                 }
