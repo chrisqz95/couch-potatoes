@@ -98,12 +98,4 @@ public class CurrentUser extends User {
             }
         }
     }
-
-    public ArrayList<String> getContactList() {
-        return contactList;
-    }
-
-    public void setContactList(ArrayList<String> contactList) {
-        this.contactList = contactList;
-    }
 }
