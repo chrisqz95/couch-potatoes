@@ -168,7 +168,7 @@ public class DBHelper {
         getDb().getReference(getMessagePath() + messageId).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                if (dataSnapshot.exists()) {
+                if (dataSnapshot.exists() && dataSnapshot.child("text").exists() && dataSnapshot.child("timestamp").exists()) {
                     finishedCallback.callback(dataSnapshot);
                 }
             }

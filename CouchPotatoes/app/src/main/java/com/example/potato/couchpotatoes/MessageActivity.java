@@ -28,11 +28,9 @@ import java.util.Map;
 
 public class MessageActivity extends AppCompatActivity {
 
-    public static final int TIME_BETWEEN_MESSAGE = 30000;
+    private static final int TIME_BETWEEN_MESSAGE = 30000;
 
     private enum MESSAGE_TYPE {SENT, RECEIVED};
-
-    private final int MESSAGE_FETCH_LIMIT = 50;
 
     private LinearLayout layout;
     private ImageView sendButton;
@@ -141,9 +139,9 @@ public class MessageActivity extends AppCompatActivity {
                     dbHelper.fetchMessage(messageId, new SimpleCallback<DataSnapshot>() {
                         @Override
                         public void callback(DataSnapshot messageData) {
-                            String from = (String) messageData.child("name").getValue();
-                            String message = (String) messageData.child("text").getValue();
-                            String timestamp = (String) messageData.child("timestamp").getValue();
+                            String from = messageData.child("name").getValue(String.class);
+                            String message = messageData.child("text").getValue(String.class);
+                            String timestamp = messageData.child("timestamp").getValue(String.class);
                             String timeString = "";
 
                             //Compare the last msg timestamp with the cur one, add timestamp if theres a gap
