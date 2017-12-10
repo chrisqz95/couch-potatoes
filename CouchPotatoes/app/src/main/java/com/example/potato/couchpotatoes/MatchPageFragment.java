@@ -5,12 +5,9 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.util.Log;
-import android.view.GestureDetector;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -41,22 +38,6 @@ public class MatchPageFragment extends Fragment {
     private TextView userInfoText;
     private LinearLayout matchingUserInfoLayout;
 
-    private ImageView imgView;
-
-    private String gUserInfo;
-
-    /**
-     * TODO: NOTE IF WE WANT TO PASS IN THE LIST DIRECTLY, WE NEED TO MAKE MATCHEDUSER EXTEND PARCELABLE
-     * @param savedInstanceState
-     */
-//    public static MatchPageFragment newInstance(List<MatchedUser> matchedUserList) {
-//        Bundle args = new Bundle();
-//        args.putParcelableArrayList(ARG_LIST, matchedUserList);
-//        MatchPageFragment fragment = new MatchPageFragment();
-//        fragment.setArguments(args);
-//        return fragment;
-//    }
-
     /**
      * give it a list of the strings of the matched users
      * @param matchedUserList
@@ -80,8 +61,8 @@ public class MatchPageFragment extends Fragment {
         matchedUserList = getArguments().getStringArrayList(ARG_LIST);
         isDating = getArguments().getBoolean("Is_Dating");
 
-        matchButton = (FloatingActionButton) getActivity().findViewById(R.id.fab_match);
-        unmatchButton = (FloatingActionButton) getActivity().findViewById(R.id.fab_unmatch);
+        matchButton = getActivity().findViewById(R.id.fab_match);
+        unmatchButton = getActivity().findViewById(R.id.fab_unmatch);
 
         matchButton.setOnClickListener(onClickListener);
         unmatchButton.setOnClickListener(onClickListener);
@@ -90,8 +71,6 @@ public class MatchPageFragment extends Fragment {
     private View.OnClickListener onClickListener = new View.OnClickListener() {
         @Override
         public void onClick(final View v) {
-            //Log.d( "TEST", "FRAGMENT CLICKED" );
-            // NOTE: MAY NOT NEED THIS
         }
     };
 
@@ -99,11 +78,11 @@ public class MatchPageFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_match_page, container, false);
-        bioText = (TextView) view.findViewById(R.id.bioText);
-        interestsHeader = (TextView) view.findViewById(R.id.interestsHeader);
-        interestsText = (TextView) view.findViewById(R.id.interestsText);
-        userInfoText = (TextView) view.findViewById(R.id.userInfoText);
-        matchingUserInfoLayout = (LinearLayout) view.findViewById(R.id.matchingUserInfoLayout);
+        bioText = view.findViewById(R.id.bioText);
+        interestsHeader = view.findViewById(R.id.interestsHeader);
+        interestsText = view.findViewById(R.id.interestsText);
+        userInfoText = view.findViewById(R.id.userInfoText);
+        matchingUserInfoLayout = view.findViewById(R.id.matchingUserInfoLayout);
 
         if ( matchedUserList.isEmpty() ) {
             userInfoText.setText( "No new matches? Make sure to fill out your account settings or try adding more interests." );
@@ -171,18 +150,6 @@ public class MatchPageFragment extends Fragment {
                     String bio = (String) res.get( "bio" );
 
                     String userInfo = "";
-
-                    // TODO Need a better way to format text
-                    /*
-                    String format = "%30s%30s\n";
-                    userInfo += String.format( format, "First Name:", firstName );
-                    userInfo += String.format( format, "Middle Name:", middleName );
-                    userInfo += String.format( format, "Last Name:", lastName );
-                    userInfo += String.format( format, "Gender:", gender );
-                    userInfo += String.format( format, "Birth Day:", birth_date );
-                    userInfo += String.format( format, "Bio:", bio );
-                    */
-
                     String genderAbbrev = "";
 
                     // Abbreviate gender
@@ -236,7 +203,6 @@ public class MatchPageFragment extends Fragment {
                                     String preference = (String) subchild.getValue();
 
                                     int newLinePos = 22;
-                                    //interests += "◇  ";
                                     interests += "    ";
                                     interests += addStrAtPos( subcategory, "\n     ", newLinePos );
                                     interests += "  -  ";
@@ -283,10 +249,6 @@ public class MatchPageFragment extends Fragment {
         return str;
     }
 
-    private String paddSpaceln( String title, String value, int desiredLength ) {
-        return paddSpace( title, value + "\n", desiredLength );
-    }
-
     private String paddSpaceEnd( String title, String value, int desiredLength ) {
         String str = "";
 
@@ -303,10 +265,6 @@ public class MatchPageFragment extends Fragment {
         str += "|";
 
         return str;
-    }
-
-    private String paddSpaceEndln( String title, String value, int desiredLength ) {
-        return paddSpaceEnd( title, value, desiredLength ) + "\n";
     }
 
     private String addStrAtPos( String str, String addition, int position ) {

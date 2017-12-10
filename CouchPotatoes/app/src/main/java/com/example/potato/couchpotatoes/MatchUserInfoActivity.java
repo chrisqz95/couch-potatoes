@@ -28,18 +28,18 @@ public class MatchUserInfoActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_match_user_info);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setTitleTextColor(Color.WHITE);
         setSupportActionBar(toolbar);
 
         helper = new DBHelper();
 
-        matchUserInfoGeneralHeader = (TextView) findViewById(R.id.matchUserInfoGeneralHeader);
-        matchUserInfoGeneralText = (TextView) findViewById(R.id.matchUserInfoGeneralText);
-        matchUserInfoBioHeader = (TextView) findViewById(R.id.matchUserInfoBioHeader);
-        matchUserInfoBioText = (TextView) findViewById(R.id.matchUserInfoBioText);
-        matchUserInfoInterestHeader = (TextView) findViewById(R.id.matchUserInfoInterestHeader);
-        matchUserInfoInterestText = (TextView) findViewById(R.id.matchUserInfoInterestText);
+        matchUserInfoGeneralHeader = findViewById(R.id.matchUserInfoGeneralHeader);
+        matchUserInfoGeneralText = findViewById(R.id.matchUserInfoGeneralText);
+        matchUserInfoBioHeader = findViewById(R.id.matchUserInfoBioHeader);
+        matchUserInfoBioText = findViewById(R.id.matchUserInfoBioText);
+        matchUserInfoInterestHeader = findViewById(R.id.matchUserInfoInterestHeader);
+        matchUserInfoInterestText = findViewById(R.id.matchUserInfoInterestText);
 
         currMatchID = getIntent().getExtras().getString( "currMatchID" );
 
@@ -59,10 +59,6 @@ public class MatchUserInfoActivity extends AppCompatActivity {
                     res.put( children.getKey(), children.getValue() );
                 }
 
-                //String generalInfoHeader = "General Info";
-
-                //matchUserInfoGeneralHeader.setText( generalInfoHeader );
-
                 String firstName = (String) res.get( "firstName" );
                 String middleName = (String) res.get( "middleName" );
                 String lastName = (String) res.get( "lastName" );
@@ -76,15 +72,6 @@ public class MatchUserInfoActivity extends AppCompatActivity {
                 String userInfo = "";
 
                 // TODO Need a better way to format text
-                    /*
-                    String format = "%30s%30s\n";
-                    userInfo += String.format( format, "First Name:", firstName );
-                    userInfo += String.format( format, "Middle Name:", middleName );
-                    userInfo += String.format( format, "Last Name:", lastName );
-                    userInfo += String.format( format, "Gender:", gender );
-                    userInfo += String.format( format, "Birth Day:", birth_date );
-                    userInfo += String.format( format, "Bio:", bio );
-                    */
 
                 String genderAbbrev = "";
 
@@ -102,8 +89,6 @@ public class MatchUserInfoActivity extends AppCompatActivity {
                 String potentMatchName = helper.getFullName( firstName, "", lastName );
                 matchUserInfoGeneralHeader.setText( potentMatchName );
 
-                //userInfo += paddSpaceln( "Name: ", helper.getFullName( firstName, "", lastName ), 30 );
-                //userInfo += "\n";
                 userInfo += paddSpaceln( "Gender: ", genderAbbrev, 38 );
                 userInfo += "\n";
                 // TODO
@@ -211,10 +196,6 @@ public class MatchUserInfoActivity extends AppCompatActivity {
         str += "|";
 
         return str;
-    }
-
-    private String paddSpaceEndln( String title, String value, int desiredLength ) {
-        return paddSpaceEnd( title, value, desiredLength ) + "\n";
     }
 
     private String addStrAtPos( String str, String addition, int position ) {

@@ -2,9 +2,7 @@ package com.example.potato.couchpotatoes;
 
 import android.content.Context;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.MotionEvent;
-import android.view.View;
 
 /**
  * Custom ViewPager to disable swiping between tabs due to swiping being used for cards within the fragment.
@@ -37,15 +35,6 @@ public class MatchViewPager extends android.support.v4.view.ViewPager {
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         // Never allow swiping to switch between pages
-        //Log.d( "TEST", "TOUCH EVENT" );
         return enableSwipe && super.onTouchEvent(event);
-    }
-
-    /**
-     * Set the ability to swipe to change tabs
-     * @param enableSwipe
-     */
-    public void setEnableSwipe(boolean enableSwipe) {
-        this.enableSwipe = enableSwipe;
     }
 }
