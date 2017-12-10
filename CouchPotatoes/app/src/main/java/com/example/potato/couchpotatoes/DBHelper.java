@@ -1,10 +1,13 @@
 package com.example.potato.couchpotatoes;
 
+import android.app.Activity;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
 import android.widget.Toast;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.*;
 import com.google.firebase.database.*;
 import com.google.firebase.storage.FirebaseStorage;
@@ -119,8 +122,24 @@ public class DBHelper {
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-                // something failed, notify the user.
-                Toast.makeText(context, "Failed to fetch data", Toast.LENGTH_LONG).show();
+                // Do nothing
+            }
+        });
+    }
+
+    /**
+     * Attempts to login. Returns whether login was successful through the callback interface.
+     * @param email user email
+     * @param password user password
+     * @param activity used for the on complete listener
+     * @param finishedCallback returns the whether or not the login was a success through the callback
+     */
+    public void attemptLogin(String email, String password, Activity activity,
+                             @NonNull final SimpleCallback<Boolean> finishedCallback) {
+        getAuth().signInWithEmailAndPassword(email, password).addOnCompleteListener(activity, new OnCompleteListener<AuthResult>() {
+            @Override
+            public void onComplete(@NonNull Task<AuthResult> task) {
+                finishedCallback.callback(task.isSuccessful());
             }
         });
     }

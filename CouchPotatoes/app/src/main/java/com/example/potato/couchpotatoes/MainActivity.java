@@ -35,7 +35,6 @@ public class MainActivity extends AppCompatActivity {
 
             // reads all the user info on the current user
             attemptFetchCurUserInfo();
-
             startActivity(new Intent(getApplicationContext(), MatchingActivity.class));
             finish();
 
@@ -56,10 +55,13 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    private class FetchCurrentUserInfoTask extends AsyncTask<Void, Void, Void> {
+    /**
+     * Creates a separate thread to fetch the current user's information
+     */
+    private class FetchCurrentUserInfoTask extends AsyncTask<Void, Void, Boolean> {
 
         @Override
-        protected Void doInBackground(Void... voids) {
+        protected Boolean doInBackground(Void... voids) {
             helper.fetchCurrentUserInfo(getApplicationContext(), new SimpleCallback<DataSnapshot>() {
                 @Override
                 public void callback(DataSnapshot data) {
@@ -68,11 +70,23 @@ public class MainActivity extends AppCompatActivity {
                 }
             });
 
-            return null;
+            return true;
+        }
+
+        @Override
+        protected void onPostExecute(final Boolean success) {
+            mFetchCurrUserInfoTask = null;
+        }
+
+        @Override
+        protected void onCancelled() {
+            mFetchCurrUserInfoTask = null;
         }
     }
 
-    // Grabs the user info of the current user from firebase and sets CurrentUser from that data
+    /**
+     * Grabs the user info of the current user from firebase and sets CurrentUser from that data
+     */
     private void attemptFetchCurUserInfo() {
         if (mFetchCurrUserInfoTask != null) {
             return;

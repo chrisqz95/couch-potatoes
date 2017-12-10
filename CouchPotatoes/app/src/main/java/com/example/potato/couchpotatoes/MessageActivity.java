@@ -13,13 +13,11 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 
 import java.text.DateFormat;
@@ -33,27 +31,25 @@ import java.util.Map;
 
 public class MessageActivity extends AppCompatActivity {
 
-    LinearLayout layout;
-    RelativeLayout layout_2;
-    ImageView sendButton;
-    EditText messageArea;
-    ScrollView scrollView;
-    DBHelper helper = new DBHelper();
-    DatabaseReference reference1, reference2;
-    String userID, chatRoom, displayName, messageID, timestamp, message, companion;
-    TextView userName;
-    Button b_select_spinner;
+    private LinearLayout layout;
+    private ImageView sendButton;
+    private EditText messageArea;
+    private ScrollView scrollView;
+    private DBHelper helper = new DBHelper();
+    private String userID, chatRoom, displayName, messageID, timestamp, message, companion;
+    private TextView userName;
+    private Button b_select_spinner;
 
-    ArrayList<String> messageTime = new ArrayList<>();
-    Map<String,String> messageIDs = new HashMap<>();
+    private ArrayList<String> messageTime = new ArrayList<>();
+    private Map<String,String> messageIDs = new HashMap<>();
 
-    final int MESSAGE_FETCH_LIMIT = 50;
+    private final int MESSAGE_FETCH_LIMIT = 50;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_chat);
+        setContentView(R.layout.activity_message);
 
         // places toolbar into the screen
         Toolbar toolbar = findViewById(R.id.chat_toolbar);
@@ -69,15 +65,10 @@ public class MessageActivity extends AppCompatActivity {
 
         // get views
         b_select_spinner = findViewById(R.id.b_select_spinner);
-        layout = findViewById(R.id.layout1);
-        layout_2 = findViewById(R.id.layout2);
+        layout = findViewById(R.id.layout_message_box);
         sendButton = findViewById(R.id.sendButton);
         messageArea = findViewById(R.id.messageArea);
         scrollView = findViewById(R.id.scrollView);
-
-        //Firebase.setAndroidContext(this);
-        reference1 = helper.getDb().getReference();
-        reference2 = helper.getDb().getReference();
 
         // Get the current user's display name
         displayName = helper.getAuthUserDisplayName();
@@ -373,7 +364,7 @@ public class MessageActivity extends AppCompatActivity {
         String[] time = curMsgTime.split(":");
 
         //Determine if its AM or PM
-        hourStr = getAmPm(time);
+        hourStr = toAmPm(time);
 
 
         // get Month
@@ -384,21 +375,24 @@ public class MessageActivity extends AppCompatActivity {
         return timeStr;
     }
 
-    /*
-     * TODO
+    /**
+     * Returns the time in AM PM format
+     * @param time to convert
+     * @return the time in AM PM format
      */
-    private String getAmPm(String[] time) {
-        String hourStr;
+    private String toAmPm(String[] time) {
         int hour = Integer.parseInt(time[0]);
         if (hour >= 12) {
-            return hourStr = (hour - 12) + ":" + time[1] + " PM";
+            return (hour - 12) + ":" + time[1] + " PM";
         } else {
-            return hourStr = time[0] + ":" + time[1] + " AM";
+            return time[0] + ":" + time[1] + " AM";
         }
     }
 
-    /*
-     * TODO: Add description
+    /**
+     * gets the month's abbreviation.
+     * @param month string of the month number.
+     * @return a string abbreviation of the month.
      */
     private String getMonth(String month) {
         String monthString;
