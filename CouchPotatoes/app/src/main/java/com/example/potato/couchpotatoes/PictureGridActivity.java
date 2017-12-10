@@ -24,6 +24,11 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.StorageReference;
 import java.util.ArrayList;
 
+/*
+ * This activity is started from the Preferences Activity when clicking on the "Edit Photos" button
+ * or the profile picture. This activity is used to view photos that the user have uploaded into
+ * their account. Users are able to upload photos and add to the list of photos.
+ */
 public class PictureGridActivity extends AppCompatActivity {
     private GridView gridView;
     private GridViewAdapter gridAdapter;
